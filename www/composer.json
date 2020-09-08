@@ -1,0 +1,10 @@
+{
+	"name" : "wenxuecity/wenxuecity_portal",
+	"description" : "version 6",
+	"require" : {
+		"php" : ">=7.2",
+		"smarty/smarty" : "~3.1",
+		"phpmailer/phpmailer" : "~6.0",
+		"aws/aws-sdk-php" : "^3.94"
+	}
+}

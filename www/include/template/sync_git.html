@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GIT 同步设置</title>
+	<style>
+		.post{
+			float:left;
+			width:auto;
+			margin: 0px auto 0px auto; 
+			padding: 0px;			
+		}
+		#content{
+			margin: 0px auto 0px auto; 
+			padding: 0px 20px 0px 20px;
+		}
+		hr{
+			width:99%;
+		}
+		strong{
+			color:red;
+		}
+		#box{
+			width:98%;
+			height:24px;		
+			padding:5px;
+			margin:0px auto 6px auto;			
+			line-height:24px;
+			clear:both;
+		}
+		input,select,span,div{
+			font-size:12px;
+		}
+	</style>
+</head>
+<body>
+	<div id="top">
+	  <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+	    <tr>
+	      <td align="left">&nbsp;&nbsp;<span class="whitelink">GIT版本同步 服务器 {%$servername%}</span></td>
+	    </tr>
+	  </table>
+	</div>
+	
+	<div id='box'>
+		<form name="git" class="post" id="post" method="post" action="{%$scriptname%}?server={%$servername%}" onsubmit="return checkfrom();">
+			<hr style="clear:both;">
+			<input type="checkbox" value="beta" name='publish[]' checked><label> beta</label>
+			<input type="checkbox" value="production" name='publish[]'><label> production</label>
+			<input type="submit" name="submit" value="提交" />	
+			<input type="button" name="log" value="查看提交日志" onClick="self.location.href='{%$scriptname%}?server={%$servername%}&log=true'" />	
+			<input type="button" name="unlock" value="解除锁定" onClick="self.location.href='{%$scriptname%}?server={%$servername%}&unlock=true'" style="margin-left:330px">	
+		</form>
+		<br>
+	</div>
+	<br>
+	<br>
+	<br>
+	<div id="content"><pre>{%$rs|default:''%}</pre></div>	
+	<br>
+	<br>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>A Simple Page with CKEditor</title>
+        <!-- Make sure the path to CKEditor is correct. -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script src="/include/editor/ckeditor/ckeditor.js"></script>
+        <script src='/include/editor/ckeditor/wxccust/setmode.js'></script>
+    </head>
+    <body>
+    <div>
+    <form>
+    
+            <textarea name="editor1" id="editor1" rows="10" cols="80">
+                editing....
+            </textarea>
+            <script>
+            $(document).ready(function(){
+            		CKEDITOR.replace( 'editor1', {
+                		customConfig: '/include/editor/ckeditor/wxccust/wxcconfig.js'
+            		});
+            		
+            		CKEDITOR.on('instanceReady', function(){ editor.OnComplete(CKEDITOR.instances.editor1); });
+
+            		
+//            		CKEDITOR.instances.editor1.on('contentDom', function() {
+//           			editor.convertLinks();
+//            		});
+            });
+            </script>
+    </form>
+    </div>
+    
+   
+  <div style="height:200px"></div>  
+    
+ <div id="editable" contenteditable="true">
+ <h1>Inline Editing in Action!</h1>
+ <p>The div element that holds this text is now editable.
+</div>
+
+<script>
+ // Turn off automatic editor creation first.
+ CKEDITOR.disableAutoInline = true;
+ CKEDITOR.inline( 'editable' );
+</script>
+
+
+</body>
+</html>
