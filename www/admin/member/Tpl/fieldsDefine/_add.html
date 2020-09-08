@@ -1,0 +1,49 @@
+<style>
+	.msg{float:left;color:gray;height:30px;line-height:30px;padding:0px;margin:0px 5px;}
+</style>
+<script>
+	function checkSubmit(){
+		if($("#name").val()==''){
+			alert('请填写名称！');
+			$("#name").focus();
+			$("#name").select();
+			return false;
+		}
+		return true;
+	}
+</script>
+<form method="post" onsubmit="return checkSubmit();" action="fieldsDefine.php?act=post&profileID={%$smarty.get.profileID%}" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                字段信息
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                名称:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="name" id="name" value="{%$rs.name|default:''%}" style="float:left; width:256px;">
+			</td>
+        </tr>
+        <tr>
+            <td height="30" bgcolor="#FFFFFF" align="right">
+                备注:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<textarea name="description" id="description" rows="4" style="width:98%;font-size:12px;">{%$rs.description|default:''%}</textarea>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="right">
+                    <input type="submit" id="submit" name="submit" value="{%$lang.cmd.save%}">
+					<input type="hidden" name="eid" id="eid" value="{%$rs.id|default:0%}" />
+					<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

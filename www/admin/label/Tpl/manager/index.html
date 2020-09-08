@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{%$page_title|default:'标签管理'%}</title>
+    <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+    <script language="JavaScript" type="text/javascript" src="/js/admin.js"></script>
+</head>
+<body>
+<div id="top">
+    <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+        <tr>
+            <td align="left">
+                &nbsp;&nbsp;<span class="whitelink">{%$page_title|default:'标签管理'%}</span>
+            </td>
+            <td align="right" class="whitestyle">
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bline">
+        <tr>
+            <td>
+                <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24">
+                        	{%$lang.cmd.yourlocation|default:'您的位置'%}>> 
+							<a href="index.php?cate={%$smarty.get.cate%}" class="tishilink">{%$page_title|default:'标签管理'%}</a>
+							{%if !empty($nav)%}
+								{%foreach from=$nav key=key item=val%}
+									>> 
+									{%if $key!=0%}
+										<a href="index.php?mid={%$val.id%}&rid={%$val.mid%}&rootid={%$smarty.get.rootid%}&cate={%$smarty.get.cate%}" class="tishilink">{%$val.name%}</a>
+									{%else%}
+										{%$val.name%}
+									{%/if%}
+								{%/foreach%}
+							{%/if%}
+                        </td>
+                        <td align="right">
+							{%if empty($incmenu)%}
+								<a href="{%$parentURL%}" class="tishilink">{%$lang.cmd.return%}</a>
+							{%else%}
+								{%if $incmenu=='none' || !empty($menulist)%}
+								<a href="{%$parentURL%}" class="tishilink">{%$lang.cmd.return%}</a>
+								{%else%}
+								{%foreach from=$incmenu item=val name=nav%}
+									{%if $smarty.foreach.nav.index!=0%}
+									{%if $val.name=='loop' && empty($smarty.get.mid) %}{%else%}&nbsp;|&nbsp;{%/if%}
+									{%/if%}
+									{%if $val.name=='chkall'%}
+										<input name="chkall" type="checkbox" onClick="CheckAll()" id="chkall">
+										<a href="#" class="tishilink" onClick="SuperCheckAll();return false;">{%$lang.cmd.selectall%}</a>
+									{%elseif $val.name=='order'%}
+										<script language="JavaScript1.2" type="text/javascript" src="/js/tableorder/tbOrder.js"></script>
+										<img src="/images/admin/up.gif" alt="{%$lang.cmd.up%}" border='0' style="cursor: pointer;" onclick="tbOrder.up();">
+										<img src="/images/admin/down.gif" alt="{%$lang.cmd.down%}" border='0' style="cursor: pointer;" onclick="tbOrder.down();"> | 
+										<a href="javascript:subform(tbOrder.save('{%$val.link%}'));" class="tishilink">{%$lang.cmd.saveorder%}</a>
+									{%elseif $val.name=='loop'%}
+										{%if !empty($smarty.get.mid)%}<a href='{%$val.link%}mid={%$mid%}&rid={%$rid%}' class="tishilink">{%$lang.cmd.returnup%}</a>{%/if%}
+									{%else%}
+										<a href='{%if !empty($val.jsLink)%}javascript:subform("{%/if%}{%$val.link%}{%if !empty($val.jsLink)%}"){%/if%}' class="tishilink"{%if !empty($val.delmsg)%} onClick="return checkclick('{%$val.delmsg%}')"{%/if%}>{%$val.name%}</a>
+									{%/if%}
+								{%/foreach%}
+								{%/if%}
+							{%/if%}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" height="6" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>                    	
+            </td>
+        </tr>
+    </table>
+</div>
+
+{%include file="$includeTpl"%}
+<br/>
+<br/>
+
+</body>
+</html>

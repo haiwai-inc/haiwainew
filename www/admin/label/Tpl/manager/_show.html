@@ -1,0 +1,33 @@
+<script language="JavaScript" type="text/javascript">
+            <!--
+            function checksubmit(){                
+				if ((document.getElementById("name").value) == "") {
+                    window.alert('请填写名称！');
+                    document.getElementById("name").select();
+                    document.getElementById("name").focus();
+                    return false;
+                }
+                else {
+                    document.getElementById("Submit").value = "数据提交中……";
+                    document.getElementById("Submit").disabled = true;
+                    return true;
+                }
+            }            
+            //-->
+        </script>
+		
+		<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+		    <tr class="dhbg">
+		        <td height="25" align="left">
+		            当前配置信息
+		        </td>
+		    </tr>
+		    <tr>
+		        <td style='font-size:16px;padding:35px;' colspan='2' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+		        	{%php%}
+						$vv=$this->_tpl_vars['value'];
+						debug::d($vv);
+					{%/php%}
+		        </td>
+		    </tr>
+		</table>

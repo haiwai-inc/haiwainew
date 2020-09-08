@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>管理员修改密码</title>
+	<link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>		
+    <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+	<link href="/admin/page/script/nav.css" rel="stylesheet" type="text/css"/>
+    <script language="JavaScript" type="text/javascript" src="/js/admin.js"></script>
+    <script language="JavaScript" type="text/javascript">
+	    <!--
+	    function checksubmit(){ 
+			var enReg = /^[A-Za-z0-9-_]+$/;                  
+			if ((g("old").value) == "") {
+	            window.alert('请填写原密码！');
+	            g("old").select();
+	            g("old").focus();
+	            return false;
+	        }else if ((g("new").value) == "") {
+	            window.alert('请填写新密码！');
+	            g("new").select();
+	            g("new").focus();
+	            return false;
+	        }else if ((g("new").value) != g("confirm").value) {
+	            window.alert('两次输入的新密码不同！');
+	            return false;
+	        }else {
+	            g("Submit").value = "数据提交中……";
+	            g("Submit").disabled = true;
+	            return true;
+	        }
+	    } 
+		//-->
+	</script>
+</head>
+<body>
+{%include file="$root/template/wxc/ssi/header_admin.html"%}
+<div style="height:50px;"></div>
+{%if !empty($smarty.post.new)%}
+<table width="50%" border="0" align="center" cellpadding="5" cellspacing="0" style="border:solid 1px #333;">
+    <tr class="dhbg">
+        <td align="left" valign="middle">
+        	<span style="font-size:14px;color:white;padding:0px; margin:0px;">修改密码</span>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" height="150" style="font-size:18px;">
+        	{%if empty($msg)%}<span style="color:green;">您的密码修改操作已经成功！ <a href="/admin/">返回首页</a></span>{%else%}<span style="color:red;">您的原密码输入有误！</span> <a href="./?act=passwd">重新输入</a>{%/if%}
+        </td>
+    </tr>
+</table>
+{%else%}
+<form action="./?act=passwd" method="post" name="form1" id="form1" onSubmit="javascript:return checksubmit();">
+	<table width="50%" border="0" align="center" cellpadding="5" cellspacing="0" style="border:solid 1px #333;">
+        <tr  class="dhbg">
+            <td align="left" valign="middle" colspan="2">
+            	<span style="font-size:14px;color:white;padding:0px; margin:0px;">修改密码</span>
+			</td>
+        </tr>
+		<tr>
+            <td align="right">检查原密码</td>
+			<td align="left"><input name="old" id="old" type="password" value=""></td>
+        </tr>
+		<tr>
+            <td align="right">设置新密码</td>
+			<td align="left"><input name="new" id="new" type="password" value=""></td>
+        </tr>
+		<tr>
+            <td align="right">确认新密码</td>
+			<td align="left"><input name="confirm" id="confirm" type="password" value=""></td>
+        </tr>
+		<tr>
+            <td align="right"></td>
+			<td align="left">
+				<input name="submit" id="Submit" type="submit" value=" 保 存 ">
+			</td>
+        </tr>
+    </table>
+</form>
+{%/if%}
+</body>
+</html>

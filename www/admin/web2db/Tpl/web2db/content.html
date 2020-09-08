@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>内容抓取/预览</title>
+<style>
+    body{padding:4px;font-size:14px;}
+    h1,form{margin: 0 auto;width:990px;}
+    textarea{width:98%;font-size:14px;line-height:24px;}
+    #title,#url{width:98%;height:28px;padding:0 4px;font-size:14px;}
+   .btn{font-size: 14px; font-weight: bold;height: 32px;line-height: 32px;margin: 4px;padding: 0 15px;} 
+   #titlebox a {color:darkblue;margin:0 0 0 10px;}
+</style>
+
+<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="JavaScript" type="text/javascript">
+	function fetchImg(){
+		var sourceURL = "{%$url%}";
+		
+		var type=$("#type:checked").val();
+		var subidVal = $("#"+type).val();
+		
+		var sourceContent = $('#content').val();
+		
+		$("#message").html("<img src='http://www.wenxuecity.com/images/loading/01.gif'> 正在获取图片...");
+		
+		$.ajax({
+			type: "POST",
+		    url: "/include/plugins/jquery.php?app=web2db,fetch&sess=true&func=getdata",
+	  	    data: { 
+				url:  sourceURL ,
+				subid: subidVal ,
+	  	    	content: encodeURIComponent(sourceContent)
+	  	    },
+		    success:function( val ){
+		    	eval(val);
+		    	if(res[0]=='0'){$("#message").html(res[1]);return;}
+				
+				//do somthing what you like
+		    	$("#box").html(res[1]);
+				$("#content").val(res[1]);
+				$("#message").html("图片获取结束！");
+		    }
+		});	
+	}
+</script>
+</head>
+<body>
+	<div id="message"></div>
+    <h1>信息捕获工具 <a href="{%$smarty.server.HTTP_REFERER|default:'./index.php'%}">返回</a></h1>
+    <form action="./index.php?act=save" method="post" name="form" id="form">
+        <p>抓取目标地址： <a href="{%$url%}" target="_blank">{%$url%}</a></p>
+        <p id="titlebox">标题： 
+            <a href="#" onclick="document.getElementById('title').value +='(图)';return false;">(图)</a>
+            <a href="#" onclick="document.getElementById('title').value +='(组图)';return false;">(组图)</a>
+            <a href="#" onclick="document.getElementById('title').value +='(视频)';return false;">(视频)</a>
+            <a href="#" onclick="document.getElementById('title').value +='(高清组图)';return false;">(高清组图)</a> 
+            <a href="#" onclick="document.getElementById('title').value +='(图/视频)';return false;">(图/视频)</a>
+        </p>
+        <input name="title" id="title" type="text" style="width:98%;" value="{%$title|escape:'html'|default:'==## 未成功获取 ##=='%}">
+        <p>出处：</p>
+        <select name="author">
+            {%foreach from=$poster item=val%}<option value="{%$val%}">{%$val%}</option>
+            {%/foreach%}
+        </select>
+          或
+        <input type="text" name="nickname" value="{%$smarty.get.source|default:''%}"  style="width:150px;height:28px;padding:0 4px;font-size:14px;">
+        
+        <p>发布位置：</p>
+        
+        <input type='radio' id='type' name='type' checked value='channels'>
+        <select name="channels" id='channels'>
+            {%foreach from=$channels item=val%}<option value="{%$val.id%}">{%$val.title%}</option>
+            {%/foreach%}
+        </select>  
+        
+        <input type='radio' id='type' name='type' value='staticBbs'>
+        <select name="staticBbs" id="staticBbs">
+            {%foreach from=$staticBbs key=k item=val%}
+            	{%if !empty($val.display) && $val.title!='滚动新闻' && $val.title!='娱乐新闻' && $val.title!='生活新闻'%}
+            		<option value="{%$k%}">{%$val.title%}</option>
+            	{%/if%}
+            {%/foreach%}
+        </select>  
+        
+        <input type='radio' id='type' name='type' value='dynamicBbs'>
+        <select name="dynamicBbs" id="dynamicBbs">
+            {%foreach from=$dynamicBbs item=val%}<option value="{%$val.subid%}">{%$val.title%}</option>
+            {%/foreach%}
+        </select>  
+        
+        <input name="submit" type="submit" value="点击保存"/>
+        
+        <p>内容：</p>
+        <input type="button" value="保存图片到本地" onclick="fetchImg();">
+        <textarea name="content" id="content" rows="20">{%$content|escape:'html'|default:'==## 未成功获取 ##=='%}</textarea>
+        
+        <p>
+            <input name="preview" type="button" value="预 览" class="btn" onclick="document.getElementById('box').innerHTML=document.getElementById('content').value;"/>
+        </p>
+        <hr>
+        <div id="box">{%$content%}</div>
+        <hr>
+        
+        <p>
+            <input name="submit" type="submit" value="保 存" class="btn"/>
+            <input name="return" type="button" value="返 回" class="btn" onclick="self.location='{%$smarty.server.HTTP_REFERER|default:'./index.php'%}';"/>
+        </p>
+        <input name="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER|default:'./index.php'%}" />
+    </form>
+</body>
+</html>

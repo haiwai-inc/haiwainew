@@ -1,0 +1,45 @@
+<script language="JavaScript" type="text/javascript" src='script/setupTpl.php?cate={%$smarty.get.cate%}'></script>
+<script language="JavaScript"  type="text/javascript">
+	var doAct={
+		g:function(sid){
+			return document.getElementById(sid);
+		},
+		cc:function(msg){
+		    if (confirm(msg)) {
+		        return true;
+		    }
+		    else {
+		        return false;
+		    }
+		},
+		result:function(html){
+			if (!html) return;
+			var editor=FCKeditorAPI.GetInstance('structs');
+			editor.SetHTML(html);
+		},
+		setupTpl:function(value){
+			var msg='您确定清空并重置当前页面的内容么？';
+			if(this.cc(msg)){
+				this.g('tpllist').options[0].selected = true;
+				x_setupTpl(value,this.result);
+			}
+		}
+	
+	};
+</script>
+<form id="editor" name="editor" method="post" action="index.php?act=editor&pid={%$smarty.get.pid%}&cate={%$smarty.get.cate%}">
+	<div style="width:98%;margin:0px auto;">
+		{%$structs%}
+	</div>
+	<div style="width:98%;margin:0px auto; padding:5px;text-align:right;">
+		<select id='tpllist' name='tpllist' onchange="doAct.setupTpl(this.value);" style="float:left;">
+			<option value="">选择预制模板并清空当前内容...</option>
+			{%foreach from=$htmltpl key=k item=v%}
+				<option value="{%$k%}">{%$v.name%}</option>
+			{%/foreach%}
+		</select>
+		<input type="submit" name="Submit" id="Submit" value="保存"/>
+		<input name="Reset" type="reset" id="Reset" value="重置"/>
+	</div>
+	<br/><br/>
+</form>

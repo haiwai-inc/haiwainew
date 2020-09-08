@@ -1,0 +1,44 @@
+<!--设置域名信息-->
+<script language="JavaScript" type="text/javascript">
+	function checkSubmit(){
+		if ((g("domain").value) == "") {
+            window.alert('请填写域名信息！');
+            g("domain").select();
+            g("domain").focus();
+            return false;
+        }else {					
+			g("Submit").value = "数据提交中……";
+            g("Submit").disabled = true;
+            return true;
+		}
+    }
+</script>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <form id="form1" name="form1" method="post" action="./domain.php?act=post&pid={%$smarty.get.pid%}&cate={%$smarty.get.cate%}" onsubmit="javascript:return checkSubmit();">
+    <tr>
+      <td align="center"><table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+          <tr class="dhbg">
+            <td width="120" height="20" align="center" class="whitestyle">项&nbsp;&nbsp;&nbsp;&nbsp;目</td>
+            <td align="left" class="whitestyle">内&nbsp;&nbsp;&nbsp;&nbsp;容</td>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#FFFFFF">域&nbsp;&nbsp;&nbsp;&nbsp;名</td>
+            <td align="left" bgcolor="#FFFFFF"><input name="domain" type="text" id="domain" style="width:100%" value="{%if !empty($rs.domain)%}{%$rs.domain%}{%/if%}"/>
+			</td>
+          </tr>
+          <tr>
+            <td colspan="2" align="right" bgcolor="#FFFFFF">
+              {%if !empty($rs.id)%}<input type="hidden" name="eid" id="eid" value="{%$rs.id%}"/>
+			  {%/if%}
+			  <input type="hidden" name="pid" id="pid" value="{%$smarty.get.pid%}"/>
+			  <input type="hidden" name="type" id="type" value="{%$domainType%}"/>			  
+			  <input type="submit" name="Submit" id="Submit" value="保存" />
+              &nbsp;&nbsp;
+              <input name="Reset" type="reset" id="Reset" value="重置" />
+              &nbsp;&nbsp;</td>
+          </tr>
+        </table></td>
+    </tr>
+  </form>
+</table>

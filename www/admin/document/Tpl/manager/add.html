@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{%$page_title%}</title>
+        <meta http-equiv=Pragma content=no-cache>
+        <meta http-equiv=expires content=0>
+        <meta http-equiv="cache-control" content="no-store">
+        <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>		
+        <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+		<script language="JavaScript">
+			function checkSubmit(){
+				if(document.getElementById('title').value==''){
+					alert('请填写文章标题！');
+					document.getElementById('title').focus();
+					return false;
+				}
+				return true;
+			}
+		</script>
+	</head>
+<body>
+<div id="top">
+    <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+        <tr>
+            <td align="left">
+                &nbsp;&nbsp;<span class="whitelink">{%$page_title%}</span>
+            </td>
+            <td align="right" class="whitestyle">
+            		
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bline">
+        <tr>
+            <td>
+                <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24">
+                            				您的位置：>> <a href='./index.php' class='tishilink'>{%$page_title%}</a>
+                        </td>
+                        <td align="right"> 
+							<a href="{%$smarty.server.HTTP_REFERER%}"  class='tishilink'>返回上页</a> 
+							<a href="{%if empty($rs.id)%}{%$smarty.server.HTTP_REFERER%}{%else%}index.php?item={%$rs.sort%}{%/if%}"  class='tishilink'>返回列表</a>            	 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+	<table width="100%" height="6" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--设置应用程序-->
+<form action="index.php?act=post&item={%$smarty.get.item%}" method="post" name="form1" id="form1" onSubmit="javascript:return checkSubmit();">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="center">
+            <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1"  class="color1" style="vertical-align:top;">
+                <tr class="dhbg">
+                    <td width="60" height="18" align="center">
+                        项&nbsp;&nbsp;&nbsp;&nbsp;目
+                    </td>
+                    <td align="left">
+                        内&nbsp;&nbsp;&nbsp;&nbsp;容
+                    </td>
+                </tr>
+				<tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF">
+                        标&nbsp;&nbsp;&nbsp;&nbsp;题
+                    </td>
+                    <td align="left" valign="top" bgcolor="#FFFFFF">
+                        <input name="title" type="text" id="title" style="width:100%;"  value="{%$rs.title|default:''%}"/>
+                    </td>
+                </tr>
+				<tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF">
+                        内&nbsp;&nbsp;&nbsp;&nbsp;容
+                    </td>
+                    <td align="left" valign="top" bgcolor="#FFFFFF">
+                    	{%$content%}
+                    </td>
+                </tr>
+				<tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF">
+                        属&nbsp;&nbsp;&nbsp;&nbsp;性
+                    </td>
+                    <td align="left" valign="top" bgcolor="#FFFFFF">
+                    	<select name='sort' id='sort' style='margin-right:15px;'>
+		            		{%foreach from =$catelist key=key item=value%}<option value='{%$key%}' {%if $key==$rs.sort%}selected=checked{%/if%} title='{%$value.note%}'>{%$value.name%}</option>
+							{%/foreach%}
+		            	 </select>
+                    </td>
+                </tr>
+				<tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF">
+                        标&nbsp;&nbsp;&nbsp;&nbsp;签
+                    </td>
+                    <td align="left" valign="top" bgcolor="#FFFFFF">
+                    	<input name="label" type="text" id="label" style="width:100%;"  value="{%$rs.label|default:''%}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top" bgcolor="#FFFFFF">
+                        图片来源
+                    </td>
+                    <td align="left" valign="top" bgcolor="#FFFFFF">
+                    	<input name="refe" type="text" id="refe" style="width:100%;"  value=""/>
+                    </td>
+                </tr>
+				<tr>
+                    <td colspan="2" align="right" bgcolor="#FFFFFF">
+						{%if !empty($rs.id)%}<input name="eid" id="eid" type="hidden" value="{%$rs.id%}"/>
+						{%/if%}
+						<input type="checkbox" value="1" checked="checked" name="isSaveRemoteImg" id="isSaveRemoteImg">
+						<label for="isSaveRemoteImg" style="cursor:pointer;">是否保存远程图片到服务器</label>
+						&nbsp;&nbsp;
+						<input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+						<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;
+						<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

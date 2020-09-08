@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>信息捕获工具</title>
+<style>
+  body{width:980px;margin:0 auto;font-size: 18px;}
+  h1{width:640px;float:left;color:#003300;font-size:1.4em;}
+  h2{float:left;width:40px;}
+  fieldset{float:left;width:955px;margin:5px 0;padding:10px;}
+  fieldset div{margin:5px 0;}
+  .clear{clear:both;}
+  .back {float: right;margin: 26px 10px 0 0;}
+  .front{float: left;margin: 26px 10px 0 -200px; color:red; font-weight:400;}
+  .btn{font-weight:bold;font-size:14px;margin:4px;padding:0px 15px;line-height:32px;height:32px;}
+  #list{
+  	float: left;
+  	list-style: none outside none;
+  	overflow: hidden;
+  	padding-bottom: 1px;
+  	width: 980px;
+  	padding:0;}
+  #list li{
+    border-color: #DFDFD5;
+    border-style: solid none none solid;
+    background: none repeat scroll 0 0 #DFDFD5;
+    border-color: #FFFFFF -moz-use-text-color -moz-use-text-color #FFFFFF;
+    border-width: 1px 0 0 1px;
+    float: left;
+    height: 40px;
+    line-height: 24px;
+    width: 325px;}
+  #list a{
+	color: #003300;
+	text-decoration:none;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin-top:10px;}
+</style>
+</head>
+<body>
+    <h1>信息捕获工具</h1>
+    <hr class="clear">
+    <input type="button" size="50" value='新建 >>' onClick='self.location.href="./index.php?act=add"'>
+    <div>
+		<ul id='list'>
+        {%if !empty($rs)%}
+            {%foreach from=$rs item=val%}<li><a href="./index.php?act=list&id={%$val.id%}">{%$val.title%}</a></li>
+            {%/foreach%}
+        {%/if%}
+        </ul>
+    </div>
+    <h1>微信捕获工具</h1>
+    <div>
+		<ul id='list'>
+		{%if !empty($rs_fetchinfo)%}
+            {%foreach from=$rs_fetchinfo item=val%}<li><a href="./index.php?act=wechatlist&sourcename={%$val.sourcename%}">{%$val.sourcename%}</a></li>
+            {%/foreach%}
+        {%/if%}
+		</ul>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br />

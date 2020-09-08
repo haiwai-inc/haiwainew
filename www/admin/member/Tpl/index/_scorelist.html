@@ -1,0 +1,59 @@
+<form name="formlist" id="formlist" method="post" action="" style="margin:0px;padding:0px;clear:both;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">
+                序号
+            </td>
+            <td align="left" width="100">
+                项目
+            </td>
+             <td align="left" width="100">
+                行为
+            </td>
+			<td align="left">
+                积分
+            </td>
+			<td align="left" width="100">
+                位置
+            </td>
+        </tr>
+        {%if !empty($result)%}
+		{%foreach from=$result name=result  item=value%}
+        {%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+		 <tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$smarty.foreach.result.index+1%}" onMouseOver="MouseColorOver('bgtr_{%$smarty.foreach.result.index+1%}');" onMouseOut="MouseColorOut('bgtr_{%$smarty.foreach.result.index+1%}');">
+            <td align="center">
+                <strong>{%$indexNum%}</strong>
+       		</td>
+            <td align="left" valign="middle" style="font-size:14px;">
+				{%$value.item%}
+            </td>
+            <td align="left" style="font-size:14px;font-style:italic; font-weight:bolder;">
+                {%$value.act%}
+            </td>
+			<td align="left" style="font-size:14px;font-weight:bolder;">
+                {%$value.score%}
+            </td>
+			<td align="left" style="font-size:14px;font-style:italic; ">
+                {%$value.pos%}
+            </td>
+        </tr>
+        {%/foreach%}
+        {%else%}
+        <tr>
+            <td height="24" colspan="9" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;当前记录为空！
+            </td>
+        </tr>{%/if%} 
+    </table>
+    <table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td height="24" align="left">
+                <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+            </td>
+            <td align="right">
+                {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+            </td>
+        </tr>
+    </table>
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>        

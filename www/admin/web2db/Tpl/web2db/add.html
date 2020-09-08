@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{%if empty($rs.id)%}新建{%else%}修改{%/if%}信息捕获工具</title>
+<style>
+    body{padding:4px;font-size:14px;}
+    h1,form{margin: 0 auto;width:990px;}
+    textarea{width:98%;}
+    #title,#url,#pattern-url,#pattern-listmatch,#pattern-baseurl{width:98%;height:28px;padding:0 4px;font-size:14px;}
+   .btn{font-size: 14px; font-weight: bold;height: 32px;line-height: 32px;margin: 4px;padding: 0 15px;} 
+</style>
+</head>
+<body>
+    <h1>{%if empty($rs.id)%}新建{%else%}修改{%/if%}信息捕获工具 <a href="{%$smarty.server.HTTP_REFERER|default:'./index.php'%}">返回</a></h1>
+    <form action="./index.php?act=post" method="post" name="form" id="form">
+        <p>名称：</p>
+        <input name="title" id="title" type="text" value="{%$rs.title|escape:'html'|default:''%}">
+        
+        <p>地址：</p>
+        <input name="url" id="url" type="text" value="{%$rs.url|escape:'html'|default:''%}">
+        
+        <p>翻页规则： URL中开始字符+页码+结束字符，如页面在URL最后，请加一些后缀字符，如 page=(.*)#for_sth</p>
+        <input name="pattern-url" id="pattern-url" type="text" value="{%$rs['pattern-url']|escape:'html'|default:''%}">
+        
+        <p>模拟用户：</p>
+        <textarea name="poster" rows="2">{%$rs['poster']|escape:'html'|default:''%}</textarea>
+        
+        <p>列表标题规则：开始字符 + 分隔标识(.*) + 结束字符</p>
+        <textarea name="pattern-list" rows="2">{%$rs['pattern-list']|escape:'html'|default:''%}</textarea>
+        
+        <p>列表规则：一般为li 有可能table</p>
+        <textarea name="pattern-taglist" rows="2">{%$rs['pattern-taglist']|escape:'html'|default:''%}</textarea>
+        
+        <p>列表匹配规则：(只有包含以下条件的链接作为列表显示)</p>
+        <input name="pattern-listmatch" id="pattern-listmatch" type="text" value="{%$rs['pattern-listmatch']|escape:'html'|default:''%}">
+        
+        <p>标题规则：开始字符 + 分隔标识(.*) + 结束字符</p>
+        <textarea name="pattern-title" rows="2">{%$rs['pattern-title']|escape:'html'|default:''%}</textarea>
+        
+        <p>标题来源规则：开始字符 + 分隔标识(.*) + 结束字符</p>
+        <textarea name="pattern-source" rows="2">{%$rs['pattern-source']|escape:'html'|default:''%}</textarea>
+        
+        <p>新闻读数规则：开始字符 + 分隔标识(.*) + 结束字符</p>
+        <textarea name="pattern-count" rows="2">{%$rs['pattern-count']|escape:'html'|default:''%}</textarea>
+        
+        <p>内容规则：开始字符 + 分隔标识(.*) + 结束字符</p>
+        <textarea name="pattern-content" rows="2">{%$rs['pattern-content']|escape:'html'|default:''%}</textarea>
+        
+        <p>内容过滤：使用换行定义多个要过滤的内容</p>
+        <textarea name="pattern-filter" rows="2">{%$rs['pattern-filter']|escape:'html'|default:''%}</textarea>
+        
+        <p>内容页面的起始URL:(在列表页面设置了相对路径的情况下使用，默认程序自动判断 base标签)</p>   
+        <input name="pattern-baseurl" id="pattern-baseurl" type="text" value="{%$rs['pattern-baseurl']|escape:'html'|default:''%}">
+        
+        <p>
+            <input name="submit" type="submit" value="保 存" class="btn"/>
+            {%if !empty($rs.id)%}<input name="delete" type="button" value="删 除" class="btn" onclick="if (confirm('您确认删除么？')){self.location='./index.php?act=del&id={%$rs.id%}';}"/>{%/if%}
+        </p>
+        <input name="eid" type="hidden" value="{%$rs.id|default:0%}" />
+        <input name="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER|default:'./index.php'%}" />
+    </form>
+</body>
+</html>

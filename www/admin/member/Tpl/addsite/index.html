@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{%$page_title|default:'Member'%}</title>
+        <meta http-equiv=Pragma content=no-cache>
+        <meta http-equiv=expires content=0>
+        <meta http-equiv="cache-control" content="no-store">
+        <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>
+        <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+        <link href="/admin/page/script/nav.css" rel="stylesheet" type="text/css"/>
+        <script language="JavaScript" type="text/javascript" src="/js/admin.js"></script>
+        <script language="JavaScript" type="text/javascript">
+            	function g(id){
+            		return document.getElementById(id);
+            	}
+            	function checkSubmit(){
+            
+            		if ((g("site").value) == "") {
+                        window.alert('请填写网站标识！');
+                        g("site").select();
+                        g("site").focus();
+                        return false;
+                    }else {					
+            			g("Submit").value = "数据提交中……";
+                        g("Submit").disabled = true;
+                        return true;
+            		}				
+                }
+            	{%if !empty($smarty.get.site)%}
+            	window.onload=function(){
+            		{%if $smarty.get.type=='notExists'%}
+            		alert('站点 {%$smarty.get.site%} 不存在!');
+            		{%/if%}
+            		{%if $smarty.get.type=='Exists'%}
+            		alert('站点 {%$smarty.get.site%} 的授权已经存在!');
+            		{%/if%}
+            	}
+            	{%/if%}			
+        </script>
+        <style>
+            #form1 {
+                margin: 0px;
+                padding: 0px;
+            }
+            
+            #form1 table {
+                margin: 40px auto;
+            }
+            
+            #form1 td {
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="form1" name="form1" method="post" action="./addsite.php?id={%$smarty.get.id%}" onsubmit="javascript:return checkSubmit();">
+            {%if empty($suc)%}
+            <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+                <tr>
+                    <td width="120" align="center" bgcolor="#FFFFFF">
+                        站点标识：
+                    </td>
+                    <td align="left" bgcolor="#FFFFFF">
+                        <input name="site" type="text" id="site" style="width:80%" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120" align="center" bgcolor="#FFFFFF">
+                        管理类型：
+                    </td>
+                    <td align="left" bgcolor="#FFFFFF">
+                        <input name="level" type="radio" value="manager" checked="checked"/>不能给其它人授权 <input name="level" type="radio" value="owner"/> 可以给其它人授权
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center" bgcolor="#FFFFFF">
+                        <br>
+                        <br>
+                        <input type="submit" name="Submit" id="Submit" value="保存" />&nbsp;&nbsp;<input name="Reset" type="reset" id="Reset" value="重置" />
+                    </td>
+                </tr>
+            </table>{%else%}
+            <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+                <tr>
+                    <td width="120" height="100" align="center" bgcolor="#FFFFFF">
+                        <span style="font-size:12pt;color:#006699;">{%$lang.cmd.sucmsg%}</span>
+                        &nbsp;&nbsp;<a href="./addsite.php?id={%$smarty.get.id%}" style="font-size:12pt;color:0066CC;">再添加一个站点</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+            </table>
+            {%/if%}
+        </form>
+    </body>
+</html>

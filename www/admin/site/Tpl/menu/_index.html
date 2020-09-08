@@ -1,0 +1,41 @@
+<form name="formlist" id="formlist" method="post" action="">
+  <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+      <tr class="dhbg">
+        <td width="40" height="24" align="center">序号</td>
+        <td width="180" align="left" valign="middle">名称</td>
+		<td align="left" valign="middle">设置信息</td>
+        <td width="40" align="center">选项</td>
+      </tr>
+      {%if !empty($result)%}
+      {%foreach from=$result name=result  item=value%}
+	  {%assign var="indexNum" value=$smarty.foreach.result.index+1%}
+	  {%*排序推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+	  {%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%if !empty($value.id)%}{%$value.id%}{%/if%}">
+	  {%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+	  {%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+	  <tr id="bgtr_{%$indexNum%}" valign="top" bgcolor="#FFFFFF" onMouseOver="MouseColorOver('bgtr_{%$indexNum%}');" onMouseOut="MouseColorOut('bgtr_{%$indexNum%}');">
+        <td height="24" align="center"><strong>{%$indexNum%}</strong>&nbsp;</td>
+        <td align="left">
+        	{%if $lb==0 %}
+			<a href="menu.php?pid={%$smarty.get.pid%}&mid={%$value.id%}&rid={%$smarty.get.mid%}" class="tishilink"{%if $value.status=='N'%} style="color:gray;"{%/if%}>{%$value.name%}</a>&nbsp;&nbsp;{%if $value.num>0 %}<strong style="font-size:8pt;">({%$value.num%})</strong>{%/if%}
+			{%else%}
+			{%if empty($value.link)%}<span{%if $value.status=='N'%} style="color:gray;"{%/if%}>{%$value.name%}</span>&nbsp;[<strong>{%$value.id%}</strong>]{%else%}<a href="{%$value.link%}" target='_blank' class="tishilink"{%if $value.status=='N'%} style="color:gray;"{%/if%}>{%$value.name%}</a>{%/if%}
+			{%/if%}
+		</td>
+		<td align="left">
+			{%$value.link|default:"--"%}
+		</td>
+        <td align="center"><input type="radio" name="id"  id="item_id{%$indexNum%}" value="{%$value.id%}" onClick="ResetTrBgcolor('bgtr_{%$indexNum%}');"></td>
+      </tr>
+     {%if $czbs==$value.id%}<script language="JavaScript" type="text/javascript">;ResetTrBgcolor('bgtr_{%$indexNum%}');</script>{%/if%}
+     {%/foreach%}
+	 {%else%}
+      <tr>
+        <td height="24" colspan="4" align="left" bgcolor="#FFFFFF" style="color:#FF0000">&nbsp;当前记录为空！</td>
+      </tr>{%/if%}
+    </table>
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>
+{%if $checkalert%}
+<script language="JavaScript" type="text/javascript">alert("您要操作的分类附属内容不为空，请先删除这些附属内容！");</script>
+{%/if%}

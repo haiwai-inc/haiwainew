@@ -1,0 +1,36 @@
+<form id="form1" name="form1" method="post" action="{%$smarty.server.SCRIPT_NAME%}?act=post&pid={%$smarty.get.pid%}&cate={%$smarty.get.cate%}&tab={%$smarty.get.tab%}">
+	<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+	    <tr class="dhbg">
+	        <td style='font-size:14px;font-weight:bold;' height="25" align="left">
+	          &nbsp;&nbsp;{%$ModName%}--{%$rs.name%}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td style='font-size:14px;font-weight:bold;' colspan='2' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+				<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+					{%include file="$root/include/template/configure.html"%}
+				</table>
+	        </td>
+	    </tr>
+	</table>
+	
+	<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+	    <tr>
+	        <td align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+	        	* 注：所有留空的项目会自动调用系统默认的参数值
+	        <td>
+			<td align="right" valign="middle" height="25" bgcolor="#FFFFFF">
+				<input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+				<input name="eid" id="eid" type="hidden" value="{%$rs.id%}"/>
+				<input name="app" id="app" type="hidden" value="{%$rs.app%}"/>
+				<input name="mid" id="mid" type="hidden" value="{%$rs.mid%}"/>
+				<input name="doConfigure" id="doConfigure" type="hidden" value="true"/>
+				<input type="submit" name="Submit" id="Submit" value="保存" />
+				&nbsp;&nbsp;
+	        	<input name="Reset" type="reset" id="Reset" value="重置" />
+	        </td>
+	    </tr>
+	</table>
+</form>
+<br/>
+<br/>

@@ -1,0 +1,46 @@
+<div id="picBox" style="text-align:left;">
+	<table {%if $result.picEditorType!='none'%}style="display:none;"{%/if%} id="picEditorNone" width="{%$config.param.width%}" height="{%$config.param.height%}" border="0" cellpadding="0" cellspacing="0" style="margin:4px;" class="box nonepic">
+		<tr>
+            <td align="center" valign="middle" class="nonepic">
+                暂  无
+                <br>
+                图  片
+            </td>
+        </tr>
+    </table>
+	
+	<div id="picEditorFileBox" style="text-align:center;margin:0px;width:{%if $config.param.width<200%}200{%else%}{%$config.param.width+8%}{%/if%}px;">
+		<img {%if $result.picEditorType=='none'%}style="display:none;"{%/if%} id="picEditorFile" src="{%if !empty($result.pic)%}{%$result.pic%}?{%$randomStr%}{%/if%}" width="{%$config.param.width%}" height="{%$config.param.height%}" border="0" hspace="4" vspace="4">
+	</div>
+	{%if $result.picEditorType!='http'%}
+	<div id="pictool" style="text-align:center;margin:4px;width:{%if $config.param.width<200%}200{%else%}{%$config.param.width%}{%/if%}px;">
+		<img src="/images/admin/edit/tool_preview.gif" width="16" height="16">
+		<a href="#" class="tishilink" onClick="piceditor.view('pic');return false">原图</a>
+		
+		<img src="/images/admin/edit/tool_info.gif" width="16" height="16">
+		<a href="#" class="tishilink" onClick="piceditor.info();return false">信息</a>
+		
+		<img src="/images/admin/edit/tool_edit.gif" width="16" height="16">
+		<a href="#" class="tishilink" onClick="piceditor.edit();return false">修改</a>
+		
+		<img src="/images/admin/edit/tool_refresh.gif" width="16" height="16">
+		<a href="#" class="tishilink" onClick="piceditor.refresh('pic');return false">刷新</a>
+	</div>
+	{%/if%}
+</div>
+	
+<div id="editBox" style="display:none;margin:0 0 10px 0;">
+	<iframe src="" frameborder="0" width="100%" height="{%$result.picifrH|default:660%}" id="picIfrEditor" scrolling="no"></iframe>
+	<input type="hidden" value="{%$result.cfg.coordsarr.0|default:0%}" name="pic_x" id="pic_x"/>
+	<input type="hidden" value="{%$result.cfg.coordsarr.1|default:0%}" name="pic_y" id="pic_y"/>
+	<input type="hidden" value="{%$result.cfg.coordsarr.2|default:$config.param.width%}" name="pic_x2" id="pic_x2"/>
+	<input type="hidden" value="{%$result.cfg.coordsarr.3|default:$config.param.height%}" name="pic_y2" id="pic_y2"/>
+	
+	<input type="hidden" value="{%$result.pic_big%}" id="pic_source_file"/>
+	<input type="hidden" value="{%$result.picW|default:600%}" id="pic_source_width"/>
+	<input type="hidden" value="{%$result.picH|default:600%}" id="pic_source_height"/>
+	<input type="hidden" value="{%$result.picPW|default:$config.param.width%}" id="pic_preview_width"/>
+	<input type="hidden" value="{%$result.picPH|default:$config.param.height%}" id="pic_preview_height"/>
+
+	<input type="hidden" value="0" id="pic_editor_status"/>
+</div>

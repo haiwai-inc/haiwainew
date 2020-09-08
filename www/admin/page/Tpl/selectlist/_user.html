@@ -1,0 +1,104 @@
+<div style="clear:both;">
+<form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">
+                序号
+            </td>
+			<td align="left">
+                内容
+            </td>
+			<td align="center" width="60">
+                显示状态
+            </td>
+			<td align="center" width="60">
+                用户级别
+            </td>
+			<td align="center" width="60">
+                用户状态
+            </td>
+            <td align="center" width="40" align="center">
+                选项
+            </td>
+        </tr>
+        {%if !empty($result)%}
+        {%foreach from=$result name=result  item=value%}
+		{%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+		{%*排序推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+		{%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%if !empty($value.id)%}{%$value.id%}{%/if%}">
+		{%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+		{%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+		<tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$indexNum%}" onMouseOver="MouseColorOver('bgtr_{%$indexNum%}');" onMouseOut="MouseColorOut('bgtr_{%$indexNum%}');">
+            <td align="center" valign="top" style="margin:4px 0px 0px 0px;">
+                <strong>{%$indexNum%}</strong>
+            </td>
+            <td align="left" valign="top" style="margin:4px 0px 0px 0px;">
+                <table width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+		        	 <tr>
+						<td align="center" width='{%$config.param.width+10%}'>
+			            	<img src="{%$value.avatar|default:'/images/none.jpg'%}" width='{%$config.param.width%}' height='{%$config.param.height%}'>
+			            </td>
+						<td align="left" valign="top">
+						 	<h3 style="margin:0px;padding:0px;">
+								<a href='{%$value.profile%}' target="_blank" class="tishilink">{%$value.nickname%}</a>
+								<em style="font-size:8pt;">
+								[ lastLogin: {%$value.lastlogintime|default:$value.jointime|date_format:"%Y-%m-%d %H:%M"%} ]
+								</em>
+							</h3>
+							<div style="float:left;">
+								<p style="margin:0px;padding:0px;line-height:25px;">{%$value.aboutme|default:''%}</p>
+								<span>积分：{%$value.point%} ；累计发布：博客{%$value.totalblog%}，论坛{%$value.totalbbs%}，资料{%$value.totaldoc%}</span>
+							</div>
+			            </td>
+					 </tr>
+				 </table>
+            </td>
+			<td align="center" valign="top" style="margin:4px 0px 0px 0px;">
+                {%if $value.status=='Y'%} <span style='color:green;'>正常</span>{%/if%}
+				{%if $value.status=='N'%}<span style='color:blue;'>关闭</span>{%/if%}
+				{%if empty($value.status)%}N/A{%/if%}
+            </td>
+			<td align="center" valign="top" style="margin:4px 0px 0px 0px;">
+            	{%$value.userlevel.name%}
+			</td>
+			<td align="center" valign="top" style="margin:4px 0px 0px 0px;">
+                {%if $value.isactive=='Y'%} 
+				<span style='color:blue;'>激活</span>
+				{%else%}
+				<span style='color:gray;'>未激活</span>
+				{%/if%}
+            </td>
+            <td align="center" valign="top" style="margin:4px 0px 0px 0px;">
+				{%if $value.idbox%}
+                <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); touchID();">
+            	{%else%}
+				---
+				{%/if%}
+			</td>						
+        </tr>
+		{%/foreach%}
+        {%else%}
+        <tr>
+            <td colspan="6" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;当前记录为空！
+            </td>
+        </tr>
+		{%/if%} 
+    </table>
+	<table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+	    <tr>
+	        <td height="24" align="left">
+	            <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+	        </td>
+	        <td align="right">
+	            {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+	        </td>
+	    </tr>
+	</table>
+	<input name="type" type="hidden" id="type" value="{%$selectType|default:''%}">
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>
+<br/>
+<br/>
+<br/>
+</div>

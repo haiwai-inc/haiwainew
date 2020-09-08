@@ -1,0 +1,57 @@
+<table width="170" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="20" height="25" align="left"{%if !$v.end%} background="/images/admin/menuicon/i_line.gif"{%/if%}>
+        </td>
+        <td width="150" align="left">
+            <!--第一级循环开始-->
+			{%foreach from=$v.sublist item=ival%}
+			{%if !empty($ival.sublist)%}
+			<!--有子类的选项-->
+            <table width="150" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="20">
+                        <img src="/images/admin/menuicon/{%$ival.icon%}.gif" name="piclevel_2_{%$ival.id%}"  id='piclevel_2_{%$ival.id%}' onClick="ShowMenu('menulevel_1_{%$v.id%}','level_2_','{%$ival.id%}','table');return false;" style="cursor:pointer;">
+                    </td>
+                    <td>
+                        <a href="{%$ival.link%}" class="menulink" onClick="ShowMenu('menulevel_1_{%$v.id%}','level_2_','{%$ival.id%}','table');return false;">{%$ival.name%}</a>
+                    </td>
+                </tr>
+            </table>
+            <table width="150" border="0" align="center" cellspacing="0" cellpadding="0" id="menulevel_2_{%$ival.id%}" style="display:{%if $ival.switch%}inline{%else%}none{%/if%};">
+                <tr>
+                    <td width="23" {%if !$ival.end%}background="/images/admin/menuicon/i_line.gif"{%/if%}>
+                    	&nbsp;                    	
+                    </td>
+                    <td>
+                        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                            {%foreach from=$ival.sublist item=value%}
+							<tr>
+                                <td width="20">
+                                    <img src="/images/admin/menuicon/{%$value.icon%}.gif" >
+                                </td>
+                                <td align="left">
+                                    <a href="{%$value.link%}"  class="menulink">{%$value.name%}</a>
+                                </td>
+                            </tr>
+							{%/foreach%}                            
+                        </table>
+                    </td>
+                </tr>
+            </table>
+			{%else%}
+            <!--无子类的选项-->
+			<table width="150" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="20" align="left">
+                        <img src="/images/admin/menuicon/{%$ival.icon%}.gif" >
+                    </td>
+                    <td align="left">
+                        <a href="{%$ival.link%}" class="menulink">{%$ival.name%}</a>
+                    </td>
+                </tr>
+            </table>
+			{%/if%}
+			{%/foreach%}
+        </td>
+    </tr>
+</table>

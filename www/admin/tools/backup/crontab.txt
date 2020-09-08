@@ -1,0 +1,15 @@
+## /etc/cronbash  = /admin/tools/backup
+
+#38.99.106.211
+@weekly root /usr/sbin/ntpdate ntp.ubuntu.com
+5 2 * * * root /usr/bin/php /etc/cronbash/db_backup.php >/dev/null
+5 3 * * * root /usr/bin/php /pub/bak/onlineStore/mysqldump.php >/dev/null
+0 4 * * * root /usr/bin/apt-mirror > /var/spool/apt-mirror/var/cron.log
+0 21 * * 3 root /bin/sh /etc/cronbash/rsync/1week.sh > /dev/null
+0 22 * * * root /bin/sh /etc/cronbash/rsync/1day.sh > /dev/null
+*/30 * * * * root /bin/sh /etc/cronbash/rsync/30min.sh > /dev/null
+
+
+#38.99.106.212
+@weekly root /usr/sbin/ntpdate ntp.ubuntu.com
+45 6 * * * root /etc/cronbash/rsync/backup.sh  >/root/rsync.log

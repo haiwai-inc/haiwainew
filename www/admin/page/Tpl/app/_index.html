@@ -1,0 +1,55 @@
+<!--设置应用程序-->
+<div style="clear:both;">
+<form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">序号</td>
+            <td align="left">全部{%$page_nav%}列表</td>
+			<td align="left" width="80">调用标识</td>
+			<td align="center" width="60">状态</td>
+            <td align="center" width="40" align="center">选项</td>
+        </tr>
+        {%if !empty($result)%}
+        {%foreach from=$result name=result  item=value%}
+		{%assign var="indexNum" value=$smarty.foreach.result.index+1%}
+		{%*是否排序*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+		{%*数据ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%if !empty($value.id)%}{%$value.id%}{%/if%}">
+		{%*排序ID*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+		<tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$indexNum%}" onMouseOver="MouseColorOver('bgtr_{%$indexNum%}');" onMouseOut="MouseColorOut('bgtr_{%$indexNum%}');">
+            <td align="center">
+                <strong {%if $value.include=='Y'%}class="outlink"{%/if%}>{%$indexNum%}</strong>
+            </td>
+            <td align="left" style='font-size:14px;{%if $value.status!='Y'%}color:gray;{%/if%}'>
+				[ {%$value.cpanel.name%} ]&nbsp;&nbsp;
+				<strong>{%if !empty($value.link)%}<a href='{%$value.link%}' class='tishilink' target='_blank'>{%$value.name%}</a>{%else%}{%$value.name%}{%/if%}</strong>&nbsp;&nbsp;
+				{%if !empty($value.cpanel.admin)%}
+				{%foreach from=$value.cpanel.admin item=val%}
+				[ <a href='{%$val.link%}' class='tishilink' {%if !empty($val.target) %}target="_blank"{%/if%} style='color:darkblue;'>{%$val.title%}</a> ]&nbsp;&nbsp;
+				{%/foreach%}
+				{%/if%}
+			</td>
+			<td align="left" style='font-size:14px;'>{%$value.tpl%}</td>
+			<td align="center">
+				{%if empty($value.id)%}
+					<span style="color:blue;">未知</span>
+				{%else%}
+					{%if $value.status!='N'%}<span style="color:green;">正常</span>{%else%}<span style="color:red;">关闭</span>{%/if%}
+				{%/if%}
+			</td>
+			<td align="center">
+                <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); unCheckAll();">
+            </td>						
+        </tr>
+		{%/foreach%}
+        {%else%}
+        <tr>
+            <td height="24" colspan="5" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;当前记录为空！
+            </td>
+        </tr>
+		{%/if%} 
+    </table> 
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>
+<script language="JavaScript" type="text/javascript">tbOrder.init('bgtr');</script>
+</div>

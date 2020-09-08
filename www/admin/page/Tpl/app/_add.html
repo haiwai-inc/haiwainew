@@ -1,0 +1,126 @@
+<script language="JavaScript" type="text/javascript">
+    <!--
+    function checksubmit(){ 
+		var enReg = /^[A-Za-z0-9-_]+$/;                  
+		if ((g("name").value) == "") {
+            window.alert('请填写名称！');
+            g("name").select();
+            g("name").focus();
+            return false;
+        }else if ((g("tpl").value) == "") {
+            window.alert('请填写模板调用标识！');
+            g("tpl").select();
+            g("tpl").focus();
+            return false;
+        }else if ((g("app").value) == "") {
+            window.alert('请选择类型！');
+            return false;
+        }else if(!enReg.test(g("tpl").value)){
+			alert('只能使用大小写英文字符，数字，中下划线作为访问标识！');	
+			g("tpl").select();
+            g("tpl").focus();
+			return false;
+		}else {
+            g("Submit").value = "数据提交中……";
+            g("Submit").disabled = true;
+            return true;
+        }
+    }   
+	function c(val) {
+		if(val==0){
+			var msg="当前页面中模板标识'"+g("tpl").value+"'已经被使用!";
+			alert(msg);
+			g("tpl").select();
+            g("tpl").focus();
+		}
+	}
+	function checkapp(){
+		if(g("tpl").value=='') return;
+		var id=(g('eid'))?g('eid').value:0;
+		x_checkapp(g("tpl").value,g("pid").value,g("cate").value,id,c);
+	}           
+    //-->
+</script>
+<script language="JavaScript" type="text/javascript" src="/admin/page/script/checkapp.php"></script>
+<form action="app.php?act=post&pid={%$smarty.get.pid%}&cate={%$smarty.get.cate%}&tab=home" method="post" name="form1" id="form1" onSubmit="javascript:return checksubmit();">
+    <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="13%" height="18" align="center">
+                项&nbsp;&nbsp;&nbsp;&nbsp;目
+            </td>
+            <td width="87%" align="left">
+                内&nbsp;&nbsp;&nbsp;&nbsp;容
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                标&nbsp;&nbsp;&nbsp;&nbsp;识
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <input name="tpl" type="text" id="tpl" style="180px;" onblur="checkapp();" value="{%$rs.tpl|default:''%}"/>[ 页面呈现时，模板内部调用的参数,同一页面内不可重复,访问标识只能使用大小写英文字符，数字，中下划线 ]
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                名&nbsp;&nbsp;&nbsp;&nbsp;称
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <input name="name" type="text" id="name" style="width:100%;" value="{%$rs.name|default:''%}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                链&nbsp;&nbsp;&nbsp;&nbsp;接
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <input name="url" type="text" id="url" style="width:100%;" value="{%$rs.url|default:''%}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                类&nbsp;&nbsp;&nbsp;&nbsp;型
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <select name='app' id='app'>
+                    <option value=''>请选择{%$page_nav%}类型</option>
+                    {%foreach from=$modlist item=val key=key%}<option value='{%$key%}'{%if $rs.app==$key%}  selected='selected'{%/if%}>{%$val.name%}----{%$val.note%} </option>{%/foreach%}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                描&nbsp;&nbsp;&nbsp;&nbsp;述
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <textarea name="description" id="description" rows="4" style="width:98%;font-size:12px;">{%$rs.description|default:''%}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#FFFFFF">
+                状&nbsp;&nbsp;&nbsp;&nbsp;态
+            </td>
+            <td align="left" bgcolor="#FFFFFF">
+                <input type="radio" name="status" value="Y" {%if $rs.status=='Y'%}checked="checked"{%/if%} /> 正常&nbsp;<input type="radio" name="status" value="N" {%if $rs.status!='Y'%}checked="checked"{%/if%} /> 关闭
+            </td>
+        </tr>
+		<tr>
+	        <td align="center" bgcolor="#FFFFFF">引&nbsp;&nbsp;&nbsp;&nbsp;用</td>
+	        <td align="left" bgcolor="#FFFFFF">
+	          <input type="radio" name="include" value="Y" {%if $rs.include=='Y'%}checked="checked"{%/if%} />
+	          开启&nbsp;
+	          <input type="radio" name="include" value="N" {%if $rs.include!='Y'%}checked="checked"{%/if%} />
+	          关闭
+			 </td>
+	    </tr>
+        <tr>
+            <td colspan="2" align="right" bgcolor="#FFFFFF">
+                <input name="pid" id="pid" type="hidden" value="{%$smarty.get.pid%}"/>
+				<input name="cate" id="cate" type="hidden" value="{%$smarty.get.cate%}"/>
+				<input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+				{%if !empty($rs)%}<input name="eid" id="eid" type="hidden" value="{%$rs.id%}"/>{%/if%}
+				<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;
+				<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,184 @@
+<script language="JavaScript" type="text/javascript" src="/admin/page/script/checkPicTextUrl.php"></script>	
+<form id="picEditorForm" name="picEditorForm" method="post" action="./pictext.php?act=post&pid={%$smarty.get.pid%}&tab=home&appid={%$smarty.get.appid%}&itemid={%$smarty.get.itemid%}&page={%$smarty.get.page|default:0%}" enctype="multipart/form-data" onSubmit="javascript:return piceditor.checkSubmit();" style="margin:0px;padding:0px;">
+	<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+		<tr >
+		   <td width="120" align="center" class="dhbg">操作选项</td> 
+		   <td align="left" class="dhbg">
+			   <div style="float:left;line-height:20px;margin-left:10px;">内容</div>
+		   </td>     
+		</tr>
+		
+		<tr >
+			<td width="120" align="center" bgcolor="#FFFFFF">标题</td>
+			<td align="left" bgcolor="#FFFFFF">
+				<input name="title" type="text" id="title"  class="textinput" value="{%$result.title|default:''%}{%if !empty($result.slavetitle)%}|{%$result.slavetitle%}{%/if%}"/>
+			</td>
+		</tr>
+		<tr >
+			<td width="120" align="center" bgcolor="#FFFFFF">颜色</td>
+			<td align="left" bgcolor="#FFFFFF">
+				<select name="highlight" style="width:120px;background-color:#{%$result.highlight|default:'000000'%};" onchange="this.style.backgroundColor='#'+this.value;">
+					<option value="000000" style="background-color:#000;"></option>
+					{%foreach from=$colorlist item=val%}
+					<option value="{%$val[1]%}" style="background-color:#{%$val[1]%};" {%if $result.highlight==$val[1]%}selected="selected"{%/if%}></option>
+					{%/foreach%}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td width="120" align="center" bgcolor="#FFFFFF">状态</td>
+			<td align="left" bgcolor="#FFFFFF">
+			<input type="radio" name="status" value="Y" {%if !empty($result.status)%}{%if $result.status=='Y'%}checked="checked"{%/if%}{%else%}checked="checked"{%/if%}>显示
+			<input type="radio" name="status" value="N" {%if !empty($result.status)%}{%if $result.status=='N'%}checked="checked"{%/if%}{%/if%}>隐藏
+			</td>
+		</tr>
+		<tr>
+	        <td align="center" valign="top" bgcolor="#FFFFFF">
+	            关键字/标签
+	        </td>
+	        <td align="left" valign="top" bgcolor="#FFFFFF">
+	            <input name="cfg_searchkey" type="text" id="cfg_searchkey" class="textinput" value="{%$result.cfg.searchkey|default:''%}"/>
+	        </td>
+	    </tr>
+		{%if !empty($config.param.fields.text)%}
+		<tr>
+		    <td width="120" align="center" bgcolor="#FFFFFF">摘要</td>
+		    <td align="left" bgcolor="#FFFFFF">
+			<textarea name="summary" type="text" id="summary" rows="4" class="textinput">{%$result.summary|default:''%}</textarea>
+		 	</td>
+		</tr>
+		{%/if%}
+		
+		{%if !empty($config.param.fields.box)%}
+		<tr>
+		    <td width="120" rowspan="2" align="center" bgcolor="#FFFFFF">图片</td>
+		    <td align="left" bgcolor="#FFFFFF">
+			 	<input type="radio" name="picitem" value="1" onclick="piceditor.changePic(1);">直接上传
+			    <input type="radio" name="picitem" value="2" checked="checked" onclick="piceditor.changePic(2);">使用图片编辑器
+			    <input type="radio" name="picitem" value="3" onclick="piceditor.changePic(3);">调用图片地址
+			</td>
+		</tr>
+		<tr>
+			<td align="left" bgcolor="#FFFFFF">
+				<!--加载脚本-->
+				<script language="JavaScript" type="text/javascript" src="/admin/page/script/piceditor/editor.js"></script>
+				
+				<!-- 以下用于调用图片地址 -->
+				<div id="picsrc" style="display:none;">
+					<!-- 上传后或当前的文件路径，用于记录到数据库 -->
+					<input name="pic" type="text" id="pic" size="35" value="{%$result.pic|default:''%}"/>&nbsp;&nbsp;为确保图片的最佳显示效果，请确认图片比例为 <strong>{%$config.param.width%} : {%$config.param.height%}</strong>
+				</div> 
+				   	
+				<!-- 以下除文件域外的三个表单用于直接上传时的参数，与js函数picture的内部参数相对应 -->
+				<div id="picfile" style="display:none;">
+					<input type="file" name="uploadfile" id="uploadfile">为确保图片的最佳显示效果，请确认图片比例为 <strong>{%$config.param.width%} : {%$config.param.height%}</strong>
+					
+					<input name="sid" type="hidden" id="sid" value="pic"><!-- 上传后或当前的文件路径要使用的表单域 -->
+					<input name="path" type="hidden" id="path" value="{%$uploadpath%}/{%$smarty.get.pid%}"><!-- 目标文件的保存路径 -->
+					<input name="filename" type="hidden" id="filename" value="{%$filename%}"><!-- 无扩展名的目标保存名称 -->							
+				</div>
+				
+				<!-- 以下设置用于使用编辑器上传 -->
+				<div id="piceditor">
+					{%include file="$root/admin/page/script/piceditor/inc.html"%}
+				</div>
+				<input name="width" type="hidden" id="width" value="{%$config.param.width%}">
+				<input name="height" type="hidden" id="height" value="{%$config.param.height%}">
+			</td>
+		</tr>
+		{%/if%} 
+		
+		{%if !empty($config.param.fields.editor)%}
+		<tr>
+		    <td width="120" align="center" valign="top" style="padding:6px 0px;" bgcolor="#FFFFFF">内容</td>
+		    <td align="left" bgcolor="#FFFFFF">
+			{%$text%}
+		 	</td>
+		</tr>
+		<tr>
+	        <td align="center" valign="middle" bgcolor="#FFFFFF">
+	            发布时间
+	        </td>
+	        <td align="left" valign="middle" bgcolor="#FFFFFF">
+	            <input name="updatetime" id="updatetime" type="text" style='width:180px;' value="{%$updatetime|date_format:"%Y-%m-%d %H:%M:%S"%}" />
+	        </td>
+	    </tr>
+	    <tr>
+	        <td align="center" valign="top" title="所属的活动，选摘的网站" bgcolor="#FFFFFF">
+	            出处/来源
+	        </td>
+	        <td align="left" valign="middle" bgcolor="#FFFFFF">
+	            名称：<br/>
+	            <input name="cfg_owner" type="text" id="cfg_owner" class="textinput" value="{%$result.cfg.owner|default:''%}">
+				链接：<br/>
+	            <input name="cfg_ownerlink" type="text" id="cfg_ownerlink" class="textinput" value="{%$result.cfg.ownerlink|default:''%}"/>
+	        </td>
+	    </tr>
+		{%/if%}	
+		<tr>
+            <td align="center" valign="top" title="直接外链的视频信息" bgcolor="#FFFFFF">
+                视频信息
+            </td>
+            <td align="left" valign="middle" bgcolor="#FFFFFF">
+                资源地址：<br/>
+                <input name="cfg_videoSrc" type="text" id="cfg_videoSrc" class="textinput" value="{%$result.cfg.videoSrc|default:''%}">
+                尺寸：<br/>
+                <input name="cfg_videoSrcWidth" type="text" style="width:50px;" id="cfg_videoSrcWidth" value="{%$result.cfg.videoSrcWidth|default:480%}"/>
+				× <input name="cfg_videoSrcHeight" type="text" style="width:50px;" id="cfg_videoSrcHeight" value="{%$result.cfg.videoSrcHeight|default:400%}"/>
+            </td>
+        </tr>
+	    <tr>
+	        <td align="center" valign="middle" bgcolor="#FFFFFF">
+	            发布状态 
+	        </td>
+	        <td bgcolor="#FFFFFF">
+	            <input name="cfg_status" type="radio" value="Y" {%if !empty($result.cfg)%}{%if $result.cfg.status!='N'%}checked="checked"{%/if%}{%else%}checked="checked"{%/if%}/> 是<input name="cfg_status" type="radio" value="N" {%if !empty($result.cfg)%}{%if $result.cfg.status=='N'%}checked="checked"{%/if%}{%/if%}/> 否
+	        </td>
+	    </tr>
+		<tr>
+	        <td align="center" valign="middle" bgcolor="#FFFFFF">
+	            评论状态 
+	        </td>
+	        <td bgcolor="#FFFFFF">
+	            <input name="cfg_iscomment" type="radio" value="Y" {%if !empty($result.cfg)%}{%if $result.cfg.iscomment!='N'%}checked="checked"{%/if%}{%else%}checked="checked"{%/if%}/> 是<input name="cfg_iscomment" type="radio" value="N" {%if !empty($result.cfg)%}{%if $result.cfg.iscomment=='N'%}checked="checked"{%/if%}{%/if%}/> 否
+	        </td>
+	    </tr>
+		<tr>
+	        <td align="center" valign="middle" bgcolor="#FFFFFF">
+	            是否显示主图 
+	        </td>
+	        <td bgcolor="#FFFFFF">
+	            <input name="cfg_isshowmainpic" type="radio" value="Y" {%if !empty($result.cfg)%}{%if $result.cfg.isshowmainpic!='N'%}checked="checked"{%/if%}{%else%}checked="checked"{%/if%}/> 是<input name="cfg_isshowmainpic" type="radio" value="N" {%if !empty($result.cfg)%}{%if $result.cfg.isshowmainpic=='N'%}checked="checked"{%/if%}{%/if%}/> 否
+	        </td>
+	    </tr>
+		
+		<tr>
+			<td width="120" align="center" bgcolor="#FFFFFF">外链</td>
+			<td align="left" bgcolor="#FFFFFF">
+				<input name="link" type="text" id="link"  class="textinput" value="{%$result.link|default:''%}"/>
+			</td>
+		</tr>
+		{%if !empty($config.param.fields.editor) or !empty($config.param.fields.box)%}
+		<tr>
+			<td width="120" align="center" valign="top" bgcolor="#FFFFFF">访问</td>
+			<td align="left" bgcolor="#FFFFFF" style="line-height:24px;">
+				<input name="url" type="text" id="url"  onblur="piceditor.checkurl();" style="width:180px;" value="{%$result.url|default:''%}"/>
+				<br/>
+				访问标识只能使用大小写英文字符，数字，中下划线 [ A-Za-z0-9-_ ]; 此处留空系统会自动生成链接地址
+			</td>
+		</tr>
+		{%/if%}
+		<tr>  
+		    <td colspan="2" align="right" bgcolor="#FFFFFF">
+				<input name="itemid" type="hidden" id="itemid" value="{%$smarty.get.itemid|default:0%}">
+				<input name="mid" type="hidden" id="mid" value="{%$config.id%}">
+				<input name="reurl" type="hidden" id="reurl" value="{%$smarty.server.HTTP_REFERER%}">
+				<input name="pageid" type="hidden" id="pageid" value="{%$smarty.get.pid%}">
+			    <input name="position" type="hidden" id="position" value="{%$config.id%}">    
+				<input name="eid" type="hidden" id="eid" value="{%if !empty($result)%}{%$result.id%}{%else%}0{%/if%}">		    
+				<input name="cate" type="hidden" id="cate" value="{%$AppPrefix%}">
+				<input type="submit" name="Submit" value=" 保  存 "/>
+		    </td>
+	    </tr>	
+	</table>
+</form>

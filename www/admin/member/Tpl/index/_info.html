@@ -1,0 +1,129 @@
+<style>
+    .msg {
+        float: left;
+        color: gray;
+        height: 30px;
+        line-height: 30px;
+        padding: 0px;
+        margin: 0px 5px;
+    }
+	.sign{
+		font-family:"Comic Sans MS";
+		font-size:14px;
+		font-weight:bold;
+	}
+</style>
+<script language="JavaScript" type="text/javascript" src="/js/lib.js"></script>
+<script language="JavaScript" type="text/javascript" src="/admin/member/js/frame.js"></script>
+<div id='ifrBG'></div>
+<div id="ifrBox" style="background:transparent;  position:absolute;left:0px;top:150px;width:100%;margin-left:auto;margin-right:auto;	text-align:center;	z-index:3;	display:none;">
+    <table style="border:8px solid #FFF;" width="85%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+	        <td height="30" align="left">
+	            <div style="float:left;font-size:14px;padding:0px 8px;line-height:26px;" id="ifrBoxTitle"></div>
+				<div style="float:right;font-size:14px;padding:0px 8px;line-height:26px;cursor:pointer;" onclick="frame.closed();">关闭</div>
+	        </td>
+    	</tr>
+		<tr>
+            <td align="center" valign="middle" style="background-color:#FFFFFF;">
+                <iframe id="ifrFrame" src="/admin/member/blank.html" height="450" width="100%" frameborder="no" scrolling="auto"></iframe>
+            </td>
+        </tr>
+    </table>
+</div>
+<table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+    <tr class="dhbg">
+        <td height="30" colspan="3" style="padding-left:10px;">
+            详细信息 
+        </td>
+    </tr>
+    <tr>
+        <td width="120" height="30" bgcolor="#FFFFFF" align="right">
+            真实姓名: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%$rs.truename|default:'--'%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            身份标识: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.identitycard|default:'--'%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            性别: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.sex|default:'--'%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            生日: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.birthday|date_format:"%Y-%m-%d"|default:'--'%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            手机: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.cellphone|default:'--'%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            电话: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.telephone|default:'--'%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            公司: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%$rs.company|default:'--'%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            地址: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%$rs.address1|default:''%}  {%$rs.address2|default:''%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            邮编: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            <span class="sign">{%$rs.zipcode|default:'--'%}</span>
+        </td>
+    </tr>
+	<tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            支付方式: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%if !empty($rs.payinfo)%}
+			<span class="sign">
+				{%$rs.paymethod%}: 
+				{%$rs.payinfo|default:'--'%}
+			</span>
+				&nbsp;&nbsp; 
+				<a href="$" onclick="frame.top=80;frame.load(this,'http://baidu.com/');return false;" style="color:#06C;font-size:14px;">查看付款记录</a>
+			{%else%}
+				--
+			{%/if%}
+        </td>
+    </tr>
+</table>

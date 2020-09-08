@@ -1,0 +1,106 @@
+<script language="JavaScript" type="text/javascript">
+    <!--
+    function checksubmit(){                
+		var enReg = /^[A-Za-z0-9-_]+$/;
+		if ((g("name").value) == "") {
+            window.alert('请填写名称！');
+            g("name").select();
+            g("name").focus();
+            return false;
+        }else if ((g("url").value) == "") {
+            window.alert('请填写访问标识！');
+            g("url").select();
+            g("url").focus();
+            return false;
+        }else if(!enReg.test(g("url").value)){
+			alert('只能使用大小写英文字符，数字，中下划线作为访问标识！');	
+			g("url").select();
+            g("url").focus();
+			return false;
+		}else if(!isNaN(g("url").value)){
+			alert('访问标识不能为纯数字！');	
+			g("url").select();
+            g("url").focus();
+			return false;
+		}else {
+            g("Submit").value = "数据提交中……";
+            g("Submit").disabled = true;
+            return true;
+        }
+    } function c(val) {
+		if(val==0){
+			var msg="当前页面中访问标识'"+g("url").value+"'已经被使用!";
+			alert(msg);
+			g("url").select();
+            g("url").focus();
+		}
+	}
+	function checkurl(){
+		if(g("url").value=='') return;
+		var id=(g('eid'))?g('eid').value:0;
+		x_checklevel(g("url").value,g("pid").value,g("cate").value,id,c);
+	}           
+    //-->
+</script>
+<script language="JavaScript" type="text/javascript" src="/admin/page/script/checklevel.php"></script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <form action="{%$smarty.server.SCRIPT_NAME%}?act=post&mid={%$mid%}&rid={%$rid%}&sid={%$smarty.get.sid%}&cate={%$smarty.get.cate%}" method="post" name="form1" id="form1" onSubmit="javascript:return checksubmit();">
+        <tr>
+            <td align="center">
+                <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1"  class="color1" style="vertical-align:top;">
+                    <tr class="dhbg">
+                        <td width="13%" height="18" align="center">
+                            项&nbsp;&nbsp;&nbsp;&nbsp;目
+                        </td>
+                        <td width="87%" align="left">
+                            内容
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" bgcolor="#FFFFFF">
+                            名&nbsp;&nbsp;&nbsp;&nbsp;称
+                        </td>
+                        <td align="left" valign="top" bgcolor="#FFFFFF">
+                            <input name="name" type="text" id="name" style="width:100%;"  value="{%$rs.name|default:''%}"/>
+                        </td>
+                    </tr>
+					<tr>
+                        <td align="center" bgcolor="#FFFFFF">
+                            标&nbsp;&nbsp;&nbsp;&nbsp;识
+                        </td>
+                        <td align="left" bgcolor="#FFFFFF">
+                            <input name="url" type="text" id="url" style="180px;" onblur="checkurl();" value="{%$rs.url|default:''%}"/> 
+							[ 同一类型下不可重复,访问标识只能使用大小写英文字符，数字，中下划线 ]
+                        </td>
+                    </tr>
+					<tr>
+                        <td align="center" valign="top" bgcolor="#FFFFFF">
+                           状&nbsp;&nbsp;&nbsp;&nbsp;态
+                        </td>
+                        <td align="left" valign="top" bgcolor="#FFFFFF">
+                            <input name="status" type="radio"  value="Y" {%if !empty($rs)%}{%if $rs.status!='N'%}checked="checked"{%/if%}{%else%}checked="checked"{%/if%}/> 是
+							<input name="status" type="radio"  value="N" {%if !empty($rs)%}{%if $rs.status=='N'%}checked="checked"{%/if%}{%/if%}/> 否
+                        </td>
+                    </tr>
+					<tr>
+                        <td align="center" valign="top" bgcolor="#FFFFFF">
+                            说&nbsp;&nbsp;&nbsp;&nbsp;明
+                        </td>
+                        <td align="left" valign="top" bgcolor="#FFFFFF">
+							<textarea name="note" id="note" style="width:100%;" rows="4">{%$rs.note|default:''%}</textarea>
+                        </td>
+                    </tr>
+					<tr>
+                        <td colspan="2" align="right" bgcolor="#FFFFFF">
+							<input name="mid" id="mid" type="hidden" value="{%$smarty.get.mid|default:0%}"/>
+							<input name="pid" id="pid" type="hidden" value="{%$smarty.get.sid%}"/>
+							<input name="eid" id="eid" type="hidden" value="{%$rs.id|default:0%}"/>
+							<input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+							<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </form>
+</table>

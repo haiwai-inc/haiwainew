@@ -1,0 +1,81 @@
+<script language='JavaScript'>
+	function doSwitch(id,tabname){
+		var menulist=document.getElementById('topMenu').getElementsByTagName('a');
+		for(var i=0;i<menulist.length;i++){
+			if(menulist[i].innerHTML!=tabname) 
+				menulist[i].style.fontWeight='';
+			else
+				menulist[i].style.fontWeight='bold';
+		}
+		
+		var list=document.getElementsByName('confArea');
+		for(var i=0;i<list.length;i++){
+			if(list[i].id!=id) list[i].style.display='none';
+		}
+		document.getElementById(id).style.display='';		
+	}	
+</script>
+<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td id="topMenu" style='font-size:14px;' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+        	{%foreach name=result from=$value key=key item=val%}
+			{%if $smarty.foreach.result.index!=0%}&nbsp;|&nbsp;{%/if%}
+			<a href="javascript:doSwitch('tab_{%$key%}','{%$key%}');" class='tishilink' {%if $key=='system'%}style="font-weight:bold;"{%/if%}>{%$key%}</a>
+			{%/foreach%}
+        </td>
+    </tr>
+</table>
+<form id="form1" name="form1" method="post" action="{%$smarty.server.SCRIPT_NAME%}?pid={%$smarty.get.pid%}">
+	{%if !empty($smarty.get.status) %}
+	<table name='confArea' id='tab_suc' width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+	    <tr class="dhbg">
+	        <td style='font-size:14px;font-weight:bold;' height="25" align="left">
+	            Message
+	        </td>
+	    </tr>
+	    <tr>
+	        <td style='font-size:14px;font-weight:bold;' colspan='2' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+	        	<h3 style="margin-top:8px;">数据已经成功保存！</h3>
+					<br/>
+					<br/>
+	        </td>
+	    </tr>
+	</table>
+	{%/if%}
+	{%foreach from = $value key=key item=val%}
+	<table name='confArea' id='tab_{%$key%}' style="display:{%if $key!='system' || !empty($smarty.get.status) %}none{%/if%};" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+	    <tr class="dhbg">
+	        <td style='font-size:14px;font-weight:bold;' height="25" align="left">
+	            {%$key%}
+	        </td>
+	    </tr>
+	    <tr>
+	        <td style='font-size:14px;font-weight:bold;' colspan='2' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+				<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+				    {%foreach from=$val key=k item=v%}
+					<tr>
+				        <td align="right" valign="middle" width='120' height="25" style='font-size:14px;font-weight:bold;'>{%$k%}:</td>
+						<td align="left" valign="middle" height="25">
+							<input name="item__{%$key%}__{%$k%}" id="item__{%$key%}__{%$k%}" type="text" value="{%$v%}" style='font-size:14px;width:100%'/>
+						</td>
+				    </tr>{%/foreach%}
+				</table>
+	        </td>
+	    </tr>
+	</table>{%/foreach%}
+	
+	<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+	    <tr>
+	    	<td align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+	        	* 注：所有留空的项目会自动调用系统默认的参数值
+	        <td>
+	        <td align="right" valign="middle" height="25" bgcolor="#FFFFFF">
+				<input name="pid" id="pid" type="hidden" value="{%$smarty.get.pid%}"/>
+				<input type="submit" name="Submit" id="Submit" value="保存" />&nbsp;&nbsp;
+	        	<input name="Reset" type="reset" id="Reset" value="重置" />
+	        </td>
+	    </tr>
+	</table>
+</form>
+<br/>
+<br/>

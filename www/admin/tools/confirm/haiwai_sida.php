@@ -1,0 +1,226 @@
+<?php
+//####  /admin/tools/confirm.php?item=haiwai_sida
+
+//用户中心测试
+return array(
+	'title'=>'海外同城',
+	'admin'=>'注册用户',
+	'func'=>array(
+		"<span style='color:red'>后台用户测试</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php</span>",
+		"查询用户 - 用户ID查询",
+		"查询用户 - 邮箱查询",
+		"查询用户 - 昵称查询",
+		"查询用户 - 时间查询",
+		"查询用户 - 查询数据是否符合标准",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=view&pk_id=12797</span>",
+		"浏览用户 - 编辑用户",
+		"浏览用户 - 删除用户",
+		"浏览用户 - 封锁用户",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=edit&pk_id=12797</span>",
+		"编辑用户 - 查看昵称是否被占用",
+		"编辑用户 - 数据是否吻合",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=edit</span>",
+		"创建用户 - 查看邮箱是否被占用",
+		"创建用户 - 查看昵称是否被占用",
+		"创建用户 - 数据输入与创建",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=blacklist</span>",
+		"黑名单 - 用户封锁显示是否正确",
+		"黑名单 - 查询数据是否符合标准",
+		"",
+		"<span style='color:red'>后台文章测试</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php</span>",
+		"文章查询 - 分类查询",
+		"文章查询 - 标题查询",
+		"文章查询 - 关键词查询",
+		"文章查询 - 笔名查询",
+		"文章查询 - 邮箱查询",
+		"文章查询 - 文章置顶/落顶",
+		"文章查询 - 文章删除",
+		"文章查询 - 查询数据是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php?act=post</span>",
+		"发表文章 - 数据输入是否正确",
+		"发表文章 - 文章分类是否吻合创建的文章分类",
+		"发表文章 - 文章关键字输入是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php?act=view&id=32</span>",
+		"查看文章 - 数据显示是否正确",
+		"查看文章 - 文章编辑",
+		"查看文章 - 文章删除",
+		"查看文章 - 文章置顶/落顶",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php?act=post&id=32</span>",
+		"编辑文章 - 数据显示是否正确",
+		"编辑文章 - 文章分类是否正确",
+		"编辑文章 - 文章关键字是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php?act=category</span>",
+		"文章分类管理 - 创建文章分类",
+		"文章分类管理 - 删除文章分类",
+		"文章分类管理 - 修改文章分类",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_article.php?act=edit_category&category_id=25</span>",
+		"编辑文章分类 - 数据是否吻合",
+		"",
+		"<span style='color:red'>后台生活工具测试</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/admin_tools.php</span>",
+		"生活工具管理 - 数据是否吻合",
+		"",
+		"<span style='color:red'>后台实名认证测试</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=user_confirm</span>",
+		"实名认证 - 邮箱查询",
+		"实名认证 - 查询数据是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/account/admin.php?act=user_verify&fk_member_id=11477</span>",
+		"审核用户 - 通过认证",
+		"审核用户 - 取消认证",
+		"审核用户 - 查询数据是否正确",
+		"",
+		"<span style='color:red'>前台用户测试</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=index</span>",
+		"用户首页 - 分类广告 黄页商铺 系统消息 计数是否正确",
+		"http://beta.haiwai.com/account/space.php?act=profile",
+		"用户基本信息 - 用户所在地是否自动吻合但前地区",
+		"用户基本信息 - 数据输入",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=password</span>",
+		"用户修改密码 - 旧密码是否吻合",
+		"用户修改密码 - 新密码是否确认",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=confirm</span>",
+		"用户实名认证 - 查询信息是否正确",
+		"用户实名认证 - 图片上传是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=msg</span>",
+		"用户消息管理 - 查询信息是否正确",
+		"用户消息管理 - 标记为已读",
+		"用户消息管理 - 标记为未读",
+		"用户消息管理 - 选择多个消息删除",
+		"用户消息管理 - 选择单条消息删除",
+		"用户消息管理 - 选择一条消息查看",
+		"用户消息管理 - 测试发送消息的所有种可能",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=msg_view&id=1</span>",
+		"用户查看消息 - 显示信息是否正确",
+		"用户查看消息 - 返回消息管理",
+		"用户查看消息 - 删除这条消息",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=classifiedinfo</span>",
+		"用户分类广告 - 显示已发布的",
+		"用户分类广告 - 显示已删除的",
+		"用户分类广告 - 查看分类广告",
+		"用户分类广告 - 编辑分类广告",
+		"用户分类广告 - 删除分类广告",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=biz&type=ownerID</span>",
+		"用户黄页商铺 - 显示我拥有的商铺",
+		"用户黄页商铺 - 显示我管理的商铺",
+		"用户黄页商铺 - 查看商铺",
+		"<span style='color:blue'>http://beta.haiwai.com/account/space.php?act=feedback</span>",
+		"用户联系客服 - 输入数据提交",
+		"用户联系客服 - 查看email是否收到 (support@haiwai.com)(haiwai2015)",
+		"",
+		"<span style='color:red'>海外生活指南</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/</span>",
+		"生活指南 - 热门工具",
+		"生活指南 - 热门推荐文章分类",
+		"生活指南 - 热门推荐文章精华图",
+		"生活指南 - 热门推荐文章列表",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/tools.php?toolname=visa</span>",
+		"生活工具 - 导航条显示是否正确",
+		"生活工具 - 查看8个工具的文章",
+		"生活工具 - 右栏相关推荐",
+		"生活工具 - 右栏相关文章",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/?act=list&category_id=25</span>",
+		"生活指南列表页 - 导航条显示是否正确",
+		"生活指南列表页 - 信息列表显示是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/lifetools/?act=view&id=32</span>",
+		"生活指南文章显示 - 导航条显示是否正确",
+		"生活指南文章显示 - 分享微信",
+		"生活指南文章显示 - 右栏四个小图",
+		"生活指南文章显示 - 右栏相关推荐",
+		"生活指南文章显示 - 右栏相关文章",
+		"生活指南文章显示 - 底栏词条标签",
+		"生活指南文章显示 - 底栏下一篇文章标题",
+		"",
+		"<span style='color:red'>页头</span>",
+		"登录框 - 快速登录框弹出效果",
+		"登录框 - 用户名显示是否正确",
+		"登录框 - 用户登录",
+		"登录框 - 用户注销",
+		"<span style='color:blue'>http://beta.haiwai.com/page/site.php</span>",
+		"切换城市 - 显示区域是否正确",
+		"切换城市 - 切换所在区域",
+		"",
+		"<span style='color:red'>页脚</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/page/site.php?act=about</span>",
+		"关于我们 - 文字显示是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/page/site.php?act=agreement</span>",
+		"用户协议 - 文字显示是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/page/site.php?act=privacy</span>",
+		"隐私条款 - 文字显示是否正确",
+		"<span style='color:blue'>http://beta.haiwai.com/page/site.php?act=contact</span>",
+		"联系我们 - 文字显示是否正确",
+		"",
+		"<span style='color:red'>登录 注册 密码 确认 (为修改 与原先程序兼容 只检查页面布局与链接即可)</span>",
+		"beta.haiwai.com/account/?c=account&act=login",
+		"主登录页面 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/account/?c=account&act=signup</span>",
+		"注册页面 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/account/?c=account&act=signup</span>",
+		"邮箱认证 - 显示(与注册页面相同url 需实际操作)",
+		"<span style='color:blue'>http://beta.haiwai.com/account/?c=account&act=activate&code=c8cfdd3cfb308f314483c6fe0ee51ab3</span>",
+		"成为会员 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/account/?c=account&act=reset</span>",
+		"找回密码 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/account/?c=account&act=change_pwd</span>",
+		"修改密码 - 显示",
+		"",
+		"<span style='color:red'>帮助中心</span>",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php</span>",
+		"如何注册 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=fwpd</span>",
+		"忘记密码 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=release</span>",
+		"如何发布免费分类广告 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=manage</span>",
+		"如何管理/查看发布的信息 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=modify</span>",
+		"如何修改发布的信息 - 显示",
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=delete</span>",
+		"如何删除已发布的信息 - 显示", 
+		"<span style='color:blue'>http://beta.haiwai.com/page/help.php?act=search</span>",
+		"如何查找/筛选信息 - 显示",
+	),
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"other"=>array(
+		"更改邮箱发送邮件是否收到",
+		"更改邮箱后未激活帐号,用户帐号是否冻结",
+		"激活邮箱后是否重新开启用户帐号,并且邮箱改变",
+		"更改密码是否发送邮件",
+	),
+);

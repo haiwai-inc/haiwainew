@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>menu</title>
+        <script language="JavaScript" type="text/javascript" src="/admin/dashboard/script/menu.js"></script>
+		<link href="/css/admin/menu.css" rel="stylesheet" type="text/css"/>
+        <base target="mainFrame">
+    </head>
+    <body onLoad="menuheight();" onResize="menuheight();">
+        <div id="top">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td height="55" align="center" class="bb">
+                        <img src="/images/admin/logo.gif" width="180" height="50" border="0">
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" height="22" border="0" cellpadding="0" cellspacing="0" class="bb">
+                <tr>
+                    <td align="left" valign="middle" background="/images/admin/face/{%$userface%}/FoldersHeaderTableBg.gif" style="padding:0px 0px 0px 10px;">
+                    	用户：{%$smarty.session.NickName%}
+					</td>	
+					<td align="right" valign="middle" background="/images/admin/face/{%$userface%}/FoldersHeaderTableBg.gif">
+						<select name="goto" onchange="goUrl( this.value );">
+							<option value="">GoTo</option>
+							<option value="/admin/?act=changeSkin">{%$lang.admin.skin%}</option>
+							<option value="/passport/profile.php?act=adminpasswd&redirect={%$returnurl%}">{%$lang.admin.password%}</option>
+							<option value="/passport/index.php?act=logout&redirect={%$returnurl%}">{%$lang.admin.logout%}</option>
+						</select>
+					</td>
+                </tr>
+            </table>
+        </div>
+		{%if $menulist.type=="Multi"%}
+        <table name="info" id="info" width="100%" border="0" cellpadding="0" cellspacing="0" class="menutdbg">
+            <tr>
+                <td align="center" valign="top">                    
+                    <!--第一级循环开始-->
+					{%foreach from=$menulist.list item=val%}
+					<table border="0" align="center" cellpadding="0" cellspacing="0" id="menulist{%$val.id%}" style="display:{%if $val.switch%}inline{%else%}none{%/if%};">
+                        <tr>
+                            <td>
+                            	<!--主类名称-->
+                                <table width="170" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td height="20" align="left">
+                                            <strong>{%$val.name%}</strong>
+                                        </td>
+                                    </tr>
+                                </table>
+								{%foreach from=$val.sublist item=v%}
+								{%if !empty($v.sublist)%}
+								<!--有子类的选项-->
+                                <table width="170" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="20" align="left">
+                                            <img src="/images/admin/menuicon/{%$v.icon%}.gif" name="piclevel_1_{%$v.id%}"  id="piclevel_1_{%$v.id%}" onClick="ShowMenu('menulist{%$val.id%}','level_1_','{%$v.id%}','div');return false;" style="cursor:pointer;">
+                                        </td>
+                                        <td align="left">
+                                            &nbsp;<a href="{%$v.link%}" onClick="ShowMenu('menulist{%$val.id%}','level_1_','{%$v.id%}','div');return false;" class="menulink">{%$v.name%}</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div id='menulevel_1_{%$v.id%}' style="display:{%if $v.switch%}inline{%else%}none{%/if%};">                                    
+                                		{%include file="panel/inc.menu.html"%}
+								</div>	
+								{%else%}							
+								<!--无子类的选项-->
+                                <table width="170" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="20" align="left">
+                                            <img src="/images/admin/menuicon/{%$v.icon%}.gif" >
+                                        </td>
+                                        <td align="left">
+                                            <a href="{%$v.link%}" class="menulink">{%$v.name%}</a>
+                                        </td>
+                                    </tr>                                    
+                                </table>
+								{%/if%}
+								{%/foreach%}
+                            </td>
+                        </tr>
+                    </table> 
+					{%/foreach%}
+					<!--第一级循环结束-->                 
+                </td>
+            </tr>
+        </table>		
+        <div id="bottom">
+            <ul id="mainlb">
+            	{%foreach from=$menulist.list item=v%}
+				<li  id="li{%$v.id%}" onMouseOver="ChangeLink('{%$v.id%}','on','{%$userface%}')" onMouseOut="ChangeLink('{%$v.id%}','off','{%$userface%}')"   onClick="ShowMenuList('{%$v.id%}')" style="background:url(/images/admin/face/{%$userface%}/dhbg1.jpg);">
+            		<span id="span{%$v.id%}" class="lb0">{%$v.name%}</span>
+            	</li>	
+				{%/foreach%}			
+			</ul>			
+        </div>
+	 	{%else%}
+		<table name="info" id="info" width="100%" border="0" cellpadding="0" cellspacing="0" class="menutdbg">
+            {%foreach from=$menulist.list item=val%}<tr>
+                <td align="center" valign="top">
+                	<!--主类名称-->
+                    <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0">
+                     <td width="20" align="left">
+                            <img src="/images/admin/menuicon/{%$val.icon%}.gif" >
+                        </td>
+                        <td align="left">
+                            <a href="{%$val.link%}" class="menulink">{%$val.name%}</a>
+                        </td>
+                      <tr>
+                    </table>					
+					{%if !empty($val.list)%}
+					<!--有子类的选项-->
+                    <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        {%foreach from=$val.list item=v%}<tr>                            
+                            <td height="25" align="left">
+                               <a href="{%$v.link%}" class="menulink" style="font-size:14px;margin-left:15px;">{%$v.name%}</a>
+                            </td>
+                        </tr>
+						{%/foreach%}
+                    </table>
+				    {%/if%} 
+				</td>
+            </tr>
+			{%/foreach%}
+        </table>
+		{%/if%}		
+    </body>
+</html>

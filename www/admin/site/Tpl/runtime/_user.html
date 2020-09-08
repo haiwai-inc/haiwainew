@@ -1,0 +1,173 @@
+<script language='JavaScript'>
+	var tabID=''; 
+	function doSwitch(id,tabname){
+		tabID=id;
+		var menulist=document.getElementById('topMenu').getElementsByTagName('a');
+		for(var i=0;i<menulist.length;i++){
+			if(menulist[i].innerHTML!=tabname) 
+				menulist[i].style.fontWeight='';
+			else
+				menulist[i].style.fontWeight='bold';
+		}
+		
+		var list=document.getElementsByName('confArea');
+		for(var i=0;i<list.length;i++){
+			if(list[i].id!=id) list[i].style.display='none';
+		}
+		document.getElementById(id).style.display='';		
+	}
+	function checkAllItem(status) {
+		var list=document.getElementById(tabID).getElementsByTagName('input');
+		for ( var i = 0; i < list.length; i++) {
+			if(list[i].name=="id[]") {
+				if(list[i].checked != status) list[i].checked = status;
+			}
+			
+			//对全不选处理 
+			if(!status){
+				if(list[i].name=="isNull[]") list[i].checked = status;
+			}
+		}
+	}
+	function checkID(id,type){
+		var idSelect= "item_id_" + tabID + id;
+		var idEssential= "item_isNull_" + tabID + id;
+		
+		if(type=='id'){
+			if( document.getElementById( idSelect ).checked==false ) document.getElementById( idEssential ).checked=false;
+		}
+		if(type=='isNull'){
+			if( document.getElementById( idEssential ).checked==true ) document.getElementById( idSelect ).checked=true;
+		}
+	}
+</script>
+<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td id="topMenu" style='font-size:14px;' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+        	{%foreach name=result from=$catelist item=val%}
+			{%if $smarty.foreach.result.index!=0%}&nbsp;|&nbsp;{%/if%}
+			<a href="javascript:doSwitch('tab_{%$val.id%}','{%$val.name%}');" class='tishilink' {%if $smarty.foreach.result.index==0%}style="font-weight:bold;"{%/if%} title="{%$val.description%}">{%$val.name%}</a>
+			{%/foreach%}
+        </td>
+        <td align="right">
+			<a href="#" class="tishilink" onClick="checkAllItem(true);return false;">全选</a>
+			&nbsp;|&nbsp;
+			<a href="#" class="tishilink" onClick="checkAllItem(false);return false;">全不选</a>
+        </td>
+    </tr>
+</table>
+<form id="formlist" name="formlist" method="post" action="{%$smarty.server.SCRIPT_NAME%}?act=userPost&pid={%$smarty.get.pid%}" target="_self" style="margin:0px;padding:0px;">
+	{%if !empty($smarty.get.status) %}
+	<table name='confArea' id='tab_suc' width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+	    <tr class="dhbg">
+	        <td style='font-size:14px;font-weight:bold;' height="25" align="left">
+	            Message
+	        </td>
+	    </tr>
+	    <tr>
+	        <td style='font-size:14px;font-weight:bold;' colspan='2' align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+	        	<h3 style="margin-top:8px;">数据已经成功保存！</h3>
+					<br/>
+					<br/>
+	        </td>
+	    </tr>
+	</table>
+	{%/if%}
+	{%if empty($catelist)%}
+	<table name='msgtb' width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+		<tr class="dhbg">
+			<td align="left"height="24">
+                系统提示：
+            </td>
+        </tr>
+        <tr>
+            <td height="24" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;暂无可用的字段定义，请<a href="/admin/member/cateDefine.php" class="tishilink">单击此处</a>设置！
+            </td>
+        </tr>
+    </table>
+	{%else%}
+	{%foreach name=mainlist from=$catelist item=cate%}
+	{%if $smarty.foreach.mainlist.index==0%}<script language='JavaScript'>tabID='tab_{%$cate.id%}';</script>{%/if%}
+	<table name='confArea' id='tab_{%$cate.id%}' style="display:{%if $smarty.foreach.mainlist.index!=0 || !empty($smarty.get.status)%}none{%/if%};" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+		<tr class="dhbg">
+			<td align="center" width="40" height="24">
+                选项
+            </td>
+            <td align="center" width="40">
+                必填
+            </td>
+            <td align="left" width="200">
+                名称
+            </td>
+            <td align="center" width="60">
+                类型
+            </td>
+			<td align="left">
+                内容
+            </td>
+        </tr>
+        {%if !empty($cate.define)%}
+	    {%foreach name=result from=$cate.define key=k item=value%}
+	    {%assign var="indexNum" value=$smarty.foreach.result.index+1%}
+		<tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$smarty.foreach.result.index+1%}" onMouseOver="MouseColorOver('bgtr_{%$smarty.foreach.result.index+1%}');" onMouseOut="MouseColorOut('bgtr_{%$smarty.foreach.result.index+1%}');">
+			<td align="center">
+                <input type="checkbox" {%if !empty($rs[$value.id])%}checked="checked"{%/if%} name="id[]" id="item_id_tab_{%$cate.id%}{%$indexNum%}" value="{%$value.id%}" onclick="checkID('{%$indexNum%}','id');">
+            </td>
+            <td align="center">
+                <input type="checkbox" name="isNull[]" {%if !empty($rs[$value.id])%}{%if $rs[$value.id].isNull=='Y'%}checked="checked"{%/if%}{%/if%} id="item_isNull_tab_{%$cate.id%}{%$indexNum%}" onclick="checkID('{%$indexNum%}','isNull');" value="{%$value.id%}">
+            </td>
+	        <td align="left" style="font-size:14px;">
+                {%$value.name%}
+            </td>
+            <td align="center">
+                {%$value.typename%}
+            </td>
+            <td align="left">
+           		{%if $value.type=='select' && !empty($value.typelist)%}
+                	<select name="demo">
+                	{%foreach from=$value.typelist key=key item=val%}
+                	<option value='{%$key%}'{%if $value.defaultValue==$val%} selected="selected"{%/if%}>{%$val%}</option>
+                	{%/foreach%}
+                	</select>
+                {%/if%}
+                {%if $value.type=='checkbox' && !empty($value.typelist)%}
+                	{%foreach name=count from=$value.typelist key=key item=val%}
+                		<input name="demo" type="checkbox" value="{%$key%}" {%if !empty($value.checklist[$val])%} checked="checked"{%/if%}> {%$val%} &nbsp;&nbsp;
+                		{%if $smarty.foreach.count.index mod 4 ==3%}<br>{%/if%}
+                	{%/foreach%}
+                {%/if%}
+                {%if $value.type!='select'&&$value.type!='checkbox'%}
+                	{%$value.defaultValue%}
+                {%/if%}
+            </td>
+	    </tr>
+	    {%/foreach%}
+	    {%else%}
+	    <tr>
+            <td height="24" colspan="5" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;暂无可用字段！
+            </td>
+        </tr>
+        {%/if%}
+    </table>
+	{%/foreach%}
+	{%/if%}
+	
+	<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+	    <tr>
+	    	<td align="left" valign="middle" height="25" bgcolor="#FFFFFF">
+				<a href="#" class="tishilink" onClick="checkAllItem(true);return false;">全选</a>
+				&nbsp;|&nbsp;
+				<a href="#" class="tishilink" onClick="checkAllItem(false);return false;">全不选</a>
+	        <td>
+	        <td align="right" valign="middle" height="25" bgcolor="#FFFFFF">
+				<input name="pid" id="pid" type="hidden" value="{%$smarty.get.pid%}"/>
+				<input type="submit" name="Submit" id="Submit" value="保存" />&nbsp;&nbsp;
+	        	<input name="Reset" type="reset" id="Reset" value="重置" />
+	        </td>
+	    </tr>
+	</table>
+</form>
+<br/>
+<br/>

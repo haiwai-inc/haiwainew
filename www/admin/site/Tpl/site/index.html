@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{%$page_title%}</title>
+        <meta http-equiv=Pragma content=no-cache>
+        <meta http-equiv=expires content=0>
+        <meta http-equiv="cache-control" content="no-store">
+        <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>		
+        <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+        <script language="JavaScript" type="text/javascript" src="/js/admin.js"></script>
+		<script language="JavaScript" type="text/javascript">
+			var doAct={
+				g:function(sid){
+					return document.getElementById(sid);
+				},
+				reload:function(){
+					alert('您的登录状态已超时，请重新登录！');
+					window.location.reload();
+				},
+				//排序功能
+				up:function(n){
+					var sourceTR=this.g('bgtr_'+n);
+					if(sourceTR.rowIndex==1){
+						alert('已经到顶了！');
+						return;
+					}
+					x_doUp(n,this.doUp);
+				},
+				down:function(n){
+					var p=this.g('bgtr_0').parentNode;
+					var sourceTR=this.g('bgtr_'+n);
+					if(sourceTR.rowIndex==p.rows.length-1){
+						alert('已经到底了！');
+						return;
+					}
+					x_doDown(n,this.doDown);					
+				},
+				doUp:function(n){
+					if (!n) {	doAct.reload();return;}
+					var sourceTR=doAct.g('bgtr_'+n);
+					var p=doAct.g('bgtr_0').parentNode;
+					
+					var el=sourceTR.cloneNode(true);
+					el.onmouseover=sourceTR.onmouseover;
+					el.onmouseout=sourceTR.onmouseout;
+					
+					var baseRowIndex=sourceTR.rowIndex-1;
+					p.deleteRow(sourceTR.rowIndex);
+					p.insertBefore(el,p.rows[baseRowIndex]);
+				},
+				doDown:function(n){
+					if (!n) {	doAct.reload();return;}
+					var p=doAct.g('bgtr_0').parentNode;
+					var sourceTR=doAct.g('bgtr_'+n);
+					var el=sourceTR.cloneNode(true);
+					el.onmouseover=sourceTR.onmouseover;
+					el.onmouseout=sourceTR.onmouseout;
+								
+					if(sourceTR.rowIndex==p.rows.length-2){
+						p.deleteRow(sourceTR.rowIndex);	
+						p.appendChild(el);
+					}else{
+						var baseRowIndex=sourceTR.rowIndex+1;		
+						p.deleteRow(sourceTR.rowIndex);	
+						p.insertBefore(el,p.rows[baseRowIndex]);
+					}
+				}
+			}
+		</script>
+		<script language="JavaScript" type="text/javascript" src="script/sitelist.php"></script>	
+	</head>
+<body>
+<div id="top">
+    <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+        <tr>
+            <td align="left">
+                &nbsp;&nbsp;<span class="whitelink">{%$page_title%}</span>
+            </td>
+            <td align="right" class="whitestyle">
+            	<form  name="searchform" id="searchform" method="get" action="index.php" target="_self" style="margin:0px;padding:0px;">
+					<input type="submit" name="submit" id="submit" value="搜索域名" style="margin:0px;padding:0px;"/>
+					<input name="domain" type="text" id="domain" value="{%$smarty.get.domain|default:''%}" style="margin:0px;padding:0px;">
+					&nbsp;&nbsp;
+					切换到：
+	            	{%if isset($typelist)%}
+					<select name='sort' id='sort' onchange='self.location="index.php?sort="+this.value;' style="margin:0px;padding:0px;">
+			        	{%foreach from=$typelist key=key item=val%}
+						<option value='{%$key%}'{%if $smarty.get.sort==$key%} selected='selected'{%/if%}>{%$val%}</option>
+						{%/foreach%}
+					</select>{%/if%}
+					&nbsp;&nbsp;&nbsp;
+				</form>				
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bline">
+        <tr>
+            <td>
+                <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24">
+                            				您的位置：>> <a href='./index.php' class='tishilink'>{%$page_title%}</a>
+                        </td>
+                        <td align="right"> 
+							<input name="chkall" type="checkbox" onClick="CheckAll()" id="chkall">
+							<a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+			                | <a href="index.php?act=add" class="tishilink">新建</a>
+							| <a href="javascript:subform('config.php?act=update');" class="tishilink">修改</a> 
+							| <a href="javascript:subform('config.php?act=copy');" class="tishilink" onclick="javascript:return checkclick('确定复制吗?');">复制</a>
+			                | <a href="javascript:subform('index.php?act=del');" class="tishilink" onclick="javascript:return checkclick('确定删除吗?');">删除</a>             	 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+	<table width="100%" height="6" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--设置应用程序-->
+<div style="clear:both;">
+<form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <input name="checkid" type="hidden" id="checkid" value="">
+            <td>
+                <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                    <tr class="dhbg" id="bgtr_0">
+                        <td width="40" height="24" align="center">
+                            序号
+                        </td>
+                        <td align="left" width="200">
+                            站点名称
+                        </td>
+						<td align="left">
+              		    备注             
+                        </td>
+						<td align="center" width="60">
+              		    排序             
+                        </td>					
+                        <td align="center" width="40" align="center">
+                            选项
+                        </td>
+                    </tr>
+                    {%if !empty($result)%}
+                    {%foreach from=$result name=result  item=value%}
+					{%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+                       <tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$value.id%}" onMouseOver="MouseColorOver('bgtr_{%$value.id%}');" onMouseOut="MouseColorOut('bgtr_{%$value.id%}');">
+					 	<td align="center">
+						<strong>{%$indexNum%}</strong>
+                        </td>
+                        <td align="left" width="180">
+                            <a href="./app.php?pid={%$value.id%}&tab=home" class="tishilink" title="{%$value.slogan%}">{%$value.name%}</a>
+                        </td>
+						<td align="left">
+                            {%if !empty($value.description)%}{%$value.description%}{%else%}(空){%/if%}
+                        </td>
+						<td align="center">
+							<img src="/images/admin/up.gif" alt="向上" border='0' style="cursor: pointer;" onclick="doAct.up({%$value.id%});">
+							<img src="/images/admin/down.gif" alt="向下" border='0' style="cursor: pointer;" onclick="doAct.down({%$value.id%});">
+						</td>	
+                        <td align="center">
+                            <input type="checkbox" name="pid[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$value.id%}','#FFFFFF'); unCheckAll();">
+                        </td>						
+                    </tr>
+					{%/foreach%}
+                    {%else%}
+                    <tr>
+                        <td height="24" colspan="7" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                            &nbsp;当前记录为空！
+                        </td>
+                    </tr>
+					{%/if%} 
+                </table>
+				<table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24" align="left">
+                            <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+                        </td>
+                        <td align="right">
+                            {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+                        </td>
+                    </tr>
+                </table>                
+            </td>
+        </tr>
+    </table>
+	<input name="pagecell" id="pagecell" type="hidden" value="{%$pagenav.per%}"/>
+	<input name="basepagenum" id="pagenum" type="hidden" value="{%$basepagenum%}"/>
+</form>
+</div>
+</body>
+</html>

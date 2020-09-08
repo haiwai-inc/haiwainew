@@ -1,0 +1,63 @@
+<script language="JavaScript" type="text/javascript" src="/js/lib.js"></script>
+<script language="JavaScript" type="text/javascript" src="/admin/member/js/frame.js"></script>
+<div id='ifrBG'></div>
+<div id="ifrBox" style="background:transparent;  position:absolute;left:0px;top:150px;width:100%;margin-left:auto;margin-right:auto;	text-align:center;	z-index:3;	display:none;">
+    <table style="border:8px solid #FFF;" width="85%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+	        <td height="30" align="left">
+	            <div style="float:left;font-size:14px;padding:0px 8px;line-height:26px;" id="ifrBoxTitle"></div>
+				<div style="float:right;font-size:14px;padding:0px 8px;line-height:26px;cursor:pointer;" onclick="frame.closed();">关闭</div>
+	        </td>
+    	</tr>
+		<tr>
+            <td align="center" valign="middle" style="background-color:#FFFFFF;">
+                <iframe id="ifrFrame" src="/admin/member/blank.html" height="450" width="100%" frameborder="no" scrolling="auto"></iframe>
+            </td>
+        </tr>
+    </table>
+</div>
+<form name="formlist" id="formlist" method="post" action="" style="margin:0px;padding:0px;clear:both;">
+{%foreach from=$apps key=key item=app%}
+<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+    <tr class="dhbg">
+        <td height="24" align="left">
+            {%$label[$key]%}
+        </td>
+    </tr>
+    {%foreach from=$app key=kk item=vv%}
+    <tr>
+        <td height="24" align="left" style="font-size:14px;padding:5px 25px;background-color:#FFFFFF;">
+            <div>
+            	<strong style="float:left;">{%$vv.title%}</strong>
+				<span style="float:right;padding:0px 25px; cursor:pointer;" onclick="frame.setAll('{%$kk%}');">多选</span>
+            </div>
+            <div class="line" style="height:8px;clear:both;">
+                &nbsp;
+            </div>
+            <ul style="list-style:none;padding:0px;" id="{%$kk%}">
+                {%foreach from=$vv.content key=k item=v%}
+                <li title="双击修改当前权限设置" ondblclick="frame.set('{%$kk%}_{%$k%}');" style="line-height:25px;padding:5px 25px;" onmousemove="this.className='color2';" onmouseout="this.className='';">
+                    <div style="float:left;">
+                        {%if !empty($v.link)%}<a href="#" onclick="frame.load(this,'{%$v.link%}');return false;" class="tishilink" style="color:darkblue;font-weight:bold;">{%$v.name%}</a>
+                        {%else%}
+                        {%$v.name%}
+                        {%/if%}
+						
+						&nbsp;&nbsp;
+						<span style="font-size:12px;">{%$v.note%}</span>
+                    </div>
+                    <input name="{%$kk%}_{%$k%}" id="{%$kk%}_{%$k%}" type="checkbox"{%if !empty($powers[$v.key])%} checked="checked"{%/if%} value="{%$kk%}_{%$k%}" style="float:right;">
+                    <div class="line" style="height:2px;clear:both;">
+                        &nbsp;
+                    </div>
+                </li>
+                {%/foreach%}
+            </ul>
+        </td>
+    </tr>
+    {%/foreach%}
+</table>
+<br>
+{%/foreach%}
+<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+</form> 

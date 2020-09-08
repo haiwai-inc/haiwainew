@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>文学城网站管理</title>
+</head>
+<body>
+	{%include file="$root/template/wxc/ssi/header_admin.html"%}
+	<ul id="tab">
+		{%if $smarty.session.UserID==6||$smarty.session.UserID==13%}<li><a href="/career/admin.php" target="_blank">招聘信息</a></li>
+		<li class="gap">|</li>{%/if%}
+		<li><a href="/service/analytics/demo.php" target="_blank">访问统计</a></li>
+		<li class="gap">|</li>
+		<li><a href="/include/editor/api/demo.php" target="_blank">编辑器</a></li>
+		<li class="gap">|</li>
+		<li><a href="/admin/content/" target="_blank">网站文档</a></li>
+		<li class="gap">|</li>
+		<li><a href="/topic/admin/index.php" target="_blank">热点专题</a></li>
+	</ul>
+</body>
+</html>

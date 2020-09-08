@@ -1,0 +1,102 @@
+<div style="clear:both;">
+    <form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <input name="checkid" type="hidden" id="checkid" value="">
+                <td>
+                    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                        <tr class="dhbg">
+                            <td width="40" height="24" align="center">
+                                序号
+                            </td>
+                            <td align="left">
+                                内容分类
+                            </td>
+							<td width="120"align="left">
+                                访问标识
+                            </td>
+                            <td width="80"align="center">
+                                下级分类
+                            </td>
+							<td width="60"align="center">
+                                状态
+                            </td>
+                            <td width="40" align="center">
+                                选项
+                            </td>
+                        </tr>
+                        {%if !empty($result)%}
+                        {%foreach from=$result name=result  item=value%}
+						{%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+						{%*推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+						{%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%$value.id%}">
+                        {%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+						{%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+                        <tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$smarty.foreach.result.index+1%}" onMouseOver="MouseColorOver('bgtr_{%$smarty.foreach.result.index+1%}');" onMouseOut="MouseColorOut('bgtr_{%$smarty.foreach.result.index+1%}');">
+                            <td align="center">
+                                <strong>{%$indexNum%}</strong>
+                            </td>
+                            <td align="left" style="font-size:14px;">
+								<a href="{%$value.pageURL%}" class="tishilink">{%$value.name%}</a>
+                            </td>
+							<td align="left">
+								{%$value.url%}
+							</td>
+							<td align="center">
+								<a href="{%$value.sortURL%}" class="tishilink">管理</a>{%if !empty($value.num)%} [<strong style="font-size:12px;">{%$value.num%}</strong>]{%/if%}
+                            </td>
+                            <td align="center">
+                                {%if $value.status=='Y'%}<span style="color:green;">发布中</span>{%else%}<span style="color:red;">草稿</span>{%/if%}
+                            </td>
+                            <td align="center">
+                               <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); unCheckAll();">
+                            </td>
+                        </tr>
+						{%if !empty($value.select)%}
+                        <script language="JavaScript" type="text/javascript">
+                        	g('checkid').value = 'ok';
+							g('item_id{%$indexNum%}').checked = true;
+                            ResetTrBgcolor('bgtr_{%$indexNum%}');
+                        </script>
+						{%/if%}
+                        {%/foreach%}
+                        {%else%}
+                        <tr>
+                            <td height="24" colspan="6" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                                &nbsp;当前记录为空！
+                            </td>
+                        </tr>{%/if%} 
+                    </table>
+                    <table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td height="24" align="left">
+                                <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+                            </td>
+                            <td align="right">
+                                {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <input name="pagecell" id="pagecell" type="hidden" value="{%$pagenav.per%}"/><input name="basepagenum" id="pagenum" type="hidden" value="{%$basepagenum%}"/>
+    	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+	</form>
+</div>
+{%if !empty($checkalert)%}
+<script language="JavaScript" type="text/javascript">
+	{%if $checkalert==0%}
+	alert("您要操作的分类有子分类，并且文章内容也不为空，请先删除或转移这些分类和文章！");
+	{%/if%}
+	{%if $checkalert==1%}
+	alert("您要操作的分类下，文章内容不为空，请先删除或转移这些文章！");
+	{%/if%}
+	{%if $checkalert==2%}
+	alert("您要操作的分类下还有子分类，请先删除或转移这些子分类！");
+	{%/if%}
+	{%if $checkalert==3%}
+	alert("您要添加的访问标识已经被使用，请重新设置！");
+	{%/if%}
+</script>
+{%/if%}

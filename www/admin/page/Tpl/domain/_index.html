@@ -1,0 +1,49 @@
+<!--设置域名-->
+<div style="clear:both;">
+<form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">
+                序号
+            </td>
+            <td align="left">
+                授权访问的域名列表
+            </td>
+			
+            <td align="center" width="40" align="center">
+                选项
+            </td>
+        </tr>
+        {%if !empty($result)%}
+        {%foreach from=$result name=result  item=value%}
+		{%assign var="indexNum" value=$smarty.foreach.result.index+1%}
+		{%*排序推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+		{%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%if !empty($value.id)%}{%$value.id%}{%/if%}">
+		{%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+		{%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+		<tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$indexNum%}" onMouseOver="MouseColorOver('bgtr_{%$indexNum%}');" onMouseOut="MouseColorOut('bgtr_{%$indexNum%}');">
+            <td align="center">
+                <strong>{%$indexNum%}</strong>
+            </td>
+            <td align="left">
+                {%$value.domain%}&nbsp;&nbsp;
+				{%if $value.unique=="Y"%}［<span style="color:rgb( 0, 0,255);">唯一入口</span>］{%/if%}
+            </td>
+			
+            <td align="center">
+                <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); unCheckAll();">
+            </td>						
+        </tr>
+		{%/foreach%}
+        {%else%}
+        <tr>
+            <td height="24" colspan="7" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;当前记录为空！
+            </td>
+        </tr>
+		{%/if%} 
+    </table> 
+	<input name="checkid" type="hidden" id="checkid" value="">
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>
+</div>

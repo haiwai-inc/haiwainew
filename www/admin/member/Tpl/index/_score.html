@@ -1,0 +1,66 @@
+<script language="javascript" type="text/javascript">
+	function checkSubmit(){
+		if( isNaN( document.getElementById('point').value )){
+			alert( '请输入数字格式的积分!' );
+			return false;
+		}
+		if(document.getElementById('point').value<{%$score.min_admin%}){
+			alert( '积分不能小于{%$score.min_admin%}!' );
+			return false;
+		}
+		if(document.getElementById('point').value>{%$score.max_admin%}){
+			alert( '积分不能大于{%$score.max_admin%}!' );
+			return false;
+		}
+		return true;
+	}
+</script>
+<style>
+	.msg{float:left;color:gray;height:30px;line-height:30px;padding:0px;margin:0px 5px;}
+</style>
+<form method="post" onsubmit="return checkSubmit();" action="index.php?act=score&id={%$smarty.get.id%}&tab=score" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                积分设置
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                用户:
+            </td>
+            <td bgcolor="#FFFFFF">
+                {%$rs.nickname%}
+				&nbsp;&nbsp;
+				[&nbsp;<a href="index.php?act=scorelist&id={%$smarty.get.id%}&tab=score" class="tishilink">查看积分历史</a>&nbsp;]
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                当前积分:
+            </td>
+            <td bgcolor="#FFFFFF">
+               <strong>{%$rs.point%}</strong>
+			</td>
+        </tr>
+		<tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                积分操作:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="point" id="point" style="float:left; font-family:Courier;font-size:14px; width:120px;" maxlength="32" value="0">
+				<span  class="msg" id="passwdmsg">积分可操作范围{%$score.min_admin%}~{%$score.max_admin%}</span>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="right">
+                    <input type="submit" id="submit" name="submit" value="{%$lang.cmd.save%}">
+					<input type="hidden" name="eid" id="eid" value="{%$rs.id|default:0%}" />
+					<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>信息捕获工具-{%$sourcename%}</title>
+    <style>
+      body{width:1200px;margin:0 auto;font-size: 15px;}
+	  h1{width:100%;float:left;color:#003300;font-size:1.4em;}
+	  .clear{clear:both;}
+      .success{color:green}
+    </style>
+</head>
+<body>
+    <h1>
+    	来源：{%$sourcename%} <a href="./index.php">返回</a>
+    </h1>
+    <hr class="clear">
+    
+    {%include file="$root/admin/web2db/Tpl/ssi/pagenav.html"%}
+    <div id="morewrapper">
+	  {%if !empty($rs_fetchinfo)%}
+		  {%foreach from=$rs_fetchinfo item=val%}
+		  <div style="margin-top:20px;">
+			<div style="float:left;">
+				<a target="_blank" href="{%$val.imglink%}">
+					<img width="120" src="{%$val.imglink%}">
+				</a>
+			</div>
+			<div style="float:left;margin:0 4px;">
+				<a target="_blank" href="./index.php?act=wechatcontent&id={%$val.uuid%}&url={%$val.url%}&source={%$sourcename%}">{%$val.title%}</a>
+				<p>更新于：{%$val.datatime%}</p>
+				<p>页面大小：{%$val.pagesize%}</p>
+			</div>
+		  </div>
+		  <div style="clear:both;"></div>
+		  {%/foreach%}
+		  
+	  {%else%}
+	     <h2>没有抓取到数据!</h2>
+	  {%/if%}
+	</div>
+	{%include file="$root/admin/web2db/Tpl/ssi/pagenav.html"%}
+	
+   <br><br><br><br>
+</body>
+</html>

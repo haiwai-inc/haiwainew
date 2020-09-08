@@ -1,0 +1,82 @@
+<form name="formlist" id="formlist" method="post" action="" style="margin:0px;padding:0px;clear:both;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">
+                序号
+            </td>
+            <td align="left" width="200">
+                名称
+            </td>
+			<td align="left">
+                备注
+            </td>
+            <td align="center" width="60">
+                类型
+            </td>
+            <td align="center" width="60">
+                状态
+            </td>
+            <td align="center" width="40">
+                选项
+            </td>
+        </tr>
+        {%if !empty($result)%}
+		{%foreach from=$result name=result  item=value%}
+        {%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+		 <tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$smarty.foreach.result.index+1%}" onMouseOver="MouseColorOver('bgtr_{%$smarty.foreach.result.index+1%}');" onMouseOut="MouseColorOut('bgtr_{%$smarty.foreach.result.index+1%}');">
+            <td align="center">
+                <strong>{%$indexNum%}</strong>
+                {%*推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+				{%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%$value.id%}">
+                {%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+				{%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+       		</td>
+            <td align="left" style="font-size:14px;">
+                <a href="./profile.php?cateid={%$value.id%}" class="tishilink">{%$value.name%}</a>
+                <span style="font-size:8pt">[ <strong>{%$value.num%}</strong> ]</span>
+            </td>
+            <td align="left">
+                {%$value.description|default:'(空)'%}
+            </td>
+            <td align="center">
+                {%if $value.type=='field'%}
+                普通
+                {%else%}
+                <span style="color:blue;">复合</span>
+                {%/if%}
+            </td>
+			<td align="center">
+                {%if $value.status=='Y'%}
+                <span style="color:blue;">正常</span>
+                {%else%}
+                <span style="color:gray;">关闭</span>
+                {%/if%}
+            </td>
+            <td align="center">
+                <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); unCheckAll();">
+            </td>
+        </tr>{%if !empty($smarty.get.czbs)%}{%if $smarty.get.czbs==$value.id%}
+        <script language="JavaScript" type="text/javascript">
+            ResetTrBgcolor('bgtr_{%$indexNum%}');
+        </script>{%/if%}{%/if%}
+        {%/foreach%}
+        {%else%}
+        <tr>
+            <td height="24" colspan="6" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                &nbsp;当前记录为空！
+            </td>
+        </tr>{%/if%} 
+    </table>
+    <table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td height="24" align="left">
+                <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+            </td>
+            <td align="right">
+                {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+            </td>
+        </tr>
+    </table>
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>   
+<script language="JavaScript" type="text/javascript">tbOrder.init('bgtr');</script>     

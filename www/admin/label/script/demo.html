@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>多级联动标签示例</title>
+	<script language="JavaScript" src="/admin/label/script/init.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/include/plugins/ajax.php?q=admin/label/ajax:getLabel|initLabel"></script>
+</head>
+<body>
+	<!-- 
+		region 是动态设置的标签ID，
+		box 是标准后缀, 
+		all.67 是调用的标签范围
+	-->
+	<div id="regionbox" class="input"></div>
+	<script language="JavaScript"> label.init('all.67', 'region','regionbox'); </script>
+</body>
+</html>

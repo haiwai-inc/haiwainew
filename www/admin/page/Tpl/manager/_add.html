@@ -1,0 +1,94 @@
+<!--设置基本信息-->
+<script language="JavaScript" type="text/javascript" src="/admin/page/script/checkPageUrl.php"></script>
+<script language="JavaScript" type="text/javascript">
+	function checkSubmit(){
+	    var enReg = /^[A-Za-z0-9_(-)]+$/;
+		var domainReg = /^[A-Za-z0-9_(-),.]+$/;
+		if ((g("name").value) == "") {
+            window.alert('请填写名称！');
+            g("name").select();
+            g("name").focus();
+            return false;
+        }else if((g("url").value) == ""||!enReg.test(g("url").value)){
+			window.alert('请填写正确的别名信息！');
+            g("url").select();
+            g("url").focus();
+            return false;
+		}else{					
+			g("Submit").value = "数据提交中……";
+            g("Submit").disabled = true;
+            return true;
+		}				
+    }
+	function c(val) {		
+		if(val==0){
+			var msg="访问标识'"+g("url").value+"'已经被使用!";
+			alert(msg);
+			g("url").select();
+            g("url").focus();
+		}
+	}
+	function checkurl(){
+		if(g("url").value=='') return;
+		x_checkurl(g("url").value,g("urlcheckid").value,g("categorise").value,c);
+	}			
+</script>
+<form id="form1" name="form1" method="post" action="{%$smarty.server.SCRIPT_NAME%}?act=post&sid={%$smarty.get.sid%}&mid={%$smarty.get.mid%}" onsubmit="javascript:return checkSubmit();">
+<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+      <tr class="dhbg">
+        <td width="120" height="20" align="center" class="whitestyle">项&nbsp;&nbsp;&nbsp;&nbsp;目</td>
+        <td align="left" class="whitestyle">内&nbsp;&nbsp;&nbsp;&nbsp;容</td>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">标&nbsp;&nbsp;&nbsp;&nbsp;识</td>
+        <td align="left" bgcolor="#FFFFFF"><input name="url" type="text" id="url" style="width:200px" maxlength="20" value="" onblur="checkurl();"/></td>
+      </tr>
+	  <tr>
+        <td align="center" bgcolor="#FFFFFF">名&nbsp;&nbsp;&nbsp;&nbsp;称</td>
+        <td align="left" bgcolor="#FFFFFF"><input name="name" type="text" id="name" style="width:98%" value=""/></td>
+      </tr>
+	  <tr>
+        <td align="center" bgcolor="#FFFFFF">口&nbsp;&nbsp;&nbsp;&nbsp;号</td>
+        <td align="left" bgcolor="#FFFFFF"><input name="slogan" type="text" id="slogan" style="width:98%" value=""/></td>
+      </tr>
+	  {%if !empty($rs.id) && !empty($tpllist)%}<tr>
+        <td align="center" bgcolor="#FFFFFF">模&nbsp;&nbsp;&nbsp;&nbsp;板</td>
+        <td align="left" bgcolor="#FFFFFF">
+        	<select name='tpl' id='tpl'>
+        	{%foreach from=$tpllist key=key item=val%}
+			<option value='{%$key%}'{%if $rs.tpl==$key%} selected='selected'{%/if%}>{%$val%}</option>
+			{%/foreach%}
+			</select>
+		</td>
+      </tr>{%/if%}
+      <tr>
+        <td align="center" bgcolor="#FFFFFF">状&nbsp;&nbsp;&nbsp;&nbsp;态</td>
+        <td align="left" bgcolor="#FFFFFF">
+          <input type="radio" name="status" value="Y" checked="checked" />
+          正常&nbsp;
+          <input type="radio" name="status" value="N"/>
+          关闭
+          </td>
+      </tr>
+	  <tr>
+        <td align="center"  bgcolor="#FFFFFF">标&nbsp;&nbsp;&nbsp;&nbsp;签</td>
+        <td align="left" bgcolor="#FFFFFF"><input name="keyword" type="text" id="keyword" style="width:98%" value=""/></td>
+      </tr>
+	  <tr>
+        <td align="center" valign="top"  bgcolor="#FFFFFF">描&nbsp;&nbsp;&nbsp;&nbsp;述</td>
+        <td align="left" bgcolor="#FFFFFF"><textarea name="description" id="description" style="width:98%" rows='8'/></textarea></td>
+      </tr>        
+      <tr>
+        <td colspan="2" align="right" bgcolor="#FFFFFF">
+          <input type="hidden" name="urlcheckid" id="urlcheckid" value="0"/>
+		  <input type="hidden" name="categorise" id="categorise" value="{%$categorise%}"/>
+		  <input type="hidden" name="pid" id="pid" value="{%$smarty.get.sid%}"/>
+		  <input type="hidden" name="mid" id="mid" value="{%$smarty.get.mid%}"/>			  
+		  <input type="hidden" name="reurl" id="reurl" value="{%$smarty.server.HTTP_REFERER%}"/>
+		  <input type="submit" name="Submit" id="Submit" value="保存" />
+          &nbsp;&nbsp;  
+          <input name="Reset" type="reset" id="Reset" value="重置" />
+          &nbsp;&nbsp;</td>
+      </tr>
+    </table>
+</form>

@@ -1,0 +1,129 @@
+<script language="JavaScript" type="text/javascript" src="/include/plugins/ajax.php?q=article/ajax:levelInit"></script>
+<script language="JavaScript" type="text/javascript">
+    <!--
+    function checksubmit(){
+        document.getElementById("Submit").value = "数据提交中……";
+        document.getElementById("Submit").disabled = true;
+        return true;
+    }
+    var levelnum=0;
+	
+    function addselect(val){
+		var sublevel=parseInt(val[0]);
+		
+	    //what ever clean extra element
+		if(sublevel>=levelnum){
+			levelnum=sublevel;
+		}else{
+			clearElement(sublevel);
+		}
+		
+		//there are some nodes
+		if (val[3]) {
+			var ce = false;
+			
+			//get tpl
+			var html = "<select id=\"p" + val[0] + "\" onchange=\"checkselect(this, " + val[0] + ", " + val[2] + ");\">\n";
+			if(val[2]==0){
+				html += "<option value=\"0\">根目录</option>\n";
+			}else{
+				html += "<option value=\"" + val[2] + "\">请选择</option>\n";
+			}
+			
+			for (var x in val[1]) {
+				html += "<option value=\"" + val[1][x][1] + "\">" + val[1][x][0] + "</option>\n";
+			}
+			html += "</select>";
+			
+			//if not exists node add element
+			if (!document.getElementById('selectArea' + val[0])) {
+				ce = document.createElement("span");
+				ce.id = "selectArea" + val[0];
+				document.getElementById('selectArea').appendChild(ce);
+				ce = false;
+			}
+			
+			//write on selectarea
+			document.getElementById("selectArea" + val[0]).innerHTML = html;
+			//alert(val[0]+"\n"+html);
+		}
+		
+		//show message and set post value
+		showmess(sublevel);
+    }
+	
+	function checkselect(obj,level,parentid){
+		if(obj.value==parentid){
+			var nowlevel=parseInt(obj.id.replace("p",""));
+			clearElement(nowlevel+1);//clear sublevel
+			showmess(nowlevel);
+			return;
+		}
+		x_levelInit(document.getElementById('pid').value,obj.value,document.getElementById('appid').value,document.getElementById('appcate').value, level, addselect);
+	}
+	
+	function clearElement(nowlevel){
+		for(var y=nowlevel;y<levelnum+1;y++){
+			if(document.getElementById('selectArea'+y)){
+				document.getElementById('selectArea'+y).innerHTML ="";
+			}
+		}
+	}
+	
+	function showmess(nowlevel){		
+		for(var z=0;z<=nowlevel-1;z++){
+			var index=document.getElementById("p"+(z+1)).selectedIndex;
+			document.getElementById('mid').value=document.getElementById("p"+(z+1)).options[index].value;
+		}
+	}
+	//demo: x_levelInit(页面$pid,父级$mid,父级标签$label,当前级别$level);
+    //-->
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <form action="{%$smarty.server.SCRIPT_NAME%}?act=post&mid={%$mid%}&rid={%$rid%}&pid={%$smarty.get.pid%}&appid={%$smarty.get.appid%}&tab={%$smarty.get.tab%}" method="post" name="form1" id="form1" onSubmit="javascript:return checksubmit();">
+        <tr>
+            <td align="center">
+                <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                    <tr class="dhbg">
+                        <td width="13%" height="30" align="center">
+                            项&nbsp;&nbsp;&nbsp;&nbsp;目
+                        </td>
+                        <td width="87%" align="left">
+                            内&nbsp;&nbsp;&nbsp;&nbsp;容
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" height="30" valign="middle" bgcolor="#FFFFFF">
+                            名&nbsp;&nbsp;&nbsp;&nbsp;称
+                        </td>
+                        <td align="left" valign="middle" bgcolor="#FFFFFF">
+                            {%$rs.name%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" height="30" valign="middle" bgcolor="#FFFFFF">
+                            {%if $smarty.get.act=='move'%}移动{%else%}合并{%/if%}到
+                        </td>
+                        <td align="left" valign="middle" bgcolor="#FFFFFF">
+                        	<div id="selectArea"></div>									
+                            <script type="text/javascript">x_levelInit({%$rs.pid%},0,'{%$rs.app%}','{%$rs.cate%}',0, addselect);</script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right" bgcolor="#FFFFFF">
+                            <input name="mid" id="mid" type="hidden" value="0"/>
+							<input name="doSign" id="doSign" type="hidden" value="{%if $smarty.get.act=='move'%}move{%else%}merge{%/if%}"/>
+							<input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+							<input name="pid" id="pid" type="hidden" value="{%$rs.pid%}"/>
+							<!--field appid for js fetching value-->
+							<input name="appid" id="appid" type="hidden" value="{%$rs.app%}"/>
+							<input name="appcate" id="appcate" type="hidden" value="{%$rs.cate%}"/>
+							<input name="eid" id="eid" type="hidden" value="{%$rs.id%}"/>
+							<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </form>
+</table>

@@ -1,0 +1,5 @@
+#nfs:
+mount -t nfs 192.168.1.5:/pub/www/data /var/nfs/data
+
+#rsync:
+/usr/bin/rsync -a --password-file=/pub/backup/data.secrets weiqi@192.168.1.5::data /pub/backup/data

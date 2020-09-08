@@ -1,0 +1,110 @@
+<div style="clear:both;">
+    <form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                        <tr class="dhbg">
+                            <td width="40" height="24" align="center">
+                                序号
+                            </td>
+                            <td align="left" width="130">
+                                图片
+                            </td>
+                            <td align="left"align="center">
+                                内容
+                            </td>
+                            <td align="center" width="40" align="center">
+                                选项
+                            </td>
+                        </tr>
+						{%if !empty($result)%}
+                        {%foreach from=$result name=result  item=value%}
+						{%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+						 <tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$smarty.foreach.result.index+1%}" onMouseOver="MouseColorOver('bgtr_{%$smarty.foreach.result.index+1%}');" onMouseOut="MouseColorOut('bgtr_{%$smarty.foreach.result.index+1%}');">
+                            <td align="center">
+                                <strong>{%$indexNum%}</strong>
+	                            {%*推荐标识*%}<input name="flag{%$indexNum%}" type="hidden" id="flag{%$indexNum%}" value="N">
+								{%*推荐ID*%}<input name="rid{%$indexNum%}" type="hidden" id="rid{%$indexNum%}" value="{%$value.id%}">
+		                        {%*排序表单*%}<input name="ord{%$indexNum%}" type="hidden" id="ord{%$indexNum%}" value="{%if !empty($value.order)%}{%$value.order%}{%/if%}">
+								{%*排序时的参考序列*%}<input name="neighbor{%$indexNum%}" type="hidden" id="neighbor{%$indexNum%}" value="{%$indexNum-1%},{%$indexNum+1%}">						
+                       		</td>
+                            <td align="center">
+                                <img src="/images/{%$itempic.w%}/{%$itempic.h%}/{%if empty($value.face)%}{%$itempic.default%}{%else%}{%$value.face.pic%}{%/if%}?default={%$value.categorise%}" width="{%$itempic.w%}" height="{%$itempic.h%}" alt="{%$value.title%}" vspace="2" hspace="2" style='border: solid 1px #EEE;'>
+                            </td>
+                            <td align="left">
+                                <table width="100%" border="0" cellpadding="2" cellspacing="1">
+                                    <tr>
+                                        <td colspan="2" style="background-color:#CCC;">
+                                            标题
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td colspan="2">
+                                            <a href="{%$value.url%}" class="tishilink" target="_blank">{%$value.name%}</a>&nbsp;&nbsp;[ <span style="color:{%$value.statusarr.color%};">{%$value.statusarr.name%}</span> ] 
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td colspan="2" valign="top">
+                                            {%$value.description|truncate:200%} 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#CCC;">
+                                            最新留言
+                                        </td>
+                                        <td style="background-color:#CCC;" width="140">
+                                            更新日期
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td>
+                                            {%if !empty($value.comment)%}{%$value.comment.content|truncate:50%}
+											 {%if !empty($value.comment.updatetime)%} 
+											<em>[ {%$value.comment.updatetime|date_format:"%Y-%m-%d %H:%M:%S"%} ] </em>
+											 {%/if%}
+											{%else%}暂无留言{%/if%}
+                                        </td>
+                                        <td>
+                                            {%if !empty($value.updatetime)%}{%$value.updatetime|date_format:"%Y-%m-%d %H:%M:%S"%}{%else%}--{%/if%}&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align="center">
+                               <input type="checkbox" name="id[]" id="item_id{%$indexNum%}" value="{%$value.id%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); unCheckAll();">
+                            </td>
+                        </tr>
+						{%if !empty($value.select)%}
+                        <script language="JavaScript" type="text/javascript">
+                        	g('checkid').value = 'ok';
+							g('item_id{%$indexNum%}').checked = true;
+                            ResetTrBgcolor('bgtr_{%$indexNum%}');
+                        </script>
+						{%/if%}
+                        {%/foreach%}
+                        {%else%}
+                        <tr>
+                            <td height="24" colspan="7" align="left" bgcolor="#FFFFFF" style="color:#FF0000">
+                                &nbsp;当前记录为空！
+                            </td>
+                        </tr>{%/if%} 
+                    </table>
+                    <table width="98%" height="26" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td height="24" align="left">
+                                <a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+                            </td>
+                            <td align="right">
+                                {%if !empty($result)%}{%include file="$pagenavtpl"%}{%/if%}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+		<input name="checkid" type="hidden" id="checkid" value="">
+		<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+        <input name="pagecell" id="pagecell" type="hidden" value="{%$pagenav.per%}"/><input name="basepagenum" id="pagenum" type="hidden" value="{%$basepagenum%}"/>
+    </form>
+</div>

@@ -1,0 +1,9 @@
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.81::gfsTmp /pub/bak/gfsTmp/81
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.82::gfsTmp /pub/bak/gfsTmp/82
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.83::gfsTmp /pub/bak/gfsTmp/83
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.84::gfsTmp /pub/bak/gfsTmp/84
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.72::gfsTmp /pub/bak/gfsTmp/72
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.73::gfsTmp /pub/bak/gfsTmp/73
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.74::gfsTmp /pub/bak/gfsTmp/74
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.219::gfsTmp /pub/bak/gfsTmp/219
+/usr/bin/rsync -a --delete --password-file=/etc/cronbash/rsync.secrets weiqi@192.168.100.219::data /pub/bak/nfsData

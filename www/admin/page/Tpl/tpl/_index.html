@@ -1,0 +1,55 @@
+<div style="clear:both;">
+<form name="formlist" id="formlist" method="post" action="" target="_self" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+        <tr class="dhbg">
+            <td width="40" height="24" align="center">
+                序号
+            </td>
+            <td align="left">
+                模板
+            </td>
+			<td align="center" width="60">
+                状态
+            </td>
+            <td align="center" width="40" align="center">
+                选项
+            </td>
+        </tr>
+        {%if !empty($result)%}
+        {%foreach from=$result name=result  item=value%}
+		{%assign var="indexNum" value=$smarty.foreach.result.index+1+$basepagenum%}
+		<tr valign="top" bgcolor="#FFFFFF" id="bgtr_{%$indexNum%}" onMouseOver="MouseColorOver('bgtr_{%$indexNum%}');" onMouseOut="MouseColorOut('bgtr_{%$indexNum%}');">
+            <td align="center">
+                <strong>{%$indexNum%}</strong>
+            </td>
+            <td align="left">
+                {%if !empty($value.pics)%}<img src="{%$value.pics%}" style="float:left;margin:4px;">{%/if%}
+				<div style="float:left;">
+					<h3 style="margin:6px 0px 0px 0px;padding:0px;">{%$value.title|default:'未命名模板'%} {%$value.key%}</h3>
+					<p style="margin:0px;padding:0px;line-height:25px;">{%$value.note|default:'(空)'%}</p>
+				</div>
+            </td>
+			<td align="center" valign="middle">
+				{%if $value.selected%}
+				<span style="color:green;">当前模板</span>
+				{%else%}
+				<span style="color:blue;">备选模板</span>
+				{%/if%}
+			</td>
+            <td align="center" valign="middle">
+                <input {%if $value.selected%}{%assign var="selectItem" value=$value.key%}checked="checked"{%/if%} type="radio" name="id" id="item_id{%$indexNum%}" value="{%$value.key%}" onclick="ResetTrBgcolor('bgtr_{%$indexNum%}','#FFFFFF'); touchID();">
+            </td>						
+        </tr>
+		{%/foreach%}
+        {%else%}
+        <tr>
+            <td height="100" colspan="4" align="center" bgcolor="#FFFFFF" style="color:#FF0000;font-size:16px;">
+                &nbsp;当前页面没有可选模板，默认将调用页面专属模板！
+            </td>
+        </tr>
+		{%/if%} 
+    </table> 
+	<input name="checkid" type="hidden" id="checkid" value="{%$selectItem%}">
+	<input name="allnum" id="allnum" type="hidden" value="{%$indexNum%}"/>
+</form>
+</div>

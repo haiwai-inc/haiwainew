@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{%$page_title%}</title>
+        <meta http-equiv=Pragma content=no-cache>
+        <meta http-equiv=expires content=0>
+        <meta http-equiv="cache-control" content="no-store">
+        <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>		
+        <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+	</head>
+<body>
+<div id="top">
+    <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+        <tr>
+            <td align="left">
+                &nbsp;&nbsp;<span class="whitelink">{%$page_title%}</span>
+            </td>
+            <td align="right" class="whitestyle">
+            		
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bline">
+        <tr>
+            <td>
+                <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24">
+                            				您的位置：>> <a href='./index.php' class='tishilink'>{%$page_title%}</a>
+                        </td>
+                        <td align="right"> 
+							<a href="{%$smarty.server.HTTP_REFERER%}"  class='tishilink'>返回上页</a>
+							<a href="index.php?item={%$rs.sort%}"  class='tishilink'>返回列表</a>           	 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+	<table width="100%" height="6" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--设置应用程序-->
+<table width="98%" align='center' border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="left">
+            <h1 style='margin:0px;'>{%$rs.title%}&nbsp;&nbsp;<span style='font-size:12px;'>{%$rs.user.nickname%} 更新于 {%$rs.updatetime|date_format:"%m/%d/%Y %H:%M:%S"%}&nbsp;&nbsp;<a href="index.php?act=update&id={%$rs.id%}" class="tishilink">修改</a></span></h1>
+			<hr/>
+        </td>
+    </tr>
+	<tr>
+        <td align="left">
+            {%$rs.content%}
+        </td>
+    </tr>
+	<tr>
+        <td class='line' height='22'>
+        	&nbsp;
+        </td>
+    </tr>
+</table>
+<br/>
+<br/>
+</body>
+</html>

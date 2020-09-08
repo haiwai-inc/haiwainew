@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{%$page_title|default:'未命名页面'%}</title>
+        <meta http-equiv=Pragma content=no-cache>
+        <meta http-equiv=expires content=0>
+        <meta http-equiv="cache-control" content="no-store">
+        <link href="/css/admin/basic.css" rel="stylesheet" type="text/css"/>		
+        <link href="/css/admin/{%$userface%}.css" rel="stylesheet" type="text/css"/>
+		<link href="/admin/page/script/nav.css" rel="stylesheet" type="text/css"/>
+        <script language="JavaScript" type="text/javascript" src="/js/admin.js"></script>
+	</head>
+<body>
+<div id="top">
+    <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0" class="dhbg">
+        <tr>
+            <td align="left">
+                &nbsp;&nbsp;<span class="whitelink">{%$page_title|default:'未命名页面'%}</span>
+            </td>
+            <td align="right" class="whitestyle">
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bline">
+        <tr>
+            <td>
+                <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="24">
+                            				您的位置：>> {%if isset($catenav)%}{%$catenav%}{%/if%}{%$page_title|default:'未命名页面'%} >> {%$page_nav%}{%if !empty($nav)%}{%foreach from=$nav item=val%}{%if $val.mid==0 && $navbase=='menu' %}<!--站点选项下无0级菜单显示-->{%else%} >> {%if empty($val.end)%}<a href="{%$navbase%}.php?{%$val.url|default:''%}pid={%$smarty.get.pid%}&mid={%$val.id%}&rid={%$val.mid%}" class="tishilink">{%$val.name%}</a>{%else%}{%$val.name%}{%/if%}{%/if%}{%/foreach%}{%/if%}
+                        </td>
+                        <td align="right">  
+							{%if !empty($previewURL)%}<a href="{%$previewURL%}" class="tishilink" target="_blank">页面预览</a>{%/if%}
+							{%if $backHomePage%}
+							{%if !empty($previewURL)%}&nbsp;|&nbsp;{%/if%}
+							<a href="{%$parentURL%}" class="tishilink">返回</a>
+							{%/if%}
+							{%if !$backHomePage && !$loadPageMenu%}
+								{%if empty($incmenu)%}
+								<a href="{%$smarty.server.HTTP_REFERER%}" class="tishilink">返回</a>
+								{%else%}
+								{%if $incmenu!='none'%}
+									{%foreach from=$incmenu item=val name=nav%}
+										{%if $smarty.foreach.nav.index!=0%}
+										{%if $val.name=='loop' && empty($smarty.get.mid) %}{%else%}&nbsp;|&nbsp;{%/if%}
+										{%/if%}
+										{%if $val.name=='chkall'%}
+											<input name="chkall" type="checkbox" onClick="CheckAll()" id="chkall">
+											<a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+										{%elseif $val.name=='search'%}
+											<input name="q" type="text" id="q" value="{%$smarty.get.q|default:''%}">
+											<input name="btnMS" value="筛选" type="button" id="btnMS" onclick="self.location='{%$val.link%}&q='+document.getElementById('q').value+'&pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}'">
+										{%elseif $val.name=='order'%}
+											<script language="JavaScript1.2" type="text/javascript" src="/js/tableorder/tbOrder.js"></script>
+											<img src="/images/admin/up.gif" alt="向上" border='0' style="cursor: pointer;" onclick="tbOrder.up();">
+											<img src="/images/admin/down.gif" alt="向下" border='0' style="cursor: pointer;" onclick="tbOrder.down();"> | 
+											<a href="javascript:subform(tbOrder.save('{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}'));" class="tishilink">保存排序</a>
+										{%elseif $val.name=='loop'%}
+											{%if !empty($smarty.get.mid)%}<a href='{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}&mid={%$mid%}&rid={%$rid%}' class="tishilink">返回上一级</a>{%/if%}
+										{%else%}
+											<a href='{%if !empty($val.jsLink)%}javascript:subform("{%/if%}{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}&page={%$smarty.get.page|default:0%}{%if !empty($val.jsLink)%}"){%/if%}' class="tishilink"{%if !empty($val.delmsg)%} onClick="return checkclick('{%$val.delmsg%}')"{%/if%}>{%$val.name%}</a>
+										{%/if%}
+									{%/foreach%}
+								{%/if%}
+								{%/if%}
+							{%/if%}                                  
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" height="6" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>                    	
+            </td>
+        </tr>
+    </table>
+</div>
+{%if !empty($menulist) && $loadPageMenu%}
+<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:0px auto 4px auto">
+    <tr>
+        <td class="tdback" id="menubox">
+	        {%foreach from=$menulist key=key item=val%}
+	        <div class="dkong" id="k{%$key%}">
+	        </div>
+	        <div class="{%if $smarty.get.tab==$key%}dselect{%else%}dshow{%/if%}" id="d{%$key%}"  title='{%$val.note%}'>
+	            <a href="{%$val.url%}pid={%$smarty.get.pid%}&tab={%$key%}" class="tishilink"{%if $key=="view"%} target="_blank"{%/if%}>{%$val.name%}</a>
+	        </div>
+	        {%/foreach%}			
+			<div class="rightdiv">
+				{%if empty($incmenu)%}
+				<a href="{%$smarty.server.HTTP_REFERER%}" class="tishilink">返回</a>
+				{%else%}
+				{%if $incmenu!='none'%}
+					{%foreach from=$incmenu item=val name=nav%}
+						{%if $smarty.foreach.nav.index!=0%}
+						{%if $val.name=='loop' && empty($smarty.get.mid) %}{%else%}&nbsp;|&nbsp;{%/if%}
+						{%/if%}
+						{%if $val.name=='chkall'%}
+							<input name="chkall" type="checkbox" onClick="CheckAll()" id="chkall">
+							<a href="#" class="tishilink" onClick="SuperCheckAll();return false;">全选</a>
+						{%elseif $val.name=='order'%}
+							<script language="JavaScript1.2" type="text/javascript" src="/js/tableorder/tbOrder.js"></script>
+							<img src="/images/admin/up.gif" alt="向上" border='0' style="cursor: pointer;" onclick="tbOrder.up();">
+							<img src="/images/admin/down.gif" alt="向下" border='0' style="cursor: pointer;" onclick="tbOrder.down();"> | 
+							<a href="javascript:subform(tbOrder.save('{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}'));" class="tishilink">保存排序</a>
+						{%elseif $val.name=='loop'%}
+							{%if !empty($smarty.get.mid)%}<a href='{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}&mid={%$mid%}&rid={%$rid%}' class="tishilink">返回上一级</a>{%/if%}
+						{%else%}
+							<a href='{%if !empty($val.jsLink)%}javascript:subform("{%/if%}{%$val.link%}pid={%$smarty.get.pid%}&tab={%$smarty.get.tab%}&page={%$smarty.get.page|default:0%}{%if !empty($val.jsLink)%}"){%/if%}' class="tishilink"{%if !empty($val.delmsg)%} onClick="return checkclick('{%$val.delmsg%}')"{%/if%}>{%$val.name%}</a>
+						{%/if%}
+					{%/foreach%}
+					{%/if%}
+				{%/if%}
+			</div> 
+   	 	</td>    
+    </tr>
+</table>
+{%/if%}
+{%include file="$includeTpl"%}
+<script language="JavaScript" type="text/javascript">if( typeof(tbOrder)!="undefined" ) tbOrder.init('bgtr');</script>	
+</body>
+</html>

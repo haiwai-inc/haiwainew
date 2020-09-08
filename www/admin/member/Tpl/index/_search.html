@@ -1,0 +1,86 @@
+<script language="JavaScript" type="text/javascript" src="/js/calendar/date.js"></script>
+<form id="userSearch" name="userSearch" method="get" action="index.php" style="margin:0px;padding:0px;">
+    <table id="userSearchBox" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                用户搜索
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                用户组:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<select id="userlevel" name="userlevel">
+            		<option value="">全部</option>
+					{%foreach from=$userlevel key=key item=val%}
+					<option value="{%$key%}">{%$val%}</option>{%/foreach%}
+            	</select>
+            </td>
+        </tr>
+		<tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                按条件:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<select id="query" name="query">
+					{%foreach from=$query key=key item=val%}
+					<option value="{%$key%}">{%$val%}</option>{%/foreach%}
+            	</select>
+                <input type="text" name="keyword" id="keyword" value="" style="width:126px;">
+            </td>
+        </tr>
+		<tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                按关注领域:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<select id="interest" name="interest">
+            		<option value="">全部</option>
+					{%foreach from=$interest key=key item=val%}
+					<option value="{%$val.id%}">{%$val.name%}</option>{%/foreach%}
+            	</select>
+            </td>
+        </tr>
+		<tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                按注册来源:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<select id="comefrom" name="comefrom">
+            		<option value="">全部</option>
+					{%foreach from=$comefrom key=key item=val%}
+					<option value="{%$val.id%}">{%$val.name%}</option>{%/foreach%}
+            	</select>
+            </td>
+        </tr>
+		<tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                注册时间介于:
+            </td>
+            <td bgcolor="#FFFFFF">
+                从 <input type="text" name="regstart" id="regstart" value="" style="width:126px; cursor:pointer;background:url('/images/tools/datePicker.gif') no-repeat right;" onClick="date.select_filltime('userSearch','regstart',0);return false;">
+				到 <input type="text" name="regend" id="regend" value="" style="width:126px; cursor:pointer;background:url('/images/tools/datePicker.gif') no-repeat right;" onClick="date.select_filltime('userSearch','regend',0);return false;">  
+            </td>
+        </tr>
+		<tr>
+            <td height="30" width="160" bgcolor="#FFFFFF" align="right">
+                最后登录时间介于:
+            </td>
+            <td bgcolor="#FFFFFF">
+                从 <input type="text" name="loginstart" id="loginstart" value="" style="width:126px; cursor:pointer; background:url('/images/tools/datePicker.gif') no-repeat right;" onClick="date.select_filltime('userSearch','loginstart',0);return false;">
+				到 <input type="text" name="loginend" id="loginend" value="" style="width:126px; cursor:pointer;background:url('/images/tools/datePicker.gif') no-repeat right;" onClick="date.select_filltime('userSearch','loginend',0);return false;">  
+            </td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="left" style="margin:0px 0px 0px 168px;">
+                    <input type="submit" id="submit" name="submit" value=" 开 始 搜 索 ">
+					<input type="hidden" id="act" name="act" value="index">
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+<script language="JavaScript" type="text/javascript">date.init('userSearchBox');</script>

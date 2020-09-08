@@ -1,0 +1,18 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<script language="JavaScript" type="text/javascript" src="/admin/dashboard/script/index.js"></script>
+        {%if $firstlogin=='1'%}<script language="JavaScript" type="text/javascript">alert( '您正在使用系统默认密码登录，请修改密码!' );</script>{%/if%}
+    </head>
+    <frameset rows="*" name="main" id="main" cols="200,12,*" framespacing="0" frameborder="no" border="0" bordercolor="{%$color_1%}">
+        <frame src="index.php?act=menu" name="leftFrame" scrolling="Yes" noresize="noresize" id="leftFrame"/>
+        <frame src="index.php?act=ctrl" name="ctrlFrame" scrolling="No" noresize="noresize" id="ctrlFrame"/>
+        <frame src="{%if $firstlogin=='1'%}/passport/index.php?act=passwd&redirect={%$returnurl%}{%else%}/admin/sync.php{%/if%}" name="mainFrame" id="mainFrame"/>
+    </frameset>
+    <noframes>
+        <body>
+        	<h1>{%$mess.noframe%}</h1>
+        </body>
+    </noframes>
+</html>

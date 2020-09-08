@@ -1,0 +1,77 @@
+<form method="post" action="index.php?act=security&id={%$smarty.get.id%}" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                {%if empty($rs)%}新建用户{%else%}基本信息{%/if%}
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                访问标识:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="username" id="username" value="{%$rs.username|default:''%}" {%if !empty($rs.username)%}readonly="readonly"{%/if%} style="float:left; width:256px;" maxlength="32" >
+            	<span  class="msg" id="usernamemsg">{%$msg.username%}</span>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                用户名:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="nickname" id="nickname" value="{%$rs.nickname|default:''%}" style="float:left; width:256px;" maxlength="32">
+            	<span  class="msg" id="nicknamemsg">{%$msg.nickname%}</span>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                邮箱:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="email" id="email" value="{%$rs.email|default:''%}" style="float:left; width:256px;" maxlength="60">
+            	<span  class="msg" id="emailmsg">{%$msg.email%}</span>
+			</td>
+        </tr>
+		<tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                类型:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	{%if $authz=='superadmin'%}<input type="radio" name="userlevel" value="9"{%if $rs.userlevel==9%} checked="checked"{%/if%}> 超级管理员
+				{%/if%}<input type="radio" name="userlevel" value="8"{%if $rs.userlevel==8%} checked="checked"{%/if%}> 管理员
+				<input type="radio" name="userlevel" value="3"{%if $rs.userlevel==3%} checked="checked"{%/if%}> 高级用户
+				<input type="radio" name="userlevel" value="2"{%if $rs.userlevel==2%} checked="checked"{%/if%}> 中级用户
+				<input type="radio" name="userlevel" value="1"{%if $rs.userlevel==1%} checked="checked"{%/if%}> 初级用户
+				<input type="radio" name="userlevel" value="0"{%if $rs.userlevel==0%} checked="checked"{%/if%}> 普通用户
+			</td>
+        </tr>
+		<tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                密码:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<span id="passwordx" onclick="this.style.display='none';document.getElementById('password').style.display='';" style="float:left;line-height:30px; font-size:14px; cursor:pointer;" title="单击修改">{%$rs.passwordx%}</span>
+                <input type="text" name="password" id="password" style="float:left;display:none;font-family:Courier;font-size:14px; width:128px;" maxlength="32" value="{%$rs.password|default:''%}">
+				<span  class="msg" id="passwdmsg">{%$msg.passwd%}</span>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" bgcolor="#FFFFFF" valign="top" style="padding:8px 3px 0px 0px ;" align="right">
+                签名:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <textarea name="aboutme" rows="4" type="aboutme" style="width:100%;font-size:12px;" id="summary ">{%$rs.aboutme|default:''%}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="right">
+                    <input type="submit" id="submit" name="submit" value="{%$lang.cmd.save%}">
+					<input type="hidden" name="eid" id="eid" value="{%$rs.id|default:0%}" />
+					<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

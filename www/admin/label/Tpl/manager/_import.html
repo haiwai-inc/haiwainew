@@ -1,0 +1,74 @@
+<script language="JavaScript" type="text/javascript" src="/admin/label/script/move.php"></script>
+<script language="JavaScript" type="text/javascript">
+    <!--
+    function checksubmit(){
+        document.getElementById("Submit").value = "数据提交中……";
+        document.getElementById("Submit").disabled = true;
+        return true;
+    }
+	
+	function match_file(fname) {
+        farr = fname.toLowerCase().split(".");
+        if (farr.length != 0) {
+            len = farr.length
+            if (farr[len - 1] == "gz" || farr[len - 1] == "bz2" || farr[len -1] == "zip") len--;
+            if (farr[len - 1] != 'ldb') {
+				document.getElementById("input_import_file").value = "";
+				alert("只支持.ldb文件的导入！");
+			} 
+        }
+    }
+
+    //-->
+</script>
+{%if empty($post_info)%}
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <form action="index.php?act=import&cate={%$cate%}" method="post" enctype="multipart/form-data" name="form1" id="form1" onSubmit="javascript:return checksubmit();">
+        <tr>
+            <td align="center">
+                <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                    <tr class="dhbg">
+                        <td height="30" align="left">
+                            请选择要导入的文件
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" height="30" valign="middle" bgcolor="#FFFFFF">
+                        	<input style="margin: 5px" type="file" name="import_file" id="input_import_file" onchange="match_file(this.value);" /> （ 最大限制 {%$post_max_size%} ）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right" bgcolor="#FFFFFF">
+                            <input name="mid" id="mid" type="hidden" value="{%$smarty.get.mid|default:0%}"/>
+							<input name="rootid" id="rootid" type="hidden" value="{%$smarty.get.rootid|default:0%}"/>
+							<input name="reurl" id="reurl" type="hidden" value="{%$parentURL%}"/>
+							<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </form>
+</table>
+{%else%}
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                    <tr class="dhbg">
+                        <td height="30" align="left">
+                            信息提示：
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" height="90" valign="middle" bgcolor="#FFFFFF">
+                        	
+							<h2 style="color:blue;">文件 "{%$post_info.name%}" ({%$post_info.size%}) 已经导入{%if $post_info.status%}成功{%else%}失败{%/if%}！ <a href="{%$parentURL%}" class="tishilink">返回</a></h2>
+							
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table>
+{%/if%}

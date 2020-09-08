@@ -1,0 +1,163 @@
+<script language="javascript">
+    //限制虚拟头像显示的最大宽度为450
+    window.onload = function(){
+        if (document.getElementById("picture")) {
+            var maxWidth = 450;
+            var img = document.getElementById("picture");
+            
+            if (img.clientWidth > maxWidth) {
+                img.style.width = maxWidth + "px";
+            }
+        }
+    }
+</script>
+<style>
+    .msg {
+        float: left;
+        color: gray;
+        height: 30px;
+        line-height: 30px;
+        padding: 0px;
+        margin: 0px 5px;
+    }
+	.sign{
+		font-family:"Comic Sans MS";
+		font-size:14px;
+		font-weight:bold;
+	}
+</style>
+<table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+    <tr class="dhbg">
+        <td height="30" colspan="3" style="padding-left:10px;">
+            基本信息 
+        </td>
+    </tr>
+    <tr>
+        <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+            姓名: 
+        </td>
+        <td bgcolor="#FFFFFF">
+        	{%$rs.nickname%}
+        </td>
+        <td width="256" rowspan="5" align="center" valign="middle" bgcolor="#FFFFFF">
+            {%if !empty($rs.avatar)%}
+            <div id="picturediv">
+                <a href="{%$rs.avatar|default:''%}" target="_blank">
+                	<img src="{%$rs.avatar|default:''%}" border="0" hspace="8" vspace="8" id="picture" />
+				</a>
+            </div>
+			{%else%}
+			<h2>暂无头像</h2>
+            {%/if%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            职业:
+        </td>
+        <td bgcolor="#FFFFFF">
+            {%$rs.occupationstr|default:'--'%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            地域地域:
+        </td>
+        <td bgcolor="#FFFFFF">
+            {%$rs.region|default:'--'%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            积分:
+        </td>
+        <td bgcolor="#FFFFFF" class="sign">
+            &nbsp;&nbsp;{%$rs.point|default:0%}
+        </td>
+    </tr>
+    <tr>
+        <td height="30" align="right" valign="top" bgcolor="#FFFFFF">
+            统计:
+        </td>
+        <td bgcolor="#FFFFFF">
+            <table width="360" border="0" cellspacing="6" cellpadding="0">
+                <tr>
+                    <td width="25%" align="right">
+                        总计登录:
+                    </td>
+                    <td width="25%" class="sign">
+                        {%$rs.totallogin|default:0%}
+                    </td>
+                    <td width="25%" align="right">
+                        好友:
+                    </td>
+                    <td width="25%" class="sign">
+                        {%$rs.totalfriends|default:0%}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        发贴:
+                    </td>
+                    <td class="sign">
+                        {%$rs.totalbbs|default:0%}
+                    </td>
+                    <td align="right">
+                        粉丝:
+                    </td>
+                    <td class="sign">
+                        {%$rs.totalfans|default:0%}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        发博:
+                    </td>
+                    <td class="sign">
+                        {%$rs.totalblog|default:0%}
+                    </td>
+                    <td align="right">
+                        参与组:
+                    </td>
+                    <td class="sign">
+                        {%$rs.totalgroups|default:0%}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+	<tr>
+        <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+            加入时间: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            From <span class="sign">{%$rs.from|default:'--'%}</span>&nbsp;&nbsp; At &nbsp;&nbsp;<span class="sign">{%$rs.jointime|date_format:"%Y/%m/%d %H:%M:%S"%}</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+            上次登录: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%if !empty($rs.lastlogintime)%}From <span class="sign">{%$rs.lastLoginIP|default:'--'%}</span> At <span class="sign">{%$rs.lastlogintime|date_format:"%Y/%m/%d %H:%M:%S"%}</span>{%else%}--{%/if%}
+        </td>
+    </tr>
+	<tr>
+        <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+            状态: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            是否激活：<span class="sign">{%$rs.isactive%}</span>；&nbsp;&nbsp;
+			是否有博客：<span class="sign">{%$rs.isclub%}</span>；&nbsp;&nbsp;
+			是否有社区：<span class="sign">{%$rs.isblog%}</span>；
+        </td>
+    </tr>
+    <tr>
+        <td height="30" bgcolor="#FFFFFF" align="right">
+            签名: 
+        </td>
+        <td colspan="2" bgcolor="#FFFFFF">
+            {%$rs.aboutme|default:'--'%}
+        </td>
+    </tr>
+</table>

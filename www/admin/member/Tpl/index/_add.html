@@ -1,0 +1,45 @@
+<form method="post" action="index.php?act=add" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                新建用户
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                用户名:
+				<input type="hidden" name="username" id="username" value="" />
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="nickname" id="nickname" value="{%$rs.nickname|default:''%}" style="float:left; width:256px;">
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                邮箱:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="email" id="email" value="{%$rs.email|default:''%}" style="float:left; width:256px;">
+			</td>
+        </tr>
+		<tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                密码:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="password" id="password" style="float:left; font-family:Courier;font-size:14px; width:128px;" maxlength="32" value="{%$rs.password|default:''%}">
+			</td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="right">
+                    <input type="submit" id="submit" name="submit" value="{%$lang.cmd.save%}">
+					<input type="hidden" name="eid" id="eid" value="{%$rs.id|default:0%}" />
+					<input type="hidden" name="from" id="from" value="{%$site.global.id%}" />
+					<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,100 @@
+<style>
+	.msg{float:left;color:gray;height:30px;line-height:30px;padding:0px;margin:0px 5px;}
+</style>
+<script>
+	function checkSubmit(){
+		if($("#name").val()==''){
+			alert('请填写名称！');
+			$("#name").focus();
+			$("#name").select();
+			return false;
+		}
+		
+		return true;
+	}
+</script>
+<form method="post" onsubmit="return checkSubmit();" action="profile.php?act=post&cateid={%$smarty.get.cateid%}" style="margin:0px;padding:0px;">
+    <table id="bgtr" width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1">
+        <tr class="dhbg">
+            <td height="30" colspan="2" style="padding-left:10px;">
+                新建字段
+            </td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                名称:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="name" id="name" value="{%$rs.name|default:''%}" style="float:left; width:256px;">
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right">
+                类型:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	{%html_options name="type" id="type" options=$typelist selected=$rs.type|default:varchar%}
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right" valign="top">
+                调用标识:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="tpl" id="tpl" value="{%$rs.tpl|default:''%}" style="float:left; width:256px;">
+                <p style="color:gray;margin:0;padding:0;line-height:24px;clear:both;">此项为模板调用参数，当需要对用户信息做特殊显示处理时使用，默认为空</p>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right" valign="top">
+                隐私设置:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<input type="radio" name="privacy" value="Y" {%if $rs.privacy=='Y'%}checked="checked"{%/if%}>启用
+            	&nbsp;&nbsp;
+            	<input type="radio" name="privacy" value="N" {%if $rs.privacy=='N'%}checked="checked"{%/if%}>关闭
+            	<p style="color:gray;margin:0;padding:0;line-height:24px;">是否允许用户对此项信息设置隐私属性</p>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" width="120" bgcolor="#FFFFFF" align="right" valign="top">
+                权限检查:
+            </td>
+            <td bgcolor="#FFFFFF">
+            	<input type="radio" name="admin" value="Y" {%if $rs.admin=='Y'%}checked="checked"{%/if%}>是
+            	&nbsp;&nbsp;
+            	<input type="radio" name="admin" value="N" {%if $rs.admin=='N'%}checked="checked"{%/if%}>否
+            	<p style="color:gray;margin:0;padding:0;line-height:24px;">此字段是否仅管理员可见</p>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" bgcolor="#FFFFFF" align="right" valign="top">
+                默认值:
+            </td>
+            <td bgcolor="#FFFFFF" align="left">
+            	<input type="text" name="defaultValue" id="defaultValue" value="{%$rs.defaultValue|default:''%}" style="width:98%;">
+            	<p style="color:gray;margin:0;padding:0;line-height:24px;">有多个默认值请使用逗号分隔</p>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" bgcolor="#FFFFFF" align="right" valign="top">
+                说明:
+            </td>
+            <td bgcolor="#FFFFFF">
+                <input type="text" name="notes" id="notes" value="{%$rs.notes|default:''%}" style="width:98%;">
+				<p style="color:gray;margin:0;padding:0;line-height:24px;">字段注释说明，用于前台信息提示</p>
+			</td>
+        </tr>
+        <tr>
+            <td height="30" colspan="2" bgcolor="#FFFFFF">
+                <div align="right">
+                	{%if !empty($rs.id)%}[ <span style="color:red;">注意： 修改类型或默认值，将会影响之前所有使用此定义的用户数据</span> ]&nbsp;&nbsp;{%/if%}
+                    <input type="submit" id="submit" name="submit" value="{%$lang.cmd.save%}">
+					<input type="hidden" name="eid" id="eid" value="{%$rs.id|default:0%}" />
+					<input type="hidden" name="reurl" id="reurl" value="{%$reurl|default:$smarty.server.HTTP_REFERER%}" />
+					&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>

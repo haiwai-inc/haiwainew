@@ -1,0 +1,50 @@
+<script language="JavaScript" src="/admin/label/script/init.js"></script>
+<script language="JavaScript" type="text/javascript" src="/include/plugins/ajax.php?q=admin/label/ajax:getLabel|initLabel"></script>
+<script language="JavaScript">
+	function doselect( value,box ){
+		var list=document.getElementById(box).childNodes;
+		for(var i=0;i<list.length;i++){
+				document.getElementById(box).removeChild(list[i]);
+		}
+		if(value!='all') label.init('all',value,box);
+	}
+</script>
+<form action="index.php?act=move&mid={%$mid%}&rootid={%$rootid%}&cate={%$cate%}" method="post" name="form1" id="form1">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="color1" style="vertical-align:top;">
+                    <tr class="dhbg">
+                        <td width="13%" height="30" align="center">
+                            项&nbsp;&nbsp;&nbsp;&nbsp;目
+                        </td>
+                        <td width="87%" align="left">
+                            内&nbsp;&nbsp;&nbsp;&nbsp;容
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" height="30" valign="middle" bgcolor="#FFFFFF">
+                            当前所选项移动到
+                        </td>
+                        <td id="navbox" align="left" valign="middle" bgcolor="#FFFFFF">
+                        	<select name='home' onchange="doselect(this.value,'labelbox');" style="float:left;">
+                        		<option value="all">根目录</option>
+                        		{%foreach from=$root item=val key=key%}<option value="{%$key%}">{%$val.name%}</option>
+								{%/foreach%}
+                        	</select>
+							<div id="labelbox" style="float:left;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right" bgcolor="#FFFFFF">
+                            <input name="reurl" id="reurl" type="hidden" value="{%$smarty.server.HTTP_REFERER%}"/>
+							<input name="rootid" id="rootid" type="hidden" value="{%$smarty.get.rootid%}"/>
+							<input name="eid" id="eid" type="hidden" value="{%$ids%}"/>
+							<input type="submit" name="Submit" id="Submit" value="保存"/>&nbsp;&nbsp;<input name="Reset" type="reset" id="Reset" value="重置"/>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table>
+</form>

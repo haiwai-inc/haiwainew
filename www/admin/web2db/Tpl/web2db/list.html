@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>信息捕获工具-{%$rs.title%}</title>
+    <style>
+      body{width:1200px;margin:0 auto;font-size: 15px;}
+	  h1{width:100%;float:left;color:#003300;font-size:1.4em;}
+	  .clear{clear:both;}
+		#morewrapper .list ul li a {
+		    color: #0259BA;
+		    display: block;
+		    float: left;
+		    overflow: hidden;
+		    width: 400px;
+		    text-decoration: none;
+		}
+		#morewrapper .list ul li{height: 26px;line-height: 26px; width: 575px; float:left;}
+        #pagenav a,#pagenav span{padding:0 2px;font-size:18px;}
+        #pagenav span{font-weight:bold; }
+        #pagenav{text-align:center;clear:both;}
+      .success{color:green}
+    </style>
+</head>
+<body>
+    <h1>
+    	当前：{%$rs.title%} <a href="./index.php?act=update&id={%$rs.id%}">修改</a> | <a href="./index.php">返回</a>
+    </h1>
+    	<div><span class="success">{%if !empty($smarty.get.title)%}已成功抓取新闻: {%$smarty.get.title%}{%/if%}</span></div>
+    <hr class="clear">
+    <p>抓取目标地址： <a href="{%$url%}" target="_blank">{%$url%}</a></p>
+    
+    {%if !empty($page)%}
+    <div id="pagenav">
+    	页码:
+      {%foreach from=$page item=p%}
+        {%if $currentpage==$p%}
+        <span>{%$p%}</span>
+        {%else%}
+        <a href="/admin/web2db/index.php?act=list&id={%$smarty.get.id%}&page={%$p%}">{%$p%}</a>
+        {%/if%} &nbsp;
+      {%/foreach%}
+    </div>
+	{%/if%}
+    
+    
+    <div id="morewrapper">
+	  {%if !empty($list)%}
+		  <div class="list">
+		    <ul>
+		      {%foreach from=$list item=val name=postlist%}
+		      <li>
+		      	  <a href="{%$val.link%}" target="_blank">{%$val.title|truncate:70%}</a> {%$val.source|default:''|truncate:15%} {%$val.count|default:''|truncate:15%} 
+		      </li>
+		      {%/foreach%}
+		    </ul>
+		  </div>
+	  {%else%}
+	     <h2>没有抓取到数据!</h2>
+	  {%/if%}
+	</div>
+	
+    {%if !empty($page)%}
+    <div id="pagenav" style="padding-top: 30px;">
+    	页码:
+      {%foreach from=$page item=p%}
+        {%if $currentpage==$p%}
+        <span>{%$p%}</span>
+        {%else%}
+        <a href="/admin/web2db/index.php?act=list&id={%$smarty.get.id%}&page={%$p%}">{%$p%}</a>
+        {%/if%} &nbsp;
+      {%/foreach%}
+    </div>
+	{%/if%}
+	
+   <br><br><br><br>
+</body>
+</html>
