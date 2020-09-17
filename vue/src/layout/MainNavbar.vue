@@ -5,7 +5,7 @@
   >
     <template>
       <router-link v-popover:popover1 class="navbar-brand" to="/">
-        Haiwai Blog
+        海外博客
       </router-link>
       <el-popover
         ref="popover1"
@@ -38,13 +38,13 @@
               avatarurl="img/eva.jpg"
               class="nav-item"
       >
-        <nav-link to="/landing">
+        <nav-link to="/">
           <i class="now-ui-icons education_paper"></i> Landing
         </nav-link>
-        <nav-link to="/login">
+        <nav-link to="/">
           <i class="now-ui-icons users_circle-08"></i> Login
         </nav-link>
-        <nav-link to="/profile">
+        <nav-link to="/">
           <i class="now-ui-icons users_single-02"></i> Profile
         </nav-link>
       </profile-drop-down>

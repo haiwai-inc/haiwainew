@@ -26,9 +26,9 @@ export default {
   data() {
     return {
       menuitems: [
-          {id:'0',name:'关注',link:'/login'},
-          {id:'1',name:'推荐',link:'/login'},
-          {id:'2',name:'热榜',link:'/login'}
+          {id:'0',name:'关注',link:'/'},
+          {id:'1',name:'推荐',link:'/'},
+          {id:'2',name:'热榜',link:'/hot'}
       ]
     }
   },
