@@ -29,9 +29,10 @@
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block">
-          <div class="hot-bloger">
+          <div class="r1-box">
             
           </div>
+          <div class="r2-box"></div>
         </div>
       </div>
     </div>
@@ -76,6 +77,9 @@ export default {
 };
 </script>
 <style>
+/* r1 */
+
+/* r1 */
 .article-page h4{
   margin-bottom: 0;
 }
