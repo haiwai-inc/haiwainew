@@ -570,7 +570,7 @@ class Api{
 	}
 	
 	private function getCache(){
-		return $this->cacheObj->get($this->cacheID);
+		return @$this->cacheObj->get($this->cacheID);
 	}
 	
 	private function setCache(){
