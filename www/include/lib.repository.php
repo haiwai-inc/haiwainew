@@ -2,30 +2,8 @@
 /**
  代码同步 包含svn github
  
- inc.comm.php
- 特殊位置需要加入更新root目录 //define( 'REPOROOT', '');
- 
  本机单节点
  inc.updateid.php    inc.webnodes.php
- 
- 调用方法
- include "inc.comm.php";
- $obj_repository=new repository();
- 
- 同步 sync.php
- $obj_repository->init_sync();
- 
- 更新svn update_svn.php
- echo $obj_repository->update_svn();
- 
- 更新git update_git.php
- echo $obj_repository->update_git();
- 
- 后台更新svn svnTask.php $1 $2
- php svnTask.php
- 
- 后台更新git gitTask.php $1 $2
- php gitTask.php
  */
 
 class repository
