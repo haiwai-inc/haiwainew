@@ -29,12 +29,69 @@
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block">
-          <div class="r1-box">
-            
-          </div>
-          <div class="r2-box">
-            右侧模块
-          </div>
+         <!-- r1 -->
+            <div class="box my-3">
+               <!-- 左边相同样式 -->
+               <div class="r3 row no-gutters">
+                 <div class="align-self-center right col-10 pr-2">
+                    <div class="d-flex align-self-center">
+                       <div class="name">硅谷传奇——硅的到来：第一家硅谷晶体管创业公司</div>
+                    </div>
+                    <div class="d-flex justify-content-between my-2">
+                       <div class="descrip">阅读 . 10853</div>
+                       <div class="descrip">2020.08.07</div>
+                    </div>
+                 </div>
+                 <div class="col-2">
+                    <img alt="" src="/img/bg3.jpg" class="rounded">
+                 </div>
+              </div>
+            </div>
+          <!-- r2 -->
+            <div class="box">
+               <div class="title  d-flex justify-content-between">
+                  <h5>文集-芳草渡 (56) </h5>
+               </div>
+               <div class="row r2 no-gutters">
+                  <div class="align-self-center right col-12">
+                     <div class="name">《芳草渡》下部 《二十七》终归大海作波涛 </div>
+                  </div>
+               </div>
+               <div class="justify-content-right border-top d-flex text-right ">
+                  <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
+                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <title>more</title>
+                        <g id="more" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                           <path d="M11.5740443,6.24199451 L11.5740443,20.2419945 M5,12 L11.5,6 L18,12" id="Arrow" stroke="#6D7278" stroke-width="2" transform="translate(11.500000, 13.120997) rotate(46.000000) translate(-11.500000, -13.120997) "></path>
+                           <rect id="Rectangle" stroke="#6D7278" stroke-width="2" x="3" y="3" width="18" height="18" rx="1"></rect>
+                        </g>
+                     </svg>
+                     更多
+                  </button>
+               </div>
+            </div>
+          <!-- r3 -->
+            <div class="box my-3">
+               <div class="title  d-flex justify-content-between">
+                  <h5>相关推荐</h5>
+                  <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
+               </div>
+               <div class="r3 row no-gutters">
+                 <div class="align-self-center right col-10 pr-2">
+                    <div class="d-flex align-self-center">
+                       <div class="name">老妈的摄影作品 - 麻雀也是鸟</div>
+                    </div>
+                    <div class="d-flex justify-content-between my-2">
+                       <div class="descrip">阅读 . 10853</div>
+                       <div class="descrip">2020.08.07</div>
+                    </div>
+                 </div>
+                 <div class="col-2">
+                    <img alt="" src="/img/bg3.jpg" class="rounded">
+                 </div>
+              </div>
+            </div>
+          <!-- r3 end-->
         </div>
       </div>
     </div>
@@ -79,9 +136,36 @@ export default {
 };
 </script>
 <style>
-/* r1 */
 
-/* r1 */
+/* r1 r2 r3*/
+.article-page .box {
+        background-color: aliceblue;
+        border-radius: 16px;
+        padding: 10px 0
+}
+.article-page .r1,.article-page .r2,.article-page .r3 {
+        padding: 12px 18px;
+        border-top: 1px solid #ddd
+}
+.article-page .name {
+        font-size: 1rem;
+        font-weight: 600
+}
+.article-page .title
+{
+padding: 0 18px;
+}
+.article-page h5{
+  margin-top: 15px;
+  font-weight:400
+}
+.article-page .descrip{
+        font-size:small;
+        color: #9A9A9A;
+        font-weight: 500
+        }
+/* r2 */
+
 .article-page h4{
   margin-bottom: 0;
 }
