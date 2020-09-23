@@ -30,9 +30,34 @@
         </div>
         <div class="col-sm-4 d-none d-sm-block">
           <div class="r1-box">
+           <!-- 作者介绍-同左-宽度不同 -->
+           
             
           </div>
-          <div class="r2-box"></div>
+          <!-- r2 -->
+            <div class="r2-box my-3">
+               <div class="r2-title d-flex justify-content-between">
+                  <h4>文集-芳草渡 (56) </h4>
+               </div>
+               <div class="r2 row no-gutters">
+                  <div class="align-self-center right col-12">
+                     <div class="r2-name">《芳草渡》下部 《二十七》终归大海作波涛 </div>
+                  </div>
+               </div>
+               <div class="justify-content-right border-top d-flex text-right ">
+                  <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
+                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <title>more</title>
+                        <g id="more" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                           <path d="M11.5740443,6.24199451 L11.5740443,20.2419945 M5,12 L11.5,6 L18,12" id="Arrow" stroke="#6D7278" stroke-width="2" transform="translate(11.500000, 13.120997) rotate(46.000000) translate(-11.500000, -13.120997) "></path>
+                           <rect id="Rectangle" stroke="#6D7278" stroke-width="2" x="3" y="3" width="18" height="18" rx="1"></rect>
+                        </g>
+                     </svg>
+                     更多
+                  </button>
+               </div>
+            </div>
+          <!-- r3 -->
         </div>
       </div>
     </div>
@@ -77,9 +102,26 @@ export default {
 };
 </script>
 <style>
-/* r1 */
+/* r2 */
+.r2-box {
+        background-color: aliceblue;
+        border-radius: 16px;
+        padding: 18px 0;
+}
+.r2 {
+        padding: 12px 18px;
+        border-top: 1px solid #ddd;
+}
+.r2-name {
+        font-size: 1rem;
+        font-weight: 600;
+}
+.r2-title
+{
+padding: 0 18px;
+}
 
-/* r1 */
+/* r2 */
 .article-page h4{
   margin-bottom: 0;
 }
