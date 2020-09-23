@@ -38,15 +38,19 @@
               avatarurl="/img/eva.jpg"
               class="nav-item"
       >
+        <nav-link to="/profile">
+          <i class="now-ui-icons users_single-02"></i> 我的主页
+        </nav-link>
         <nav-link to="/">
-          <i class="now-ui-icons education_paper"></i> Landing
+          <i class="now-ui-icons location_bookmark"></i> 我的收藏
+        </nav-link>
+        <nav-link to="/">
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
         </nav-link>
         <nav-link to="/login">
-          <i class="now-ui-icons users_circle-08"></i> Login
+          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
         </nav-link>
-        <nav-link to="/profile">
-          <i class="now-ui-icons users_single-02"></i> Profile
-        </nav-link>
+        
       </profile-drop-down>
 
       <li class="nav-item">
