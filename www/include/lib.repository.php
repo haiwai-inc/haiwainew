@@ -3,7 +3,9 @@
  代码同步 包含svn github
  
  本机单节点
- inc.updateid.php    inc.webnodes.php
+ inc.updateid.php    
+ inc.syncnodes.php
+ REPOROOT
  */
 
 class repository
