@@ -26,6 +26,7 @@
         <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
           placeholder="搜索文章/用户..."
+          @keyup.enter.native="submit"
         >
         </fg-input>
       </div>
@@ -130,6 +131,11 @@ export default {
         defaultOff: false
       }
     };
+  },
+  methods:{
+    submit(){
+      this.$router.push('/search')
+    }
   }
 };
 </script>

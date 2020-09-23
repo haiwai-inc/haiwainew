@@ -55,6 +55,12 @@ export default new Router({
       name: 'userindex',
       components: { default: resolve => require (['./module/user/UserIndex.vue'],resolve), header: MainNavbar },
       
+    },
+    {
+      path: '/search',
+      name: 'search',
+      components: { default: resolve => require (['./module/blog/pages/Search.vue'],resolve), header: MainNavbar },
+      
     },{
       path:'/notices',
       name:'notices',

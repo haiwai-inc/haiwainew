@@ -1,13 +1,13 @@
 <template>
   <div class="devnotice">
-    消息页 - 包含：评论、悄悄话、关注、喜欢 - 待开发
+    搜索结果页 - 待开发
   </div>
 </template>
 <script>
 
 export default {
-  name: 'notices',
-  bodyClass: 'notices-page',
+  name: 'profile',
+  bodyClass: 'profile-page',
   components: {
     
   }
