@@ -41,19 +41,19 @@ export default {
   data() {
     return {
       maincategory:[
-        {id:'0',name:'全部',link:'/login'},
-        {id:'1',name:'原创',link:'/login'},
-        {id:'2',name:'时政',link:'/login'},
-        {id:'3',name:'旅游',link:'/login'},
-        {id:'4',name:'美食',link:'/login'},
-        {id:'5',name:'娱乐',link:'/login'},
-        {id:'6',name:'家居',link:'/login'},
-        {id:'7',name:'财经',link:'/login'},
-        {id:'8',name:'热榜',link:'/login'},
-        {id:'9',name:'推荐',link:'/login'},
-        {id:'10',name:'热榜',link:'/login'},
-        {id:'11',name:'推荐',link:'/login'},
-        {id:'12',name:'热榜',link:'/login'}
+        {id:'0',name:'全部',link:'/blog/hot'},
+        {id:'1',name:'原创',link:'/blog/hot'},
+        {id:'2',name:'时政',link:'/blog/hot'},
+        {id:'3',name:'旅游',link:'/blog/hot'},
+        {id:'4',name:'美食',link:'/blog/hot'},
+        {id:'5',name:'娱乐',link:'/blog/hot'},
+        {id:'6',name:'家居',link:'/blog/hot'},
+        {id:'7',name:'财经',link:'/blog/hot'},
+        {id:'8',name:'热榜',link:'/blog/hot'},
+        {id:'9',name:'推荐',link:'/blog/hot'},
+        {id:'10',name:'热榜',link:'/blog/hot'},
+        {id:'11',name:'推荐',link:'/blog/hot'},
+        {id:'12',name:'热榜',link:'/blog/hot'}
       ],
       authorList : [
     {

@@ -32,7 +32,9 @@
           <div class="r1-box">
             
           </div>
-          <div class="r2-box"></div>
+          <div class="r2-box">
+            右侧模块
+          </div>
         </div>
       </div>
     </div>

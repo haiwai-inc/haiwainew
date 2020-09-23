@@ -40,8 +40,9 @@
         background-color: $opacity-gray-3;
       }
       &.active {
-        background-color: $primary-color;
-        color: white;
+        // background-color: $primary-color;
+        // color: white;
+        background-color: transparent;
       }
 
       &.disabled,

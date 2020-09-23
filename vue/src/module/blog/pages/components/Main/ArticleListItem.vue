@@ -7,7 +7,10 @@
     </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
-            <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> {{data.author}}
+            <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> 
+              <router-link to="/my">
+                {{data.author}}
+              </router-link>
           </div>
           <div class="tail-data">
             <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.likes}}</span>
@@ -21,7 +24,9 @@
       class='list-itme-image' 
       v-if="data.image"
       v-bind:style="{backgroundImage:'url('+data.image+')'}">
-        <div class="imgspace" id="imgspace"></div>
+        <router-link to="/blog/p/${data.articleID}">
+          <div class="imgspace" id="imgspace"></div>
+        </router-link>
     </div>
 </div>
 </template>
@@ -63,6 +68,11 @@ h4{
     border-radius: 4px; 
     margin:auto .85rem;
 }
+.list-itme a{
+  color:#14171a;
+  text-decoration: none;
+}
+
 .imgspace{
     width:160px;
     height:105px;

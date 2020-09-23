@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       menuitems: [
-          {id:'0',name:'关注',link:'/'},
+          {id:'0',name:'关注',link:'/follow'},
           {id:'1',name:'推荐',link:'/'},
           {id:'2',name:'热榜',link:'/hot'}
       ]

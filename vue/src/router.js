@@ -33,6 +33,11 @@ export default new Router({
       name: 'article',
       components: { default:resolve => require (['./module/blog/pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
       
+    },{
+      path: '/blog/write',
+      name: 'editor',
+      components: { default:resolve => require (['./module/blog/pages/editor/EditorPage.vue'],resolve), header: MainNavbar},
+      
     },
     {
       path: '/login',
@@ -44,11 +49,18 @@ export default new Router({
       name: 'profile',
       components: { default: resolve => require (['./module/user/Profile.vue'],resolve), header: MainNavbar },
       
+    },
+    {
+      path: '/my',
+      name: 'userindex',
+      components: { default: resolve => require (['./module/user/UserIndex.vue'],resolve), header: MainNavbar },
+      
     },{
       path:'/notices',
       name:'notices',
       components:{default: resolve => require (['./module/user/Notices.vue'],resolve), header: MainNavbar}
-    }
+    },
+    {path:'*',components:{default: resolve => require (['./module/404.vue'],resolve), header: MainNavbar}}
   ],
   scrollBehavior: to => {
     if (to.hash) {

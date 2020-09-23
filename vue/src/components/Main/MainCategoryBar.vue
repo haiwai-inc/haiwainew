@@ -78,9 +78,9 @@ export default {
   data() {
     return {
       menuitems: [
-          {id:'0',name:'全部',link:'/login'},
-          {id:'1',name:'原创',link:'/login'},
-          {id:'2',name:'时政',link:'/login'}
+          {id:'0',name:'全部',link:'/hot'},
+          {id:'1',name:'原创',link:'/hot'},
+          {id:'2',name:'时政',link:'/hot'}
       ]
     }
   },

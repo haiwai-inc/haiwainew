@@ -1,5 +1,5 @@
 <template>
-  <div style="text-align:center">
+  <div class="devnotice">
     消息页 - 待开发
   </div>
 </template>
