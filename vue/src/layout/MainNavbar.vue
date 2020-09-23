@@ -4,7 +4,7 @@
     menu-classes="ml-auto"
   >
     <template>
-      <router-link v-popover:popover1 class="navbar-brand" to="/">
+      <router-link class="navbar-brand" to="/">
         海外博客
       </router-link>
       <el-popover
@@ -34,17 +34,17 @@
       
       <profile-drop-down
               tag="li"
-              username="User Name"
-              avatarurl="img/eva.jpg"
+              username="这里是用户名"
+              avatarurl="/img/eva.jpg"
               class="nav-item"
       >
         <nav-link to="/">
           <i class="now-ui-icons education_paper"></i> Landing
         </nav-link>
-        <nav-link to="/">
+        <nav-link to="/login">
           <i class="now-ui-icons users_circle-08"></i> Login
         </nav-link>
-        <nav-link to="/">
+        <nav-link to="/profile">
           <i class="now-ui-icons users_single-02"></i> Profile
         </nav-link>
       </profile-drop-down>
@@ -56,7 +56,7 @@
           rel="tooltip"
           title="Notices"
           data-placement="bottom"
-          href="/profile"
+          href="/notices"
         >
           <div class="noticealert"></div>
           <i class="now-ui-icons ui-1_bell-53"></i>

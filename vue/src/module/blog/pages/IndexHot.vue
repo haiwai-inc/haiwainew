@@ -24,10 +24,10 @@
   </div>
 </template>
 <script>
-import MainMenu from '../components/Main/MainMenu';
-import MainCategoryBar from '../components/Main/MainCategoryBar';
-import ArticleListItem from '../components/Main/ArticleListItem';
-import BlogerList from '../components/Main/BlogerList';
+import MainMenu from './components/Main/MainMenu';
+import MainCategoryBar from './components/Main/MainCategoryBar';
+import ArticleListItem from './components/Main/ArticleListItem';
+import BlogerList from './components/Main/BlogerList';
 
 export default {
   name: 'index-hot',
@@ -57,21 +57,21 @@ export default {
       ],
       authorList : [
     {
-      avatarUrl:'img/avatar.jpg',
+      avatarUrl:'/img/avatar.jpg',
       isHot:true,
       name:'English Name',
       firstLetter:'用',
       description:'简介简介简介简介 English desciption',
       isFollowed:true,
     },{
-      avatarUrl:'img/eva.jpg',
+      avatarUrl:'/img/eva.jpg',
       isHot:false,
       name:'天煞地煞',
       firstLetter:'天',
       description:'简介简介简介简介哈哈哈简介简介简介简',
       isFollowed:false,
     },{
-      avatarUrl:'img/julie.jpg',
+      avatarUrl:'/img/julie.jpg',
       isHot:true,
       name:'用户名',
       firstLetter:'用',
@@ -91,7 +91,7 @@ export default {
           read:'3456',
           commont:'12',
           likes:'23',
-          image:'img/bg3.jpg',
+          image:'/img/bg3.jpg',
         },{
           articleID:'34567',
           articleUrl:'',
@@ -103,7 +103,7 @@ export default {
           read:'3456',
           commont:'12',
           likes:'23',
-          image:'img/bg4.jpg',
+          image:'/img/bg4.jpg',
         },{
           articleID:'3456',
           articleUrl:'',
@@ -115,7 +115,7 @@ export default {
           read:'3456',
           commont:'12',
           likes:'23',
-          image:'img/bg1.jpg',
+          image:'/img/bg1.jpg',
         },{
           articleID:'345',
           articleUrl:'',

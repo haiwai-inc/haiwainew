@@ -1,13 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Index from './pages/Index.vue';
-import IndexHot from './pages/IndexHot.vue';
 import ArticlePage from './pages/article/ArticlePage';
-import Landing from './pages/Landing.vue';
-import Login from './pages/Login.vue';
-import Profile from './pages/Profile.vue';
 import MainNavbar from './layout/MainNavbar.vue';
-import MainFooter from './layout/MainFooter.vue';
 
 Vue.use(Router);
 
@@ -16,40 +10,44 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+    path: '',redirect:{name:'index'}
+    
+    },{
+      path: '/blog',
       name: 'index',
-      components: { default: Index, header: MainNavbar, footer: MainFooter },
+      components: { default:resolve => require (['./module/blog/pages/Index.vue'],resolve), header: MainNavbar},
+      // children:[
+      //   {
+      //     path:'hot',
+      //     name:'hot',
+      //     component:resolve => require (['./module/blog/pages/IndexHot.vue'],resolve)
+      //   }
+      // ]
+    },{
+      path: '/blog/hot',
+      name: 'hot',
+      components: { default:resolve => require (['./module/blog/pages/IndexHot.vue'],resolve), header: MainNavbar},
       
-    },
-    {
-      path: '/hot',
-      name: 'index-hot',
-      components: { default: IndexHot, header: MainNavbar, footer: MainFooter },
-      
-    },
-    {
-      path: '/article',
-      name: 'article-page',
-      components: { default: ArticlePage, header: MainNavbar, footer: MainFooter },
-      
-    },
-    {
-      path: '/landing',
-      name: 'landing',
-      components: { default: Landing, header: MainNavbar, footer: MainFooter },
+    },{
+      path: '/blog/p/:id',
+      name: 'article',
+      components: { default:resolve => require (['./module/blog/pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
       
     },
     {
       path: '/login',
       name: 'login',
-      components: { default: Login, header: MainNavbar },
-      
+      components: { default: resolve => require (['./module/user/Login.vue'],resolve), header: MainNavbar },
     },
     {
       path: '/profile',
       name: 'profile',
-      components: { default: Profile, header: MainNavbar, footer: MainFooter },
+      components: { default: resolve => require (['./module/user/Profile.vue'],resolve), header: MainNavbar },
       
+    },{
+      path:'/notices',
+      name:'notices',
+      components:{default: resolve => require (['./module/user/Notices.vue'],resolve), header: MainNavbar}
     }
   ],
   scrollBehavior: to => {
