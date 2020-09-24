@@ -2,10 +2,10 @@
 /**
  代码同步 包含svn github
  
- 本机单节点
- inc.updateid.php    
- inc.syncnodes.php
- REPOROOT
+ 需要文件
+ /www/inc.updateid.php    
+ /www/inc.syncnodes.php
+ /www/inc.comm.php systemVersion 必须和python的保持一致
  */
 
 class repository
