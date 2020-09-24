@@ -79,7 +79,7 @@ class repository
 		//同步程序
 		$sync_data=[
 				"publish"=>true,
-		        "dist"=>true,
+		        "dist"=>false,
 				"data"=>[]
 		];
 		
