@@ -78,7 +78,7 @@ def update_git():
 
 def update_dist():
     #初始dist路径
-    server_dist_path = SERVER_ROOT+"www/cache/vue/"
+    server_dist_path = SERVER_ROOT+"www/cache/dist/"
     build_dist_path = SERVER_ROOT+"vue/dist/"
 
     #同步插件
