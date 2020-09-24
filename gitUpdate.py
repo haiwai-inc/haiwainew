@@ -90,7 +90,7 @@ def update_dist():
     out += subprocess.check_output(['npm', 'run', 'build']).decode('utf-8')
 
     #成功后复制编译包
-    if os.path.exists(dist_dist):
+    if os.path.exists(build_dist_path):
         out += subprocess.check_output(['rsync','-a','--delete',build_dist_path,server_dist_path]).decode('utf-8')
 
     return out
