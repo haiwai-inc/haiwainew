@@ -79,6 +79,7 @@ class repository
 		//同步程序
 		$sync_data=[
 				"publish"=>true,
+		        "dist"=>true,
 				"data"=>[]
 		];
 		
@@ -88,6 +89,9 @@ class repository
 		
 		$lock=false;
 		if(!empty($_POST['publish'])){
+		    if(!empty($_POST['dist'])){
+		        $sync_data['dist']=true;
+		    }
 			foreach($_POST['publish'] as $server){
 				foreach($syncnodes[$server] as $v){
 					$check=$this->memCache->get(systemVersion."_git_".$v);
