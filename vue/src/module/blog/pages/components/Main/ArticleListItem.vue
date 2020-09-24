@@ -1,10 +1,10 @@
 <template>
   <div class="list-itme d-flex" >
     <div>
-    <router-link to="/blog/p/${data.articleID}">
+      <router-link to="/blog/p/${data.articleID}">
         <h4 class='article-title'>{{data.title}}</h4>
         <p class="descript">{{data.description}}</p>
-    </router-link>
+      </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
             <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> 
@@ -82,7 +82,7 @@ h4.article-title{
   padding-top:1rem;
 }
 p.descript,div.list-itme-tail{
-  color:#999;
+  color:#657786;
   line-height: 1.8 ;
   font-size: .94rem ;
 }

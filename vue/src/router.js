@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import ArticlePage from './pages/article/ArticlePage';
 import MainNavbar from './layout/MainNavbar.vue';
 
 Vue.use(Router);

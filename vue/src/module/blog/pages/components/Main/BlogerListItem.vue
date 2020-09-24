@@ -1,6 +1,7 @@
 <template>
     <div class="hot-blogger row no-gutters" id="author" :class="{noborder:type=='small'}">
       <div class="col-2" :class="{'hot-blogger-avatar':type=='default',small:type=='small'}">
+        <router-link to="/my">
         <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>
           <div v-if="!data.avatarUrl" class="avatar-word">{{data.firstLetter}}</div>
           <img 
@@ -9,10 +10,14 @@
             class="rounded-circle" 
             v-bind:src="data.avatarUrl" 
             >
+        </router-link>
       </div>
       <div class='align-self-center right col-10'> 
           <div class="d-flex align-self-center">
-              <div :class="{'blogger-name':type=='default','small-name':type=='small'}">{{data.name}}</div>
+              <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
+                <router-link to="/my">{{data.name}}
+                </router-link>
+              </div>
               <div class='ml-auto' style="width: 75px;">
                   <a v-if="!data.isFollowed" class="btn btn-link text-primary w-100 btn-follow" type="button">
                       <div class="d-flex justify-content-end align-items-end add">
@@ -35,7 +40,10 @@
                   </a>
               </div>
           </div>
-          <div id="description" class="description" title="data.description">{{data.description}}</div> 
+          <div id="description" class="description" title="data.description">
+            <router-link to="/my">{{data.description}}
+            </router-link>
+          </div> 
       </div>
     </div>
 </template>
@@ -75,6 +83,13 @@ export default {
 }
 .hot-blogger.noborder{
   border-top:0;
+}
+.hot-blogger a{
+  color:#14171a;
+  text-decoration: none;
+}
+.hot-blogger .description a{
+  color:#657786
 }
 .hot-blogger-avatar .avatar-word, .small .avatar-word{
     border-radius: 50%;

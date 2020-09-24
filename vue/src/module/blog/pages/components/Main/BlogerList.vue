@@ -12,9 +12,8 @@
 </template>
 <script>import {
   Button,
-  BlogerListItem,
 } from '@/components';
-
+import BlogerListItem from './BlogerListItem'
 export default {
   name: 'bloger-list',
   props: {
