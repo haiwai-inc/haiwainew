@@ -84,14 +84,14 @@ def update_dist():
     #同步插件
     os.chdir(SERVER_ROOT+"vue")
     out = ""
-    out += check_output(['npm', 'install'])
+    out += subprocess.check_output(['npm', 'install']).decode('utf-8')
 
     #生成编译包
-    out += check_output(['npm', 'run', 'build'])
+    out += subprocess.check_output(['npm', 'run', 'build']).decode('utf-8')
 
     #成功后复制编译包
     if os.path.exists(dist_dist):
-        out += check_output(['rsync','-a','--delete',build_dist_path,server_dist_path])
+        out += subprocess.check_output(['rsync','-a','--delete',build_dist_path,server_dist_path]).decode('utf-8')
 
     return out
 
