@@ -22,7 +22,7 @@ from subprocess import check_output
 from phpserialize import serialize, unserialize
 
 # 修改服务器参数========
-SYSTEM_VERSION= "haiwainew.com"
+SYSTEM_VERSION= "beta.haiwainew.com"
 LOCAL_IP= "10.240.0.3"
 SERVER_ROOT = "/pub/www/haiwainew.com/"
 MEM_HOST = 'sourceNode'
@@ -57,6 +57,10 @@ def sync_code():
         #同步git
         out+= update_git()
 
+        #同步dist
+        if val['dist']:
+            out+= update_dist()
+
         #输出同步信息
         if out:
             f = open(LOG, "w")
@@ -70,6 +74,25 @@ def sync_code():
 def update_git():
     os.chdir(SERVER_ROOT)
     out = subprocess.check_output(["git","pull"]).decode('utf-8')
+    return out
+
+def update_dist():
+    #初始dist路径
+    server_dist_path = SERVER_ROOT+"www/cache/dist/"
+    build_dist_path = SERVER_ROOT+"vue/dist/"
+
+    #同步插件
+    os.chdir(SERVER_ROOT+"vue")
+    out = ""
+    out += subprocess.check_output(['npm', 'install']).decode('utf-8')
+
+    #生成编译包
+    out += subprocess.check_output(['npm', 'run', 'build']).decode('utf-8')
+
+    #成功后复制编译包
+    if os.path.exists(build_dist_path):
+        out += subprocess.check_output(['rsync','-a','--delete',build_dist_path,server_dist_path]).decode('utf-8')
+
     return out
 
 def get_mem():
@@ -118,6 +141,46 @@ schedule.every(TIME_GAP).seconds.do(sync_code)
 while True:
     schedule.run_pending()
     time.sleep(1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

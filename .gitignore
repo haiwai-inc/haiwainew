@@ -1,0 +1,31 @@
+# Mac DS_Store Files
+.DS_Store
+
+# windows thumbnail cache
+Thumbs.db
+
+#angular dist
+/vue/dist/*
+/vue/package-lock.json
+
+# composer vendor dir
+/vendor
+/www/vendor
+/www/composer.lock
+/www/inc.*
+/www/test.*
+/www/cache_angular
+/www/cache
+/www/data
+/www/node_modules
+/www/upload
+/www/remote_sync.php
+/www/*.js
+/www/*.css
+/www/*.txt
+/www/assets/*
+/www/angular.html
+/www/mysql
+/www/.*
+/www/include/editor/ckeditor5/build
+/www/include/editor/ckeditor5/node_modules

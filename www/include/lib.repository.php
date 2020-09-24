@@ -2,10 +2,10 @@
 /**
  代码同步 包含svn github
  
- 本机单节点
- inc.updateid.php    
- inc.syncnodes.php
- REPOROOT
+ 需要文件
+ /www/inc.updateid.php    
+ /www/inc.syncnodes.php
+ /www/inc.comm.php systemVersion 必须和python的保持一致
  */
 
 class repository
@@ -79,6 +79,7 @@ class repository
 		//同步程序
 		$sync_data=[
 				"publish"=>true,
+		        "dist"=>false,
 				"data"=>[]
 		];
 		
@@ -88,6 +89,9 @@ class repository
 		
 		$lock=false;
 		if(!empty($_POST['publish'])){
+		    if(!empty($_POST['dist'])){
+		        $sync_data['dist']=true;
+		    }
 			foreach($_POST['publish'] as $server){
 				foreach($syncnodes[$server] as $v){
 					$check=$this->memCache->get(systemVersion."_git_".$v);
