@@ -5,7 +5,7 @@
   >
     <template>
       <router-link class="navbar-brand" to="/">
-        海外博客
+        <img src="/img/logo.png" alt="海外博客" height="32">
       </router-link>
       <el-popover
         ref="popover1"
