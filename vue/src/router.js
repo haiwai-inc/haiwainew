@@ -50,6 +50,12 @@ export default new Router({
       
     },
     {
+      path: '/api_example',
+      name: 'api_example',
+      components: { default: resolve => require (['./module/user/API-example.vue'],resolve), header: MainNavbar },
+      
+    },
+    {
       path: '/my',
       name: 'userindex',
       components: { default: resolve => require (['./module/user/UserIndex.vue'],resolve), header: MainNavbar },
