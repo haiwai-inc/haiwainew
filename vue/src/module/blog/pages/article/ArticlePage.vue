@@ -99,7 +99,7 @@
 </template>
 <script>
 import MainMenu from '../components/Main/MainMenu';
-import {BlogerListItem} from '@/components';
+import BlogerListItem from '../components/Main/BlogerListItem';
 export default {
   name: 'article-page',
   bodyClass: 'index-page',

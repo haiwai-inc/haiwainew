@@ -86,8 +86,8 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
-      
-      <li class="nav-item"><div class="divider"></div>
+      <div class="divider"></div>
+      <li class="nav-item">
         <n-button 
         type="primary" 
         round 
@@ -156,6 +156,9 @@ export default {
   height: 10px;
   border-radius: 50%;
   background-color: #FF3636;
+}
+.editbtn{
+   white-space: nowrap;
 }
 @media (max-width: 575.98px) { 
   .editbtn{

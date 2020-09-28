@@ -23,8 +23,6 @@ import Slider from './Slider.vue';
 
 import Pagination from './Pagination.vue';
 
-import MainMenu from './Main/MainMenu.vue';
-import BlogerListItem from './Main/BlogerListItem';
 export {
   Alert,
   Collapse,
@@ -42,12 +40,10 @@ export {
   Navbar,
   NavbarToggleButton,
   NavLink,
-  MainMenu,
   TabPane,
   Tabs,
   Modal,
   Parallax,
   Slider,
   Button,
-  BlogerListItem
 };

@@ -23,9 +23,9 @@
   </div>
 </template>
 <script>
-import MainMenu from './components/Main/MainMenu';
-import ArticleListItem from './components/Main/ArticleListItem';
-import BlogerList from './components/Main/BlogerList';
+import MainMenu from './components/Main/MainMenu.vue';
+import ArticleListItem from './components/Main/ArticleListItem.vue';
+import BlogerList from './components/Main/BlogerList.vue';
 
 export default {
   name: 'index',
