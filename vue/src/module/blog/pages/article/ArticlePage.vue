@@ -31,6 +31,9 @@
         <div class="col-sm-4 d-none d-sm-block">
          <!-- r1 -->
             <div class="box my-3">
+              <span class="blogger-box">
+              <bloger-list-item :data="authorInfor" type="small"></bloger-list-item>
+            </span>
                <!-- 左边相同样式 -->
                <div class="r3 row no-gutters">
                  <div class="align-self-center right col-10 pr-2">
