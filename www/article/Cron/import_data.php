@@ -32,7 +32,7 @@ class import_data{
     
     function start(){
         $lastid=0;
-        while( $rs_blog_legacy_202005_post = $this->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>200,'postid,>'=>$lastid,'visible'=>1]) ){                      
+        while( $rs_blog_legacy_202005_post = $this->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible'=>1]) ){                      
             foreach($rs_blog_legacy_202005_post as $k=>$v){
                 $lastid=$v['postid'];
                 $rs=$v;
@@ -81,7 +81,7 @@ class import_data{
             if($rs['treelevel']!=0){
                 //comment
                 $check_article_indexing_basecode=$this->obj_article_indexing->getOne("*",['wxc_postID'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
-                $basecode=empty($check_article_indexing_basecode)?0:$check_article_indexing_basecode['id'];
+                $basecode=empty($check_article_indexing_basecode)?0:$check_article_indexing_basecode['postID'];
             }
             $fields_indexing=[
                 "postID"=>$postID,
