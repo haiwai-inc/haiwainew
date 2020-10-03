@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-4 login-left d-none d-sm-block">
-      <left-bar></left-bar>
+      <left-bar>{{showLogin?'登录':'注册'}}</left-bar>
     </div>
     <div class="col-sm-8 col-12">
         <login-page 
@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      showLogin:true
+      showLogin:true,
     };
   },
   methods:{

@@ -3,11 +3,13 @@ import WxcLogoWhite from './WxcLogoWhite';
 import WxcLogoGreen from './WxcLogoGreen';
 import GoogleLogo from './GoogleLogo';
 import FacebookLogo from './FacebookLogo';
+import LeftArrow from './LeftArrow';
 
 export {
   HaiwaiLogoWhite,
   WxcLogoWhite,
   WxcLogoGreen,
   GoogleLogo,
-  FacebookLogo
+  FacebookLogo,
+  LeftArrow
 };
