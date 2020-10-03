@@ -1,9 +1,10 @@
 <template>
   <div class="login-leftpart">
-      <div class="p-3">
+      <div class="p-3 back"
+      @click="$router.push('/blog')">
         <left-arrow style="fill:white;margin-right:24px"></left-arrow><haiwai-logo-white></haiwai-logo-white>
       </div>
-      <div class="slogan">
+      <div class="slogan d-none d-sm-block">
         <span>
           <span class='hilight'>
             <slot></slot>
@@ -41,6 +42,9 @@ export default {
   height:100%;
   position: relative;
 }
+.login-leftpart .back{
+  cursor: pointer;
+}
 .login-leftpart .slogan{
   position: absolute;
   top:45%;
@@ -54,5 +58,14 @@ export default {
 }
 .login-leftpart .slogan .hilight{
   color:#ffaa15;
+}
+@media (max-width: 575.98px){
+    .login-leftpart .slogan{
+      position: absolute;
+      top:0;
+      margin-top:70px;
+      padding-left: 30%;
+      color:white;
+    }
 }
 </style>

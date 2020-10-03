@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-4 login-left d-none d-sm-block">
+    <div class="col-sm-4 login-left">
       <left-bar>{{showLogin?'登录':'注册'}}</left-bar>
     </div>
     <div class="col-sm-8 col-12">
@@ -51,5 +51,14 @@ html, body, #app, .wrapper, .login-index .row{
 .login-index .login-left{
   background-color: #39B8EB;
   height: 100%;
+}
+@media (max-width: 575.98px){
+    .login-index .login-left{
+      height:60px;
+    }
+    .login-index .content{
+      width:350px;
+      padding: 0;
+    }
 }
 </style>
