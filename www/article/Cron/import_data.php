@@ -62,10 +62,6 @@ class import_data{
                 $rs['article_new']=$this->add_to_article($rs);
                 
                 echo $lastid."\n";
-                
-                if($lastid>2){
-                    exit;
-                }
             }
         }
             
