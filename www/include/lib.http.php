@@ -139,7 +139,7 @@ class http {
 			$ip = $_SERVER['HTTP_FORWARDED'];
 		
 		else
-			$ip = $_SERVER['REMOTE_ADDR'];
+		    $ip = empty($_SERVER['REMOTE_ADDR'])?"127.0.0.1":$_SERVER['REMOTE_ADDR'];
 		
 		//针对特殊情况进行处理 [HTTP_X_FORWARDED_FOR] => 67.180.137.112, 104.198.222.228
 		if(strstr($ip, ',')){
