@@ -3,7 +3,7 @@ export default [
     {
         path: '/login',
         name: 'login',
-        components: { default: resolve => require (['./Login.vue'],resolve)},
+        components: { default: resolve => require (['./login/Login.vue'],resolve)},
     },
     {
         path: '/profile',
