@@ -73,7 +73,7 @@ class import_data{
     
     //article
     function add_to_article($rs){
-        $check_article_indexing=$this->obj_article_indexing->getOne("*",['wxc_postID'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
+        $check_article_indexing=$this->obj_article_indexing->getOne("*",['wxc_postID'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
         
         if(empty($check_article_indexing)){
             //msg
