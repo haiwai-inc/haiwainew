@@ -50,9 +50,6 @@ export default {
   color: #9A9A9A;
   font-weight: 500
 }
-.recommend-list img{
-
-}
 
 @media (max-width: 575.98px){
     

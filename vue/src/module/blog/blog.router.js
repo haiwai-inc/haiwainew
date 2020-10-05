@@ -26,7 +26,7 @@ export default [
         components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve), header: MainNavbar},
       },{
         path: '/blog/user/:id',
-        name: 'userindex',
+        name: 'bloguserindex',
         components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
       },
       {
