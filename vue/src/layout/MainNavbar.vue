@@ -39,7 +39,7 @@
               avatarurl="/img/eva.jpg"
               class="nav-item"
       >
-        <nav-link to="/my">
+        <nav-link to="/blog/user/1">
           <i class="now-ui-icons users_single-02"></i> 我的主页
         </nav-link>
         <nav-link to="/profile">

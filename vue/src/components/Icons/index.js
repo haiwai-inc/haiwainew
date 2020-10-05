@@ -4,6 +4,11 @@ import WxcLogoGreen from './WxcLogoGreen';
 import GoogleLogo from './GoogleLogo';
 import FacebookLogo from './FacebookLogo';
 import LeftArrow from './LeftArrow';
+import IconPen from './IconPen.vue';
+import IconMail from './IconMail.vue';
+import IconPlus from './IconPlus.vue';
+import IconCheck from './IconCheck.vue';
+import IconX from './IconX.vue';
 
 export {
   HaiwaiLogoWhite,
@@ -11,5 +16,10 @@ export {
   WxcLogoGreen,
   GoogleLogo,
   FacebookLogo,
-  LeftArrow
+  LeftArrow,
+  IconPen,
+  IconMail,
+  IconPlus,
+  IconCheck,
+  IconX
 };
