@@ -29,7 +29,6 @@ import BlogerList from './components/Main/BlogerList.vue';
 
 export default {
   name: 'blog-index',
-  bodyClass: 'index-page',
   components: {
     MainMenu,
     ArticleListItem,

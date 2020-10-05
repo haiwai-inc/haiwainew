@@ -16,17 +16,18 @@ export default [
         path: '/blog/hot',
         name: 'hot',
         components: { default:resolve => require (['./pages/IndexHot.vue'],resolve), header: MainNavbar},
-        
       },{
         path: '/blog/p/:id',
         name: 'article',
         components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
-        
       },{
         path: '/blog/write',
         name: 'editor',
         components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve), header: MainNavbar},
-        
+      },{
+        path: '/blog/user/:id',
+        name: 'userindex',
+        components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
       },
       {
           path: '/search',
