@@ -28,7 +28,7 @@ import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
 
 export default {
-  name: 'blog-index',
+  name: 'blog-user-index',
   bodyClass: 'index-page',
   components: {
     MainMenu,
