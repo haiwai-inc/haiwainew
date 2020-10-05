@@ -2,10 +2,16 @@
   <div>
     <div class="container">
       <div>
-        <main-menu type="0"></main-menu>
+        <main-menu type="-1"></main-menu>
       </div>
       <div class="row">
+        <div class="col-sm-4 d-none d-sm-block">
+          <div class="hot-bloger">
+            <bloger-list v-bind:data="authorList" title="热门博主"></bloger-list>
+          </div>
+        </div>
         <div class="col-sm-8 col-12">
+            <index-header></index-header>
           <article-list-item 
             v-for="item in articlelists"
             v-bind:key="item.articleID"
@@ -13,26 +19,23 @@
             type="0">
           </article-list-item>
         </div>
-        <div class="col-sm-4 d-none d-sm-block">
-          <div class="hot-bloger">
-            <bloger-list v-bind:data="authorList" title="热门博主"></bloger-list>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import MainMenu from './components/Main/MainMenu.vue';
-import ArticleListItem from './components/Main/ArticleListItem.vue';
-import BlogerList from './components/Main/BlogerList.vue';
+import MainMenu from '../pages/components/Main/MainMenu.vue';
+import ArticleListItem from '../pages/components/Main/ArticleListItem.vue';
+import BlogerList from '../pages/components/Main/BlogerList.vue';
+import IndexHeader from './IndexHeader'
 
 export default {
-  name: 'blog-index',
+  name: 'blog-user-index',
   components: {
     MainMenu,
     ArticleListItem,
     BlogerList,
+    IndexHeader
   },
   data() {
     return {
