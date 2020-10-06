@@ -8,7 +8,7 @@
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
             <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> 
-              <router-link to="/my">
+              <router-link to="/blog/user/1">
                 {{data.author}}
               </router-link>
           </div>
