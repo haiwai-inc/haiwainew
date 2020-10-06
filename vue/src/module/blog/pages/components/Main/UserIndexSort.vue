@@ -4,7 +4,9 @@
       class="user-index-sort d-flex align-self-center" 
       v-for="(item, index) in data" 
       :key="index">
-      <icon-news class="icon"></icon-news>
+      <icon-news class="icon" v-if="item.icon==='0'"></icon-news>
+      <icon-fire class="icon" v-if="item.icon==='1'"></icon-fire>
+      <icon-message class="icon" v-if="item.icon==='2'"></icon-message>
       <div class="flex-grow-1 pt-1 pl-2">
         {{item.text}} </div><icon-right></icon-right>
     </div>
@@ -13,7 +15,9 @@
 <script>
 import {
     IconRight,
-    IconNews
+    IconNews,
+    IconMessage,
+    IconFire
 } from '@/components/Icons';
 
 export default {
@@ -23,7 +27,9 @@ export default {
   },
   components: {
     IconRight,
-    IconNews
+    IconNews,
+    IconMessage,
+    IconFire
   }
   
 };

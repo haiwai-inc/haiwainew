@@ -44,15 +44,15 @@ export default {
     return {
         sortList:[
             {
-                icon:'',
+                icon:'0',
                 text:'最新博文',
                 src:'0'
             },{
-                icon:'',
+                icon:'1',
                 text:'最热博文',
                 src:'1'
             },{
-                icon:'',
+                icon:'2',
                 text:'最新评论',
                 src:'2'
             }

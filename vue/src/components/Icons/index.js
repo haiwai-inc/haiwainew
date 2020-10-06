@@ -11,6 +11,8 @@ import IconCheck from './IconCheck.vue';
 import IconX from './IconX.vue';
 import IconRight from './IconRight.vue';
 import IconNews from './IconNews.vue';
+import IconMessage from './IconMessage.vue';
+import IconFire from './IconFire.vue';
 
 export {
   HaiwaiLogoWhite,
@@ -25,5 +27,7 @@ export {
   IconCheck,
   IconX,
   IconRight,
-  IconNews
+  IconNews,
+  IconMessage,
+  IconFire
 };
