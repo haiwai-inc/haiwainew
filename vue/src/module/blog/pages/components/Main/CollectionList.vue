@@ -25,7 +25,7 @@ export default {
   props: {
     type:String,
     title:String,
-    data:[]
+    data:{}
   },
   data(){
     return {

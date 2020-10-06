@@ -6,7 +6,8 @@
       </div>
       <div class="row">
         <div class="col-sm-4 d-none d-sm-block">
-          <div class="hot-bloger">
+            <user-index-sort :data="sortList"></user-index-sort>
+          <div class="collection-list mt-3">
             <collection-list v-bind:data="collectionList" title="文集"></collection-list>
           </div>
         </div>
@@ -26,6 +27,7 @@
 <script>
 import MainMenu from '../pages/components/Main/MainMenu.vue';
 import ArticleListItem from '../pages/components/Main/ArticleListItem.vue';
+import UserIndexSort from '../pages/components/Main/UserIndexSort.vue';
 import CollectionList from '../pages/components/Main/CollectionList.vue';
 import IndexHeader from './IndexHeader'
 
@@ -34,11 +36,27 @@ export default {
   components: {
     MainMenu,
     ArticleListItem,
+    UserIndexSort,
     CollectionList,
     IndexHeader
   },
   data() {
     return {
+        sortList:[
+            {
+                icon:'',
+                text:'最新博文',
+                src:'0'
+            },{
+                icon:'',
+                text:'最热博文',
+                src:'1'
+            },{
+                icon:'',
+                text:'最新评论',
+                src:'2'
+            }
+        ],
         collectionList : [
             {
                 id:12,

@@ -10,6 +10,7 @@ import IconPlus from './IconPlus.vue';
 import IconCheck from './IconCheck.vue';
 import IconX from './IconX.vue';
 import IconRight from './IconRight.vue';
+import IconNews from './IconNews.vue';
 
 export {
   HaiwaiLogoWhite,
@@ -23,5 +24,6 @@ export {
   IconPlus,
   IconCheck,
   IconX,
-  IconRight
+  IconRight,
+  IconNews
 };
