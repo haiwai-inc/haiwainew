@@ -18,14 +18,14 @@ class passport extends Api {
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','name','description','background','avatar'],['id'=>$userID]);
         
-        $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID','description','background'],['userID'=>$userID]);
-        
-        $rs=[
-            'status'=>true,
-            'msg'=>"",
-            'data'=>['account_user'=>$rs_account_user,'blog_blogger'=>$rs_blog_blogger],
-        ];
+        if(!empty($rs_account_user)){
+            $obj_blog_blogger=load("blog_blogger");
+            $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID','description','background'],['userID'=>$userID]);
+            
+            $rs=['status'=>true,'msg'=>"",'data'=>['account_user'=>$rs_account_user,'blog_blogger'=>$rs_blog_blogger]];
+        }else{
+            $rs=['status'=>false,'msg'=>"User not logged in",'data'=>""];
+        }
         
         return $rs;
     }
