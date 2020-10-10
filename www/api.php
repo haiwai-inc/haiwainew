@@ -22,3 +22,5 @@ if( file_exists($filename) ) require_once($filename);
 //执行API
 $obj=new $class();
 $obj->run($func);
+
+//test1
