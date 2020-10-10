@@ -11,9 +11,6 @@ class passport extends Api {
         $this->sess = true;
     }
 
-    /**
-     * 检查登录状态
-     */
     public function login_status($userID) {
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','name','description','background','avatar'],['id'=>$userID]);
@@ -31,7 +28,6 @@ class passport extends Api {
     }
     
     
-
     
     
     
