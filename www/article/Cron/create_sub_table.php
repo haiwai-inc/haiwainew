@@ -6,56 +6,65 @@ include DOCUROOT.'/inc.comm.php';
 func_checkCliEnv();
 
 /**
-
 CREATE TABLE post_0 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_1 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_2 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_3 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_4 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_5 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_6 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_7 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_8 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 CREATE TABLE post_9 (
 id INT(11) AUTO_INCREMENT PRIMARY KEY,
 title text NOT NULL,
-msgbody longtext NOT NULL
+msgbody longtext NOT NULL,
+pic VARCHAR(255) NOT NULL
 );
 
 
@@ -110,7 +119,56 @@ id INT(11) AUTO_INCREMENT PRIMARY KEY,
 postID INT(11) NOT NULL,
 tagID INT(11) NOT NULL
 );
-
+CREATE TABLE post_buzz_0 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_1 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_2 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_3 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_4 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_5 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_6 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_7 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_8 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
+CREATE TABLE post_buzz_9 (
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+postID INT(11) NOT NULL,
+userID INT(11) NOT NULL
+);
 
 
 CREATE TABLE post_upload_0 (

@@ -5,11 +5,11 @@ define( 'DOCUROOT',str_replace("/blog/Cron","",dirname( __FILE__ )));
 include DOCUROOT.'/inc.comm.php';
 func_checkCliEnv();
 
-class sync_hot_post{
+class sync_recommend_post{
     function start(){
         $obj_blog_tool=load("blog_tool");
         $obj_legacy_hot_post=load("blog_legacy_hot_post");
-        $obj_blog_hot=load("blog_hot");
+        $obj_blog_recommend=load("blog_recommend");
         $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
         
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'oder'=>['id'=>'DESC']]);
@@ -18,7 +18,7 @@ class sync_hot_post{
             $rs=$obj_blog_legacy_202005_post->getOne("*",['postid'=>$v['postid']],"blog_{$v['date']}_post");
             $rs_import_post=$obj_blog_tool->import_post($rs);
             
-            $check_blog_hot=$obj_blog_hot->getOne("*",['postID'=>$rs_import_post['article_new']['postID']]);
+            $check_blog_hot=$obj_blog_recommend->getOne("*",['postID'=>$rs_import_post['article_new']['postID']]);
             if(empty($check_blog_hot)){
                 $fields=[
                     "postID"=>$rs_import_post['article_new']['postID'],
@@ -26,7 +26,7 @@ class sync_hot_post{
                     "title"=>$v['title'],
                     "create_date"=>times::getTime(),
                 ];
-                $obj_blog_hot->insert($fields);
+                $obj_blog_recommend->insert($fields);
             }
             
             echo $v['id']."\n";
@@ -34,7 +34,7 @@ class sync_hot_post{
     }
 }
 
-$obj = new sync_hot_post();
+$obj = new sync_recommend_post();
 $obj->start();
 
 
