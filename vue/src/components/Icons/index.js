@@ -13,6 +13,9 @@ import IconRight from './IconRight.vue';
 import IconNews from './IconNews.vue';
 import IconMessage from './IconMessage.vue';
 import IconFire from './IconFire.vue';
+import IconSearch from './IconSearch.vue';
+import IconLike from './IconLike.vue';
+import IconLikeOutline from './IconLikeOutline.vue';
 
 export {
   HaiwaiLogoWhite,
@@ -29,5 +32,8 @@ export {
   IconRight,
   IconNews,
   IconMessage,
-  IconFire
+  IconFire,
+  IconSearch,
+  IconLike,
+  IconLikeOutline
 };

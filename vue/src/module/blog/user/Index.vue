@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="container">
       <div>
         <main-menu type="-1"></main-menu>
@@ -22,7 +21,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script>
 import MainMenu from '../pages/components/Main/MainMenu.vue';
@@ -111,7 +109,7 @@ export default {
                 read:12345,
             },
         ],
-        authorInfo :{
+        authorInfo : {
             avatarUrl:'/img/avatar.jpg',
             isHot:true,
             name:'English Name',

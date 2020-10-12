@@ -1,7 +1,7 @@
 <template>
     <div class="hot-blogger row no-gutters" id="author" :class="{noborder:type=='small'}">
       <div class="col-2" :class="{'hot-blogger-avatar':type=='default',small:type=='small'}">
-        <router-link to="/my">
+        <router-link to="/blog/user/1">
         <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>
           <div v-if="!data.avatarUrl" class="avatar-word">{{data.firstLetter}}</div>
           <img 
