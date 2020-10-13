@@ -31,7 +31,6 @@ export default {
     IconMessage,
     IconFire
   }
-  
 };
 
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div class="left-nav-item d-flex justify-content-between">
-      <div class="name">
+      <div class="name" :style="data.id===3?{color:'#39b8eb'}:''">
         <icon-message v-if="data.id===0" style="stroke:#333"></icon-message>
         <icon-mail v-if="data.id===1" style="fill:#333"></icon-mail>
-        <icon-like-outline v-if="data.id===3" style="stroke:#333"></icon-like-outline>
+        <icon-like-outline v-if="data.id===3" style="stroke:#39b8eb"></icon-like-outline>
         {{data.title}}</div>
-      <div class="descrip">{{data.unread}} </div> 
+      <div class="descrip" :style="data.id===3?{color:'#39b8eb'}:''">{{data.unread}} </div> 
   </div>
 </template>
 <script>
