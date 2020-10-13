@@ -185,7 +185,7 @@ export default {
             authorHomepage:'blog/user/1',
             content:'随便说点什么叽叽歪歪',
             like:0,
-            showReply:true,
+            showReply:false,
             replies:[
               {
                 ID:2234,
