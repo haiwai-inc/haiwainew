@@ -1,13 +1,7 @@
 <?php
-//后台操作添加
-set_time_limit(0);
-define( 'DOCUROOT',str_replace("/article/Cron","",dirname( __FILE__ )));
-include DOCUROOT.'/inc.comm.php';
-func_checkCliEnv();
-
-
-class import_data{
-    function __construct(){
+class blog_tool{
+    //import legacy blog data
+    function load_all_db(){
         //account
         $this->obj_account_user=load("account_user");
         $this->obj_account_legacy_user=load("account_legacy_user");
@@ -30,41 +24,35 @@ class import_data{
         $this->obj_blog_legacy_202005_msg=load("blog_legacy_202005_msg");
     }
     
-    function start(){
-        $lastid=0;
-        while( $rs_blog_legacy_202005_post = $this->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible'=>1]) ){                      
-            foreach($rs_blog_legacy_202005_post as $k=>$v){
-                $lastid=$v['postid'];
-                $rs=$v;
-
-                //user
-                $rs['user_new']=$this->add_to_user($rs);
-                
-                //blogger
-                if($rs['treelevel']==0){
-                    $rs['blogger_new']=$this->add_to_blogger($rs);
-                    
-                    //tag
-                    if($rs['blogcat_id']!=0){
-                        $rs['tag_new'][]=$this->add_to_tag($rs['blogcat_id']);
-                    }
-                    if($rs['parent_id']!=0){
-                        $rs['tag_new'][]=$this->add_to_tag($rs['parent_id']);
-                    }
-                    
-                    //category
-                    if($rs['catid']!=0){
-                        $rs['category_new']=$this->add_to_category($rs);
-                    }
-                }
-                
-                //article
-                $rs['article_new']=$this->add_to_article($rs);
-                
-                echo $lastid."\n";
+    //start indexing table: blog_202005_post
+    function import_post($rs){
+        $this->load_all_db();
+        
+        //user
+        $rs['user_new']=$this->add_to_user($rs);
+        
+        //blogger
+        if($rs['treelevel']==0){
+            $rs['blogger_new']=$this->add_to_blogger($rs);
+            
+            //tag
+            if($rs['blogcat_id']!=0){
+                $rs['tag_new'][]=$this->add_to_tag($rs['blogcat_id']);
+            }
+            if($rs['parent_id']!=0){
+                $rs['tag_new'][]=$this->add_to_tag($rs['parent_id']);
+            }
+            
+            //category
+            if($rs['catid']!=0){
+                $rs['category_new']=$this->add_to_category($rs);
             }
         }
-            
+        
+        //article
+        $rs['article_new']=$this->add_to_article($rs);
+        
+        return $rs;
     }
     
     //article
@@ -73,7 +61,8 @@ class import_data{
         
         if(empty($check_article_indexing)){
             //msg
-            $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']]);
+            $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+            $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
             
             //indexing
             $postID=$this->obj_article_post->get_id();
@@ -92,7 +81,7 @@ class import_data{
                 "categoryID"=>empty($rs['category_new']['id'])?0:$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
-                "edit_date"=>strtotime($rs['editdate']),
+                "edit_date"=>strtotime($rs['dateline']),
                 "like_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
@@ -146,7 +135,7 @@ class import_data{
     function add_to_user($rs){
         $rs_account_legacy_user=$this->obj_account_legacy_user->getOne("*",['userid'=>$rs['userid']]);
         
-        $check_account_user=$this->obj_account_user->getOne("*",['username'=>$rs_account_legacy_user['username']]);
+        $check_account_user=$this->obj_account_user->getOne("*",['login_source'=>'wxc','username'=>$rs_account_legacy_user['username']]);
         if(empty($check_account_user)){
             $rs_account_legacy_user_details=$this->obj_account_legacy_user_details->getOne("*",["user_details_id"=>$rs['userid']]);
             
@@ -213,7 +202,7 @@ class import_data{
                 return false;
             }
             
-            $check_article_category=$this->obj_article_category->getOne("*",['userID'=>$rs['user_new']['id'],'bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);                              
+            $check_article_category=$this->obj_article_category->getOne("*",['userID'=>$rs['user_new']['id'],'bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
             if(empty($check_article_category)){
                 $field=[
                     "userID"=>$rs['user_new']['id'],
@@ -247,72 +236,4 @@ class import_data{
         return $field;
     }
 }
-
-$obj = new import_data();
-$obj->start();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>

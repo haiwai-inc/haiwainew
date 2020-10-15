@@ -22,6 +22,6 @@ export default [
     },{
         path:'/notices',
         name:'notices',
-        components:{default: resolve => require (['./Notices.vue'],resolve), header: MainNavbar}
+        components:{default: resolve => require (['./notices/Notices.vue'],resolve), header: MainNavbar}
     }
 ]
