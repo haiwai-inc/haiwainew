@@ -1,9 +1,9 @@
 <?php
-class article_search extends Search
+class search_article_pool extends Search
 {
 
     protected $dictName = "article";
-    protected $index    = "article";
+    protected $index    = "article_body";
 
     public function __construct()
     {
@@ -32,29 +32,20 @@ class article_search extends Search
 			},
 			"mappings": {
 				"properties": {
-				"indexID": {
-					"type": "integer"
-				},
 				  "blogID": {
-					"type": "integer"
+					"enabled": false
 				  },
 				  "msgbody": {
-					"analyzer": "ik_smart",
-					"type": "text"
-				  },
-				  "userID":{
-					"type": "integer"
+					"enabled": false
 				  },
 				  "title": {
-					"analyzer": "ik_max_word",
-					"boost": 2,
-					"type": "text"
-                  },
-                  "tags":{
-                      "type":"text"
-                  },
-				  "visible": {
-					"type": "integer"
+					"enabled": false
+				  },
+				  "pic": {
+					"enabled": false
+				  },
+				  "buzz":{
+					"enabled": false
 				  }
 				}
 			  }
@@ -64,25 +55,7 @@ class article_search extends Search
     public function initialize_index()
     {
         debug::d($this->indexset(json_decode($this->articleSet)));
-	}
-	
-
-	public function search_tags($tags){
-		$tag_string = implode(" ", $tags);
-		$query["should"] = [];
-		foreach ($tags as $tag){
-			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
-		}
-		// $query["should"] =[$this->object(array("match" => array("tags"=>$tag_string)))];
-		$query["must_not"]=array(
-			$this->object(array("term" => array("visible"=>0)))
-		);
-
-		$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
-		$rs = $this->search($query);
-		$rs = json_decode(json_encode($rs), true);
-		return $rs;
-	}
+    }
 
     /**
      * 批量添加新文章
@@ -96,13 +69,12 @@ class article_search extends Search
 			$data_string = "";
             foreach ($articles as $article) {
                 $article_formatted = [
-                    "indexID"      => $article['id'],
-                    "userID"  => $article['userID'],
                     "blogID"  => $article['postID'],
                     "title"   => $article['title'],
-                    "msgbody" => $article['msgbody'],
-                    "tags"    => $article['tags'],
-                    "visible" => $article['visible'],
+                    "msgbody" => $article['msgbody_origin'],
+					"pic" => $article['pic'],
+					"buzz"=>[]
+                    // "visible" => $article['visible'],
 				];
 				$count++;
 				$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
@@ -125,6 +97,10 @@ class article_search extends Search
 			debug::d($e);
             return 0;
         }
-    }
+	}
+	
+	public function add_buzz($postID, $userID){
+		
+	}
 
 }

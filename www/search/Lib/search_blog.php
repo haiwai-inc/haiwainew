@@ -1,8 +1,8 @@
 <?php
-class blog_search extends Search{
+class search_blog extends Search{
 
     protected $dictName = "blog";
-    
+
     function __construct()
 	{   $blogSet='
 		
@@ -29,46 +29,29 @@ class blog_search extends Search{
 			},
 			"mappings": {
 				"properties": {
-				  "postid": {
+				  "blogid": {
 					"type": "integer"
 				  },
-				  "content": {
+				  "description": {
 					"analyzer": "ik_smart",
 					"type": "text"
 				  },
-				  "article_blogname": {
-					"index": false,
+				  "name": {
+					"analyzer": "ik_max_word",
+					"boost": 2,
 					"type": "text"
 				  },
 				  "title": {
 					"analyzer": "ik_max_word",
 					"boost": 2,
 					"type": "text"
-				  },
+                  },
+                  "tags":{
+                      
+                  },    
 				  "visible": {
 					"type": "integer"
 				  },
-				  "doc": {
-					"properties": {
-					  "visible": {
-						"type": "long"
-					  }
-					}
-				  },
-				  "dateline": {
-					"type": "date",
-					"format": "yyyy-MM-dd HH:mm:ss"
-				  },
-				  "article_userid": {
-					"type": "integer"
-				  },
-				  "article_blogid": {
-					"type": "integer"
-				  },
-				  "article_username": {
-					"index": false,
-					"type": "text"
-				  }
 				}
 			  }
         }';

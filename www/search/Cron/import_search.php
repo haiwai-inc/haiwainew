@@ -3,15 +3,15 @@ set_time_limit(0);
 define( 'DOCUROOT',str_replace("/article/Cron","",dirname( __FILE__ )));
 include DOCUROOT.'/inc.comm.php';
 
-$article_search = load("article_search");
-$article_search_pool = load("article_search_pool");
-$index_setting = $article_search->get_index_setting();
+$search_article = load("search_article");
+$search_article_pool = load("search_article_pool");
+$index_setting = $search_article->get_index_setting();
 if(!empty($index_setting) || !empty($index_setting['error'] )){
-    $article_search -> initialize_index();
+    $search_article -> initialize_index();
 }
-$index_setting = $article_search->get_index_setting();
+$index_setting = $search_article->get_index_setting();
 if(!empty($index_setting) || !empty($index_setting['error'] )){
-    $article_search_pool -> initialize_index();
+    $search_article_pool -> initialize_index();
 }
 
 // Get first 1000 article
@@ -95,7 +95,7 @@ foreach(range(0, count($articles)-1) as $i){
 // exit;
 
 // debug::D("haha");
-$test = $article_search -> add_new_articles($final_list);
-$test2 = $article_search_pool -> add_new_articles($final_list);
+$test = $search_article -> add_new_articles($final_list);
+$test2 = $search_article_pool -> add_new_articles($final_list);
 // debug::D($test);
 
