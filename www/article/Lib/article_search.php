@@ -12,7 +12,7 @@ class article_search extends Search
 		{
 			"settings": {
 				"index.number_of_replicas":"2",
-				"index.number_of_shards":"2",
+				"index.number_of_shards":"5",
 				"index.max_ngram_diff":"13",
 				"analysis": {
 					"analyzer": {
