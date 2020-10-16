@@ -35,7 +35,16 @@ class page extends Api {
     }
     
     public function hot_tag(){
+        $obj_memcache = func_initMemcached('cache01');
+        $rs_memcache = $obj_memcache->get("blog_hot_tag");
         
+        if(empty($rs_memcache)){
+            $rs=['status'=>false,'msg'=>"",'data'=>""];
+            return $rs;
+        }
+        
+        $rs=['status'=>true,'msg'=>"",'data'=>$rs_memcache];
+        return $rs;
     }
     
     public function hot_article($lastid=0){
