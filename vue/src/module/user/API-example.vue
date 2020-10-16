@@ -18,21 +18,35 @@
   </div>
 </template>
 <script>
-
+import Account from './service/account'
+let accountModule ={
+  state: {
+    account: new Account()
+  },
+  mutations: {
+    increment (state) {
+    }
+  }
+}
 export default {
   name: 'api_example',
   bodyClass: 'index-page',
-//   components: {
-//     MainMenu,
-//   },
+  //Create new module for store that is used only under the current module
+  beforeCreate(){
+      this.$store.registerModule('account', accountModule)
+  },
   data() {
     return {
         user:this.$store.state.user
     };
   },
   methods:{
-      login() {
-          this.$api.get("Haha");
+      async login() {
+          console.log(this.$store.state.account);
+          let user = this.$store.state.user;
+          await user.login("abc", "bcd");
+          let account = this.$store.state.account.account;
+          account.signal("Here is a message")
       }
   }      
 };

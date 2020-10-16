@@ -15,7 +15,7 @@
 class Search {
 	
 	public $search_host = "";
-	public $search_port ="";
+	public $search_port = "";
 	public $showquery = false;
 	
 	protected $index;
@@ -57,19 +57,22 @@ class Search {
 			}
 			
 			else {
-				curl_setopt( $ci, CURLOPT_POSTFIELDS, json_encode($data ));
-				curl_setopt( $ci, CURLOPT_HTTPHEADER, array('Content-Type: application/json') );
+				$data_json = json_encode($data);
+				curl_setopt( $ci, CURLOPT_POSTFIELDS, $data_json);
+				curl_setopt( $ci, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)) );
 			}
-			
 		}
 		if($this->showquery) {
 			if(empty($bulk))
 				debug::d(json_encode($data));
-				else
-					debug::d($data);
+			else
+				debug::d($data);
 		}
-		
-		$json =  curl_exec($ci);
+		$json =  curl_exec($ci);	
+		if(empty($json)){
+			debug::d(curl_error($ci));
+			debug::d(curl_errno($ci));
+		}
 		return  json_decode($json);
 	}
 	
@@ -110,7 +113,6 @@ class Search {
 		$url = "/{$index}/_search?size={$this->page['size']}&from={$pagination}";
 		//处理搜索条件
 		$data = $this->prequery($data);
-		
 		$result = array();
 		$tmpobj = $this->curl($url,$data,"GET");
 		if( isset($tmpobj->hits->total->value) ) $this->page['all'] = $tmpobj->hits->total->value;//记录总数
@@ -130,10 +132,10 @@ class Search {
 			}
 		}
 		
-		if(!empty($result)){
-			$this->pageNavInfo = $this->__getNavData();
-			$this->pageNavTpl = $this->__getNavTpl();
-		}
+		// if(!empty($result)){
+		// 	$this->pageNavInfo = $this->__getNavData();
+		// 	$this->pageNavTpl = $this->__getNavTpl();
+		// }
 		
 		return $result;
 	}
@@ -473,13 +475,14 @@ class Search {
 	function get($id,$source=true){
 		$data = array();
 		if(is_array($id)){
-			$url = "/{$this->index}/_doc/_mget";
-			foreach($id as $docid){
-				$data[]=array(
-						"_id"=> $docid,
-						"_source"=>$source
-				);
-			}
+			$url = "/{$this->index}/_mget";
+			$data = ['ids'=>$id];
+			// foreach($id as $docid){
+			// 	$data[]=array(
+			// 			"_id"=> $docid,
+			// 			"_source"=>$source
+			// 	);
+			// }
 		}else{
 			$url = "/{$this->index}/_doc/{$id}";
 			if($source) $url = $url."/_source";
@@ -491,7 +494,7 @@ class Search {
 	//设置索引
 	//https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html
 	function indexset($data){
-		return $this->call( "/{$this->index}/", $data, "PUT" );
+		return $this->call( "/{$this->index}", $data, "PUT" );
 	}
 	
 	//https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
@@ -518,19 +521,31 @@ class Search {
 	function analyzer($text){
 		return $this->curl("/_analyze",array('analyzer'=>'ik','text'=>$text));
 	}
+
+	/**
+	 * 获取目前表信息
+	 */
+	function get_index_setting(){
+		return $this->call( "/{$this->index}", null, "GET" );
+	}
 	
 	//将数组转换成对象
 	static function object($array=null) {
-		$object = new stdClass();
+		$object = new stdClass(); 
 		
 		if( $array===null ) return $object;
-		if (!is_array($array)) return $array;
-		
+		if (!is_array($array)||self::isAssoc($array)) return $array;		
 		foreach ($array as $name=>$value) {
 			$name = trim($name);
 			if (!empty($name)) $object->$name = self::object($value);
 		}
 		return $object;
+	}
+
+	static function isAssoc(array $arr)
+	{
+		if (array() === $arr) return false;
+		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 	
 	//将时间字串转成标准lucene时间格式

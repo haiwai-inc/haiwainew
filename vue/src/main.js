@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router/router';
 import NowUiKit from './plugins/now-ui-kit';
-import API from './api';
+import API from './service/api';
 import Vuex from 'vuex';
 import User from './service/user'
 
