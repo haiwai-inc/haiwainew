@@ -15,7 +15,9 @@
         <div class="col-sm-8 col-12">
           <span
             v-if="activeId===0"
-          >评论</span>
+          >
+            <notice-comment></notice-comment>
+          </span>
           <span
             v-if="activeId===1"
           >
@@ -44,6 +46,7 @@
 import MainMenu from '../../blog/pages/components/Main/MainMenu.vue';
 import LeftNavItem from '../../blog/pages/components/Main/LeftNavItem';
 import ArticleListItem from '../../blog/pages/components/Main/ArticleListItem.vue';
+import NoticeComment from './NoticeComment';
 export default {
   name: 'notices',
   data(){
@@ -140,7 +143,8 @@ export default {
   components: {
     LeftNavItem,
     MainMenu,
-    ArticleListItem
+    ArticleListItem,
+    NoticeComment
   },
   computed:{
     

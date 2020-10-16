@@ -1,17 +1,26 @@
 <template>
-    <comment :data="articleDetail.comment"></comment>
+    <div>
+        <div v-for="(item,index) in comments" :key="index">
+            <h5 
+            @click="$router.push(item.articleUrl)"
+            class="notice-comment-t"
+            >{{item.title}}</h5>
+            <comment :data="item.comment"></comment>
+        </div>
+    </div>
 </template>
 <script>
 import Comment from '../../blog/pages/article/Comment'
 export default {
-  name: 'article-page',
+  name: 'notice-comment',
   components: {
     Comment
   },
   data(){
       return{
-          comments:{
+          comments:[{
               title:'这个标题是第一个',
+              articleUrl:'/blog/p/1',
                 comment:[
                 {
                     ID:1234,
@@ -71,12 +80,31 @@ export default {
                     ]
                 }
                 ],
+          },{
+              title:'这个标题是第2个',
+              articleUrl:'/blog/p/1',
+                comment:[
+                {
+                    ID:1234,
+                    avatarUrl:'/img/julie.jpg',
+                    name:'朱莉',
+                    time:'15:30 10/12/2020',
+                    authorHomepage:'blog/user/1',
+                    content:'随便说点什么叽叽歪歪',
+                    like:3,
+                    showReply:false,
+                    replies:[]
+                }
+                ],
           }
-          
+          ]
       }
   }
 }
 </script>
 <style>
-
+.notice-comment-t{
+    cursor: pointer;
+    padding: 10px 0 0;
+}
 </style>
