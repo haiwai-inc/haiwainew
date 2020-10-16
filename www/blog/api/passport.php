@@ -12,14 +12,13 @@ class passport extends Api {
     }
 
     public function login_status($userID) {
-        $obj_account_user=load("account_user");
-        $rs_account_user=$obj_account_user->getOne(['id','name','description','background','avatar'],['id'=>$userID]);
-        $rs_account_user['avatar']=file_domain.$rs_account_user['avatar'];
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne('*',['userID'=>$userID]);
         
-        if(!empty($rs_account_user)){
-            $rs=['status'=>true,'msg'=>"",'data'=>$rs_account_user];
+        if(!empty($rs_blog_blogger)){
+            $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_blogger];
         }else{
-            $rs=['status'=>false,'msg'=>"User not logged in",'data'=>""];
+            $rs=['status'=>false,'msg'=>"no blogger",'data'=>""];
         }
         
         return $rs;
