@@ -70,7 +70,9 @@
           </span>
           <span
             v-if="activeId===2"
-          >关注</span>
+          >
+          <notice-follow></notice-follow>
+          </span>
           <span
             v-if="activeId===3">
             <h4>全部喜欢</h4>
@@ -92,6 +94,7 @@ import MainMenu from '../../blog/pages/components/Main/MainMenu.vue';
 import LeftNavItem from '../../blog/pages/components/Main/LeftNavItem';
 import ArticleListItem from '../../blog/pages/components/Main/ArticleListItem.vue';
 import NoticeComment from './NoticeComment';
+import NoticeFollow from './NoticeFollow';
 export default {
   name: 'notices',
   data(){
@@ -189,7 +192,8 @@ export default {
     LeftNavItem,
     MainMenu,
     ArticleListItem,
-    NoticeComment
+    NoticeComment,
+    NoticeFollow
   },
   computed:{
     
