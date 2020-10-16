@@ -1,13 +1,31 @@
 <template>
 <div class="container">
-      <div>
+      <div class="d-none d-sm-block">
         <main-menu type="-1"></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-4 d-none d-sm-block">
-            <left-nav-item v-for="(item,index) in data" :key='index' :data='item'></left-nav-item>
+        <div class="col-sm-4 left-top-nav">
+            <left-nav-item 
+            v-for="(item,index) in data" 
+            :key='index' 
+            :data='item'
+            :activeId='activeId'
+            v-on:whichActive="whichActive"></left-nav-item>
         </div>
         <div class="col-sm-8 col-12">
+          <span
+            v-if="activeId===0"
+          >评论</span>
+          <span
+            v-if="activeId===1"
+          >
+          <!-- 把悄悄话写在这个span里面 -->
+          </span>
+          <span
+            v-if="activeId===2"
+          >关注</span>
+          <span
+            v-if="activeId===3">
             <h4>全部喜欢</h4>
             <article-list-item 
             v-for="item in articlelists"
@@ -15,6 +33,8 @@
             v-bind:data="item"
             type="0">
             </article-list-item>
+          </span>
+            
         </div>
       </div>
     </div>
@@ -121,7 +141,26 @@ export default {
     LeftNavItem,
     MainMenu,
     ArticleListItem
+  },
+  computed:{
+    
+  },
+  methods:{
+    whichActive(id){
+      this.activeId=id;
+      console.log(this);
+    }
   }
 };
 </script>
-<style></style>
+<style>
+@media (max-width: 575.98px){
+  .left-top-nav .name svg, .left-top-nav .descrip{
+    display: none;
+  }
+  .left-top-nav{
+    display: flex;
+    justify-content: space-between;
+  }
+}
+</style>
