@@ -7,7 +7,11 @@ func_checkCliEnv();
 
 class generate_hot_tag{
     function start(){
+        $this->obj_article_tag=load("article_tag");
         
+        $rs_article_tag=$this->obj_article_tag->getAll("*",['visible'=>1,'limit'=>20,'order'=>['count_article'=>'DESC']]);
+        debug::d($rs_article_tag);
+        exit;
     }
 }
 
