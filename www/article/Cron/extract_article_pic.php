@@ -35,19 +35,21 @@ class extract_article_pic{
                     if(substr($image,0,8)=='/upload/'){
                         $image=file_domain.$image;
                     }
+                    
+                    //save image
+                    $path=DOCUROOT."/upload/article/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                    if (!file_exists($path)) {
+                        mkdir($path, 0777, true);
+                    }
+                    $filename=$v['postID']."_1";
+                    $rs_image=picture::saveImg($image,$path,$filename);
+                    
                     $is_pic=1;
                 }else{
                     $is_pic=-1;
                 }
-                $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 
-                //save image
-                $path=DOCUROOT."/upload/article/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
-                if (!file_exists($path)) {
-                    mkdir($path, 0777, true);
-                }
-                $filename=$v['postID']."_1";
-                $rs_image=picture::saveImg($image,$path,$filename);
+                $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 echo $lastid."\n";
             }
         }
