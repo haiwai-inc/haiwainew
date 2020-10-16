@@ -37,7 +37,7 @@ class extract_article_pic{
                     }
                     $is_pic=1;
                 }else{
-                    $is_pic=0;
+                    $is_pic=-1;
                 }
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 
