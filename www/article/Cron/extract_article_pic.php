@@ -49,7 +49,6 @@ class extract_article_pic{
                 $filename=$v['postID']."_1";
                 $rs_image=picture::saveImg($image,$path,$filename);
                 echo $lastid."\n";
-                exit;
             }
         }
     }
