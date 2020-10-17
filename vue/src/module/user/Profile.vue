@@ -1,6 +1,6 @@
 <template>
   <div class="devnotice">
-    我的收藏、个人设置页 - 待开发
+    个人设置页 - 待开发
   </div>
 </template>
 <script>
