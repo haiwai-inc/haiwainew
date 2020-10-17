@@ -14,3 +14,7 @@ npm install
 
 # testing userID
 1
+
+
+# tmp mpdified file
+blog/Cron/generate_hot_blogger.php   ->  file_domain
