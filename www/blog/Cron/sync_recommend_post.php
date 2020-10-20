@@ -12,7 +12,7 @@ class sync_recommend_post{
         $obj_blog_recommend=load("blog_recommend");
         $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
         
-        $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'oder'=>['id'=>'DESC']]);
+        $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         foreach($rs_legacy_hot_post as $v){
             //import legacy post
             $rs=$obj_blog_legacy_202005_post->getOne("*",['postid'=>$v['postid']],"blog_{$v['date']}_post");

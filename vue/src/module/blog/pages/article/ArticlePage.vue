@@ -117,15 +117,14 @@
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
-import comment from './Comment'
+import Comment from './Comment'
 export default {
   name: 'article-page',
-  bodyClass: 'index-page',
   components: {
     MainMenu,
     BlogerListItem,
     RecommendListItem,
-    comment
+    Comment
   },
   data() {
     return {

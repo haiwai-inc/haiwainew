@@ -11,6 +11,11 @@ export default [
         components: { default: resolve => require (['./Profile.vue'],resolve), header: MainNavbar },
     },
     {
+        path: '/bookmark',
+        name: 'bookmark',
+        components: { default: resolve => require (['./BookMark.vue'],resolve), header: MainNavbar },
+    },
+    {
         path: '/api_example',
         name: 'api_example',
         components: { default: resolve => require (['./API-example.vue'],resolve), header: MainNavbar },

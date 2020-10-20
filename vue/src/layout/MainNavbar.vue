@@ -42,7 +42,7 @@
         <nav-link to="/blog/user/1">
           <i class="now-ui-icons users_single-02"></i> 我的主页
         </nav-link>
-        <nav-link to="/profile">
+        <nav-link to="/bookmark">
           <i class="now-ui-icons location_bookmark"></i> 我的收藏
         </nav-link>
         <nav-link to="/profile">

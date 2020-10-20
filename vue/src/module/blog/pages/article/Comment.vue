@@ -5,7 +5,7 @@
         <div>
             <span class="replyName">{{item.name}}</span><span class="replyTime">{{item.time}}</span>
             <p class="replyContent" v-html="item.content"></p>
-            <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{item.like!==0?item.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a></p>
+            <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{item.like!==0?item.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a><a href="#" class="ml-5" style="color:gray">删除</a></p>
             <div v-if="item.replies.length>0">
                 <div :id="index" v-show="item.showReply">
                     <div v-for="(r,idx) in item.replies" :key="'r'+idx" class="d-flex align-items-start mt-2">
@@ -13,7 +13,7 @@
                         <div>
                             <span class="replyName">{{r.name}}</span><span class="replyTime">{{r.time}}</span>
                             <p class="replyContent" v-html="r.content"></p>
-                            <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{r.like!==0?r.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a></p>
+                            <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{r.like!==0?r.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a><a href="#" class="ml-5" style="color:gray">删除</a></p>
                         </div>
                     </div>
                 </div>
