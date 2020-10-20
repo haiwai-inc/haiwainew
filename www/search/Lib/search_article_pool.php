@@ -57,6 +57,34 @@ class search_article_pool extends Search
         debug::d($this->indexset(json_decode($this->articleSet)));
     }
 
+	public function insert_doc($article){
+		$article_formatted = [
+			"blogID"  => $article['postID'],
+            "title"   => $article['title'],
+            "msgbody" => $article['msgbody_origin'],
+			"pic" => $article['pic'],
+			"buzz"=>[]
+		];
+		return $this->add($article_formatted, $article['postID']);
+	}
+
+	public function update_buzz($postID, $userID){
+		$article = $this->get($postID);
+		if(!empty($article['_source'])){
+			$buzz_list = $article['_source']['buzz'];
+			if(!in_array($userID, $buzz_list)){
+				$buzz_list[] = $userID;
+			}
+			else {
+				$index = array_search($userID, $buzz_list);
+				$buzz_list = array_splice ($buzz_list, $index, 1);
+			}
+			$this->update(['buzz'=>$buzz_list], $postID);
+			return 1;
+		}
+		return 0;
+	}
+
     /**
      * 批量添加新文章
      * @param $articles | List of article record
@@ -99,8 +127,5 @@ class search_article_pool extends Search
         }
 	}
 	
-	public function add_buzz($postID, $userID){
-		
-	}
 
 }

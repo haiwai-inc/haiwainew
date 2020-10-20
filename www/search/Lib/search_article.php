@@ -52,7 +52,7 @@ class search_article extends Search
                   },
                   "tags":{
                       "type":"text"
-                  },
+				  },
 				  "visible": { 
 					"type": "integer"
 				  }
@@ -68,7 +68,7 @@ class search_article extends Search
 	
 
 	public function search_tags($tags){
-		$tag_string = implode(" ", $tags);
+		// $tag_string = implode(" ", $tags);
 		$query["should"] = [];
 		foreach ($tags as $tag){
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
@@ -82,6 +82,20 @@ class search_article extends Search
 		$rs = $this->search($query);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
+	}
+
+	public function insert_doc($article){
+		$article_formatted = [
+			"indexID"      => $article['id'],
+			"userID"  => $article['userID'],
+			"blogID"  => $article['postID'],
+			"title"   => $article['title'],
+			"msgbody" => $article['msgbody'],
+			"tags"    => $article['tags'],
+			"visible" => $article['visible'],
+		];
+
+		return $this->add($article_formatted, $article['postID']);
 	}
 
     /**
