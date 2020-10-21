@@ -37,7 +37,8 @@
       </ul>
     </div>
     <div class="col-md-7 editor">
-      <h3>这里是标题</h3>
+      <input class="editorTitle" type="text" value="这里是标题">
+      
       <!-- 编辑器放这里 -->
     </div>
   </div>
@@ -147,5 +148,9 @@ body,html,#app,.wrapper,.publisher{
 .publisher .editbtn{
   font-size: 1rem;
   font-weight: 700;
+}
+.publisher .editorTitle{
+  font-size: 32px;
+  border: 0;
 }
 </style>
