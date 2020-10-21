@@ -23,7 +23,7 @@ export default [
       },{
         path: '/blog/write',
         name: 'editor',
-        components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve)},
       },{
         path: '/blog/user/:id',
         name: 'bloguserindex',
