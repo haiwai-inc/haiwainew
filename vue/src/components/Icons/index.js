@@ -25,7 +25,8 @@ import IconTime from './IconTime.vue';
 import IconFolder from './IconFolder.vue';
 import IconDelete from './IconDelete.vue';
 import IconBlogSet from './IconBlogSet.vue';
-import IconAccountSet from './IconAccountSet.vue'
+import IconAccountSet from './IconAccountSet.vue';
+import IconV from './IconV.vue';
 
 
 export {
@@ -56,6 +57,7 @@ export {
   IconFolder,
   IconDelete,
   IconBlogSet,
-  IconAccountSet
+  IconAccountSet,
+  IconV
 
 };
