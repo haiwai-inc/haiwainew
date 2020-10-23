@@ -68,7 +68,7 @@ class Search {
 			else
 				debug::d($data);
 		}
-		$json =  curl_exec($ci);	
+		$json =  curl_exec($ci);
 		if(empty($json)){
 			debug::d(curl_error($ci));
 			debug::d(curl_errno($ci));

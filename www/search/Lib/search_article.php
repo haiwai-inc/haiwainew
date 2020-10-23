@@ -3,7 +3,7 @@ class search_article extends Search
 {
 
     protected $dictName = "article";
-    protected $index    = "article";
+    protected $index    = "hwarticle";
 
     public function __construct()
     {
@@ -32,6 +32,7 @@ class search_article extends Search
 			},
 			"mappings": {
 				"properties": {
+				"type": { "type": "keyword" },
 				"indexID": {
 					"type": "integer"
 				},
@@ -51,7 +52,19 @@ class search_article extends Search
 					"type": "text"
                   },
                   "tags":{
-                      "type":"text"
+                      "type":"integer"
+				  },
+				  "create_date": {
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss"
+				  },
+				  "edit_date": {
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss"
+				  },
+				  "like_date": {
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss"
 				  },
 				  "visible": { 
 					"type": "integer"
@@ -64,6 +77,14 @@ class search_article extends Search
     public function initialize_index()
     {
         debug::d($this->indexset(json_decode($this->articleSet)));
+	}
+
+	public function delete_index(){
+
+	}
+
+	private function get_time_string($timestamp){
+		return gmdate("Y-m-d h:m:s", $timestamp);
 	}
 	
 
@@ -80,12 +101,14 @@ class search_article extends Search
 
 		$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
 		$rs = $this->search($query);
+		debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
 	}
 
 	public function insert_doc($article){
 		$article_formatted = [
+			"type"	=> $article['typeID'],
 			"indexID"      => $article['id'],
 			"userID"  => $article['userID'],
 			"blogID"  => $article['postID'],
@@ -93,6 +116,10 @@ class search_article extends Search
 			"msgbody" => $article['msgbody'],
 			"tags"    => $article['tags'],
 			"visible" => $article['visible'],
+			"create_date"    => $this-> get_time_string($article['create_date']),
+			"edit_date"    => $this-> get_time_string($article['edit_date']),
+			"like_date"    => $this-> get_time_string($article['like_date']),
+			"pic" => $article['pic'],
 		];
 
 		return $this->add($article_formatted, $article['postID']);
@@ -110,32 +137,37 @@ class search_article extends Search
 			$data_string = "";
             foreach ($articles as $article) {
                 $article_formatted = [
+					"type"	=> $article['typeID'],
                     "indexID"      => $article['id'],
                     "userID"  => $article['userID'],
                     "blogID"  => $article['postID'],
                     "title"   => $article['title'],
                     "msgbody" => $article['msgbody'],
                     "tags"    => $article['tags'],
+                    "create_date"    => $this-> get_time_string($article['create_date']),
+                    "edit_date"    => $this-> get_time_string($article['edit_date']),
+                    "like_date"    => $this-> get_time_string($article['like_date']),
                     "visible" => $article['visible'],
+					"pic" => $article['pic'],
 				];
 				$count++;
 				$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
 				$data_string = $data_string.json_encode($article_formatted)."\n";
 
-                if ($count == 100) {
-					debug::d("adding");
-                    debug::d($this->addBulk($data_string));
+                if ($count == 1000) {
+					// debug::d("adding");
+					// debug::d($this->addBulk($data_string));
+					$this->addBulk($data_string);
 					$data_string = "";
 					$count = 0;
                 }
             }
 
-            if (!empty($article_list)) {
-                $this->addBulk($article_list);
+            if (!empty($count)) {
+                $this->addBulk($data_string);
             }
             return 1;
         } catch (Exception $e) {
-			debug::d("aa");
 			debug::d($e);
             return 0;
         }
