@@ -7,7 +7,8 @@
       </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
-            <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> 
+          <icon-V class="text-primary lable" v-if="data.isHot"></icon-V>
+            <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> --> 
               <router-link to="/blog/user/1">
                 {{data.author}}
               </router-link>
@@ -31,6 +32,9 @@
 </div>
 </template>
 <script>
+import {
+    IconV
+} from '@/components/Icons';
 
 export default {
   name: 'article-list-item',
@@ -50,7 +54,10 @@ export default {
       image:[String]
     }
   },
-  
+  components: {
+    IconV
+  }
+   
 };
 // console.log(type);
 </script>

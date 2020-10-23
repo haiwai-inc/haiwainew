@@ -2,7 +2,8 @@
     <div class="hot-blogger row no-gutters" id="author" :class="{noborder:type=='small'}">
       <div class="col-2" :class="{'hot-blogger-avatar':type=='default',small:type=='small'}">
         <router-link to="/blog/user/1">
-        <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>
+        <icon-V class="text-primary lable" v-if="data.isHot"></icon-V>
+        <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
           <div v-if="!data.avatarUrl" class="avatar-word">{{data.firstLetter}}</div>
           <img 
             v-if="data.avatarUrl" 
@@ -51,7 +52,8 @@
 import {
     IconPlus,
     IconCheck,
-    IconX
+    IconX,
+    IconV
 } from '@/components/Icons';
 import {
   Button,
@@ -78,7 +80,8 @@ export default {
     [Button.name]: Button,
     IconPlus,
     IconCheck,
-    IconX
+    IconX,
+    IconV
   }
   
 };
