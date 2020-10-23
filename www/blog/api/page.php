@@ -34,6 +34,7 @@ class page extends Api {
         return $rs;
     }
     
+    //热门标签
     public function hot_tag(){
         $obj_memcache = func_initMemcached('cache01');
         $rs_memcache = $obj_memcache->get("blog_hot_tag");
@@ -47,6 +48,7 @@ class page extends Api {
         return $rs;
     }
     
+    //
     public function hot_article($lastid=0){
         
     }
@@ -65,14 +67,30 @@ class page extends Api {
         return $rs;
     }
     
+    //
     public function follower_article(){
         
     }
     
+    //文章详情
+    public function view_article($id){
+        $obj_article_post=load("article_post");
+        $obj_article_indexing=load("article_indexing");
+        
+        $rs_article_post=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_post)){
+            $rs=['status'=>false,'msg'=>"no article",'data'=>""];
+            return $rs;
+        }
+        
+        //计数+1
+        
+    }
     
-    
-    
-    
+    //文章评论
+    public function comment_article($id){
+        
+    }
     
     
     
