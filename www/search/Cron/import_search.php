@@ -2,7 +2,17 @@
 set_time_limit(600);
 define('DOCUROOT', str_replace("/search/Cron", "", dirname(__FILE__)));
 include DOCUROOT . '/inc.comm.php';
+if(count($argv)<2){
+    echo("Password needed\n");
+    exit;
+}
+else {
+    if($argv[1] != "haiwai2020") {
 
+        echo("Wrong password\n");
+        exit;
+    }
+}
 $search_article      = load("search_article");
 $search_article_pool = load("search_article_pool");
 $article_post_obj = load("article_post");
@@ -24,7 +34,7 @@ $index_obj    = load("article_indexing");
 $group_number = 0;
 $indexed_article_number = 0;
 $indexed_article_pool_number = 0;
-while ($group_number < 8) {
+while (true) {
     try{
     $articles = $index_obj->getAll(["id", "userID", 'typeID', "postID", "visible", "create_date", "like_date", "edit_date", "treelevel"], ["visible" => 1, "limit" => [$group_number * 1000, 1000], "is_sync" => 0]);
     $group_number++;
