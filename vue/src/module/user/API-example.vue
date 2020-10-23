@@ -10,6 +10,7 @@
         </div>
         <div class="col-sm-4 d-none d-sm-block">
           <!-- {{user.state.check}} -->
+          <img :src="user.avatar" alt="">
           {{user.username}}
           <button v-on:click="login()"> Login</button>
         </div>
@@ -44,9 +45,9 @@ export default {
       async login() {
           console.log(this.$store.state.account);
           let user = this.$store.state.user;
-          await user.login("abc", "bcd");
+          let res = await user.getUserInfo(1);
           let account = this.$store.state.account.account;
-          account.signal("Here is a message")
+          account.signal(res.data.data.avatar);
       }
   }      
 };

@@ -16,7 +16,18 @@ import IconFire from './IconFire.vue';
 import IconSearch from './IconSearch.vue';
 import IconLike from './IconLike.vue';
 import IconLikeOutline from './IconLikeOutline.vue';
-import IconMore3v from './IconMore3v'
+import IconMore3v from './IconMore3v.vue';
+import IconFollow from './IconFollow.vue';
+import IconUser from './IconUser.vue';
+import IconArticle from './IconArticle.vue';
+import IconTop from './IconTop.vue';
+import IconTime from './IconTime.vue';
+import IconFolder from './IconFolder.vue';
+import IconDelete from './IconDelete.vue';
+import IconBlogSet from './IconBlogSet.vue';
+import IconAccountSet from './IconAccountSet.vue';
+import IconV from './IconV.vue';
+
 
 export {
   HaiwaiLogoWhite,
@@ -37,5 +48,16 @@ export {
   IconSearch,
   IconLike,
   IconLikeOutline,
-  IconMore3v
+  IconMore3v,
+  IconFollow,
+  IconUser,
+  IconArticle,
+  IconTop,
+  IconTime,
+  IconFolder,
+  IconDelete,
+  IconBlogSet,
+  IconAccountSet,
+  IconV
+
 };
