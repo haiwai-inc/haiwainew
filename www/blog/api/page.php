@@ -82,9 +82,6 @@ class page extends Api {
             $rs=['status'=>false,'msg'=>"no article",'data'=>""];
             return $rs;
         }
-        
-        //计数+1
-        
     }
     
     //文章评论
