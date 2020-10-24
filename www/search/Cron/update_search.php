@@ -35,9 +35,10 @@ $index_obj    = load("article_indexing");
 $group_number = 0;
 $indexed_article_number = 0;
 $indexed_article_pool_number = 0;
+$first_update_time = time() - 5*60;
 while (true) {
     try{
-    $articles = $index_obj->getAll(["id", "userID", 'typeID', "postID", "visible", "create_date", "like_date", "edit_date", "treelevel"], ["visible" => 1, "limit" => [$group_number * 1000, 1000], "is_sync" => 0]);
+    $articles = $index_obj->getAll(["id", "userID", 'typeID', "postID", "visible", "create_date", "like_date", "edit_date", "treelevel"], ["visible" => 1, "limit" => [$group_number * 1000, 1000], "edit_date,>=" => $first_update_time]);
     $group_number++;
     while(count($articles) == 0){
         break;
@@ -175,7 +176,7 @@ while (true) {
     unset($articles);
     unset($tag_id_list);
     unset($tag_id_map);
-    $index_obj->update(['is_sync'=>1], ['OR'=>['id'=>$index_list]]);
+    // $index_obj->update(['is_sync'=>1], ['OR'=>['id'=>$index_list]]);
     unset($index_list);
     // continue;
     }

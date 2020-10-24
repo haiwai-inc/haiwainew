@@ -21,4 +21,5 @@ blog/Cron/generate_hot_blogger.php   ->  file_domain
 
 # elastic search
 search/Cron/import_search.php // create and initialize search index for article and article pool
-search/Cron/update_search.php // update new article from database to es
+search/Cron/update_search.php // update new article from database to es 
+password: haiwai2020

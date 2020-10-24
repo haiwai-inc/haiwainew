@@ -101,7 +101,7 @@ class search_article extends Search
 
 		$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
 		$rs = $this->search($query);
-		debug::d($rs);
+		// debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
 	}
