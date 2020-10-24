@@ -68,6 +68,7 @@ while (true) {
     foreach (range(0, 9) as $i) {
         $ids           = $id_list[$i];
         $tag_post_ids  = $post_id_list[$i];
+        $article_posts = [];
         if(!empty($ids)){
             $article_posts = $article_post_obj->getAll("*", ["OR" => ["id" => $ids]], "post_{$i}");
         }
@@ -105,6 +106,7 @@ while (true) {
 
 //Get tag info
     $tag_id_map = [];
+    $tags = [];
     if(!empty($tag_id_list)){
         $tags       = $tag_obj->getAll(["id", "name"], ["OR" => ['ID' => $tag_id_list]]);
     }
