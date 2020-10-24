@@ -38,7 +38,7 @@ $indexed_article_pool_number = 0;
 $first_update_time = time() - 5*60;
 while (true) {
     try{
-    $articles = $index_obj->getAll(["id", "userID", 'typeID', "postID", "visible", "create_date", "like_date", "edit_date", "treelevel"], ["visible" => 1, "limit" => [$group_number * 1000, 1000], "edit_date,>=" => $first_update_time]);
+    $articles = $index_obj->getAll(["id", "userID", 'typeID', "postID", "visible", "create_date", "like_date", "edit_date", "treelevel"], ["visible" => 1, "limit" => [$group_number * 200, 200], "edit_date,>=" => $first_update_time]);
     $group_number++;
     while(count($articles) == 0){
         break;
@@ -162,8 +162,8 @@ while (true) {
     $test2 = $search_article_pool->add_new_articles($final_pool_list);
     debug::d($test);
     debug::d($test2); 
-    echo("<br>Total indexed article: ".$indexed_article_number);
-    echo("<br>Total article pool: ".$indexed_article_pool_number);
+    echo("<br>Total indexed article: ".$indexed_article_number."\n");
+    echo("<br>Total article pool: ".$indexed_article_pool_number."\n");
 
     unset($final_list);
     unset($final_pool_list);
