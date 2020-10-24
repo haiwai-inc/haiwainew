@@ -103,7 +103,7 @@ class search_article_pool extends Search
 	
 	public function get_by_postIDs($postIDs){
 		$posts = $this->get($postIDs);
-		$posts = json_decode(json_encode($posts));
+		$posts = json_decode(json_encode($posts),true);
 		if(is_array($postIDs)){
 			return $posts['docs'];
 		}

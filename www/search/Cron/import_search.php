@@ -118,6 +118,9 @@ while (true) {
     $final_list = [];
     $final_pool_list = [];
 
+    if(count($articles) < 1){
+        break;
+    }
     foreach (range(0, count($articles) - 1) as $i) {
         $postID = $articles[$i]['postID'];
         if (empty($article_post_map[$postID])) {
