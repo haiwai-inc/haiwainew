@@ -9,5 +9,8 @@ export default {
 };
 </script>
 <style>
+.icon:hover {
+  fill: #DA4567;
+}
 
 </style>
