@@ -3,14 +3,14 @@
     <div class="row">
       <div class="col-sm-4 left-top-nav">
         <div class="left-nav-item d-flex justify-content-between">
-          <div class="name" @click="menuId=0"><icon-blog-set></icon-blog-set>博客设置
+          <div class="name"  @click="menuId=0" ><icon-blog-set></icon-blog-set>博客设置
           </div>
         </div>
         <div class="left-nav-item d-flex justify-content-between">
           <div class="name" @click="menuId=1"><icon-account-set></icon-account-set>账号设置</div>
         </div>
         <div class="left-nav-item d-flex justify-content-between">
-          <div class="name" @click="menuId=2"><icon-black-list></icon-black-list>黑名单</div>
+          <div class="name" @click="menuId=2"><icon-blacklist></icon-blacklist>黑名单</div>
         </div>
      </div>
       <div class="col-sm-8 col-12">
@@ -55,11 +55,9 @@ export default {
   name: 'profile',
   components: {
     Avatar,
-    [FormGroupInput.name]: FormGroupInput,
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlacklist
   },
-     components:{
-    IconAccountSet,IconBlogSet,IconBlacklist
-  },
+
   data(){
     return{
       menuId:1,
@@ -76,6 +74,7 @@ export default {
   }
 };
 </script>
+
 <style>
 .left-nav-item{
   padding: 12px 18px;

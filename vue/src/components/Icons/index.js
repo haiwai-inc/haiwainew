@@ -27,7 +27,7 @@ import IconDelete from './IconDelete.vue';
 import IconBlogSet from './IconBlogSet.vue';
 import IconAccountSet from './IconAccountSet.vue';
 import IconV from './IconV.vue';
-import IconBlacklist from './IconBlacklist.vue';
+import IconBlacklist from './IconBlackList.vue';
 
 
 export {
