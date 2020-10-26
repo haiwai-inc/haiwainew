@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-    name: 'icon-mail',
+    name: 'icon-article',
 };
 </script>
 <style>
