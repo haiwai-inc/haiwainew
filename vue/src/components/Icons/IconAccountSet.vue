@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-    name: 'icon-accountset',
+    name: 'icon-account-set',
 };
 </script>
 <style>

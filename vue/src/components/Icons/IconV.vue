@@ -6,7 +6,7 @@ style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-w
 </template>
 <script>
 export default {
-    name: 'icon-mail',
+    name: 'icon-v',
 };
 </script>
 <style>

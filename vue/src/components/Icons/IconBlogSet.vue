@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-    name: 'icon-blogset',
+    name: 'icon-blog-set',
 };
 </script>
 <style>
