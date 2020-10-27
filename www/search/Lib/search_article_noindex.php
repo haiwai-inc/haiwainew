@@ -1,9 +1,9 @@
 <?php
-class search_article_pool extends Search
+class search_article_noindex extends Search
 {
 
     protected $dictName = "article";
-    protected $index    = "hwarticlebody";
+    protected $index    = "hwarticle_noindex";
 
     public function __construct()
     {
@@ -32,7 +32,7 @@ class search_article_pool extends Search
 			},
 			"mappings": {
 				"properties": {
-				  "blogID": {
+				  "postID": {
 					"enabled": false
 				  },
 				  "msgbody": {
@@ -63,7 +63,7 @@ class search_article_pool extends Search
     public function insert_doc($article)
     {
         $article_formatted = [
-			"blogID"  => $article['postID'],
+			"postID"  => $article['postID'],
 			"title"   => $article['title'],
 			"msgbody" => $article['msgbody_origin'],
 			"pic"     => $article['pic'],
@@ -75,7 +75,7 @@ class search_article_pool extends Search
 	
 	public function get_formatted_doc($article){
 		return [
-			"blogID"  => $article['postID'],
+			"postID"  => $article['postID'],
 			"title"   => $article['title'],
 			"msgbody" => $article['msgbody_origin'],
 			"pic"     => $article['pic'],
@@ -105,7 +105,13 @@ class search_article_pool extends Search
 		$posts = $this->get($postIDs);
 		$posts = json_decode(json_encode($posts),true);
 		if(is_array($postIDs)){
-			return $posts['docs'];
+			$posts_body = [];
+			foreach($posts['docs'] as $doc){
+				if(!empty($doc['found'])){
+					$posts_body[] = $doc['_source'];
+				}
+			}
+			return $posts_body;
 		}
 		return $posts;
 	}
@@ -118,20 +124,36 @@ class search_article_pool extends Search
     {
 
         try {
-            $count       = 0;
-            $data_string = "";
+			$count       = 0;
+			$total = 0;
+			$data_string = "";
+			$postID_map = [];
+			foreach ($articles as $article) {
+				$postIDs[] = $article['postID'];
+			}
+			$result = $this->get_by_postIDs($postIDs);
+			foreach($result as $post){
+				$postID_map[$post['postID']] = true;
+			}
             foreach ($articles as $article) {
                 $article_formatted = [
-                    "blogID"  => $article['postID'],
+                    "postID"  => $article['postID'],
                     "title"   => $article['title'],
                     "msgbody" => $article['msgbody_origin'],
                     "pic"     => $article['pic'],
                     "buzz"    => $article['buzz'],
                     "tags"    => $article['tags'],
                 ];
-                $count++;
-                $data_string = $data_string . json_encode(['index' => ["_id" => $article['postID']]]) . "\n";
-                $data_string = $data_string . json_encode($article_formatted) . "\n";
+				$count++;
+				$total++;
+				if(!empty($postID_map[$article['postID']])){
+					$data_string = $data_string.json_encode(['update' => ["_id"=>$article['postID']]]) . "\n";
+					$data_string = $data_string.json_encode(array('doc'=>$article_formatted))."\n";
+				}
+				else{
+					$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
+					$data_string = $data_string.json_encode($article_formatted)."\n";
+				}
 
                 if ($count == 1000) {
                     // debug::d("adding");
@@ -145,7 +167,7 @@ class search_article_pool extends Search
             if (!empty($count)) {
                 $this->addBulk($data_string);
             }
-            return 1;
+            return $total;
         } catch (Exception $e) {
             debug::d($e);
             return 0;

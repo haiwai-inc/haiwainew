@@ -19,6 +19,6 @@ npm install
 blog/Cron/generate_hot_blogger.php   ->  file_domain
 
 # elastic search
-search/Cron/import_search.php // create and initialize search index for article and article pool
-search/Cron/update_search.php // update new article from database to es 
+search/Cron/init_indexes.php // create and initialize search index for article and article pool
+search/Cron/update_search.php [password] [all] [iteration_number]// update new article from database to es, [all] ignore 15 min limit, [iteration_number] iteration_number*200 = total number indexed
 password: haiwai2020

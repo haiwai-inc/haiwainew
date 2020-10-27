@@ -80,7 +80,7 @@ class Search {
 	public $page=array(
 			'param'=>'page',
 			'group'=>5,
-			'size'=>15, //默认每个分页的文档数量
+			'size'=>30, //默认每个分页的文档数量
 			'now'=>0,//当前页面
 			'all'=>0,
 			'max'=>100
@@ -99,18 +99,26 @@ class Search {
 	 * 文档搜索接口
 	 * https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html
 	 */
-	function search( $data, $index=null, $type=null ){
+	function search( $data, $index=null, $type=null, $size = null, $page = null){
 		$index = empty($index)? $this->index : $index;
 		$type = empty($type)? $this->type : $type;
 		
+		if(empty($size) || !is_numeric($size)){
+			$size = $this->page['size'];
+		}
+
+
 		//获得当前页码
 		if(isset($_GET[$this->page['param']])) $this->page['now'] = intval($_GET[$this->page['param']]);
 		//针对搜索翻页，最多支持到100页即可，更多的页面内容除了增加系统消耗外，没有意义
 		if( $this->page['now'] > $this->page['max']) $this->page['now']=$this->page['max'];
+		if(empty($now) || !is_numeric($now)){
+			$now = $this->page['now'];
+		}
 		//设置起始记录点
-		$pagination = $this->page['size']*$this->page['now'];
+		$pagination = $size*$now;
 		//es搜索请求链接
-		$url = "/{$index}/_search?size={$this->page['size']}&from={$pagination}";
+		$url = "/{$index}/_search?size={$size}&from={$pagination}";
 		//处理搜索条件
 		$data = $this->prequery($data);
 		$result = array();

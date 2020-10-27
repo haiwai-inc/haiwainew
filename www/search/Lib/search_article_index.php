@@ -1,9 +1,9 @@
 <?php
-class search_article extends Search
+class search_article_index extends Search
 {
 
     protected $dictName = "article";
-    protected $index    = "hwarticle";
+    protected $index    = "hwarticle_index";
 
     public function __construct()
     {
@@ -36,7 +36,7 @@ class search_article extends Search
 				"indexID": {
 					"type": "integer"
 				},
-				  "blogID": {
+				  "postID": {
 					"type": "integer"
 				  },
 				  "msgbody": {
@@ -88,7 +88,7 @@ class search_article extends Search
 	}
 	
 
-	public function search_tags($tags){
+	public function search_tags($tags, $order = array("postID"=>array("order"=>"desc"))){
 		// $tag_string = implode(" ", $tags);
 		$query["should"] = [];
 		foreach ($tags as $tag){
@@ -99,11 +99,27 @@ class search_article extends Search
 			$this->object(array("term" => array("visible"=>0)))
 		);
 
-		$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
-		$rs = $this->search($query);
+		// $query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "dateline"=>array("order"=>"desc")))];
+		$query["sort"]=[$this->object($order)];
+		$rs = $this->search($query,null,null, 100);
 		// debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
+	}
+
+	public function get_by_postIDs($postIDs){
+		$posts = $this->get($postIDs);
+		$posts = json_decode(json_encode($posts),true);
+		if(is_array($postIDs)){
+			$posts_body = [];
+			foreach($posts['docs'] as $doc){
+				if(!empty($doc['found'])){
+					$posts_body[] = $doc['_source'];
+				}
+			}
+			return $posts_body;
+		}
+		return $posts;
 	}
 
 	public function insert_doc($article){
@@ -111,7 +127,7 @@ class search_article extends Search
 			"type"	=> $article['typeID'],
 			"indexID"      => $article['id'],
 			"userID"  => $article['userID'],
-			"blogID"  => $article['postID'],
+			"postID"  => $article['postID'],
 			"title"   => $article['title'],
 			"msgbody" => $article['msgbody'],
 			"tags"    => $article['tags'],
@@ -134,13 +150,25 @@ class search_article extends Search
 		
         try {
 			$count = 0;
+			$total = 0;
 			$data_string = "";
+			$postIDs = [];
+			$postID_map = [];
+			foreach ($articles as $article) {
+				$postIDs[] = $article['postID'];
+			}
+			$result = $this->get_by_postIDs($postIDs);
+			foreach($result as $post){
+				$postID_map[$post['postID']] = true;
+			}
             foreach ($articles as $article) {
+				if(!empty($article['treelevel']))
+					continue;
                 $article_formatted = [
 					"type"	=> $article['typeID'],
                     "indexID"      => $article['id'],
                     "userID"  => $article['userID'],
-                    "blogID"  => $article['postID'],
+                    "postID"  => $article['postID'],
                     "title"   => $article['title'],
                     "msgbody" => $article['msgbody'],
                     "tags"    => $article['tags'],
@@ -151,8 +179,16 @@ class search_article extends Search
 					"pic" => $article['pic'],
 				];
 				$count++;
-				$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
-				$data_string = $data_string.json_encode($article_formatted)."\n";
+				$total++;
+				if(!empty($postID_map[$article['postID']])){
+					$data_string = $data_string.json_encode(['update' => ["_id"=>$article['postID']]]) . "\n";
+					$data_string = $data_string.json_encode(array('doc'=>$article_formatted))."\n";
+				}
+				else{
+					$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
+					$data_string = $data_string.json_encode($article_formatted)."\n";
+				}
+					
 
                 if ($count == 1000) {
 					// debug::d("adding");
@@ -164,9 +200,9 @@ class search_article extends Search
             }
 
             if (!empty($count)) {
-                $this->addBulk($data_string);
+                debug::D($this->addBulk($data_string));
             }
-            return 1;
+            return $total;
         } catch (Exception $e) {
 			debug::d($e);
             return 0;

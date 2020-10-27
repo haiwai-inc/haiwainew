@@ -8,7 +8,7 @@ class page extends Api {
     //推荐
     public function recommend_article($lastid=0){
         $obj_blog_recommend=load("blog_recommend");
-        $obj_search_article_pool=load("search_article_pool");
+        $obj_search_article_noindex=load("search_article_noindex");
         
         $fields=[
             "limit"=>30,
@@ -25,8 +25,8 @@ class page extends Api {
         }
         
         /*
-        $rs_search_article_pool=$obj_search_article_pool->get([57028]);
-        debug::d($rs_search_article_pool);
+        $rs_search_article_noindex=$obj_search_article_noindex->get([57028]);
+        debug::d($rs_search_article_noindex);
         exit;
         */
         
