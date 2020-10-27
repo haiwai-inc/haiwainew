@@ -10,7 +10,7 @@
           <div class="name" @click="menuId=1"><icon-account-set></icon-account-set>账号设置</div>
         </div>
         <div class="left-nav-item d-flex justify-content-between">
-          <div class="name" @click="menuId=2"><icon-blacklist></icon-blacklist>黑名单</div>
+          <div class="name" @click="menuId=2"><icon-black-list></icon-black-list>黑名单</div>
         </div>
      </div>
       <div class="col-sm-8 col-12">
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import {IconAccountSet,IconBlogSet,IconBlacklist} from '@/components/Icons';
+import {IconAccountSet,IconBlogSet,IconBlackList} from '@/components/Icons';
 import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
@@ -55,7 +55,7 @@ export default {
   name: 'profile',
   components: {
     Avatar,
-    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlacklist
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList
   },
 
   data(){
@@ -85,11 +85,7 @@ export default {
   font-size: 1rem;
   font-weight: 600
 }
-.left-nav-item .descrip{
-  font-size:small;
-  color: #888888;
-  font-weight: 500;
-  fill:#888888;
-  line-height: 24px;
+.left-nav-item:hover{color: #39b8eb;
+        fill: #39b8eb
 }
 </style>

@@ -8,7 +8,7 @@
         <div class="col-sm-4 d-none d-sm-block">
           <div class="followed-blogger">
             <ul>
-              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-news style="height:42;width:42;fill:#39B8EB"></icon-news><span class="pl-2">全部更新文章</span></li>
+              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
               <li 
               v-for="(item,index) in authorList" 
               :key="index" 
@@ -51,7 +51,7 @@
 import MainMenu from './components/Main/MainMenu';
 import ArticleListItem from './components/Main/ArticleListItem';
 import Avatar from  './components/Main/Avatar';
-import { IconNews } from '@/components/Icons';
+import { IconArticleBg } from '@/components/Icons';
 import IndexHeader from '../user/IndexHeader'
 // import BlogerList from './components/Main/BlogerList';
 
@@ -61,7 +61,7 @@ export default {
     MainMenu,
     ArticleListItem,
     Avatar,
-    IconNews,
+    IconArticleBg,
     IndexHeader
   },
   methods:{

@@ -27,7 +27,8 @@ import IconDelete from './IconDelete.vue';
 import IconBlogSet from './IconBlogSet.vue';
 import IconAccountSet from './IconAccountSet.vue';
 import IconV from './IconV.vue';
-import IconBlacklist from './IconBlackList.vue';
+import IconBlackList from './IconBlackList.vue';
+import IconArticleBg from './IconArticleBg.vue';
 
 
 export {
@@ -60,6 +61,7 @@ export {
   IconBlogSet,
   IconAccountSet,
   IconV,
-  IconBlacklist
+  IconBlackList,
+  IconArticleBg
 
 };
