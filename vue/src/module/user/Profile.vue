@@ -1,12 +1,19 @@
 <template>
   <div class="container-sm">
     <div class="row">
-      <div class="col-sm-4">
-        <p @click="menuId=0">博客设置</p>
-        <p @click="menuId=1">账号设置</p>
-        <p @click="menuId=2">黑名单</p>
-      </div>
-      <div class="col-sm-8">
+      <div class="col-sm-4 left-top-nav">
+        <div class="left-nav-item d-flex justify-content-between">
+          <div class="name"  @click="menuId=0" ><icon-blog-set></icon-blog-set>博客设置
+          </div>
+        </div>
+        <div class="left-nav-item d-flex justify-content-between">
+          <div class="name" @click="menuId=1"><icon-account-set></icon-account-set>账号设置</div>
+        </div>
+        <div class="left-nav-item d-flex justify-content-between">
+          <div class="name" @click="menuId=2"><icon-black-list></icon-black-list>黑名单</div>
+        </div>
+     </div>
+      <div class="col-sm-8 col-12">
         <div v-if="menuId===0">博客设置内容</div>
         <div v-if="menuId===1">
           <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
@@ -38,6 +45,7 @@
   </div>
 </template>
 <script>
+import {IconAccountSet,IconBlogSet,IconBlackList} from '@/components/Icons';
 import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
@@ -47,8 +55,9 @@ export default {
   name: 'profile',
   components: {
     Avatar,
-    [FormGroupInput.name]: FormGroupInput,
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList
   },
+
   data(){
     return{
       menuId:1,
@@ -65,4 +74,18 @@ export default {
   }
 };
 </script>
-<style></style>
+
+<style>
+.left-nav-item{
+  padding: 12px 18px;
+  border-bottom:1px solid #ddd;
+  cursor: pointer;
+}
+.left-nav-item .name {
+  font-size: 1rem;
+  font-weight: 600
+}
+.left-nav-item:hover{color: #39b8eb;
+        fill: #39b8eb
+}
+</style>

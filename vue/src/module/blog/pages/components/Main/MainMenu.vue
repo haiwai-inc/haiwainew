@@ -26,12 +26,12 @@ export default {
   data() {
     return {
       menuitems: [
-          {id:'0',name:'关注',link:'/blog'},
+          {id:'0',name:'关注',link:'/blog/follows'},
           {id:'1',name:'推荐',link:'/blog'},
           {id:'2',name:'热榜',link:'/blog/hot'}
       ]
     }
-  },
+  }
 };
 </script>
 <style>
