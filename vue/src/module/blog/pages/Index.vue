@@ -27,12 +27,21 @@ import MainMenu from './components/Main/MainMenu.vue';
 import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
 
+import blog from '../../../service/blog'
+
 export default {
   name: 'blog-index',
   components: {
     MainMenu,
     ArticleListItem,
     BlogerList,
+  },
+  methods:{
+    test(){
+      console.log('hello index vue');
+      console.log(blog);
+      blog.message();
+    },
   },
   data() {
     return {

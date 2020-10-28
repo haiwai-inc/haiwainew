@@ -4,15 +4,16 @@ import router from './router/router';
 import NowUiKit from './plugins/now-ui-kit';
 import API from './service/api';
 import Vuex from 'vuex';
-import User from './service/user'
+import User from './service/user';
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.config.productionTip = false;
 
-Vue.prototype.$api = new API()
+Vue.prototype.$api = new API();
 
 Vue.use(NowUiKit);
-
 Vue.use(Vuex);
+Vue.use( CKEditor );
 
 const store = new Vuex.Store({
   state: {

@@ -37,15 +37,41 @@
       </ul>
     </div>
     <div class="col-md-7 editor">
-      <input class="editorTitle" type="text" value="这里是标题">
-      
-      <!-- 编辑器放这里 -->
+      <input class="editorTitle" type="text" v-model="article.title" placeholder="新建博文标题">
+
+      <!-- 编辑器 -->
+      <ckeditor 
+        :editor="editor"
+        :config="editorConfig"
+        :disabled="editorDisabled"
+
+        tag-name="textarea"
+        v-model="article.content"
+        
+        @ready="onEditorReady"
+        @focus="onEditorFocus"
+        @blur="onEditorBlur"
+        @input="onEditorInput"
+        @destroy="onEditorDestroy"></ckeditor>
+
+        <n-button 
+        type="primary" 
+        round 
+        simple 
+        @click="save"
+        class="editbtn">
+          <icon-plus class="editicon"></icon-plus>保存
+        </n-button>
     </div>
   </div>
 </template>
 <script>
 import { Button } from '@/components'
 import {HaiwaiLogoWhite,IconPlus} from '@/components/Icons'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+import blog from '../../../../service/blog'
+
 export default {
   name: 'profile',
   components: {
@@ -53,6 +79,59 @@ export default {
     [Button.name]: Button,
     IconPlus
   },
+
+  methods:{
+    test(){
+      console.log('hello edit vue');
+      console.log(blog);
+      blog.message();
+    },
+    
+    async fetchData() {
+      let blogid = 0;
+      if (this.$route.params.blogid!=undefined) {
+        blogid = this.$route.params.blogid;
+        this.article = await blog.getArticle(blogid);
+      }
+    },
+
+    save(){
+      blog.update(1,this.article);
+    },
+
+    //for editor
+    toggleEditorDisabled() {
+      this.editorDisabled = !this.editorDisabled;
+    },
+    onEditorReady( editor ) {
+      console.log( 'Editor is ready.', { editor } );
+      //console.log( Array.from( editor.ui.componentFactory.names() ) );
+      
+    },
+    onEditorFocus( event, editor ) {
+      console.log( 'Editor focused.', { event, editor } );
+    },
+    onEditorBlur( event, editor ) {
+      console.log( 'Editor blurred.', { event, editor } );
+    },
+    onEditorInput( data, event, editor ) {
+      console.log( 'Editor data input.', { event, editor, data } );
+    },
+    onEditorDestroy( editor ) {
+      console.log( 'Editor destroyed.', { editor } );
+    },
+    destroyApp() {
+      app.$destroy();
+    }
+  },
+
+  beforeCreate(){
+  },
+
+  created () {
+    this.fetchData()
+  },
+
   data(){
     return{
       wenjiActiveId:100,
@@ -89,11 +168,30 @@ export default {
           wordCount:200,
           isPublished:false
         }
-      ]
+      ],
+      
+      loading: false,
+      article: {},
+
+      editor: ClassicEditor,
+      editorData: '',
+      editorConfig: {
+          toolbar: [ 
+            "selectAll","|","heading","undo","redo","bold","italic","blockQuote",
+            "imageUpload","imageStyle:full","imageStyle:side","mediaEmbed","indent","outdent","link","numberedList","bulletedList",
+            "ckfinder","imageTextAlternative","insertTable","tableColumn","tableRow","mergeTableCells"
+          ],
+      },
+      editorDisabled: false
     }
+
   }
+  
 };
+
+
 </script>
+
 <style>
 body,html,#app,.wrapper,.publisher{
   height:100%
