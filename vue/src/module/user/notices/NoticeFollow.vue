@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h5 
-        class="notice-follow-t"
-        >{{follows.title}}</h5>
+        <h6
+        class="pb-2"
+        >{{follows.title}}</h6>
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item"></bloger-list-item>
     </div>
 </template>
@@ -46,7 +46,5 @@ export default {
 }
 </script>
 <style>
-.notice-follow-t{
-    padding: 10px 0 0;
-}
+
 </style>

@@ -20,9 +20,9 @@
         <span v-if="activeId === 1">
           <!-- 把悄悄话写在这个span里面 开始 -->
           <div class="qiaoqiao-list">
-            <div class="menu">
+            <h6 class="pb-2">
               全部悄悄话
-            </div>
+            </h6>
             <ul>
               <li>
                       
@@ -94,7 +94,7 @@
           <notice-follow></notice-follow>
         </span>
         <span v-if="activeId === 3">
-          <h4>全部喜欢</h4>
+          <h6 class="border-bottom pb-3">收到的喜欢</h6>
           <article-list-item
             v-for="item in articlelists"
             v-bind:key="item.articleID"
@@ -253,11 +253,6 @@ export default {
 </script>
 <style>
 /*悄悄话列表页*/
-.qiaoqiao-list .menu {
-  margin-bottom: 20px;
-  font-size: 14px;
-  font-weight: 700;
-}
 .qiaoqiao-list .dropdown-toggle::after {
     display:none;
 }
