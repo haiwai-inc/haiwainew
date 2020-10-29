@@ -431,8 +431,7 @@ function func_initMemcached($host='127.0.0.1',$port='11211'){
 	
 	$id=$host.'_'.$port;
 	if(!isset($cache[$id]))	{
-	    $obj = new Memcache;
-	    $obj->addServer($host, $port);
+	    $obj = new Mem($host, $port);
 		if(empty($obj)) return false;
 		
 		$cache[$id]=$obj;

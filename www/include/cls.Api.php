@@ -130,47 +130,22 @@ class Api{
 	}
 	
 	//检查学生隶属关系
-	protected function studentAuthz($studentID){
+	protected function userAuthz($UserID){
 		return true;
 		
-		if(!$this->accessCheck($studentID)){
-			$this->error("Student is not match!","User Access Forbidden!",0,'403');
+		if(!$this->accessCheck($UserID)){
+			$this->error("User is not match!","User Access Forbidden!",0,'403');
 		}
 	}
 	
-	protected function accessCheck($studentID){
-		if(empty($_SESSION['student'])) return false;
-		
-		foreach($_SESSION['student'] as $val){
-			if( $val['id']==$studentID ) return true;
-		}
+	protected function accessCheck($UserID){
+		if(empty($_SESSION['UserID'])) return false;
+		if($_SESSION['UserID']==$UserID) return true;
+		if($_SESSION['UserLevel']===9) return true;
 		
 		return false;
 	}
-	
-	//检查专家隶属关系
-	protected function expertAuthz($expertID){
-		if(!$this->expertAccessCheck($expertID)){
-			$this->error("Expert is not match!","User Access Forbidden!",0,'403');
-		}
-	}
-	
-	protected function expertAccessCheck($expertID){
-		if(empty($_SESSION['user']['expert_id'])||empty($expertID)) return false;
-		if($_SESSION['user']['expert_id']==$expertID) return true;
-		
-		//检查当前请求的expert是否是自己的下属
-		$expertManagerObj = load("members_expert_manager");
-		$where  = [
-				'manager_id'=>$_SESSION['user']['expert_id'],
-				'expert_id'=>$expertID,
-				'pending'=>0
-		];
-		$rs = $expertManagerObj->getOne(['id'],$where);
-		if(!empty($rs)) return true;
-		
-		return false;
-	}
+
 	
 	function run( $method ){
 		//启用session
@@ -182,7 +157,7 @@ class Api{
 		//检查权限
 		if(in_array($method,$this->authPool)) $this->authz($method);
 		if($this->space)
-			if(empty($_SESSION['user']['id']))
+			if(empty($_SESSION['UserID']))
 				$this->error("User Is Not Login!","User Access Forbidden!",0,'403');
 				if($this->admin)
 					if(empty($_SESSION['UserLevel'])) $this->error("Administrator Is Not Loign!","User Access Forbidden!",0,'403');

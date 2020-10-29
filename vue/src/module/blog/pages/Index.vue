@@ -27,7 +27,7 @@ import MainMenu from './components/Main/MainMenu.vue';
 import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
 
-import blog from '../../../service/blog'
+import blog from '../blog.service'
 
 export default {
   name: 'blog-index',

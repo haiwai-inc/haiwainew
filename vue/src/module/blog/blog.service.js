@@ -1,4 +1,4 @@
-import API from "./api"
+import API from "../../service/api"
 
 /**
  * Blog content class
@@ -11,7 +11,7 @@ class Blog extends API{
      * @param number bloger 
      */
     async getArticleList(bloger){
-        return await this.sendget("blog/common/getArticleList/?bloger="+bloger)
+        return await this.sendget("blog/dashboard/getArticleList/?bloger="+bloger)
     }
 
     /**
@@ -20,7 +20,7 @@ class Blog extends API{
      */
     async getArticle(blogid){
         console.log('calling getArticle here!');
-        return await this.sendget("blog/common/getArticle/?id="+blogid)
+        return await this.sendget("blog/dashboard/getArticle/?id="+blogid)
     }
 
     /**
@@ -29,7 +29,7 @@ class Blog extends API{
      * @param object data
      */
     async add(bloger,data){
-        return await this.sendpost("blog/common/add/?bloger="+bloger,data);
+        return await this.sendpost("blog/dashboard/add/?bloger="+bloger,data);
     }
 
     /**
@@ -38,7 +38,7 @@ class Blog extends API{
      * @param object data
      */
     async autosave(bloger,data){
-        return await this.sendpost("blog/common/autosave/?bloger="+bloger,data);
+        return await this.sendpost("blog/dashboard/autosave/?bloger="+bloger,data);
     }
 
     /**
@@ -47,7 +47,7 @@ class Blog extends API{
      * @param object data
      */
     async update(blogid,data){
-        return await this.sendpost("blog/common/update/?id="+blogid,data);
+        return await this.sendpost("blog/dashboard/update/?id="+blogid,data);
     }
 
     /**
@@ -55,7 +55,7 @@ class Blog extends API{
      * @param number blogid 
      */
     async delete(blogid){
-        return await this.sendget("blog/common/delete/?id="+blogid)
+        return await this.sendget("blog/dashboard/delete/?id="+blogid)
     }
 
     async sendget(url){

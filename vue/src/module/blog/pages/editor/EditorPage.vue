@@ -70,7 +70,7 @@ import { Button } from '@/components'
 import {HaiwaiLogoWhite,IconPlus} from '@/components/Icons'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
-import blog from '../../../../service/blog'
+import blog from '../../blog.service'
 
 export default {
   name: 'profile',
