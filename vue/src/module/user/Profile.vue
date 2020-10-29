@@ -38,14 +38,30 @@
           <button class="btn btn-round btn-primary">保存</button>
         </div>
         <div v-if="menuId===2">
-          黑名单设置
+          <h5 class="userset-t ">黑名单设置</h5>
+          <div class="box my-3">
+                   <div class=" blacklist align-self-center col-12 no-gutters">
+                      <div class="d-flex align-self-center">
+                         <div class="small-name">
+                          <a href="" class="text-black">慎始敬终</a>
+                          </div>
+                         <div class="ml-auto" style="width: 175px;">
+                            <a class="m-0  btn btn-link text-default w-100">
+                                  <div class="d-flex text-gray  justify-content-end align-items-end">
+                                    <icon-delete></icon-delete>从黑名单中移除
+                                  </div>
+                            </a>
+                         </div>
+                      </div>
+                   </div>
+           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import {IconAccountSet,IconBlogSet,IconBlackList} from '@/components/Icons';
+import {IconAccountSet,IconBlogSet,IconBlackList,IconDelete} from '@/components/Icons';
 import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
@@ -55,7 +71,7 @@ export default {
   name: 'profile',
   components: {
     Avatar,
-    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete
   },
 
   data(){
@@ -75,6 +91,12 @@ export default {
 };
 </script>
 
+.blacklist {
+        padding: 12px 18px;
+        border-top: 1px solid #ddd;
+}
+
+
 <style>
 .left-nav-item{
   padding: 12px 18px;
@@ -87,5 +109,13 @@ export default {
 }
 .left-nav-item:hover{color: #39b8eb;
         fill: #39b8eb
+}
+
+.userset-t {
+        padding: 10px 0 0;
+}
+.blacklist {
+        padding: 12px 0;
+        border-bottom: 1px solid #ddd;
 }
 </style>
