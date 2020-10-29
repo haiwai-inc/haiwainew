@@ -45,13 +45,13 @@ exit;
 
 
         $obj_account_user=load("account_user");
-        $rs_account_user=$obj_account_user->getOne(['id','name','description','background','avatar'],['id'=>$userID]);
+        $rs_account_user=$obj_account_user->getOne(['id','username','description','background','avatar'],['id'=>$userID]);
         $rs_account_user['avatar']=file_domain.$rs_account_user['avatar'];
         
         
         $_SESSION=$rs_account_user;
         $_SESSION['UserID']=$rs_account_user['id'];
-        $_SESSION['UserName']=$rs_account_user['name'];
+        $_SESSION['UserName']=$rs_account_user['username'];
         $_SESSION['UserLevel']=9;
         
         
