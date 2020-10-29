@@ -30,6 +30,7 @@ import IconV from './IconV.vue';
 import IconBlackList from './IconBlackList.vue';
 import IconArticleBg from './IconArticleBg.vue';
 import IconShare from './IconShare.vue';
+import IconStar from './IconStar.vue';
 
 
 export {
@@ -64,6 +65,7 @@ export {
   IconV,
   IconBlackList,
   IconArticleBg,
-  IconShare
+  IconShare,
+  IconStar
 
 };
