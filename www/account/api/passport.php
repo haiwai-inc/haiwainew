@@ -48,6 +48,13 @@ exit;
         $rs_account_user=$obj_account_user->getOne(['id','name','description','background','avatar'],['id'=>$userID]);
         $rs_account_user['avatar']=file_domain.$rs_account_user['avatar'];
         
+        
+        $_SESSION=$rs_account_user;
+        $_SESSION['UserID']=$rs_account_user['id'];
+        $_SESSION['UserName']=$rs_account_user['name'];
+        $_SESSION['UserLevel']=9;
+        
+        
         if(!empty($rs_account_user)){
             $rs=['status'=>true,'msg'=>"",'data'=>$rs_account_user];
         }else{
