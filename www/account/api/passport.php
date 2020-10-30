@@ -59,13 +59,12 @@ exit;
         $_SESSION['UserLevel']=$rs_account_user['auth_group'];
         
         
-        if(!empty($rs_account_user)){
-            $rs=['status'=>true,'msg'=>"",'data'=>$rs_account_user];
-        }else{
-            $rs=['status'=>false,'msg'=>"User not logged in",'data'=>""];
+        if(empty($rs_account_user)){
+            $this->msg='User not logged in';
+            $this->status=false;
         }
         
-        return $rs;
+        return $rs_account_user;
     }
     
     /**

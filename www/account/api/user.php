@@ -2,7 +2,14 @@
 
 /**
  * @author sida
- * ['data'=>[],'msg'=>[],'status'=>true]
+ * [
+ *  'data'=>[],
+ *  'error'=>[
+ *      ['name'=>'user','msg'=>''],
+ *      ['name'=>'password','msg'=>'']
+ *  ],
+ *  'status'=>true
+ *  ]
  */
 class user extends Api {
 

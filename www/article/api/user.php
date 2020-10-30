@@ -13,8 +13,11 @@ class user extends Api {
      * @param integer $bloggerID
      * @param object $data
      */
-    public function article_add($bloggerID,$data){
+    public function article_add($title,$msg,$data){
+        //主题
         
+        //副属性
+        $data=['typeID'=>1,'blogID'=>'1','categoryID'=>1];
     }
     
     /**

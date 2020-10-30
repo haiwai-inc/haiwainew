@@ -83,30 +83,6 @@ class user extends Api {
         
     }
     
-    /**
-     * 二级页面
-     * 关注 文章 最热
-     */
-    public function follower_article_hot(){
-        
-    }
-    
-    /**
-     * 二级页面
-     * 关注 文章 最新
-     */
-    public function follower_article_recent(){
-        
-    }
-    
-    /**
-     * 二级页面
-     * 关注 评论 最新
-     */
-    public function follower_comment_recent(){
-        
-    }
-    
     
     
     

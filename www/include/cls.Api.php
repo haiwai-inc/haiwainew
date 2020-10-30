@@ -105,10 +105,12 @@ class Api{
 	
 	public $authPool = []; //设置哪些方法必须验证 key & secret
 	
+	public $status=true;
+	public $error=false;
+	
 	private $classname;
 	private $classCache;
 	private $classFileName;
-	
 	
 	/**
 	 * 当$cacheStart为false时，只针对php内部调用
@@ -650,23 +652,28 @@ class Api{
 	}
 	
 	private function display($result){
-		
+	    $rs=[
+	       "data"=>$result,
+	       "error"=>$this->error,
+	       "status"=>$this->status,
+	    ];
+	    
 		header("Access-Control-Allow-Origin: *");
 		header("Content-Type: application/json; charset=UTF-8");
 		
 		if(isset($_GET['format'])){
 			if($_GET['format']=='debug') {
-				debug::D($result);
+			    debug::D($rs);
 				exit;
 			}
 			
 			if($_GET['format']=='php') {
-				echo $result;
+			    echo $rs;
 				exit;
 			}
 		}
 		
-		echo json_encode($result, JSON_NUMERIC_CHECK);
+		echo json_encode($rs, JSON_NUMERIC_CHECK);
 		exit;
 	}
 	

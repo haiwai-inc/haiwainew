@@ -104,7 +104,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页
+     * 博客主页 二级页面
      * 文章 列表 最热
      */
     public function article_list_hot(){
@@ -112,7 +112,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页
+     * 博客主页 二级页面
      * 评论 列表 最新
      */
     public function comment_list_recent(){
@@ -120,7 +120,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页
+     * 博客主页 二级页面
      * 评论 详情 最新
      */
     public function comment_view_recent(){
