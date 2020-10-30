@@ -28,6 +28,19 @@
         </n-button>
             </div>
         </div>
+        <div class="ProfileMain-header">
+           <ul class="nav justify-content-center border-bottom">
+              <li class="nav-item">
+                 <a class="nav-link active" href="#">最新博文</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="#">最热博文</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="#">最新评论</a>
+              </li>
+           </ul>
+        </div>
     </div>
 </template>
 <script>

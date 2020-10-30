@@ -4,13 +4,7 @@
         <main-menu type="-1"></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-4 d-none d-sm-block">
-            <user-index-sort :data="sortList"></user-index-sort>
-          <div class="collection-list mt-3">
-            <collection-list v-bind:data="collectionList" title="文集"></collection-list>
-          </div>
-        </div>
-        <div class="col-sm-8 col-12">
+       <div class="col-sm-8 col-12">
             <index-header></index-header>
             <article-list-item 
             v-for="item in articlelists"
@@ -18,6 +12,12 @@
             v-bind:data="item"
             type="0">
             </article-list-item>
+        </div>
+        <div class="col-sm-4 d-none d-sm-block">
+            <!-- <user-index-sort :data="sortList"></user-index-sort> -->
+          <div class="collection-list mt-3">
+            <collection-list v-bind:data="collectionList" title="文集"></collection-list>
+          </div>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@ export default {
   components: {
     MainMenu,
     ArticleListItem,
-    UserIndexSort,
+    //UserIndexSort,
     CollectionList,
     IndexHeader
   },
