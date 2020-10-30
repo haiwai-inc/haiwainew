@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div>  
+        <h6 class="border-bottom pb-3">
+          收到的评论
+        </h6>
         <div v-for="(item,index) in comments" :key="index">
             <h5 
             @click="$router.push(item.articleUrl)"
@@ -103,6 +106,11 @@ export default {
 }
 </script>
 <style>
+ .notice-menu{
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 700;
+}
 .notice-comment-t{
     cursor: pointer;
     padding: 10px 0 0;
