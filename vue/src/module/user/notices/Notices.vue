@@ -27,7 +27,7 @@
               <li>
                       
                 <div class="pull-right dropdown">
-                  <a class="time dropdown-toggle no-caret" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">2020.08.07  <icon-more3v></icon-more3v></a>
+                  <a class="time dropdown-toggle no-caret" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">2020.08.07  <icon-more3v style="width:20;height:20;fill:gray"></icon-more3v></a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
                       <li><a>删除会话</a></li>
                       <li><a>加入黑名单</a></li>
@@ -58,7 +58,7 @@
               </b>
               <div class="dropdown">
                 <span class="ic-show dropdown-toggle">
-                  <icon-more3v></icon-more3v>
+                  <icon-more3v style="width:20;height:20;fill:gray"></icon-more3v>
                 </span>
                 <ul class="dropdown-menu">
                   <li><a>加入黑名单</a></li>

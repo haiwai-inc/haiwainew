@@ -6,13 +6,29 @@
           <haiwai-logo-white></haiwai-logo-white>
         </router-link>
       </div>
-      <div style="padding:10px 22px"><icon-plus></icon-plus>新建文集</div>
+      <button class="btn btn-link m-3" ><icon-plus></icon-plus><span style="font-size:1rem;color:#14171A">新建文集</span></button>
       <ul>
         <li 
-        class="wenjiItem" 
+        class="wenjiItem d-flex justify-content-between align-items-center" 
         v-for="(item,index) in wenjiList" 
         :key="index"
-        :class="{active:wenjiActiveId==item.id}">{{item.name}} ({{item.count}})</li>
+        :class="{active:wenjiActiveId==item.id}"
+        >
+          <span 
+          class="flex-fill"
+          @click="changeMenu(item.id,articleActiveId)">
+          {{item.name}} ({{item.count}})</span>
+
+          <drop-down
+          class="nav-item dropdown"
+          :haiwaiIcon="iconmore3v"
+          haiwaiClass="haiwaiicon"
+          style="padding:0;"
+          >
+            <a class="dropdown-item" href="#">修改文件名称</a>
+            <a class="dropdown-item" href="#">删除文集</a>
+          </drop-down>
+        </li>
       </ul>
     </div>
     <div class="col-md-3 menu2">
@@ -21,7 +37,7 @@
         type="primary" 
         round 
         simple 
-        @click="$router.push('/blog/write')"
+        @click="addArticle()"
         class="editbtn">
           <icon-plus class="editicon"></icon-plus>新建文章
         </n-button>
@@ -30,10 +46,29 @@
         <li 
         v-for="(item,index) in articleList" 
         :key="index"
-        class="aritcleItem"
-        :class="{active:item.articleId==articleActiveId,ispublished:item.isPublished}">
-          {{item.title}}
-          <div><small>字数：{{item.wordCount}}</small></div></li>
+        class="aritcleItem d-flex justify-content-between align-items-center"
+        :class="{active:item.articleId==articleActiveId,ispublished:item.isPublished}"
+        >
+          <div class="flex-fill" @click="changeMenu(wenjiActiveId,item.articleId)">
+            {{item.title}}
+            <div><small>字数：{{item.wordCount}}</small></div>
+          </div>
+          <drop-down
+          class="nav-item dropdown"
+          :haiwaiIcon="iconmore3v"
+          haiwaiClass="haiwaiicon"
+          style="padding:0;"
+          >
+            <a class="dropdown-item" href="#">直接发布文章</a>
+            <a class="dropdown-item" href="#">定时发布</a>
+            <a class="dropdown-item" href="#">置顶文章</a>
+            <a class="dropdown-item" href="#">移动文章</a>
+            <a class="dropdown-item" href="#">设为私密</a>
+            <a class="dropdown-item" href="#">禁止评论</a>
+            <a class="dropdown-item" href="#">禁止转载</a>
+            <a class="dropdown-item" href="#">删除文章</a>
+          </drop-down>
+        </li>
       </ul>
     </div>
     <div class="col-md-7 editor">
@@ -66,18 +101,20 @@
   </div>
 </template>
 <script>
-import { Button } from '@/components'
-import {HaiwaiLogoWhite,IconPlus} from '@/components/Icons'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { Button, DropDown } from '@/components';
+import {HaiwaiLogoWhite,IconPlus} from '@/components/Icons';
+import HaiwaiIcons from '@/components/Icons/Icons'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import blog from '../../blog.service'
+import blog from '../../blog.service';
 
 export default {
   name: 'profile',
   components: {
-    HaiwaiLogoWhite,
     [Button.name]: Button,
-    IconPlus
+    DropDown,
+    HaiwaiLogoWhite,
+    IconPlus,
   },
 
   methods:{
@@ -122,6 +159,29 @@ export default {
     },
     destroyApp() {
       app.$destroy();
+    },
+    addWenji(){
+      var newwenji = {
+        id:1000,
+        name:'新建的文集',
+        count:0
+      }
+      this.wenjiList.push(newwenji)
+      this.changeMenu(newwenji.id,this.articleActiveId)
+    },
+    addArticle(){
+      var newarticle = {
+          articleId:9089,
+          title:"新填的文章",
+          wordCount:0,
+          isPublished:false
+        }
+      this.articleList.unshift(newarticle)
+      this.changeMenu(this.wenjiActiveId,newarticle.articleId)
+    },
+    changeMenu(wid,aid){
+      this.wenjiActiveId = wid;
+      this.articleActiveId = aid;
     }
   },
 
@@ -134,6 +194,7 @@ export default {
 
   data(){
     return{
+      iconmore3v:HaiwaiIcons.iconmore3v,
       wenjiActiveId:100,
       articleActiveId:12345,
       wenjiList:[
@@ -164,7 +225,7 @@ export default {
           isPublished:true
         },{
           articleId:23456,
-          title:"标题3",
+          title:"未发布的文章",
           wordCount:200,
           isPublished:false
         }
@@ -216,10 +277,11 @@ body,html,#app,.wrapper,.publisher{
   padding-left: 0;
 }
 .publisher li {
-  padding:10px 16px ;
+  padding:14px 16px ;
   position: relative;
 }
 .publisher .wenjiItem{
+  cursor: pointer;
   border-left: 6px #b8b8b8 solid;
 }
 .publisher .wenjiItem.active{
@@ -227,6 +289,7 @@ body,html,#app,.wrapper,.publisher{
   background-color: #ececec;
 }
 .publisher .aritcleItem{
+  cursor: pointer;
   border-left: 6px #ececec solid;
   color:gray;
 }
@@ -250,5 +313,16 @@ body,html,#app,.wrapper,.publisher{
 .publisher .editorTitle{
   font-size: 32px;
   border: 0;
+}
+.dropdown .dropdown-toggle::after {
+    display:none;
+}
+.haiwaiicon svg{
+  width:20px;
+  height:20px;
+  fill:#14171A;
+}
+.wenjiItem .nav-link{
+  padding:0;
 }
 </style>

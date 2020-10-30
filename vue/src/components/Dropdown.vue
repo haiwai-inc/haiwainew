@@ -20,6 +20,7 @@
       >
         <i :class="icon"></i>
         <span class="no-icon">{{ title }}</span>
+        <span v-html="haiwaiIcon" :class="haiwaiClass"></span>
       </a>
     </slot>
     <ul
@@ -43,6 +44,8 @@ export default {
     },
     title: String,
     icon: String,
+    haiwaiIcon:String,
+    haiwaiClass:String,
     position: String,
     hideArrow: Boolean,
     tag: {
