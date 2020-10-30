@@ -14,10 +14,27 @@ class user extends Api {
      * @param object $data
      */
     public function article_add($title,$msg,$data){
-        //主题
+        //文章固有属性
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_post=load("article_post");
+        $obj_article_post_tag=load("article_post_tag");
+        $obj_article_tag=load("article_tag");
+        $obj_article_indexing->insert(['postID','treelevel','basecode','......']);
+        $obj_article_post->insert(['title','msgbody','pic']);
+        $obj_article_post_tag->insert([]); 
+        $obj_article_tag->insert([]); //这个表需要检查一下，如果没有这个tag就加一个名字，有把文章count+1
         
-        //副属性
-        $data=['typeID'=>1,'blogID'=>'1','categoryID'=>1];
+        //转文章为->blog
+        $data=['typeID'=>1,'bloggerID'=>'1','categoryID'=>1];
+        $obj_article_indexing->update($data);
+        
+        //转文章为->group
+        $data=['typeID'=>2,'groupID'=>'1','group单独模块字段'=>1];
+        $obj_article_indexing->update($data);
+        
+        //转文章为->bbs
+        $data=['typeID'=>3,'subID'=>'1','bbs单独模块字段'=>1];
+        $obj_article_indexing->update($data);
     }
     
     /**
