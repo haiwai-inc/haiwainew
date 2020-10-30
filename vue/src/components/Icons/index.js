@@ -8,6 +8,7 @@ import IconPen from './IconPen.vue';
 import IconMail from './IconMail.vue';
 import IconPlus from './IconPlus.vue';
 import IconCheck from './IconCheck.vue';
+import IconEdit from './IconEdit.vue';
 import IconX from './IconX.vue';
 import IconRight from './IconRight.vue';
 import IconNews from './IconNews.vue';
@@ -36,6 +37,7 @@ import IconPrivate from './IconPrivate.vue';
 import IconStar from './IconStar.vue';
 
 
+
 export {
   HaiwaiLogoWhite,
   WxcLogoWhite,
@@ -47,6 +49,7 @@ export {
   IconMail,
   IconPlus,
   IconCheck,
+  IconEdit,
   IconX,
   IconRight,
   IconNews,
@@ -72,5 +75,6 @@ export {
   IconShare,
   IconPrivate,
   IconStar
+
 
 };

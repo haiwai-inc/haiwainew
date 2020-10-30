@@ -25,7 +25,7 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#"><icon-time></icon-time>修改文件名称</a>
+            <a class="dropdown-item" href="#"><icon-edit></icon-edit>修改文件名称</a>
             <a class="dropdown-item" href="#"><icon-delete></icon-delete>删除文集</a>
           </drop-down>
         </li>
@@ -102,7 +102,7 @@
 </template>
 <script>
 import { Button, DropDown } from '@/components';
-import {HaiwaiLogoWhite,IconPlus,IconDelete,IconForbid,IconFolder,IconPrivate,IconTop,IconTime} from '@/components/Icons';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -116,6 +116,7 @@ export default {
     HaiwaiLogoWhite,
     IconPlus,
     IconDelete,
+    IconEdit,
     IconForbid,
     IconFolder,
     IconPrivate,
