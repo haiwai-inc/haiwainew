@@ -9,7 +9,7 @@ class blog_tool{
         $this->obj_account_legacy_user_album=load("account_legacy_user_album");
         
         //article
-        $this->obj_article_category=load("article_category");
+        $this->obj_blog_category=load("blog_category");
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_article_tag=load("article_tag");
         $this->obj_article_post=load("article_post");
@@ -202,17 +202,17 @@ class blog_tool{
                 return false;
             }
             
-            $check_article_category=$this->obj_article_category->getOne("*",['userID'=>$rs['user_new']['id'],'bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
-            if(empty($check_article_category)){
+            $check_blog_category=$this->obj_blog_category->getOne("*",['userID'=>$rs['user_new']['id'],'bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
+            if(empty($check_blog_category)){
                 $field=[
                     "userID"=>$rs['user_new']['id'],
                     "bloggerID"=>$rs['blogger_new']['id'],
                     "name"=>$rs_blog_legacy_blogcat_members['category'],
                 ];
-                $field['id']=$this->obj_article_category->insert($field);
+                $field['id']=$this->obj_blog_category->insert($field);
             }else{
-                $this->obj_article_category->update(['count_article'=>$check_article_category['count_article']+1],['id'=>$check_article_category['id']]);
-                $field=$check_article_category;
+                $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+                $field=$check_blog_category;
             }
             
             return $field;

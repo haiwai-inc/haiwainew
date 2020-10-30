@@ -10,7 +10,7 @@ class clear_blog_data{
     function __construct($password){
         if($password=="wxc123456"){
             $this->obj_account_user=load("account_user");
-            $this->obj_article_category=load("article_category");
+            $this->obj_blog_category=load("blog_category");
             $this->obj_article_indexing=load("article_indexing");
             $this->obj_article_tag=load("article_tag");
             $this->obj_blog_blogger=load("blog_blogger");
@@ -20,7 +20,7 @@ class clear_blog_data{
             $this->obj_article_post_tag=load("article_post_tag");
             
             $this->obj_account_user->exec("TRUNCATE TABLE `user`");
-            $this->obj_article_category->exec("TRUNCATE TABLE `category`");
+            $this->obj_blog_category->exec("TRUNCATE TABLE `category`");
             $this->obj_article_indexing->exec("TRUNCATE TABLE `indexing`");
             $this->obj_article_tag->exec("TRUNCATE TABLE `tag`");
             $this->obj_blog_blogger->exec("TRUNCATE TABLE `blogger`");

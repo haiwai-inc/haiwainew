@@ -11,6 +11,10 @@ class passport extends Api {
         $this->sess = true;
     }
 
+    /**
+     * 所有博客页面
+     * 博主 认证
+     */
     public function login_status($userID) {
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne('*',['userID'=>$userID]);
@@ -23,11 +27,6 @@ class passport extends Api {
         
         return $rs;
     }
-    
-    
-    
-    
-    
     
     
     

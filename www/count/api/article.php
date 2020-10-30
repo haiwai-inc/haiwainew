@@ -5,7 +5,11 @@ class article extends Api {
         parent::__construct();
     }
 
-    function add_article($id){
+    /**
+     * 很多页面
+     * 文章 添加
+     */
+    function article_add($id){
         $obj_count_tool=load("count_tool");
         $rs_count=$obj_count_tool->add_article($id);
         
@@ -13,7 +17,11 @@ class article extends Api {
         return $rs;
     }
     
-    function view_article($id){
+    /**
+     * 很多页面
+     * 文章 显示
+     */
+    function article_view($id){
         $obj_count_tool=load("count_tool");
         $rs_count=$obj_count_tool->view_article($id);
         $rs=['status'=>true,'msg'=>"",'data'=>$rs_count];
