@@ -25,8 +25,8 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#">修改文件名称</a>
-            <a class="dropdown-item" href="#">删除文集</a>
+            <a class="dropdown-item" href="#"><icon-time></icon-time>修改文件名称</a>
+            <a class="dropdown-item" href="#"><icon-delete></icon-delete>删除文集</a>
           </drop-down>
         </li>
       </ul>
@@ -60,13 +60,13 @@
           style="padding:0;"
           >
             <a class="dropdown-item" href="#">直接发布文章</a>
-            <a class="dropdown-item" href="#">定时发布</a>
-            <a class="dropdown-item" href="#">置顶文章</a>
-            <a class="dropdown-item" href="#">移动文章</a>
-            <a class="dropdown-item" href="#">设为私密</a>
-            <a class="dropdown-item" href="#">禁止评论</a>
-            <a class="dropdown-item" href="#">禁止转载</a>
-            <a class="dropdown-item" href="#">删除文章</a>
+            <a class="dropdown-item" href="#"><icon-time></icon-time>定时发布</a>
+            <a class="dropdown-item" href="#"><icon-top></icon-top>置顶文章</a>
+            <a class="dropdown-item" href="#"><icon-folder></icon-folder>移动文章</a>
+            <a class="dropdown-item" href="#"><icon-private></icon-private>设为私密</a>
+            <a class="dropdown-item" href="#"><icon-forbid></icon-forbid>禁止评论</a>
+            <a class="dropdown-item" href="#"><icon-forbid></icon-forbid>禁止转载</a>
+            <a class="dropdown-item" href="#"><icon-delete></icon-delete>删除文章</a>
           </drop-down>
         </li>
       </ul>
@@ -102,7 +102,7 @@
 </template>
 <script>
 import { Button, DropDown } from '@/components';
-import {HaiwaiLogoWhite,IconPlus} from '@/components/Icons';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconForbid,IconFolder,IconPrivate,IconTop,IconTime} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -115,6 +115,12 @@ export default {
     DropDown,
     HaiwaiLogoWhite,
     IconPlus,
+    IconDelete,
+    IconForbid,
+    IconFolder,
+    IconPrivate,
+    IconTop,
+    IconTime
   },
 
   methods:{

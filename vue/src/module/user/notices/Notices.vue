@@ -25,7 +25,6 @@
             </h6>
             <ul>
               <li>
-                      
                 <div class="pull-right dropdown">
                   <a class="time dropdown-toggle no-caret" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">2020.08.07  <icon-more3v style="width:20;height:20;fill:gray"></icon-more3v></a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenu">

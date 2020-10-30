@@ -18,6 +18,8 @@ import IconLike from './IconLike.vue';
 import IconLikeOutline from './IconLikeOutline.vue';
 import IconMore3v from './IconMore3v.vue';
 import IconFollow from './IconFollow.vue';
+import IconForbid from './IconForbid.vue';
+
 import IconUser from './IconUser.vue';
 import IconArticle from './IconArticle.vue';
 import IconTop from './IconTop.vue';
@@ -30,6 +32,7 @@ import IconV from './IconV.vue';
 import IconBlackList from './IconBlackList.vue';
 import IconArticleBg from './IconArticleBg.vue';
 import IconShare from './IconShare.vue';
+import IconPrivate from './IconPrivate.vue';
 import IconStar from './IconStar.vue';
 
 
@@ -54,6 +57,7 @@ export {
   IconLikeOutline,
   IconMore3v,
   IconFollow,
+  IconForbid,
   IconUser,
   IconArticle,
   IconTop,
@@ -66,6 +70,7 @@ export {
   IconBlackList,
   IconArticleBg,
   IconShare,
+  IconPrivate,
   IconStar
 
 };
