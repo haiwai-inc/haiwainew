@@ -24,8 +24,8 @@ class user extends Api {
         $obj_article_post_tag->insert([]); 
         $obj_article_tag->insert([]); //这个表需要检查一下，如果没有这个tag就加一个名字，有把文章count+1
         
-        //转文章为->blog
         $data=['typeID'=>1,'bloggerID'=>'1','categoryID'=>1];
+        //转文章为->blog + 一系列小操作，比如blogger表里面总文章+1，category表增改（文集）
         $obj_article_indexing->update($data);
         
         //转文章为->group
