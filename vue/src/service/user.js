@@ -25,7 +25,7 @@ class User extends API{
             return rs;
         }
         catch(e){
-            console.log(e)
+            // console.log(e);
             return false;
         }
     }
@@ -40,7 +40,7 @@ class User extends API{
             return res
         }
         catch(e){
-            console.log(e);
+            // console.log(e);
             return false;
         }
     }
