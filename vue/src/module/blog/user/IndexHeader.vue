@@ -28,15 +28,15 @@
         </n-button>
             </div>
         </div>
-        <div class="ProfileMain-header">
-           <ul class="nav justify-content-center border-bottom">
-              <li class="nav-item">
+        <div class="profile-header mt-2">
+           <ul class="nav justify-content-center">
+              <li class="col nav-item text-center px-0">
                  <a class="nav-link active" href="#">最新博文</a>
               </li>
-              <li class="nav-item">
+              <li class="col nav-item text-center px-0">
                  <a class="nav-link" href="#">最热博文</a>
               </li>
-              <li class="nav-item">
+              <li class="col nav-item text-center px-0">
                  <a class="nav-link" href="#">最新评论</a>
               </li>
            </ul>
@@ -102,4 +102,13 @@ export default {
     font-size: 0.85rem;
     color:gray
 }
+.profile-header .nav-link{
+     color:#657786  
+}
+.profile-header .nav-link.active {
+        color: #1D1D1D;
+        border-bottom: 2px solid #39B8EB;
+        font-weight: 600;
+}
+
 </style>

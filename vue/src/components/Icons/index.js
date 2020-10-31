@@ -23,6 +23,7 @@ import IconForbid from './IconForbid.vue';
 
 import IconUser from './IconUser.vue';
 import IconArticle from './IconArticle.vue';
+import IconTag from './IconTag.vue';
 import IconTop from './IconTop.vue';
 import IconTime from './IconTime.vue';
 import IconFolder from './IconFolder.vue';
@@ -74,7 +75,8 @@ export {
   IconArticleBg,
   IconShare,
   IconPrivate,
-  IconStar
+  IconStar,
+  IconTag
 
 
 };
