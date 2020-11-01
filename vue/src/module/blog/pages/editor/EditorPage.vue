@@ -6,7 +6,7 @@
           <haiwai-logo-white></haiwai-logo-white>
         </router-link>
       </div>
-      <button class="btn btn-link m-3" ><icon-plus></icon-plus><span style="font-size:1rem;color:#14171A">新建文集</span></button>
+      <button class="btn btn-link m-3" @click="modals.addwenji = true"><icon-plus></icon-plus><span style="font-size:1rem;color:#14171A">新建文集</span></button>
       <ul>
         <li 
         class="wenjiItem d-flex justify-content-between align-items-center" 
@@ -60,19 +60,54 @@
           style="padding:0;"
           >
             <a class="dropdown-item" href="#">直接发布文章</a>
-            <a class="dropdown-item" href="#"><icon-time></icon-time>定时发布</a>
-            <a class="dropdown-item" href="#"><icon-top></icon-top>置顶文章</a>
-            <a class="dropdown-item" href="#"><icon-folder></icon-folder>移动文章</a>
-            <a class="dropdown-item" href="#"><icon-private></icon-private>设为私密</a>
-            <a class="dropdown-item" href="#"><icon-forbid></icon-forbid>禁止评论</a>
-            <a class="dropdown-item" href="#"><icon-forbid></icon-forbid>禁止转载</a>
-            <a class="dropdown-item" href="#"><icon-delete></icon-delete>删除文章</a>
+            <a 
+            class="dropdown-item pl-4" 
+            href="#" 
+            @click="modals.schedule = true"
+            >
+              <icon-time></icon-time>定时发布
+            </a>
+            <a class="dropdown-item pl-4" href="#"><icon-top></icon-top>置顶文章</a>
+            <div class="submenu-item dropleft">
+              <a class="dropdown-item dropdown-toggle pl-3" href="#" id="move" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <icon-folder></icon-folder>移动文章
+              </a>
+              <div class="dropdown-menu" aria-labelledby="move">
+                <a class="dropdown-item" href="#">文集1</a>
+                <a class="dropdown-item" href="#">文集2</a>
+              </div>
+            </div>
+            <a class="dropdown-item pl-4" href="#"><icon-private></icon-private>设为私密</a>
+            <a class="dropdown-item pl-4" href="#"><icon-forbid></icon-forbid>禁止评论</a>
+            <a class="dropdown-item pl-4" href="#"><icon-forbid></icon-forbid>禁止转载</a>
+            <a class="dropdown-item pl-4" href="#"><icon-delete></icon-delete>删除文章</a>
+            
           </drop-down>
         </li>
       </ul>
     </div>
     <div class="col-md-7 editor">
-      <input class="editorTitle" type="text" v-model="article.title" placeholder="新建博文标题">
+      <div><span style="font-size:13px;padding-left:8px;">自动保存中...   已保存</span></div>
+      <div class="d-flex justify-content-between py-2">
+        <input class="editorTitle" type="text" v-model="article.title" placeholder="新建博文标题">
+        <n-button 
+        v-if="true"
+        type="primary" 
+        round 
+        simple 
+        @click.native="modals.publish = true"
+        class="editbtn">
+          发布文章
+        </n-button>
+        <n-button 
+        v-if="false"
+        type="default" 
+        link 
+        @click.native="save"
+        class="editbtn">
+          <icon-x :style="{fill:'gray'}"></icon-x>取消发布
+        </n-button>
+      </div>
 
       <!-- 编辑器 -->
       <ckeditor 
@@ -98,11 +133,107 @@
           <icon-plus class="editicon"></icon-plus>保存
         </n-button>
     </div>
+
+    <!-- Add Wenji Modal -->
+    <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">请编辑新文集名称</h4>
+      <p>
+        <fg-input placeholder="文集名"></fg-input>
+      </p>
+      <template slot="footer">
+        <n-button 
+        class="mr-3"
+        type="default" 
+        link
+        @click.native="modals.addwenji = false"
+        >
+          取消
+        </n-button>
+        <n-button 
+        type="primary"
+        round 
+        simple
+          >发布</n-button
+        >
+      </template>
+    </modal>
+
+    <!-- Publish Modal -->
+    <modal :show.sync="modals.publish" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">发布文章</h4>
+      <p>
+        您可以选择一些适合的标签，能方便分类检索，文章也更容易让其他用户看到。
+      </p>
+      <template slot="footer">
+        <n-button 
+        class="mr-3"
+        type="default" 
+        link
+        @click.native="modals.publish = false"
+        >
+          取消
+        </n-button>
+        <n-button 
+        type="primary"
+        round 
+        simple
+        >
+          发布
+        </n-button>
+      </template>
+    </modal>
+
+<!-- Schedule Modal -->
+    <modal :show.sync="modals.schedule" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">设置定时发布时间</h4>
+      
+      <div class="datepicker-container d-flex justify-content-center">
+        <fg-input>
+          <el-date-picker
+            type="date"
+            popper-class="date-picker date-picker-primary"
+            placeholder="选择要发布的日期"
+            v-model="pickers.datePicker"
+            :picker-options="pickers.expireTimeOption"
+          >
+          </el-date-picker>
+        </fg-input>
+        <fg-input class="ml-3">
+          <el-time-picker
+            v-model="timepicker"
+            :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59'
+            }"
+            placeholder="选择发布时间">
+          </el-time-picker>
+        </fg-input>
+      </div>
+      
+      <template slot="footer">
+        <n-button 
+        class="mr-3"
+        type="default" 
+        link
+        @click.native="modals.schedule = false"
+        >
+          取消
+        </n-button>
+        <n-button 
+        type="primary"
+        round 
+        simple
+        >
+          定时发布
+        </n-button>
+      </template>
+    </modal>
+
   </div>
 </template>
 <script>
-import { Button, DropDown } from '@/components';
-import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime} from '@/components/Icons';
+import { Button, DropDown, Modal, FormGroupInput } from '@/components';
+import { DatePicker,TimePicker } from 'element-ui';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -113,6 +244,10 @@ export default {
   components: {
     [Button.name]: Button,
     DropDown,
+    Modal,
+    [FormGroupInput.name]: FormGroupInput,
+    [DatePicker.name]: DatePicker,
+    [TimePicker.name]: TimePicker,
     HaiwaiLogoWhite,
     IconPlus,
     IconDelete,
@@ -121,7 +256,8 @@ export default {
     IconFolder,
     IconPrivate,
     IconTop,
-    IconTime
+    IconTime,
+    IconX
   },
 
   methods:{
@@ -190,6 +326,7 @@ export default {
       this.wenjiActiveId = wid;
       this.articleActiveId = aid;
     }
+    
   },
 
   beforeCreate(){
@@ -204,6 +341,21 @@ export default {
       iconmore3v:HaiwaiIcons.iconmore3v,
       wenjiActiveId:100,
       articleActiveId:12345,
+      modals: {
+        addwenji: false,
+        publish: false,
+        schedule:false,
+      },
+      pickers: {
+        datePicker: '',
+        expireTimeOption: {
+					disabledDate(date) {
+			          	//disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+						return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+					}
+				},
+      },
+      timepicker:new Date(2016, 9, 10, 18, 40),
       wenjiList:[
         {
           id:100,
@@ -252,9 +404,7 @@ export default {
       },
       editorDisabled: false
     }
-
   }
-  
 };
 
 
@@ -331,5 +481,22 @@ body,html,#app,.wrapper,.publisher{
 }
 .wenjiItem .nav-link{
   padding:0;
+}
+.submenu-item:hover > .dropdown-menu {
+  display: block;
+}
+.submenu-item .dropdown-menu{
+  display: none;
+  margin-top:-45px ;
+  margin-right:-1px;
+}
+.submenu-item .dropdown-menu::before{
+  top:0;
+}
+.el-date-table td.disabled div {
+  background-color: rgba(255, 255, 255, 0);
+}
+.el-date-table td.disabled div span{
+  color:#ffffff8f !important;
 }
 </style>

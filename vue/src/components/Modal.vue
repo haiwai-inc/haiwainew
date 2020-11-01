@@ -20,7 +20,7 @@
         <div class="modal-content">
           <slot name="base-content">
             <div class="modal-header" :class="headerClasses">
-              <slot name="close-button">
+              <!-- <slot name="close-button">
                 <button
                   type="button"
                   v-if="showClose"
@@ -31,7 +31,7 @@
                 >
                   <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
-              </slot>
+              </slot> -->
               <slot name="header"></slot>
             </div>
 

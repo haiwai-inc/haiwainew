@@ -28,7 +28,7 @@
                   <a v-if="data.isFollowed" class="btn btn-link text-default w-100 cancel-follow">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
-                              <icon-x></icon-x>
+                              <icon-x :style="{fill:'#FF3636'}"></icon-x>
                               取消关注
                           </div>
                       </span>
