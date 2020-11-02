@@ -38,7 +38,7 @@
           <button class="btn btn-round btn-primary">保存</button>
         </div>
         <div v-if="menuId===2">
-          <h5 class="userset-t ">黑名单设置</h5>
+          <h6 class="userset-t ">黑名单</h6>
           <div class="box my-3">
                    <div class=" blacklist align-self-center col-12 no-gutters">
                       <div class="d-flex align-self-center">
@@ -98,6 +98,11 @@ export default {
 
 
 <style>
+.collection-box {
+        background-color: #f0f8ff;
+        border-radius: 16px;
+        padding: 18px 0;
+}
 .left-nav-item{
   padding: 12px 18px;
   border-bottom:1px solid #ddd;

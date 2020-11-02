@@ -30,7 +30,7 @@
           用户
         </span>
         <span v-if="activeId === 2">
-          专题
+          标签
         </span>
         <span v-if="activeId === 3">
           文集
@@ -79,7 +79,7 @@ export default {
         },
         {
           id: 2,
-          title: "专题",
+          title: "标签",
           noticeList: [],
           unread: 3,
         },

@@ -25,8 +25,8 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#"><icon-edit></icon-edit>修改文件名称</a>
-            <a class="dropdown-item" href="#"><icon-delete></icon-delete>删除文集</a>
+            <a class="dropdown-item" href="#"><icon-edit class="icon"></icon-edit>修改文件名称</a>
+            <a class="dropdown-item" href="#"><icon-delete class="icon"></icon-delete>删除文集</a>
           </drop-down>
         </li>
       </ul>
@@ -65,22 +65,22 @@
             href="#" 
             @click="modals.schedule = true"
             >
-              <icon-time></icon-time>定时发布
+              <icon-time class="icon"></icon-time>定时发布
             </a>
-            <a class="dropdown-item pl-4" href="#"><icon-top></icon-top>置顶文章</a>
+            <a class="dropdown-item pl-4" href="#"><icon-top class="icon"></icon-top>置顶文章</a>
             <div class="submenu-item dropleft">
               <a class="dropdown-item dropdown-toggle pl-3" href="#" id="move" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <icon-folder></icon-folder>移动文章
+                <icon-folder class="icon"></icon-folder>移动文章
               </a>
               <div class="dropdown-menu" aria-labelledby="move">
                 <a class="dropdown-item" href="#">文集1</a>
                 <a class="dropdown-item" href="#">文集2</a>
               </div>
             </div>
-            <a class="dropdown-item pl-4" href="#"><icon-private></icon-private>设为私密</a>
-            <a class="dropdown-item pl-4" href="#"><icon-forbid></icon-forbid>禁止评论</a>
-            <a class="dropdown-item pl-4" href="#"><icon-forbid></icon-forbid>禁止转载</a>
-            <a class="dropdown-item pl-4" href="#"><icon-delete></icon-delete>删除文章</a>
+            <a class="dropdown-item pl-4" href="#"><icon-private class="icon" ></icon-private>设为私密</a>
+            <a class="dropdown-item pl-4" href="#"><icon-forbid class="icon"></icon-forbid>禁止评论</a>
+            <a class="dropdown-item pl-4" href="#"><icon-forbid class="icon"></icon-forbid>禁止转载</a>
+            <a class="dropdown-item pl-4" href="#"><icon-delete class="icon"></icon-delete>删除文章</a>
             
           </drop-down>
         </li>
@@ -470,6 +470,11 @@ body,html,#app,.wrapper,.publisher{
 .publisher .editorTitle{
   font-size: 32px;
   border: 0;
+}
+.publisher .dropdown .icon{
+  margin-right: 5px;
+  width:20px;
+  height:20px
 }
 .dropdown .dropdown-toggle::after {
     display:none;
