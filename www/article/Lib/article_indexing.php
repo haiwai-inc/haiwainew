@@ -4,6 +4,31 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo    = array("config" => "article", "type" => "MySQL");
 
+	public function get_single_article_info($postID){
+		$article = $this->getOne("*", ['postID'=>$postID]);
+		if(empty($article) ) return 0;
+        $article_post_obj = load("article_post");
+        $article_tag_obj  = load("article_post_tag");
+        $article_buzz_obj = load("article_post_buzz");
+		$table_id                      = $article['userID'] % 10;
+		$tag_table_id                  = $article['postID'] % 10;
+		$article_post = $article_post_obj->getOne("*", ["id" => $postID], "post_{$table_id}");
+		$article_tags = $article_tag_obj->getAll("*", ["OR" => ["postID" => $postID]], "post_tag_{$tag_table_id}");
+		$article_buzz = $article_buzz_obj->getAll("*", ["OR" => ["postID" => $postID]], "post_buzz_{$tag_table_id}");
+		if(empty($article_post)) return 0;
+		$article['title'] = $article_post['title'];
+		$article['msgbody'] = $article_post['msgbody'];
+		$article['tag'] = [];
+		$article['buzz'] = [];
+		foreach($article_tags as $tag){
+			$article['tag'][] = $tag['tagID'];
+		}
+		foreach($article_buzz as $buzz){
+			$article['buzz'][] = $buzz['userID'];
+
+		}
+		return $article;
+	}
     public function get_article_info($where)
     {
         $article_post_obj = load("article_post");

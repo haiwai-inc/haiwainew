@@ -2,21 +2,21 @@
 set_time_limit(600);
 define('DOCUROOT', str_replace("/search/Cron", "", dirname(__FILE__)));
 include DOCUROOT . '/inc.comm.php';
-if(count($argv)<2){
-    echo("Password needed\n");
-    exit;
-}
-else {
-    if($argv[1] != "haiwai2020") {
-        
-        echo("Wrong password\n");
-        exit;
-    }
-}
+// if(count($argv)<2){
+//     echo("Password needed\n");
+//     exit;
+// }
+// else {
+//     if($argv[1] != "haiwai2020") {
+
+//         echo("Wrong password\n");
+//         exit;
+//     }
+// }
 $first_update_time = time() - 5*60;
 
-if(count($argv)>2){
-    if($argv[2] == "all"){
+if(count($argv)>1){
+    if($argv[1] == "all"){
         $first_update_time = 0;
     }
 }
@@ -31,9 +31,9 @@ $tag_obj          = load("article_tag");
 $index_obj    = load("article_indexing");
 $group_number = 0;
 $iterations_max = 0;
-if(count($argv)>3){
-    if(is_numeric($argv[3])){
-        $iterations_max = intval($argv[3]);
+if(count($argv)>2){
+    if(is_numeric($argv[2])){
+        $iterations_max = intval($argv[2]);
     }
 }
 $indexed_article_number = 0;

@@ -39,6 +39,9 @@ class search_article_index extends Search
 				  "postID": {
 					"type": "integer"
 				  },
+				  "buzz":{
+					"enabled": false
+				  },
 				  "msgbody": {
 					"analyzer": "ik_smart",
 					"type": "text"
@@ -92,16 +95,17 @@ class search_article_index extends Search
 		// $tag_string = implode(" ", $tags);
 		$query["should"] = [];
 		foreach ($tags as $tag){
+			$tag= intval($tag);
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
 		}
 		// $query["should"] =[$this->object(array("match" => array("tags"=>$tag_string)))];
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
-		);
+		); 
 
 		// $query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "dateline"=>array("order"=>"desc")))];
 		$query["sort"]=[$this->object($order)];
-		$rs = $this->search($query,null,null, 100);
+		$rs = $this->search($query,null,null);
 		// debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
@@ -136,6 +140,7 @@ class search_article_index extends Search
 			"edit_date"    => $this-> get_time_string($article['edit_date']),
 			"like_date"    => $this-> get_time_string($article['like_date']),
 			"pic" => $article['pic'],
+			"buzz" => $article['buzz'],
 		];
 
 		return $this->add($article_formatted, $article['postID']);
@@ -177,6 +182,7 @@ class search_article_index extends Search
                     "like_date"    => $this-> get_time_string($article['like_date']),
                     "visible" => $article['visible'],
 					"pic" => $article['pic'],
+					"buzz" => $article['buzz'],
 				];
 				$count++;
 				$total++;
@@ -200,13 +206,38 @@ class search_article_index extends Search
             }
 
             if (!empty($count)) {
-                debug::D($this->addBulk($data_string));
+                $this->addBulk($data_string);
             }
             return $total;
         } catch (Exception $e) {
 			debug::d($e);
             return 0;
         }
-    }
+	}
+	
 
+	function search_by_keyword($keyword){
+		$query = [];
+		if(is_string($keyword)){
+			$highlight = array("title"=>$this->object(), "msgbody"=>$this->object());
+			
+			$query["should"] =[$this->object(array("match" => array("title"=>$keyword))),$this->object(array("match" => array("msgbody"=>$keyword)))];
+			$query["must_not"]=array(
+				$this->object(array("term" => array("visible"=>0)))
+			);
+
+			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"),"edit_date"=>array("order"=>"desc")))];
+			$query["highlight"] = array(
+				"pre_tags" => array( "<span style='color:blue'>" ),
+				"post_tags" => array( "</span>" ),
+				"fields" =>  $highlight
+			);
+		}
+		else{
+			$query = $keyword;
+		}
+		$rs = $this->search($query);
+		$rs = json_decode(json_encode($rs), true);
+		return $rs;
+	}
 }
