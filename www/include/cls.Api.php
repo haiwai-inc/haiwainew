@@ -652,18 +652,18 @@ class Api{
 	}
 	
 	private function display($result){
-	    $rs=[
-	       "data"=>$result,
-	       "error"=>$this->error,
-	       "status"=>$this->status,
-	    ];
-	    
 		header("Access-Control-Allow-Origin: *");
 		header("Content-Type: application/json; charset=UTF-8");
 		
+		$rs=[
+		    "data"=>$result,
+		    "error"=>$this->error,
+		    "status"=>$this->status,
+		];
+		
 		if(isset($_GET['format'])){
 			if($_GET['format']=='debug') {
-			    debug::D($rs);
+			    debug::d($rs);
 				exit;
 			}
 			
@@ -673,7 +673,8 @@ class Api{
 			}
 		}
 		
-		echo json_encode($rs, JSON_NUMERIC_CHECK);
+		//echo json_encode($rs, JSON_NUMERIC_CHECK);
+		echo json_encode($rs, JSON_UNESCAPED_UNICODE);
 		exit;
 	}
 	

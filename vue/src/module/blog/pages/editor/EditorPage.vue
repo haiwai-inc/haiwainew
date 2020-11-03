@@ -25,7 +25,10 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#"><icon-edit class="icon"></icon-edit>修改文件名称</a>
+            <a 
+            class="dropdown-item" 
+            href="#"
+            @click="modals.addwenji = true"><icon-edit class="icon"></icon-edit>修改文集名称</a>
             <a class="dropdown-item" href="#"><icon-delete class="icon"></icon-delete>删除文集</a>
           </drop-down>
         </li>
@@ -153,7 +156,7 @@
         type="primary"
         round 
         simple
-          >发布</n-button
+          >保存</n-button
         >
       </template>
     </modal>

@@ -31,25 +31,79 @@ class user extends Api {
     /**
      * 很多页面
      * 黑名单 添加
+     * @param integer $blockID|屏蔽人的ID
      */
-    public function blacklist_add(){
+    public function blacklist_add($blockID){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne(['id'],['status'=>1,'id'=>$blockID]);
+        if(empty($check_account_user)){
+            $this->error="不是有效的屏蔽用户";
+            $this->status=false;
+            return false;
+        }else{
+            $obj_account_blacklist=load("account_blacklist");
+            $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
+            if(!empty($check_account_blacklist)){
+                $this->error="此用户已经被屏蔽";
+                $this->status=false;
+                return false;
+            }else{
+                $obj_account_blacklist->insert(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
+                $this->error="已屏蔽此用户";
+            }
+        }
         
+        return true;
     }
     
     /**
      * 很多页面
      * 黑名单 删除
+     * @param integer $blockID|屏蔽人的ID
      */
-    public function blacklist_delete(){
-        
+    public function blacklist_delete($blockID){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne(['id'],['status'=>1,'id'=>$blockID]);
+        if(empty($check_account_user)){
+            $this->error="不是有效的屏蔽用户";
+            $this->status=false;
+            return false;
+        }else{
+            $obj_account_blacklist=load("account_blacklist");
+            $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
+            if(empty($check_account_blacklist)){
+                $this->error="此用户未被列入黑名单";
+                $this->status=false;
+                return false;
+            }else{
+                $obj_account_blacklist->remove(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
+                $this->error="已取消屏蔽此用户";
+            }
+        }
     }
     
     /**
      * 个人设置黑名单页
      * 黑名单 列表
+     * @param integer $last_blockID|最后屏蔽人的ID
      */
-    public function blacklist_list(){
+    public function blacklist_list($last_blockID=0){
+        $obj_account_blacklist=load("account_blacklist");
+        $fields=[
+            'userID'=>$_SESSION['id']
+        ];
+        if(!empty($last_blockID)){
+            $fields['blockID,<']=$last_blockID;
+        }
+        $rs_account_blacklist=$obj_account_blacklist->getAll("*",$fields);
         
+        //加入用户信息
+        if(!empty($rs_account_blacklist)){
+            $obj_account_user=load("account_user");
+            $rs_account_blacklist=$obj_account_user->get_basic_userinfo($rs_account_blacklist,'blockID');
+        }
+        
+        return $rs_account_blacklist;
     }
     
     /**
