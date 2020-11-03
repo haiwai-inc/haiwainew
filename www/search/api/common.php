@@ -10,6 +10,9 @@ class common extends Api{
     public function articles($keyword){
         $tool_obj = load("search_tool");
         $articles = $tool_obj -> search_article($keyword);
+        
+        $user_obj = load("account_user");
+        $articles = $user_obj -> get_basic_userinfo($articles, "userID");
         return $articles;
     }
 
@@ -81,11 +84,11 @@ class common extends Api{
         foreach($tags as $tag){
             $tag_list[] = intval($tag);
         }
-        debug::d($tags);
-        debug::d($tag_list);
-        debug::D([1,2,3,4,5,6,7,8,9,10]);
         $article_index_obj = load("search_article_index");
         $articles = $article_index_obj->search_tags($tag_list);
+
+        $user_obj = load("account_user");
+        $articles = $user_obj -> get_basic_userinfo($articles, "userID");
         return $articles;
     }
 }
