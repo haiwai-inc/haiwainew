@@ -2,5 +2,69 @@
 class blog_blogger extends Model{
 	protected $tableName="blogger";
 	protected $dbinfo=array("config"=>"blog","type"=>"MySQL");
+
+	/**
+	 * Search blogger with keyword
+	 * @param string $keyword
+	 * @return $for_article
+	 */
+	public function search_by_name($keyword, $for_article = false){
+		//TODO lastid filter
+		$where = ['name, LIKE' => "%$keyword%"];
+		if(empty($for_article)){
+			$blogger_rs  = $this->getList(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], $where);
+		}
+		else{
+			$where['limit'] = 3;
+			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], $where);
+		}
+		
+		return $this->fetch_userinfo($blogger_rs);
+	}
+
+	public function fetch_userinfo($blogger_rs){
+		if(empty($blogger_rs)) return [];
+		$user_ids = [];
+		foreach($blogger_rs as $blogger){
+			$user_ids[] = $blogger["userID"];
+		}
+
+		$user_obj = load("account_user");
+		$users_map = $user_obj -> get_id_user_map($user_ids);
+
+		$bloggers = [];
+		foreach($blogger_rs as $blogger){
+			if(empty($users_map[$blogger['userID']])) continue;
+			$blogger['user'] = $users_map[$blogger['userID']];
+			$bloggers[] = $blogger;
+		}
+		return $bloggers;
+	}
+
+	/**
+	 * Get a id=>blogger map
+	 * @param array $ids | List of ids
+	 * @return array $rs | id blogger map
+	 */
+	public function get_id_blogger_map($ids){
+		$bloggers = $this->get_bloggers_by_ids($ids);
+		$rs = [];
+		foreach($bloggers as $blogger){
+			$rs[$blogger['id']] = $blogger;
+		}
+		return $rs;
+	}
+
+	/**
+	 * Get a list of blogger objects from db with list of ids
+	 * @param array $ids | List of ids
+	 * @param array $users | List of bloggers
+	 */
+	public function get_bloggers_by_ids($ids){
+		if(empty($ids)) return [];
+		if(!is_array($ids)) $ids = [$ids];
+		$bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], ["OR"=>["id"=>$ids]]);
+		return $bloggers;
+	}
 }
 ?>
