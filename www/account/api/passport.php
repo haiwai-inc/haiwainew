@@ -17,7 +17,7 @@ class passport extends Api {
      */
     public function login_status($userID) {
 
-//$obj=load("search_article_pool");
+//$obj=load("search_article_index");
 //$test1=$obj->get_by_postIDs([9237]);
 
 

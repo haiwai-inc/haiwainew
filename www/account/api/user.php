@@ -49,11 +49,10 @@ class user extends Api {
                 return false;
             }else{
                 $obj_account_blacklist->insert(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
-                $this->error="已屏蔽此用户";
             }
         }
         
-        return true;
+        return "已屏蔽此用户";
     }
     
     /**
@@ -77,23 +76,24 @@ class user extends Api {
                 return false;
             }else{
                 $obj_account_blacklist->remove(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
-                $this->error="已取消屏蔽此用户";
             }
         }
+        
+        return "已取消屏蔽此用户";
     }
     
     /**
      * 个人设置黑名单页
      * 黑名单 列表
-     * @param integer $last_blockID|最后屏蔽人的ID
+     * @param integer $last_blacklistID|最后黑名单的ID
      */
-    public function blacklist_list($last_blockID=0){
+    public function blacklist_list($last_blacklistID=0){
         $obj_account_blacklist=load("account_blacklist");
         $fields=[
             'userID'=>$_SESSION['id']
         ];
-        if(!empty($last_blockID)){
-            $fields['blockID,<']=$last_blockID;
+        if(!empty($last_blacklistID)){
+            $fields['id,<']=$last_blacklistID;
         }
         $rs_account_blacklist=$obj_account_blacklist->getAll("*",$fields);
         
@@ -109,25 +109,68 @@ class user extends Api {
     /**
      * 文章详情页
      * 书签 添加
+     * @param integer $postID|收藏文章的postID
      */
-    public function bookmark_add(){
+    public function bookmark_add($postID){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['treelevel'=>0,'visible'=>1,'postID'=>$postID]);
+        if(empty($check_article_indexing)){
+            $this->error="此文章不存在";
+            $this->status=false;
+            return false;
+        }else{
+            $obj_account_bookmark=load("account_bookmark");
+            $check_account_book=$obj_account_bookmark->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$postID]);
+            if(!empty($check_account_book)){
+                $this->error="此文章已经加入到了书签";
+                $this->status=false;
+                return false;
+            }else{
+                $obj_account_bookmark->insert(['userID'=>$_SESSION['id'],'postID'=>$postID]);
+            }
+        }
         
+        return "已经加入此文章到书签";
     }
     
     /**
      * 文章详情页
      * 书签 删除
+     * @param integer $postID|收藏文章的postID
      */
-    public function bookmark_delete(){
+    public function bookmark_delete($postID){
+        $obj_account_bookmark=load("account_bookmark");
+        $check_account_book=$obj_account_bookmark->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_account_book)){
+            $this->error="书签里没有此文章";
+            $this->status=false;
+            return false;
+        }else{
+            $obj_account_bookmark->remove(['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        }
         
+        return "已在书签删除此文章";
     }
     
     /**
      * 收藏页
      * 书签 列表
+     * @param integer $last_bookmarkID|最后书签的ID
      */
-    public function bookmark_list(){
+    public function bookmark_list($last_bookmarkID=0){
+        $obj_account_bookmark=load("account_bookmark");
+        $obj_article_post=load("article_post");
         
+        $fields=[
+            'userID'=>$_SESSION['id']
+        ];
+        if(!empty($last_blockID)){
+            $fields['id,<']=$last_bookmarkID;
+        }
+        $rs_account_bookmark=$obj_account_bookmark->getAll("*",$fields);
+        $rs_account_bookmark=$obj_article_post->get_basic_userinfo($rs_account_bookmark,"postID");
+        
+        return $rs_account_bookmark;
     }
     
     /**
