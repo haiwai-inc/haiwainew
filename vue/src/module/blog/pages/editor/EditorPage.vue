@@ -62,7 +62,7 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#">直接发布文章</a>
+            <a class="dropdown-item" href="#"><icon-publish class="icon"></icon-publish>直接发布</a>
             <a 
             class="dropdown-item pl-4" 
             href="#" 
@@ -236,7 +236,7 @@
 <script>
 import { Button, DropDown, Modal, FormGroupInput } from '@/components';
 import { DatePicker,TimePicker } from 'element-ui';
-import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX} from '@/components/Icons';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX,IconPublish} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -258,6 +258,7 @@ export default {
     IconForbid,
     IconFolder,
     IconPrivate,
+    IconPublish,
     IconTop,
     IconTime,
     IconX

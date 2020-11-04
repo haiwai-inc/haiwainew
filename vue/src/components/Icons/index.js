@@ -5,6 +5,8 @@ import GoogleLogo from './GoogleLogo';
 import FacebookLogo from './FacebookLogo';
 import LeftArrow from './LeftArrow';
 import IconPen from './IconPen.vue';
+import IconPublish from './IconPublish.vue';
+import IconPublished from './IconPublished.vue';
 import IconMail from './IconMail.vue';
 import IconPlus from './IconPlus.vue';
 import IconCheck from './IconCheck.vue';
@@ -48,6 +50,8 @@ export {
   LeftArrow,
   IconPen,
   IconMail,
+  IconPublish,
+  IconPublished,
   IconPlus,
   IconCheck,
   IconEdit,
