@@ -237,7 +237,7 @@ class user extends Api {
         $obj_account_qqh_post=load("account_qqh_post");
         
         $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['qqhID'=>$qqhID,'visible'=>1,'order'=>['id'=>'DESC']]);
-        if(!empty($rs_account_qqh_post)){
+        if(empty($rs_account_qqh_post)){
             $this->error="此对话不存在";
             $this->status=false;
             return false;
