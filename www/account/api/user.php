@@ -176,9 +176,37 @@ class user extends Api {
     /**
      * 很多页面
      * 悄悄话 发送
+     * @param integer $touserID | 被发送人touserID
+     * @param integer $msgbody | 被发送人msgbody
      */
-    public function qqh_add(){
+    public function qqh_add($touserID,$msgbody){
+        $obj_account_qqh=load("account_qqh");
+        $obj_account_qqh_post=load("account_qqh_post");
         
+        //查看是否开启对话框
+        $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
+        if(empty($check_account_qqh)){
+            $check_account_qqh=['userID'=>$_SESSION['id'],'touserID'=>$touserID,'new_message'=>0,'to_new_message'=>0];
+            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID]);
+        }else{
+            $update_account_qqh_fields=[
+                'last_message_dateline'=>times::getTime()
+            ];
+            
+            //自己发起的对话
+            if($check_account_qqh['userID']==$_SESSION['id']){
+                $update_account_qqh_fields['to_new_message']=$check_account_qqh['to_new_message']+1;
+            }
+            //别人发起的对话
+            else{
+                $update_account_qqh_fields['new_message']=$check_account_qqh['new_message']+1;
+            }
+            
+            $obj_account_qqh->update($update_account_qqh_fields,['id'=>$check_account_qqh['id']]);
+        }
+        
+        $obj_account_qqh_post->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID,'qqhID'=>$check_account_qqh['id'],'msgbody'=>$msgbody,'dateline'=>times::getTime()]);
+        return "悄悄话已发送";
     }
     
     /**
@@ -186,15 +214,39 @@ class user extends Api {
      * 悄悄话 列表
      */
     public function qqh_list(){
+        $obj_account_qqh=load("account_qqh");
+        $obj_account_user=load("account_user");
         
+        $rs_account_qqh=$obj_account_qqh->getAll("*",['SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",'order'=>["last_message_dateline"=>'DESC']]);
+        
+        //查询联系人
+        $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
+        $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"touserID");
+        
+        return $rs_account_qqh;
     }
     
     /**
      * 悄悄话详情页
      * 悄悄话 详情
+     * @param integer $qqhID | 悄悄话对话框ID
      */
-    public function qqh_view(){
+    public function qqh_view($qqhID){
+        $obj_account_qqh=load("account_qqh");
+        $obj_account_user=load("account_user");
+        $obj_account_qqh_post=load("account_qqh_post");
         
+        $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['qqhID'=>$qqhID,'visible'=>1,'order'=>['id'=>'DESC']]);
+        if(!empty($rs_account_qqh_post)){
+            $this->error="此对话不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        //查询联系人
+        $rs_account_qqh_post=$obj_account_user->get_basic_userinfo($rs_account_qqh_post,"userID");
+        
+        return $rs_account_qqh_post;
     }
     
     /**

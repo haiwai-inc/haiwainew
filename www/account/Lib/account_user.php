@@ -47,7 +47,7 @@ class account_user extends Model{
 	            }
 	        }
 	        foreach($rs as $k=>$v){
-	            $rs[$k]['basic_userinfo']=$hash_account_user[$v[$hashID]];
+	            $rs[$k]["basic_userinfo_{$hashID}"]=$hash_account_user[$v[$hashID]];
 	        }
 	    }
 	    
