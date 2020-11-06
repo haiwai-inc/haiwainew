@@ -160,6 +160,7 @@ class user extends Api {
     public function bookmark_list($last_bookmarkID=0){
         $obj_account_bookmark=load("account_bookmark");
         $obj_article_post=load("article_post");
+        $obj_account_qqh=load("account_qqh");
         
         $fields=[
             'userID'=>$_SESSION['id']
@@ -193,8 +194,7 @@ class user extends Api {
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
         if(empty($check_account_qqh)){
-            $check_account_qqh=['userID'=>$_SESSION['id'],'touserID'=>$touserID,'new_message'=>0,'to_new_message'=>0];
-            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID,'last_message_dateline'=>times::getTime()]);
+            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'to_new_message'=>1,'touserID'=>$touserID,'last_message_dateline'=>times::getTime()]);
         }else{
             $update_account_qqh_fields=[
                 'last_message_dateline'=>times::getTime()
@@ -224,9 +224,9 @@ class user extends Api {
         $obj_account_qqh=load("account_qqh");
         $obj_account_user=load("account_user");
         
-        $rs_account_qqh=$obj_account_qqh->getAll("*",['SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",'order'=>["last_message_dateline"=>'DESC']]);
+        $rs_account_qqh=$obj_account_qqh->getAll("*",['limit'=>20,'SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",'order'=>["last_message_dateline"=>'DESC']]);
         
-        //查询联系人
+        //查询联系人信息
         $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
         $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"touserID");
         
@@ -237,21 +237,31 @@ class user extends Api {
      * 悄悄话详情页
      * 悄悄话 详情
      * @param integer $qqhID | 悄悄话对话框ID
+     * @param integer $last_id | 最后一个悄悄话信息id
      */
-    public function qqh_view($qqhID){
+    public function qqh_view($qqhID,$last_id=0){
         $obj_account_qqh=load("account_qqh");
         $obj_account_user=load("account_user");
         $obj_account_qqh_post=load("account_qqh_post");
         
-        $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['qqhID'=>$qqhID,'visible'=>1,'order'=>['id'=>'DESC']]);
+        $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['limit'=>20,'qqhID'=>$qqhID,'visible'=>1,'order'=>['id'=>'DESC']]);
         if(empty($rs_account_qqh_post)){
             $this->error="此对话不存在";
             $this->status=false;
             return false;
         }
         
-        //查询联系人
+        //查询联系人信息
         $rs_account_qqh_post=$obj_account_user->get_basic_userinfo($rs_account_qqh_post,"userID");
+        
+        //清空悄悄话读数
+        $rs_account_qqh=$obj_account_qqh->getOne("*",['id'=>$qqhID]);
+        if($rs_account_qqh['userID']==$_SESSION['id']){
+            $fields_account_qqh=["new_message"=>0];
+        }else{
+            $fields_account_qqh=["to_new_message"=>0];
+        }
+        $obj_account_qqh->update($fields_account_qqh,['id'=>$qqhID]);
         
         return $rs_account_qqh_post;
     }
