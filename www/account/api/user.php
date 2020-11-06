@@ -252,6 +252,7 @@ class user extends Api {
     /**
      * 用户
      * 赞 添加
+     * 
      */
     public function buzz_add(){
         
