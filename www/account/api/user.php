@@ -221,7 +221,7 @@ class user extends Api {
      * 悄悄话 列表
      * @param integer $lastID | 最后一个悄悄话信息对话框id
      */
-    public function qqh_list($lastID){
+    public function qqh_list($lastID=0){
         $obj_account_qqh=load("account_qqh");
         $obj_account_user=load("account_user");
         
