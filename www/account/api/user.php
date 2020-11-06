@@ -85,15 +85,15 @@ class user extends Api {
     /**
      * 个人设置黑名单页
      * 黑名单 列表
-     * @param integer $last_blacklistID|最后黑名单的ID
+     * @param integer $lastID|最后黑名单的ID
      */
-    public function blacklist_list($last_blacklistID=0){
+    public function blacklist_list($lastID=0){
         $obj_account_blacklist=load("account_blacklist");
         $fields=[
             'userID'=>$_SESSION['id']
         ];
-        if(!empty($last_blacklistID)){
-            $fields['id,<']=$last_blacklistID;
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
         }
         $rs_account_blacklist=$obj_account_blacklist->getAll("*",$fields);
         
@@ -155,9 +155,9 @@ class user extends Api {
     /**
      * 收藏页
      * 书签 列表
-     * @param integer $last_bookmarkID|最后书签的ID
+     * @param integer $lastID|最后书签的ID
      */
-    public function bookmark_list($last_bookmarkID=0){
+    public function bookmark_list($lastID=0){
         $obj_account_bookmark=load("account_bookmark");
         $obj_article_post=load("article_post");
         $obj_account_qqh=load("account_qqh");
@@ -165,8 +165,8 @@ class user extends Api {
         $fields=[
             'userID'=>$_SESSION['id']
         ];
-        if(!empty($last_blockID)){
-            $fields['id,<']=$last_bookmarkID;
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
         }
         $rs_account_bookmark=$obj_account_bookmark->getAll("*",$fields);
         $rs_account_bookmark=$obj_article_post->get_basic_userinfo($rs_account_bookmark,"postID");
@@ -219,12 +219,21 @@ class user extends Api {
     /**
      * 悄悄话页
      * 悄悄话 列表
+     * @param integer $lastID | 最后一个悄悄话信息对话框id
      */
-    public function qqh_list(){
+    public function qqh_list($lastID){
         $obj_account_qqh=load("account_qqh");
         $obj_account_user=load("account_user");
         
-        $rs_account_qqh=$obj_account_qqh->getAll("*",['limit'=>20,'SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",'order'=>["last_message_dateline"=>'DESC']]);
+        $where_account_qqh_post=[
+            'limit'=>20,
+            'SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",
+            'order'=>["last_message_dateline"=>'DESC']
+        ];
+        if(!empty($lastID)){
+            $where_account_qqh_post['id,<']=$lastID;
+        }
+        $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
         
         //查询联系人信息
         $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
@@ -237,14 +246,24 @@ class user extends Api {
      * 悄悄话详情页
      * 悄悄话 详情
      * @param integer $qqhID | 悄悄话对话框ID
-     * @param integer $last_id | 最后一个悄悄话信息id
+     * @param integer $lastID | 最后一个悄悄话信息id
      */
-    public function qqh_view($qqhID,$last_id=0){
+    public function qqh_view($qqhID,$lastID=0){
         $obj_account_qqh=load("account_qqh");
         $obj_account_user=load("account_user");
         $obj_account_qqh_post=load("account_qqh_post");
         
-        $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['limit'=>20,'qqhID'=>$qqhID,'visible'=>1,'order'=>['id'=>'DESC']]);
+        $where_account_qqh_post=[
+            'limit'=>20,
+            'qqhID'=>$qqhID,
+            'visible'=>1,
+            'order'=>['id'=>'DESC']
+        ];
+        if(!empty($lastID)){
+            $where_account_qqh_post['id,<']=$lastID;
+        }
+        $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",$where_account_qqh_post);
+        
         if(empty($rs_account_qqh_post)){
             $this->error="此对话不存在";
             $this->status=false;
@@ -257,11 +276,11 @@ class user extends Api {
         //清空悄悄话读数
         $rs_account_qqh=$obj_account_qqh->getOne("*",['id'=>$qqhID]);
         if($rs_account_qqh['userID']==$_SESSION['id']){
-            $fields_account_qqh=["new_message"=>0];
+            $where_account_qqh=["new_message"=>0];
         }else{
-            $fields_account_qqh=["to_new_message"=>0];
+            $where_account_qqh=["to_new_message"=>0];
         }
-        $obj_account_qqh->update($fields_account_qqh,['id'=>$qqhID]);
+        $obj_account_qqh->update($where_account_qqh,['id'=>$qqhID]);
         
         return $rs_account_qqh_post;
     }
@@ -269,10 +288,44 @@ class user extends Api {
     /**
      * 用户
      * 赞 添加
-     * 
+     * @param integer $postID | 文章的postID
      */
-    public function buzz_add(){
+    public function buzz_add($postID){
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_post_buzz=load("article_post_buzz");
         
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
+        
+        if(empty($check_article_indexing)){
+            $this->error="此文章不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $tbn=substr('0'.$postID,-1);
+        $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
+        if(!empty($check_article_post_buzz)){
+            $this->error="此文章您已经赞过了";
+            $this->status=false;
+            return false;
+        }else{
+            //添加人和帖子映射
+            $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
+            
+            //帖子赞+1
+            $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+            
+            //博主赞+1
+            if($check_article_indexing['typeID']==1){
+                $obj_blog_blogger=load("blog_blogger");
+                $check_blog_blogger=$obj_blog_blogger->getOne(['id','count_buzz'],['id'=>$check_article_indexing['bloggerID']]);
+                if(!empty($check_blog_blogger)){
+                    $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
+                }
+            }
+        }
+        
+        return "已赞";
     }
     
     /**
@@ -282,6 +335,15 @@ class user extends Api {
     public function buzz_delete(){
         
     }
+    
+    /**
+     * 用户
+     * 赞 列表
+     */
+    public function buzz_list(){
+        
+    }
+    
     
     /**
      * "很多"页面
