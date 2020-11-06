@@ -183,11 +183,18 @@ class user extends Api {
         $obj_account_qqh=load("account_qqh");
         $obj_account_qqh_post=load("account_qqh_post");
         
+        //不可以给自己发悄悄话
+        if($_SESSION['id']==$touserID){
+            $this->error="悄悄话的人就是自己";
+            $this->status=false;
+            return false;
+        }
+        
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
         if(empty($check_account_qqh)){
             $check_account_qqh=['userID'=>$_SESSION['id'],'touserID'=>$touserID,'new_message'=>0,'to_new_message'=>0];
-            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID]);
+            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID,'last_message_dateline'=>times::getTime()]);
         }else{
             $update_account_qqh_fields=[
                 'last_message_dateline'=>times::getTime()
