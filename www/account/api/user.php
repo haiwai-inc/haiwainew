@@ -281,7 +281,7 @@ class user extends Api {
             $where_account_qqh=["to_new_message"=>0];
         }
         $obj_account_qqh->update($where_account_qqh,['id'=>$qqhID]);
-        rsort($rs_account_qqh_post);
+        krsort($rs_account_qqh_post);
         
         return $rs_account_qqh_post;
     }
