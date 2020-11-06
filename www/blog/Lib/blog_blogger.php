@@ -12,11 +12,11 @@ class blog_blogger extends Model{
 		//TODO lastid filter
 		$where = ['name, LIKE' => "%$keyword%"];
 		if(empty($for_article)){
-			$blogger_rs  = $this->getList(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], $where);
+			$blogger_rs  = $this->getList(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], $where);
 		}
 		else{
 			$where['limit'] = 3;
-			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], $where);
+			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], $where);
 		}
 		
 		return $this->fetch_userinfo($blogger_rs);
@@ -63,7 +63,7 @@ class blog_blogger extends Model{
 	public function get_bloggers_by_ids($ids){
 		if(empty($ids)) return [];
 		if(!is_array($ids)) $ids = [$ids];
-		$bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], ["OR"=>["id"=>$ids]]);
+		$bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$ids]]);
 		return $bloggers;
 	}
 }
