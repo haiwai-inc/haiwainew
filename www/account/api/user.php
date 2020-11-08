@@ -175,6 +175,20 @@ class user extends Api {
     }
     
     /**
+     * 小铃铛页
+     * 悄悄话 未读 计数
+     */
+    public function qqh_unread_count(){
+        $obj_account_qqh=load("account_qqh");
+        
+        $rs_account_qqh_from=$obj_account_qqh->getOne("SELECT SUM(new_message) as total_new_message FROM qqh WHERE userID={$_SESSION['id']}");
+        $rs_account_qqh_to=$obj_account_qqh->getOne("SELECT SUM(to_new_message) as total_to_new_message FROM qqh WHERE touserID={$_SESSION['id']}");
+        
+        $count=$rs_account_qqh_from['total_new_message']+$rs_account_qqh_to['total_to_new_message'];
+        return $count;
+    }
+    
+    /**
      * 很多页面
      * 悄悄话 发送
      * @param integer $touserID | 被发送人touserID
@@ -219,7 +233,7 @@ class user extends Api {
     /**
      * 悄悄话页
      * 悄悄话 列表
-     * @param integer $lastID | 最后一个悄悄话信息对话框id
+     * @param integer $lastID | 最后一个悄悄话信息对话框的message_dateline
      */
     public function qqh_list($lastID=0){
         $obj_account_qqh=load("account_qqh");
@@ -231,7 +245,7 @@ class user extends Api {
             'order'=>["last_message_dateline"=>'DESC']
         ];
         if(!empty($lastID)){
-            $where_account_qqh_post['id,<']=$lastID;
+            $where_account_qqh_post['last_message_dateline,<']=$lastID;
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
         
@@ -333,7 +347,41 @@ class user extends Api {
      * 赞 取消
      */
     public function buzz_delete(){
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_post_buzz=load("article_post_buzz");
         
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
+        
+        if(empty($check_article_indexing)){
+            $this->error="此文章不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $tbn=substr('0'.$postID,-1);
+        $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
+        if(!empty($check_article_post_buzz)){
+            $this->error="此文章您已经赞过了";
+            $this->status=false;
+            return false;
+        }else{
+            //添加人和帖子映射
+            $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
+            
+            //帖子赞+1
+            $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+            
+            //博主赞+1
+            if($check_article_indexing['typeID']==1){
+                $obj_blog_blogger=load("blog_blogger");
+                $check_blog_blogger=$obj_blog_blogger->getOne(['id','count_buzz'],['id'=>$check_article_indexing['bloggerID']]);
+                if(!empty($check_blog_blogger)){
+                    $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
+                }
+            }
+        }
+        
+        return "已取消赞";
     }
     
     /**
