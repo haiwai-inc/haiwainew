@@ -46,6 +46,7 @@ class page extends Api {
             $postID_blog_recommend[]=$v['postID'];
         }
         
+        //添加ES信息
         $rs_search_article_noindex=$obj_search_article_noindex->get_by_postIDs($postID_blog_recommend);
         debug::d($postID_blog_recommend);
         debug::d($rs_search_article_noindex);
