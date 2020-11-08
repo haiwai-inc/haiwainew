@@ -42,12 +42,14 @@ class page extends Api {
             $rs=['status'=>false,'msg'=>"",'data'=>""];
             return $rs;
         }
+        foreach($rs_blog_recommend as $v){
+            $postID_blog_recommend[]=$v['postID'];
+        }
         
-        /*
-        $rs_search_article_noindex=$obj_search_article_noindex->get([57028]);
+        $rs_search_article_noindex=$obj_search_article_noindex->get_by_postIDs($postID_blog_recommend);
+        debug::d($postID_blog_recommend);
         debug::d($rs_search_article_noindex);
         exit;
-        */
         
         $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_recommend];
         return $rs;

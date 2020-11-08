@@ -46,7 +46,7 @@ exit;
 */
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','auth_group','username','description','background','avatar'],['id'=>$userID]);
-        $rs_account_user['avatar']=file_domain.$rs_account_user['avatar'];
+        $rs_account_user['avatar']=$rs_account_user['avatar'];
         
         $_SESSION=$rs_account_user;
         $_SESSION['UserID']=$rs_account_user['id'];
@@ -59,6 +59,14 @@ exit;
         }
         
         return $rs_account_user;
+    }
+    
+    /**
+     * 页头
+     * 用户 退出
+     */
+    public function user_logout(){
+        
     }
     
     /**
