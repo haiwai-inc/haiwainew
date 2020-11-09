@@ -23,7 +23,7 @@
             </drop-down>
             
           </div>
-          <div class="d-flex" @click="showQqhView(item.id)">
+          <div class="d-flex" @click="showQqhView(index)">
             <avatar :data="authorInfor" :imgHeight="48"></avatar>
             <div class="pl-2">
               <span class="name">{{item.basic_userinfo_userID.id==userID?item.basic_userinfo_touserID.username:item.basic_userinfo_userID.username}}</span>
@@ -74,7 +74,7 @@
               ><img class="rounded-circle" src="/img/julie.jpg"
             /></a>
             <div><span class="content">{{item.msgbody}}</span></div>
-            <span class="time">{{item.dateline | formatDate}}</span>
+            <span class="time">{{item.dateline*1000 | formatDate}}</span>
           </li>
           
         </ul>
@@ -129,6 +129,7 @@ export default {
         qqhView:{},
         msgbody:'',
         authorInfor: {
+          userID:123,
           avatarUrl: "/img/julie.jpg",
           isHot: true,
           authorHomepage: "",
@@ -149,16 +150,18 @@ export default {
       this.qqhList=res.data;
       console.log(this.qqhList);
     },
-    async qqh_view(id) {
+    async qqh_view(idx) {
+      let list = this.qqhList.data;
       let user = this.$store.state.user;
-      let res = await user.qqh_view(id);
+      let res = await user.qqh_view(list[idx].id);
       this.qqhView=res.data;
       this.qqhView.data=res.data.data.reverse();
-      console.log(res);
+      this.touserID=list[idx].basic_userinfo_userID.id===this.userID?list[idx].basic_userinfo_touserID.id:list[idx].basic_userinfo_userID.id;
+      console.log(this.touserID);
     },
-    showQqhView(id){
-      this.msgID=id;
-      this.qqh_view(id);
+    showQqhView(idx){
+      this.msgID=idx;
+      this.qqh_view(idx);
       this.showView=true;
     },
     sendQqh(id){
