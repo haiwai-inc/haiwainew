@@ -11,8 +11,10 @@ class account_user extends Model{
 	public function get_id_user_map($ids){
 		$users = $this->get_users_by_ids($ids);
 		$rs = [];
-		foreach($users as $user){
-			$rs[$user['id']] = $user;
+		if(!empty($users)){
+			foreach($users as $user){
+				$rs[$user['id']] = $user;
+			}
 		}
 		return $rs;
 	}
@@ -40,12 +42,7 @@ class account_user extends Model{
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
-	        $rs_account_user=$this->getAll(['id','username','avatar'],['OR'=>['id'=>$tmp_rs_id]]);
-	        if(!empty($rs_account_user)){
-	            foreach($rs_account_user as $v){
-	                $hash_account_user[$v['id']]=$v;
-	            }
-	        }
+			$hash_account_user = $this->get_id_user_map($tmp_rs_id);
 	        foreach($rs as $k=>$v){
 	            $rs[$k]["basic_userinfo_{$hashID}"]=$hash_account_user[$v[$hashID]];
 	        }

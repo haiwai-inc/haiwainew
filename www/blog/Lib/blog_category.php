@@ -13,37 +13,14 @@ class blog_category extends Model{
 	 * @return array $categories
 	 */
 	public function search_by_name($keyword){
-		$categories = $this->getList("*", ["visible"=>1, "name, Like"=>$keyword]);
-		
+		$categories = $this->getList("*", ["visible"=>1, "name,like"=>"%".$keyword."%"]);
 		if(empty($categories)) return $categories;
-		return $this->fetch_userinfo($categories);
-	}
-
-	/**
-	 * Fill in userinfo for categories
-	 * @param array $categories
-	 * @return array $categories_with_user
-	 */
-	private function fetch_userinfo($categories){
-		$rs = [];
-		if(empty($categories)) return [];
-		$user_ids = [];
-		$blogger_ids = [];
-		foreach($categories as $category){
-			$user_ids[] = $category['userID'];
-			$blogger_ids[] = $category['bloggerID'];
-		}
+		// return $this->fetch_userinfo($categories);
 		$user_obj = load("account_user");
 		$blogger_obj = load("blog_blogger");
-		$user_map = $user_obj -> get_id_user_map($user_ids);
-		$blogger_map = $blogger_obj -> get_id_blogger_map($blogger_ids);
-		
-		foreach($categories as $category){
-			if(empty($user_map[$category['userID']]) || empty($blogger_map[$category['bloggerID']])) continue;
-			$category['user'] = $user_map[$category['userID']];
-			$category['blogger'] = $user_map[$category['bloggerID']];
-			$rs[] = $category;
-		}
-		return $rs;
+		$categories = $user_obj->get_basic_userinfo($categories, "userID");
+		$categories = $blogger_obj->get_basic_bloggerinfo($categories, "bloggerID");
+		return $categories;
 	}
+
 }
