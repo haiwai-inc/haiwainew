@@ -53,12 +53,7 @@ class page extends Api {
         $rs_blog_recommend=$obj_account_user->get_basic_userinfo($rs_blog_recommend,"userID");
         
         //添加ES信息
-        /*
-        $rs_search_article_noindex=$obj_search_article_noindex->get_by_postIDs($postID_blog_recommend);
-        debug::d($postID_blog_recommend);
-        debug::d($rs_search_article_noindex);
-        exit;
-        */
+        $rs_blog_recommend=$obj_search_article_noindex->get_postInfo($postID_blog_recommend,'postID');
         
         $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_recommend];
         return $rs;
