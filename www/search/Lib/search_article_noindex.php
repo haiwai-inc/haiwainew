@@ -101,19 +101,48 @@ class search_article_noindex extends Search
         return 0;
 	}
 	
-	public function get_by_postIDs($postIDs){
+	public function get_by_postIDs($postIDs, $full_msg = false){
 		$posts = $this->get($postIDs);
 		$posts = json_decode(json_encode($posts),true);
 		if(is_array($postIDs)){
 			$posts_body = [];
 			foreach($posts['docs'] as $doc){
 				if(!empty($doc['found'])){
-					$posts_body[] = $doc['_source'];
+					$doc_body = $doc['_source'];
+					if(empty($full_msg)){
+						$doc_body['msgbody'] = strip_tags($doc_body['msgbody']);
+						$doc_body['msgbody'] = substr($doc_body['msgbody'], 0, 1000);
+					}
+					$posts_body[] = $doc_body;
 				}
 			}
 			return $posts_body;
 		}
 		return $posts;
+	}
+
+	public function get_postID_map($postIDs, $full_msg = false){
+		$rs = [];
+		$posts = $this->get_by_postIDs($postIDs, $full_msg);
+		foreach($posts as $post){
+			$rs[$post['postID']] = $post;
+		}
+		return $rs;
+	}
+
+	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
+		if(!empty($rs)){
+	        foreach($rs as $v){
+	            $tmp_rs_id[]=$v[$hashID];
+			}
+			;
+			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
+	        foreach($rs as $k=>$v){
+	            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
+	        }
+	    } 
+	    
+	    return $rs;
 	}
 
     /**
