@@ -15,17 +15,24 @@
                 <span class="blog-user-index-des">博客访问：{{authorInfo.read}}</span>
             </div>
             <div class="pr-3">
-                <icon-mail style="width:16px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.8rem;">悄悄话</span>
+                <n-button  
+                link 
+                size="sm"
+                @click="openModal()"
+                >
+                    <icon-mail style="width:16px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.8rem;">发悄悄话</span>
+                </n-button>
+                
                 <n-button 
-        :type="authorInfo.isFollowed?'default':'primary'" 
-        round 
-        simple 
-        @click="$router.push('/blog/user/1')"
-        class="editbtn ml-3"
-        size="sm"
-        >
-          <icon-plus :style="authorInfo.isFollowed?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{authorInfo.isFollowed?'已关注':'关注'}}
-        </n-button>
+                :type="authorInfo.isFollowed?'default':'primary'" 
+                round 
+                simple 
+                @click="$router.push('/blog/user/1')"
+                class="editbtn ml-3"
+                size="sm"
+                >
+                    <icon-plus :style="authorInfo.isFollowed?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{authorInfo.isFollowed?'已关注':'关注'}}
+                </n-button>
             </div>
         </div>
         <div class="profile-header mt-2">
@@ -41,6 +48,39 @@
               </li>
            </ul>
         </div>
+    <!-- Send QQH Modal -->
+    <modal :show.sync="modals.sendQqhModal" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">向{{userID}}发送悄悄话</h4>
+      
+      <div class="datepicker-container d-flex justify-content-center">
+        <el-input
+        type="textarea"
+        :rows="2"
+        placeholder="请输入内容"
+        v-model="modals.qqhMsgbody">
+        </el-input>
+      </div>
+      
+      <template slot="footer">
+          <span :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data}}</span>
+        <n-button 
+        class="mr-3"
+        type="default" 
+        link
+        @click.native="modals.sendQqhModal = false"
+        >
+          取消
+        </n-button>
+        <n-button 
+        type="primary"
+        round 
+        simple
+        @click.native="sendQqh(userID)"
+        >
+          发送
+        </n-button>
+      </template>
+    </modal>
     </div>
 </template>
 <script>
@@ -50,8 +90,10 @@ import {
     IconPlus,
 } from '@/components/Icons';
 import {
-    Button
+    Button,
+    Modal,
 } from '@/components';
+import { Input } from 'element-ui';
 export default {
     name: 'blog-user-index-header',
     components:{
@@ -59,21 +101,50 @@ export default {
         IconMail,
         IconPlus,
         [Button.name]: Button,
+        [Input.name]: Input,
+        Modal,
+        
+    },
+    props:{
+        userID:String,
     },
     data() {
-    return {
-        authorInfo :{
-            avatarUrl:'/img/avatar.jpg',
-            isHot:true,
-            name:'English Name',
-            firstLetter:'用',
-            description:'简介简介简介简介 English desciption',
-            isFollowed:false,
-            read:12345,
-            backgroundImg:'/img/bg11.jpg'
-        },
-    };
+        return {
+            authorInfo :{
+                avatarUrl:'/img/avatar.jpg',
+                isHot:true,
+                name:'English Name',
+                firstLetter:'用',
+                description:'简介简介简介简介 English desciption',
+                isFollowed:false,
+                read:12345,
+                backgroundImg:'/img/bg11.jpg'
+            },
+            modals:{
+                sendQqhModal:false,
+                qqhMsgbody:'',
+                modalData:{}
+            },
+        };
     },
+    methods:{
+        openModal(){
+            this.modals.sendQqhModal=true
+        },
+        sendQqh(id){
+            this.send(1,id,this.modals.qqhMsgbody);
+        },
+        async send(userID,touserID,msgbody) {
+          let user = this.$store.state.user;
+          let res = await user.sendQqh(userID,touserID,msgbody);
+          this.modals.modalData=res.data
+            setTimeout(()=>{
+                this.modals.modalData={};
+                // this.modals.sendQqhModal=res.data.status?false:true;
+            },2000)
+          console.log(res);
+        }
+    }
 }
 </script>
 <style>

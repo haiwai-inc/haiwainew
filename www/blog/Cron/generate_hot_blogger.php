@@ -21,9 +21,9 @@ class generate_hot_blogger{
             }
             foreach($rs_blog_blogger as $k=>$v){
                 if(!empty($hash_account_user[$v['userID']]['avatar'])){
-                    $rs_blog_blogger[$k]['avatar']=file_domain.$hash_account_user[$v['userID']]['avatar'];
+                    $rs_blog_blogger[$k]['avatar']=$hash_account_user[$v['userID']]['avatar'];
                 }else{
-                    $rs_blog_blogger[$k]['avatar']="https://www.wenxuecity.com/members/images/default_man_200.jpg";
+                    $rs_blog_blogger[$k]['avatar']="";
                 }
             }
         }

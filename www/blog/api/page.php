@@ -42,9 +42,20 @@ class page extends Api {
             $rs=['status'=>false,'msg'=>"",'data'=>""];
             return $rs;
         }
+        foreach($rs_blog_recommend as $k=>$v){
+            $postID_blog_recommend[]=$v['postID'];
+            $rs_blog_recommend[$k]['msgbody']="testetestsetsetsetsetetsetetsetsettttttttttttttttttttttttttttttttttttttttttttttttttttttttt";
+            $rs_blog_recommend[$k]['pic']="/data/members/13/07/1361296712.jpg";
+        }
         
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_blog_recommend=$obj_account_user->get_basic_userinfo($rs_blog_recommend,"userID");
+        
+        //添加ES信息
         /*
-        $rs_search_article_noindex=$obj_search_article_noindex->get([57028]);
+        $rs_search_article_noindex=$obj_search_article_noindex->get_by_postIDs($postID_blog_recommend);
+        debug::d($postID_blog_recommend);
         debug::d($rs_search_article_noindex);
         exit;
         */

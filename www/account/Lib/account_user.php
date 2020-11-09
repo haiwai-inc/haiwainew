@@ -36,6 +36,7 @@ class account_user extends Model{
 		return $user_rs;
 	}
 	
+	//在包含用户ID的数组里，补全用户基本信息
 	function get_basic_userinfo($rs,$hashID='id'){
 	    if(!empty($rs)){
 	        foreach($rs as $v){
@@ -43,7 +44,7 @@ class account_user extends Model{
 	        }
 			$hash_account_user = $this->get_id_user_map($tmp_rs_id);
 	        foreach($rs as $k=>$v){
-	            $rs[$k]['basic_userinfo']=$hash_account_user[$v[$hashID]];
+	            $rs[$k]["basic_userinfo_{$hashID}"]=$hash_account_user[$v[$hashID]];
 	        }
 	    }
 	    

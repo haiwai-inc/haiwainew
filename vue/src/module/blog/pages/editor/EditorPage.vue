@@ -6,35 +6,54 @@
           <haiwai-logo-white></haiwai-logo-white>
         </router-link>
       </div>
-      <button class="btn btn-link m-3" @click="modals.addwenji = true"><icon-plus></icon-plus><span style="font-size:1rem;color:#14171A">新建文集</span></button>
-      <ul>
-        <li 
-        class="wenjiItem d-flex justify-content-between align-items-center" 
-        v-for="(item,index) in wenjiList" 
-        :key="index"
-        :class="{active:wenjiActiveId==item.id}"
-        >
-          <span 
-          class="flex-fill"
-          @click="changeMenu(item.id,articleActiveId)">
-          {{item.name}} ({{item.count}})</span>
-
-          <drop-down
-          class="nav-item dropdown"
-          :haiwaiIcon="iconmore3v"
-          haiwaiClass="haiwaiicon"
-          style="padding:0;"
+      <div class="d-sm-none">
+        <el-collapse v-model="activeName" accordion>
+          <el-collapse-item title="日记本" name="1">
+            <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
+            <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
+          </el-collapse-item>
+          <el-collapse-item title="飞鸟集" name="2">
+            <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
+            <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+          </el-collapse-item>
+          <el-collapse-item title="飞猪集" name="3">
+            <div>简化流程：设计简洁直观的操作流程；</div>
+            <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
+            <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+      <div class="d-none d-sm-block">
+        <button class="btn btn-link m-3" @click="modals.addwenji = true"><icon-plus></icon-plus><span style="font-size:1rem;color:#14171A">新建文集</span></button>
+        <ul>
+          <li 
+          class="wenjiItem d-flex justify-content-between align-items-center" 
+          v-for="(item,index) in wenjiList" 
+          :key="index"
+          :class="{active:wenjiActiveId==item.id}"
           >
-            <a 
-            class="dropdown-item" 
-            href="#"
-            @click="modals.addwenji = true"><icon-edit class="icon"></icon-edit>修改文集名称</a>
-            <a class="dropdown-item" href="#"><icon-delete class="icon"></icon-delete>删除文集</a>
-          </drop-down>
-        </li>
-      </ul>
+            <span 
+            class="flex-fill"
+            @click="changeMenu(item.id,articleActiveId)">
+            {{item.name}} ({{item.count}})</span>
+
+            <drop-down
+            class="nav-item dropdown"
+            :haiwaiIcon="iconmore3v"
+            haiwaiClass="haiwaiicon"
+            style="padding:0;"
+            >
+              <a 
+              class="dropdown-item" 
+              href="#"
+              @click="modals.addwenji = true"><icon-edit class="icon"></icon-edit>修改文集名称</a>
+              <a class="dropdown-item" href="#"><icon-delete class="icon"></icon-delete>删除文集</a>
+            </drop-down>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="col-md-3 menu2">
+    <div class="col-md-3 menu2 d-none d-sm-block">
       <div style="text-align:center;border-bottom:1px #ddd solid;padding:24px 0;">
         <n-button 
         type="primary" 
@@ -62,7 +81,7 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#">直接发布文章</a>
+            <a class="dropdown-item" href="#"><icon-publish class="icon"></icon-publish>直接发布</a>
             <a 
             class="dropdown-item pl-4" 
             href="#" 
@@ -234,10 +253,10 @@
   </div>
 </template>
 <script>
-import { Button, DropDown, Modal, FormGroupInput } from '@/components';
-import { DatePicker,TimePicker } from 'element-ui';
-import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX} from '@/components/Icons';
-import HaiwaiIcons from '@/components/Icons/Icons'
+import { Button, DropDown, Modal, FormGroupInput, } from '@/components';
+import { DatePicker,TimePicker,Collapse,CollapseItem } from 'element-ui';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX,IconPublish} from '@/components/Icons';
+import HaiwaiIcons from '@/components/Icons/Icons';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from '../../blog.service';
@@ -251,6 +270,8 @@ export default {
     [FormGroupInput.name]: FormGroupInput,
     [DatePicker.name]: DatePicker,
     [TimePicker.name]: TimePicker,
+    [Collapse.name]:Collapse,
+    [CollapseItem.name]:CollapseItem,
     HaiwaiLogoWhite,
     IconPlus,
     IconDelete,
@@ -258,6 +279,7 @@ export default {
     IconForbid,
     IconFolder,
     IconPrivate,
+    IconPublish,
     IconTop,
     IconTime,
     IconX
@@ -344,6 +366,7 @@ export default {
       iconmore3v:HaiwaiIcons.iconmore3v,
       wenjiActiveId:100,
       articleActiveId:12345,
+      activeName: '0',
       modals: {
         addwenji: false,
         publish: false,

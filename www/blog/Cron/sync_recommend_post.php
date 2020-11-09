@@ -29,8 +29,14 @@ class sync_recommend_post{
                 $obj_blog_recommend->insert($fields);
             }
             
+            $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
+            
             echo $v['id']."\n";
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
     }
 }
 
