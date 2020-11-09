@@ -92,6 +92,7 @@
           type="primary"
           round 
           simple
+          @click.native="sendQqh(touserID)"
           >
             发送
           </n-button>
@@ -120,6 +121,8 @@ export default {
   data(){
       return{
         userID:1,
+        touserID:2,
+        msgID:0,
         iconmore3v:HaiwaiIcons.iconmore3v,
         showView:false,
         qqhList:{},
@@ -154,8 +157,19 @@ export default {
       console.log(res);
     },
     showQqhView(id){
+      this.msgID=id;
       this.qqh_view(id);
       this.showView=true;
+    },
+    sendQqh(id){
+      this.send(this.userID,id,this.msgbody);
+    },
+    async send(userID,touserID,msgbody) {
+      let user = this.$store.state.user;
+      let res = await user.sendQqh(userID,touserID,msgbody);
+      this.showQqhView(this.msgID);
+      this.msgbody='';
+      console.log(res);
     }
   },
   filters: {
