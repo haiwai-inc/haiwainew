@@ -111,14 +111,20 @@ class search_article_index extends Search
 		return $rs;
 	}
 
-	public function get_by_postIDs($postIDs){
+	public function get_by_postIDs($postIDs, $full_msg = false){
+
 		$posts = $this->get($postIDs);
 		$posts = json_decode(json_encode($posts),true);
 		if(is_array($postIDs)){
 			$posts_body = [];
 			foreach($posts['docs'] as $doc){
 				if(!empty($doc['found'])){
-					$posts_body[] = $doc['_source'];
+					$doc_body = $doc['_source'];
+					if(empty($full_msg)){
+						$doc_body['msgbody'] = strip_tags($doc_body['msgbody']);
+						$doc_body['msgbody'] = strstr($doc_body['msgbody'], 1000);
+					}
+					$posts_body[] = $doc_body;
 				}
 			}
 			return $posts_body;

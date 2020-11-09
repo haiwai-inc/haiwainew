@@ -18,28 +18,29 @@ class blog_blogger extends Model{
 			$where['limit'] = 3;
 			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], $where);
 		}
-		
-		return $this->fetch_userinfo($blogger_rs);
-	}
-
-	public function fetch_userinfo($blogger_rs){
-		if(empty($blogger_rs)) return [];
-		$user_ids = [];
-		foreach($blogger_rs as $blogger){
-			$user_ids[] = $blogger["userID"];
-		}
-
 		$user_obj = load("account_user");
-		$users_map = $user_obj -> get_id_user_map($user_ids);
-
-		$bloggers = [];
-		foreach($blogger_rs as $blogger){
-			if(empty($users_map[$blogger['userID']])) continue;
-			$blogger['user'] = $users_map[$blogger['userID']];
-			$bloggers[] = $blogger;
-		}
+		$bloggers = $user_obj->get_basic_userinfo($blogger_rs, "userID");
 		return $bloggers;
 	}
+
+	// public function fetch_userinfo($blogger_rs){
+	// 	if(empty($blogger_rs)) return [];
+	// 	$user_ids = [];
+	// 	foreach($blogger_rs as $blogger){
+	// 		$user_ids[] = $blogger["userID"];
+	// 	}
+
+	// 	$user_obj = load("account_user");
+	// 	$users_map = $user_obj -> get_id_user_map($user_ids);
+
+	// 	$bloggers = [];
+	// 	foreach($blogger_rs as $blogger){
+	// 		if(empty($users_map[$blogger['userID']])) continue;
+	// 		$blogger['user'] = $users_map[$blogger['userID']];
+	// 		$bloggers[] = $blogger;
+	// 	}
+	// 	return $bloggers;
+	// }
 
 	/**
 	 * Get a id=>blogger map
@@ -49,8 +50,10 @@ class blog_blogger extends Model{
 	public function get_id_blogger_map($ids){
 		$bloggers = $this->get_bloggers_by_ids($ids);
 		$rs = [];
-		foreach($bloggers as $blogger){
-			$rs[$blogger['id']] = $blogger;
+		if(!empty($bloggers)){
+			foreach($bloggers as $blogger){
+				$rs[$blogger['id']] = $blogger;
+			}
 		}
 		return $rs;
 	}
@@ -65,6 +68,19 @@ class blog_blogger extends Model{
 		if(!is_array($ids)) $ids = [$ids];
 		$bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_like", "count_comment"], ["OR"=>["id"=>$ids]]);
 		return $bloggers;
+	}
+
+	function get_basic_bloggerinfo($rs,$hashID='id'){
+	    if(!empty($rs)){
+	        foreach($rs as $v){
+	            $tmp_rs_id[]=$v[$hashID];
+	        }
+			$hash_account_user = $this->get_id_blogger_map($tmp_rs_id);
+	        foreach($rs as $k=>$v){
+	            $rs[$k]['basic_bloggerinfo']=$hash_account_user[$v[$hashID]];
+	        }
+	    }
+	    return $rs;
 	}
 }
 ?>
