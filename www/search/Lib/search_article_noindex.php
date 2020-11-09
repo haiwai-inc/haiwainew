@@ -132,7 +132,6 @@ class search_article_noindex extends Search
 	}
 
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
-		debug::D($rs);
 		if(!empty($rs)){
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
@@ -325,21 +324,21 @@ class search_article_noindex extends Search
 
 		$this->add_new_articles($final_pool_list);
 
-		$saved_articles = json_decode(json_encode($this->get($postIDs)), true)['docs'];
-		$saved_map = [];
-		foreach($saved_articles as $saved_article){
-			$saved_map[$saved_article['_id']] = !empty($saved_article['found']);
-		}
-		foreach($final_pool_list as $article){
-			if($saved_map[$article['postID']]){
-				$this->update($article, $article['postID']);
-				debug::d("Updated ".$article['postID']);
-			}
-			else {
-				$this->add($article, $article['postID']);
-				debug::d("Added ".$article['postID']);
-			}
-		}
+		// $saved_articles = json_decode(json_encode($this->get($postIDs)), true)['docs'];
+		// $saved_map = [];
+		// foreach($saved_articles as $saved_article){
+		// 	$saved_map[$saved_article['_id']] = !empty($saved_article['found']);
+		// }
+		// foreach($final_pool_list as $article){
+		// 	if($saved_map[$article['postID']]){
+		// 		$this->update($article, $article['postID']);
+		// 		debug::d("Updated ".$article['postID']);
+		// 	}
+		// 	else {
+		// 		$this->add($article, $article['postID']);
+		// 		debug::d("Added ".$article['postID']);
+		// 	}
+		// }
 		return 1;
     }
 }
