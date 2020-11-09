@@ -132,6 +132,30 @@ class search_article_index extends Search
 		return $posts;
 	}
 
+	public function get_postID_map($postIDs, $full_msg = false){
+		$rs = [];
+		$posts = $this->get_by_postIDs($postIDs, $full_msg);
+		foreach($posts as $post){
+			$rs[$post['postID']] = $post;
+		}
+		return $rs;
+	}
+
+	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
+		if(!empty($rs)){
+	        foreach($rs as $v){
+	            $tmp_rs_id[]=$v[$hashID];
+			}
+			;
+			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
+	        foreach($rs as $k=>$v){
+	            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
+	        }
+	    } 
+	    
+	    return $rs;
+	}
+
 	public function insert_doc($article){
 		$article_formatted = [
 			"type"	=> $article['typeID'],
