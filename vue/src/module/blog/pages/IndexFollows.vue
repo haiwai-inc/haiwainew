@@ -33,7 +33,7 @@
             </article-list-item>
           </div>
           <div v-if="selectID!=-1">
-            <index-header></index-header>
+            <index-header userID="2"></index-header>
             <article-list-item 
               v-for="item in articlelists"
               v-bind:key="item.articleID"
@@ -62,7 +62,7 @@ export default {
     ArticleListItem,
     Avatar,
     IconArticleBg,
-    IndexHeader
+    IndexHeader,
   },
   methods:{
     selectItem(idx){

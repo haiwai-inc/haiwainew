@@ -36,11 +36,53 @@ class User extends API{
     async getUserInfo(userID){
         try{
             let res = await this.get("account/passport/login_status/?userID="+userID);
-            this.avatar = res.data.data.avatar
+            this.avatar = res.data.avatar
             return res
         }
         catch(e){
             // console.log(e);
+            return false;
+        }
+    }
+    /**
+     * send qqh 
+     * @param userID
+     * @param touserID
+     * @param msgbody
+     */
+    async sendQqh(userID,touserID,msgbody){
+        try{
+            let res = await this.get("account/user/qqh_add/?userID="+userID+"&touserID="+touserID+"&msgbody="+msgbody);
+            this.avatar = res.data.avatar
+            return res
+        }
+        catch(e){
+            // console.log(e);
+            return false;
+        }
+    }
+    /**
+     * get qqh list 
+     */
+    async qqh_list(){
+        try{
+            let res = await this.get("account/user/qqh_list/");
+            return res
+        }
+        catch(e){
+            return false;
+        }
+    }
+    /**
+     * get qqh view 
+     * @param qqhID
+     */
+    async qqh_view(qqhID){
+        try{
+            let res = await this.get("account/user/qqh_view/?qqhID="+qqhID);
+            return res
+        }
+        catch(e){
             return false;
         }
     }

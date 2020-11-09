@@ -1,7 +1,5 @@
 import axios from 'axios'
 
- 
-
 class API {
 
     apiPrefix = "/api/v1/"
