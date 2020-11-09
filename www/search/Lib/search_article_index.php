@@ -148,7 +148,12 @@ class search_article_index extends Search
 			}
 			;
 			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
+			
 	        foreach($rs as $k=>$v){
+				if(empty($hash_posts[$v[$hashID]])){
+					unset($rs[$k]);
+					continue;
+				}
 	            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
 	        }
 	    } 
