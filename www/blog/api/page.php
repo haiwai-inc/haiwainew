@@ -42,8 +42,9 @@ class page extends Api {
             $rs=['status'=>false,'msg'=>"",'data'=>""];
             return $rs;
         }
-        foreach($rs_blog_recommend as $v){
+        foreach($rs_blog_recommend as $k=>$v){
             $postID_blog_recommend[]=$v['postID'];
+            $rs_blog_recommend[$k]['msgbody']="testetestsetsetsetsetetsetetsetsettttttttttttttttttttttttttttttttttttttttttttttttttttttttt";
         }
         
         //添加用户信息
