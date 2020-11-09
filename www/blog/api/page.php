@@ -45,6 +45,7 @@ class page extends Api {
         foreach($rs_blog_recommend as $k=>$v){
             $postID_blog_recommend[]=$v['postID'];
             $rs_blog_recommend[$k]['msgbody']="testetestsetsetsetsetetsetetsetsettttttttttttttttttttttttttttttttttttttttttttttttttttttttt";
+            $rs_blog_recommend[$k]['pic']="/data/members/13/07/1361296712.jpg";
         }
         
         //添加用户信息
