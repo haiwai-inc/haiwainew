@@ -208,12 +208,9 @@ class user extends Api {
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
         if(empty($check_account_qqh)){
-            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'to_new_message'=>1,'touserID'=>$touserID,'last_message_dateline'=>times::getTime()]);
+            //未开启对话框直接插入
+            $check_account_qqh['id']=$obj_account_qqh->insert(['userID'=>$_SESSION['id'],'to_new_message'=>1,'touserID'=>$touserID]);
         }else{
-            $update_account_qqh_fields=[
-                'last_message_dateline'=>times::getTime()
-            ];
-            
             //自己发起的对话
             if($check_account_qqh['userID']==$_SESSION['id']){
                 $update_account_qqh_fields['to_new_message']=$check_account_qqh['to_new_message']+1;
@@ -223,10 +220,15 @@ class user extends Api {
                 $update_account_qqh_fields['new_message']=$check_account_qqh['new_message']+1;
             }
             
+            //更新未读悄悄话计数
             $obj_account_qqh->update($update_account_qqh_fields,['id'=>$check_account_qqh['id']]);
         }
         
-        $obj_account_qqh_post->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID,'qqhID'=>$check_account_qqh['id'],'msgbody'=>$msgbody,'dateline'=>times::getTime()]);
+        $qqh_postID=$obj_account_qqh_post->insert(['userID'=>$_SESSION['id'],'touserID'=>$touserID,'qqhID'=>$check_account_qqh['id'],'msgbody'=>$msgbody,'dateline'=>times::getTime()]);
+        
+        //更新最后一条信息ID
+        $obj_account_qqh->update(['last_messageID'=>$qqh_postID],['id'=>$check_account_qqh['id']]);
+        
         return "悄悄话已发送";
     }
     
@@ -237,6 +239,7 @@ class user extends Api {
      */
     public function qqh_list($lastID=0){
         $obj_account_qqh=load("account_qqh");
+        $obj_account_qqh_post=load("account_qqh_post");
         $obj_account_user=load("account_user");
         
         $where_account_qqh_post=[
@@ -249,9 +252,25 @@ class user extends Api {
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
         
-        //查询联系人信息
-        $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
-        $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"touserID");
+        if(!empty($rs_account_qqh)){
+            //查询联系人信息
+            $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
+            $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"touserID");
+            
+            //查询最后一条信息
+            foreach($rs_account_qqh as $v){
+                $last_messageID_account_qqh[]=$v['last_messageID'];
+            }
+            $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",['OR'=>['id'=>$last_messageID_account_qqh]]);
+            if(!empty($rs_account_qqh_post)){
+                foreach($rs_account_qqh_post as $v){
+                    $hash_account_qqh_post[$v['qqhID']]=$v;
+                }
+                foreach($rs_account_qqh as $k=>$v){
+                    $rs_account_qqh[$k]['last_messageinfo']=$hash_account_qqh_post[$v['id']];
+                }
+            }
+        }
         
         return $rs_account_qqh;
     }
