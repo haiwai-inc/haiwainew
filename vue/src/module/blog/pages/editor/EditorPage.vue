@@ -132,7 +132,7 @@
       </div>
 
       <!-- 编辑器 -->
-      <ckeditor 
+      <!-- <ckeditor 
         :editor="editor"
         :config="editorConfig"
         :disabled="editorDisabled"
@@ -144,7 +144,7 @@
         @focus="onEditorFocus"
         @blur="onEditorBlur"
         @input="onEditorInput"
-        @destroy="onEditorDestroy"></ckeditor>
+        @destroy="onEditorDestroy"></ckeditor> -->
 
         <n-button 
         type="primary" 
@@ -257,7 +257,7 @@ import { Button, DropDown, Modal, FormGroupInput, } from '@/components';
 import { DatePicker,TimePicker,Collapse,CollapseItem } from 'element-ui';
 import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX,IconPublish} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from '../../blog.service';
 
@@ -419,16 +419,8 @@ export default {
       loading: false,
       article: {},
 
-      editor: ClassicEditor,
-      editorData: '',
-      editorConfig: {
-          toolbar: [ 
-            "selectAll","|","heading","undo","redo","bold","italic","blockQuote",
-            "imageUpload","imageStyle:full","imageStyle:side","mediaEmbed","indent","outdent","link","numberedList","bulletedList",
-            "ckfinder","imageTextAlternative","insertTable","tableColumn","tableRow","mergeTableCells"
-          ],
-      },
-      editorDisabled: false
+      
+      
     }
   }
 };
