@@ -10,7 +10,7 @@ class generate_hot_blogger{
         $this->obj_blog_blogger=load("blog_blogger");
         $this->obj_account_user=load("account_user");
         
-        $rs_blog_blogger=$this->obj_blog_blogger->getAll("*",['status'=>1,'limit'=>50,'order'=>['count_read'=>'DESC']]);
+        $rs_blog_blogger=$this->obj_blog_blogger->getAll("*",['status'=>1,'limit'=>200,'order'=>['count_read'=>'DESC']]);
         if(!empty($rs_blog_blogger)){
             foreach($rs_blog_blogger as $v){
                 $tmp_blog_blogger[]=$v['userID'];

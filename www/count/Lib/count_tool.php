@@ -16,6 +16,7 @@ class count_tool{
         $this->obj_redis=func_initRedis($this->host);
     }
     
+    //读数+1
     function add_article($id){
         //init cache
         $rs=$this->view_article($id);
@@ -35,6 +36,7 @@ class count_tool{
         return $rs;
     }
     
+    //查询读数
     function view_article($id){
         $rs=$this->obj_redis->get($id); 
         if(empty($rs)){
@@ -45,7 +47,6 @@ class count_tool{
         }
         return $rs;
     }
-    
     
 }
 ?>
