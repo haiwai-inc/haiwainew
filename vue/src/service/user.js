@@ -60,7 +60,7 @@ class User extends API{
             // console.log(e);
             return false;
         }
-    }
+    } 
     /**
      * get qqh list 
      */
