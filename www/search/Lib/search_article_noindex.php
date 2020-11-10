@@ -112,7 +112,7 @@ class search_article_noindex extends Search
 					$doc_body = $doc['_source'];
 					if(empty($full_msg)){
 						$doc_body['msgbody'] = strip_tags($doc_body['msgbody']);
-						$doc_body['msgbody'] = substr($doc_body['msgbody'], 0, 1000);
+						$doc_body['msgbody'] = strings::subString($doc_body['msgbody'], 1000);
 					}
 					$posts_body[] = $doc_body;
 				}
