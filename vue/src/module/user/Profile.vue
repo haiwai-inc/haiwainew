@@ -29,10 +29,10 @@
                 placeholder="用户名"
               >
               </fg-input>
-              <p class="pt-3"><b>博客名</b></p>
+              <p class="pt-3"><b>简介</b></p>
               <fg-input
                 addon-left-icon="now-ui-icons text_bold"
-                placeholder="博客名"
+                placeholder="简介"
               >
               </fg-input>
             </div>
@@ -45,6 +45,12 @@
             <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary">修改我的头像</button></div>
           </div>
           <div>
+             <p class="pt-3"><b>用户名</b></p>
+              <fg-input
+                addon-left-icon="now-ui-icons text_bold"
+                placeholder="用户名"
+              >
+              </fg-input>
             <p class="pt-3"><b>修改密码</b></p>
             <fg-input
               addon-left-icon="now-ui-icons objects_key-25"
