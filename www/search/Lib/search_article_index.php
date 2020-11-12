@@ -110,9 +110,10 @@ class search_article_index extends Search
 		}
 		$rs = $this->search($query,null,null);
 		$rs = json_decode(json_encode($rs), true);
+		$article_index_obj = load("article_indexing");
+		$rs = $article_index_obj -> format_string($rs);
 		$articles = [];
 		foreach ($rs as $k=>$v){
-			$v['msgbody'] = substr($v['msgbody'], 0, 1000);
 			$articles[]= [
 				'postID'=>$v['postID'],
 				'userID'=>$v['userID'],
