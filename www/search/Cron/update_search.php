@@ -2,17 +2,6 @@
 set_time_limit(600);
 define('DOCUROOT', str_replace("/search/Cron", "", dirname(__FILE__)));
 include DOCUROOT . '/inc.comm.php';
-// if(count($argv)<2){
-//     echo("Password needed\n");
-//     exit;
-// }
-// else {
-//     if($argv[1] != "haiwai2020") {
-
-//         echo("Wrong password\n");
-//         exit;
-//     }
-// }
 $first_update_time = time() - 5*60;
 
 if(count($argv)>1){

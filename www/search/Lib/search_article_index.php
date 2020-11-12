@@ -36,6 +36,9 @@ class search_article_index extends Search
 				"indexID": {
 					"type": "integer"
 				},
+				"bloggerID": {
+					"type": "integer"
+				},
 				  "postID": {
 					"type": "integer"
 				  },
@@ -91,7 +94,7 @@ class search_article_index extends Search
 	}
 	
 
-	public function search_tags($tags, $order = array("postID"=>array("order"=>"desc"))){
+	public function search_tags($tags, $last_score = 0, $order = array("postID"=>array("order"=>"desc"))){
 		// $tag_string = implode(" ", $tags);
 		$query["should"] = [];
 		foreach ($tags as $tag){
@@ -105,9 +108,15 @@ class search_article_index extends Search
 
 		// $query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "dateline"=>array("order"=>"desc")))];
 		$query["sort"]=[$this->object($order)];
+		if(!empty($last_score)){
+			$query["search_after"] = [$last_score];
+		}
 		$rs = $this->search($query,null,null);
 		// debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
+		foreach ($rs as $k=>$v){
+			$rs[$k]['msgbody'] = substr($v['msgbody'], 0, 1000);
+		}
 		return $rs;
 	}
 
@@ -251,7 +260,7 @@ class search_article_index extends Search
 	}
 	
 
-	function search_by_keyword($keyword){
+	function search_by_keyword($keyword, $last_score = 0){
 		$query = [];
 		if(is_string($keyword)){
 			$highlight = array("title"=>$this->object(), "msgbody"=>$this->object());
@@ -262,8 +271,11 @@ class search_article_index extends Search
 			);
 
 			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"),"edit_date"=>array("order"=>"desc")))];
+			if(!empty($last_score )){
+				$query["search_after"]=[$last_score, 0];
+			}
 			$query["highlight"] = array(
-				"pre_tags" => array( "<span style='color:blue'>" ),
+				"pre_tags" => array( "<span style='color:#39B8EB'>" ),
 				"post_tags" => array( "</span>" ),
 				"fields" =>  $highlight
 			);
