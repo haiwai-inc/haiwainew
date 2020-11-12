@@ -74,7 +74,7 @@ class page extends Api {
             return $rs;
         }
         
-        $rs=['status'=>true,'msg'=>"",'data'=>$rs_memcache];
+        $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
         return $rs;
     }
     
@@ -91,7 +91,7 @@ class page extends Api {
             return $rs;
         }
         
-        $rs=['status'=>true,'msg'=>"",'data'=>$rs_memcache];
+        $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
         return $rs;
     }
     
@@ -103,6 +103,10 @@ class page extends Api {
         //ES搜索tag
         $obj_article_index=load("search_article_index");
         $rs_article_index=$obj_article_index->search_tags([8]);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_index=$obj_article_noindex->get_postInfo($rs_article_index);
         
         //添加用户信息
         $obj_account_user=load("account_user");
@@ -118,8 +122,24 @@ class page extends Api {
     /**
      * 博客主页 编辑器页
      * 文章 列表 最新
+     * @param integer $bloggerID
      */
-    public function article_list_recent(){
+    public function article_list_recent($bloggerID){
+        if(empty($bloggerID)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+        if(empty($rs_blog_blogger)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        debug::d($rs_blog_blogger);
+        exit;
         
     }
     
@@ -127,16 +147,24 @@ class page extends Api {
      * 博客主页 二级页面
      * 文章 列表 最热
      */
-    public function article_list_hot(){
-        
+    public function article_list_hot($bloggerID){
+        if(empty($bloggerID)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
     }
     
     /**
      * 博客主页 二级页面
      * 评论 列表 最新
      */
-    public function comment_list_recent(){
-        
+    public function comment_list_recent($bloggerID){
+        if(empty($bloggerID)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
     }
     
     /**
