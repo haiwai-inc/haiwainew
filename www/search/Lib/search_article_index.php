@@ -95,29 +95,31 @@ class search_article_index extends Search
 	
 
 	public function search_tags($tags, $last_score = 0, $order = array("postID"=>array("order"=>"desc"))){
-		// $tag_string = implode(" ", $tags);
 		$query["should"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
 		}
-		// $query["should"] =[$this->object(array("match" => array("tags"=>$tag_string)))];
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
 		); 
 
-		// $query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "dateline"=>array("order"=>"desc")))];
 		$query["sort"]=[$this->object($order)];
 		if(!empty($last_score)){
 			$query["search_after"] = [$last_score];
 		}
 		$rs = $this->search($query,null,null);
-		// debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
+		$articles = [];
 		foreach ($rs as $k=>$v){
-			$rs[$k]['msgbody'] = substr($v['msgbody'], 0, 1000);
+			$v['msgbody'] = substr($v['msgbody'], 0, 1000);
+			$articles[]= [
+				'postID'=>$v['postID'],
+				'userID'=>$v['userID'],
+				"postInfo_postID" => $v
+			];
 		}
-		return $rs;
+		return $articles;
 	}
 
 	public function get_by_postIDs($postIDs, $full_msg = false){
