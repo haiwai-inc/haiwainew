@@ -111,8 +111,7 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
         
-        debug::d($rs_article_index);
-        exit;
+        return $rs_article_index;
     }
     
     /**
