@@ -69,7 +69,7 @@ class account_user extends Model{
 	            $item=$hash_account_user[$v[$hashID]];
 	            
 	            //首字母
-	            $item['first_letter']=strings::subString($item['username'],1);
+	            $item['first_letter']=substr(strings::subString($item['username'],1), 0, -3);
 	            
 	            //是否名博
 	            $item['is_hot_blogger']=(in_array($item['id'],$userID_rs_memcache))?1:0;
