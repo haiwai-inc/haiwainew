@@ -1,8 +1,5 @@
 <?php
 class page extends Api {
-
-    
-    
     
     public function __construct() {
         parent::__construct();
@@ -102,8 +99,20 @@ class page extends Api {
      * 二级页面 
      * 热榜 文章 列表
      */
-    public function hot_article_list($lastid=0){
+    public function hot_article_list($tagID=0,$lastid=0){
+        $obj_article_index=load("search_article_index");
+        $rs_article_index=$obj_article_index->search_tags([8]);
         
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_index=$obj_account_user->get_basic_userinfo($rs_article_index,"userID");
+        
+        //添加文章计数信息
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
+        
+        debug::d($rs_article_index);
+        exit;
     }
     
     /**
