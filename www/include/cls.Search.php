@@ -134,7 +134,9 @@ class Search {
 					$val = $item->_source; //标准内容
 					if( isset($item->highlight) ) $val->__highlight = $item->highlight; //加载高亮结果
 					$val->__index_id = $item->_id; //唯一ID
-					
+					if(!empty($item->_score)){
+						$val->_score = $item->_score;
+					}
 					$result[] = $val;
 				}
 			}
@@ -308,7 +310,7 @@ class Search {
 		);
 		
 		//提取各分类设置
-		$action = array('highlight','aggs','sort');
+		$action = array('highlight','aggs','sort','search_after');
 		foreach( $action as $act ){
 			if( !isset($query[$act]) ) continue;
 			

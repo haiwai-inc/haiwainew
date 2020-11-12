@@ -27,7 +27,7 @@ class account_user extends Model{
 	public function get_users_by_ids($ids){
 		if(empty($ids)) return [];
 		if(!is_array($ids)) $ids = [$ids];
-		$users = $this->getAll(["id", "username", "avatar", "description"], ["OR"=>["id"=>$ids]]);
+		$users = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$ids]]);
 		return $users;
 	}
 

@@ -4,42 +4,35 @@ class common extends Api{
     * Search by keywords for articles
     *
     * @param string $keyword
+    * @param string $last_score
     * @response 搜索结果
     *
     */
-    public function articles($keyword){
+    public function articles($keyword, $last_score){
         $tool_obj = load("search_tool");
-        $articles = $tool_obj -> search_article($keyword);
-        
+        $articles = $tool_obj -> search_article($keyword, $last_score);
         $user_obj = load("account_user");
         $articles = $user_obj -> get_basic_userinfo($articles, "userID");
         return $articles;
     }
 
     /**
-     * Search by name for users
+     * Search by name for bloggers
      *
      * @param string $keyword
      * @param string $type
      * @param boolean $with_article
+     * @param string $last_score
      * @response 搜索结果
      *
      */
-    public function users($keyword, $type = "all", $with_article = false)
+    public function bloggers($keyword, $type = "all", $with_article = false, $last_score = 0)
     {
-        $rs       = [];
-        if($type == "all" || $type == "user"){
-            $user_obj = load("account_user");
-            $users = $user_obj->search_by_name($keyword);
-            $rs['users'] = $users;
+        $tool_obj = load("search_tool");
+        $rs = $tool_obj->search_blogger($keyword, $type, $last_score);
+        if(!empty($with_article)){
+            $rs = array_slice($rs, 0 , 3);
         }
-
-        if($type == "all" || $type == "blogger"){
-            $blogger_obj = load("blog_blogger");
-            $bloggers = $blogger_obj->search_by_name($keyword, $with_article);
-            $rs['bloggers'] = $bloggers;
-        }
-
         return $rs;
     }
 
@@ -72,10 +65,11 @@ class common extends Api{
      * Search by id of tags 
      *
      * @param array $tags
+     * @param string $last_id
      * @response 搜索结果 list of articles
      *
      */
-    public function tag_articles($tags){
+    public function tag_articles($tags, $last_id = 0){
         if(empty($tags)) return [];
         if(!is_array($tags)){
             $tags = [$tags];
@@ -85,7 +79,7 @@ class common extends Api{
             $tag_list[] = intval($tag);
         }
         $article_index_obj = load("search_article_index");
-        $articles = $article_index_obj->search_tags($tag_list);
+        $articles = $article_index_obj->search_tags($tag_list, $last_id);
 
         $user_obj = load("account_user");
         $articles = $user_obj -> get_basic_userinfo($articles, "userID");
