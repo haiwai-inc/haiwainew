@@ -14,13 +14,43 @@
         </div>
      </div>
       <div class="col-sm-8 col-12">
-        <div v-if="menuId===0">博客设置内容</div>
+        <div v-if="menuId===0">
+        <h6 class="border-bottom pb-3">博客设置</h6>
+        <div class="blog-user-index">
+           <div class="user-bg" style="background-image: url(/img/bg11.jpg);">
+              <div class="user-bgup"></div>
+           </div>
+        </div>
+         <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">修改博客头像背景</button></div>
+          <div>
+              <p class="pt-3"><b>用户名</b></p>
+              <fg-input
+                addon-left-icon="now-ui-icons users_circle-08"
+                placeholder="用户名"
+              >
+              </fg-input>
+              <p class="pt-3"><b>简介</b></p>
+              <fg-input
+                addon-left-icon="now-ui-icons text_bold"
+                placeholder="简介"
+              >
+              </fg-input>
+            </div>
+            <button class="btn btn-round btn-primary">保存</button>
+        </div>
         <div v-if="menuId===1">
+        <h6 class="border-bottom pb-3">账号设置</h6>
           <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
             <avatar :data="authorInfor" :imgHeight="100"></avatar>
             <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary">修改我的头像</button></div>
           </div>
           <div>
+             <p class="pt-3"><b>用户名</b></p>
+              <fg-input
+                addon-left-icon="now-ui-icons text_bold"
+                placeholder="用户名"
+              >
+              </fg-input>
             <p class="pt-3"><b>修改密码</b></p>
             <fg-input
               addon-left-icon="now-ui-icons objects_key-25"
@@ -38,7 +68,7 @@
           <button class="btn btn-round btn-primary">保存</button>
         </div>
         <div v-if="menuId===2">
-          <h6 class="userset-t ">黑名单</h6>
+          <h6 class="border-bottom pb-3">黑名单</h6>
           <div class="box my-3">
                    <div class=" blacklist align-self-center col-12 no-gutters">
                       <div class="d-flex align-self-center">
@@ -122,5 +152,12 @@ export default {
 .blacklist {
         padding: 12px 0;
         border-bottom: 1px solid #ddd;
+}
+.user-bg {
+        background-size: cover;
+        background-position-y: center;
+}
+ .user-bgup {
+        height: 100px;
 }
 </style>

@@ -1,8 +1,9 @@
 <?php
 class page extends Api {
-
+    
     public function __construct() {
         parent::__construct();
+        $this->sess = true;
     }
     
     /**
@@ -44,8 +45,6 @@ class page extends Api {
         }
         foreach($rs_blog_recommend as $k=>$v){
             $postID_blog_recommend[]=$v['postID'];
-            $rs_blog_recommend[$k]['msgbody']="testetestsetsetsetsetetsetetsetsettttttttttttttttttttttttttttttttttttttttttttttttttttttttt";
-            $rs_blog_recommend[$k]['pic']="/data/members/13/07/1361296712.jpg";
         }
         
         //添加用户信息
@@ -53,10 +52,13 @@ class page extends Api {
         $rs_blog_recommend=$obj_account_user->get_basic_userinfo($rs_blog_recommend,"userID");
         
         //添加ES信息
-        $rs_blog_recommend=$obj_search_article_noindex->get_postInfo($rs_blog_recommend,'postID');
+        $rs_blog_recommend=$obj_search_article_noindex->get_postInfo($rs_blog_recommend);
         
-        $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_recommend];
-        return $rs;
+        //添加文章计数信息
+        $obj_article_indexing=load("article_indexing");
+        $rs_blog_recommend=$obj_article_indexing->get_article_count($rs_blog_recommend);
+        
+        return $rs_blog_recommend;
     }
     
     /**
@@ -97,8 +99,20 @@ class page extends Api {
      * 二级页面 
      * 热榜 文章 列表
      */
-    public function hot_article_list($lastid=0){
+    public function hot_article_list($tagID=0,$lastid=0){
+        //ES搜索tag
+        $obj_article_index=load("search_article_index");
+        $rs_article_index=$obj_article_index->search_tags([8]);
         
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_index=$obj_account_user->get_basic_userinfo($rs_article_index,"userID");
+        
+        //添加文章计数信息
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
+        
+        return $rs_article_index;
     }
     
     /**

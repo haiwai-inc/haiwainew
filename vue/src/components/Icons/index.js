@@ -10,6 +10,7 @@ import IconPublished from './IconPublished.vue';
 import IconMail from './IconMail.vue';
 import IconPlus from './IconPlus.vue';
 import IconCheck from './IconCheck.vue';
+import IconDraft from './IconDraft.vue';
 import IconEdit from './IconEdit.vue';
 import IconX from './IconX.vue';
 import IconRight from './IconRight.vue';
@@ -54,6 +55,7 @@ export {
   IconPublished,
   IconPlus,
   IconCheck,
+  IconDraft,
   IconEdit,
   IconX,
   IconRight,

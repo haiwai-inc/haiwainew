@@ -31,9 +31,9 @@
           <n-button type="default" round simple class="w-100 mb-3">
             <facebook-logo></facebook-logo>  facebook 账号登录
           </n-button>
-          <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
+          <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
-          </n-button>
+          </n-button>  -->
         </div>
 
       </div>
@@ -46,7 +46,7 @@ import {
   FormGroupInput,
 } from '@/components';
 import {
-  WxcLogoWhite,
+  //WxcLogoWhite,
   WxcLogoGreen,
   GoogleLogo,
   FacebookLogo
@@ -59,7 +59,7 @@ export default {
     [Button.name]: Button,
     [Checkbox.name]: Checkbox,
     [FormGroupInput.name]: FormGroupInput,
-    WxcLogoWhite,
+    //WxcLogoWhite,
     WxcLogoGreen,
     GoogleLogo,
     FacebookLogo

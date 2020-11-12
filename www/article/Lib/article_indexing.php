@@ -4,6 +4,28 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo    = array("config" => "article", "type" => "MySQL");
 
+    //在包含postID的数组里，补全帖子的 ,点赞计数，留言计数，阅读计数
+    function get_article_count($rs,$hashID='postID'){
+        if(!empty($rs)){
+            foreach($rs as $v){
+                $id_rs[]=$v[$hashID];
+            }
+            
+            //点赞计数，留言计数，阅读计数
+            $rs_article_count=$this->getAll(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            if(!empty($rs_article_count)){
+                foreach($rs_article_count as $v){
+                    $hash_article_count[$v['postID']]=$v;
+                }
+                foreach($rs as $k=>$v){
+                    $rs[$k]["countinfo_{$hashID}"]=$hash_article_count[$v['postID']];
+                }
+            }
+        }
+        
+        return $rs;
+    }
+    
 	public function get_single_article_info($postID){
 		$article = $this->getOne("*", ['postID'=>$postID]);
 		if(empty($article) ) return 0;
