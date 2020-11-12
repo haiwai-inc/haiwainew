@@ -100,20 +100,25 @@ class page extends Api {
      * 热榜 文章 列表
      */
     public function hot_article_list($tagID=0,$lastid=0){
-        //ES搜索tag
-        $obj_article_index=load("search_article_index");
-        $rs_article_index=$obj_article_index->search_tags([8]);
-        
-        //ES补全postID信息
+        $obj_article_indexing=load("article_indexing");
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_index=$obj_article_noindex->get_postInfo($rs_article_index);
+        
+        //ES搜索tag
+        if(!empty($tagID)){
+            $obj_article_index=load("search_article_index");
+            $rs_article_index=$obj_article_index->search_tags([$tagID]);
+        }else{
+            $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],['limit'=>30,'visible'=>1,'ORDER'=>['count_read'=>'DESC']]);
+            
+            //ES补全postID信息
+            $rs_article_index=$obj_article_noindex->get_postInfo($rs_article_index);
+        }
         
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_index=$obj_account_user->get_basic_userinfo($rs_article_index,"userID");
         
         //添加文章计数信息
-        $obj_article_indexing=load("article_indexing");
         $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
         
         return $rs_article_index;
