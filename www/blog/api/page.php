@@ -100,6 +100,7 @@ class page extends Api {
      * 热榜 文章 列表
      */
     public function hot_article_list($tagID=0,$lastid=0){
+        //ES搜索tag
         $obj_article_index=load("search_article_index");
         $rs_article_index=$obj_article_index->search_tags([8]);
         
