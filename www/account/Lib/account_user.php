@@ -50,6 +50,7 @@ class account_user extends Model{
 	        }
 	        
 	        //如果登录 查询关注人
+	        $followerID_accout_follower=[];
 	        if(!empty($_SESSION['id'])){
 	            $obj_accout_follower=load("account_follower");
 	            $rs_accout_follower=$obj_accout_follower->getAll("*",['userID'=>$_SESSION['id'],'limit'=>200]);
