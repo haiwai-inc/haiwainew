@@ -14,7 +14,6 @@ class clear_blog_data{
             $this->obj_article_indexing=load("article_indexing");
             $this->obj_article_tag=load("article_tag");
             $this->obj_blog_blogger=load("blog_blogger");
-            $this->obj_blog_hot=load("blog_hot");
             $this->obj_article_post=load("article_post");
             $this->obj_article_post_tag=load("article_post_tag");
             $this->obj_account_notification=load("account_notification");
@@ -31,7 +30,6 @@ class clear_blog_data{
             $this->obj_article_indexing->exec("TRUNCATE TABLE `indexing`");
             $this->obj_article_tag->exec("TRUNCATE TABLE `tag`");
             $this->obj_blog_blogger->exec("TRUNCATE TABLE `blogger`");
-            $this->obj_blog_hot->exec("TRUNCATE TABLE `hot`");
             $this->obj_account_blacklist->exec("TRUNCATE TABLE `blacklist`");
             $this->obj_account_bookmark->exec("TRUNCATE TABLE `bookmark`");
             $this->account_follower->exec("TRUNCATE TABLE `follower`");
