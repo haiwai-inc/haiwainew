@@ -15,7 +15,7 @@ class sync_recommend_post{
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         foreach($rs_legacy_hot_post as $v){
             //检查是否导入
-            $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$rs_legacy_hot_post['title']]);
+            $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$v['title']]);
             if(!empty($check_blog_hot)){
                 continue;
             }
