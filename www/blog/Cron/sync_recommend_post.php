@@ -14,10 +14,17 @@ class sync_recommend_post{
         
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         foreach($rs_legacy_hot_post as $v){
-            //import legacy post
-            $rs=$obj_blog_legacy_202005_post->getOne("*",['postid'=>$v['postid']],"blog_{$v['date']}_post");
-            $rs_import_post=$obj_blog_tool->import_post($rs);
+            //检查是否导入
+            $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$rs_legacy_hot_post['title']]);
+            if(!empty($check_blog_hot)){
+                continue;
+            }
             
+            //原帖信息
+            $rs=$obj_blog_legacy_202005_post->getOne("*",['postid'=>$v['postid']],"blog_{$v['date']}_post");
+            
+            //导入新数据库
+            $rs_import_post=$obj_blog_tool->import_post($rs);
             $check_blog_hot=$obj_blog_recommend->getOne("*",['postID'=>$rs_import_post['article_new']['postID']]);
             if(empty($check_blog_hot)){
                 $fields=[
@@ -30,7 +37,6 @@ class sync_recommend_post{
             }
             
             $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
-            
             echo $v['id']."\n";
         }
         

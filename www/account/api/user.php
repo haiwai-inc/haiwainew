@@ -1,5 +1,13 @@
 <?php
 
+
+/*
+ * 有一个用户系统的log记录小铃铛
+ * 最新评论加字段控制
+ * 
+ */
+
+
 /**
  * @author sida
  * [
@@ -428,21 +436,65 @@ class user extends Api {
         
     }
     
+    
+    
+    
     /**
      * 小铃铛页
-     * 文章 列表 赞 “我点的”
+     * 消息 列表 赞 
      */
-    public function article_list_buzz_mine(){
+    public function notification_list_buzz(){
         
     }
     
     /**
      * 小铃铛页
-     * 评论 列表 最新 “我发的”
+     * 消息 列表 评论 
      */
-    public function comment_list_recent_mine(){
+    public function notification_list_comment(){
         
     }
+    
+    /**
+     * 小铃铛页
+     * 消息 列表 订阅
+     */
+    public function notification_list_follower(){
+        
+    }
+    
+    /**
+     * 小铃铛页
+     * 消息 未读 计数
+     */
+    public function notification_unread_count(){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        $rs_account_notification=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>1],"notification_".$tbn);
+        
+        $rs=["blog_comment"=>0,'qqh'=>0,'follower'=>0,'buzz'=>0];
+        if(!empty($rs_account_notification)){
+            foreach($rs_account_notification as $v){
+                if($v['type']=='blog_comment')  $rs['blog_comment']++;
+                if($v['type']=='qqh')  $rs['qqh']++;
+                if($v['type']=='follower')  $rs['follower']++;
+                if($v['type']=='buzz')  $rs['buzz']++;
+            }
+        }
+        
+        return $rs;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 

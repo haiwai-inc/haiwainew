@@ -98,6 +98,8 @@ class page extends Api {
     /**
      * 二级页面 
      * 热榜 文章 列表
+     * @param integer $tagID | 标签ID
+     * @param integer $lastid | 最后一个postID
      */
     public function hot_article_list($tagID=0,$lastid=0){
         $obj_article_indexing=load("article_indexing");
@@ -106,9 +108,17 @@ class page extends Api {
         //ES搜索tag
         if(!empty($tagID)){
             $obj_article_index=load("search_article_index");
-            $rs_article_index=$obj_article_index->search_tags([$tagID]);
+            $rs_article_index=$obj_article_index->search_tags([$tagID],$lastid);
         }else{
-            $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],['limit'=>30,'visible'=>1,'ORDER'=>['count_read'=>'DESC']]);
+            $fields=[
+                'limit'=>30,
+                'visible'=>1,
+                'ORDER'=>['count_read'=>'DESC']
+            ];
+            if(!empty($lastid)){
+                $fields['postID,<']=$lastid;
+            }
+            $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],$fields);
             
             //ES补全postID信息
             $rs_article_index=$obj_article_noindex->get_postInfo($rs_article_index);
@@ -128,8 +138,9 @@ class page extends Api {
      * 博客主页 编辑器页
      * 文章 列表 最新
      * @param integer $bloggerID
+     * @param integer $lastid | 最后一个postID
      */
-    public function article_list_recent($bloggerID){
+    public function article_list_recent($bloggerID,$lastid=0){
         if(empty($bloggerID)){
             $this->error="此博主不存在";
             $this->status=false;
@@ -143,33 +154,111 @@ class page extends Api {
             $this->status=false;
             return false;
         }
-        debug::d($rs_blog_blogger);
-        exit;
         
+        $obj_article_indexing=load("article_indexing");
+        $fields=[
+            'limit'=>30,
+            'bloggerID'=>$bloggerID,
+            'order'=>['edit_date'=>'DESC']
+        ];
+        if(!empty($lastid)){
+            $fields['postID,<']=$lastid;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
+        return $rs_article_indexing;
     }
     
     /**
      * 博客主页 二级页面
      * 文章 列表 最热
+     * @param integer $bloggerID
+     * @param integer $lastid | 最后一个postID
      */
-    public function article_list_hot($bloggerID){
+    public function article_list_hot($bloggerID,$lastid=0){
         if(empty($bloggerID)){
             $this->error="此博主不存在";
             $this->status=false;
             return false;
         }
+        
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+        if(empty($rs_blog_blogger)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $obj_article_indexing=load("article_indexing");
+        $fields=[
+            'limit'=>30,
+            'bloggerID'=>$bloggerID,
+            'order'=>['count_read'=>'DESC']
+        ];
+        if(!empty($lastid)){
+            $fields['postID,<']=$lastid;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
+        return $rs_article_indexing;
     }
     
     /**
      * 博客主页 二级页面
      * 评论 列表 最新
+     * @param integer $bloggerID
+     * @param integer $lastid | 最后一个postID
      */
-    public function comment_list_recent($bloggerID){
+    public function comment_list_recent($bloggerID,$lastid=0){
         if(empty($bloggerID)){
             $this->error="此博主不存在";
             $this->status=false;
             return false;
         }
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+        if(empty($rs_blog_blogger)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $obj_article_indexing=load("article_indexing");
+        $fields=[
+            'treelevel'=>1,
+            'limit'=>30,
+            'bloggerID'=>$bloggerID,
+            'order'=>['edit_date'=>'DESC']
+        ];
+        if(!empty($lastid)){
+            $fields['postID,<']=$lastid;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        
+        return $rs_article_indexing;
     }
     
     /**
