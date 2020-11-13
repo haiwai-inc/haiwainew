@@ -22,7 +22,7 @@ class clear_blog_data{
             $this->account_follower=load("account_follower");
             $this->account_qqh=load("account_qqh");
             $this->account_qqh_post=load("account_qqh_post");
-            $this->blog_recommend=load("account_blog_recommend");
+            $this->blog_recommend=load("blog_recommend");
             
             
             $this->obj_account_user->exec("TRUNCATE TABLE `user`");
