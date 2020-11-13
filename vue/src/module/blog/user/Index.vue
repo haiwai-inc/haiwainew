@@ -51,7 +51,7 @@ export default {
                 src:'1'
             },{
                 icon:'2',
-                text:'最新评论',
+                text:'新评博文',
                 src:'2'
             }
         ],

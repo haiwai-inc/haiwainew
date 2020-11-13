@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-    name: 'icon-time',
+    name: 'icon-schedule',
 };
 </script>
 <style>

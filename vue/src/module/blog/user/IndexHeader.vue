@@ -44,7 +44,7 @@
                  <a class="nav-link" href="#">最热博文</a>
               </li>
               <li class="col nav-item text-center px-0">
-                 <a class="nav-link" href="#">最新评论</a>
+                 <a class="nav-link" href="#">新评博文</a>
               </li>
            </ul>
         </div>
