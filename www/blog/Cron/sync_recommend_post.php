@@ -13,6 +13,7 @@ class sync_recommend_post{
         $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
         
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
+        $postID_legacy_hot_post=[];
         foreach($rs_legacy_hot_post as $v){
             //检查是否导入
             $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$v['title']]);
