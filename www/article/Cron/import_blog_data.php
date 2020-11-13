@@ -9,7 +9,7 @@ class import_blog_data{
     function start(){
         $obj_blog_tool=load("blog_tool");
         $lastid=0;
-        while( $rs_blog_legacy_202005_post = $this->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible'=>1]) ){                      
+        while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible'=>1]) ){                      
             foreach($rs_blog_legacy_202005_post as $k=>$v){
                 $lastid=$v['postid'];
                 $obj_blog_tool->import_post($v);
