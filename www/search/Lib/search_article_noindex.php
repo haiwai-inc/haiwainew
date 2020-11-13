@@ -210,6 +210,10 @@ class search_article_noindex extends Search
 
     public function fetch_and_insert($postIDs)
     {
+        if(empty($postIDs)){
+            return;
+        }
+        
 		if(!is_array($postIDs)){
 			$postIDs = [$postIDs];
 		}
