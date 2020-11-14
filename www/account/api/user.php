@@ -448,6 +448,18 @@ class user extends Api {
     }
     
     /**
+     * 用户17登录
+     * http://local.haiwainew.com/api/v1/account/passport/login_status/?userID=17
+     * 
+     * 查看所有未读消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_unread_count/
+     * 
+     * 查看未读的博客评论消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_list_comment/
+     * 
+     * 清空特定类型的消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
+     * 
      * 小铃铛页   测试信息： userID=17, basecode=59252 59294
      * 消息 列表 评论 
      * @param integer $lastID | 最后id
