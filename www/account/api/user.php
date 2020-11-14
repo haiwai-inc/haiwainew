@@ -448,11 +448,30 @@ class user extends Api {
     }
     
     /**
-     * 小铃铛页
+     * 小铃铛页   测试信息： userID=17, basecode=59252 59294
      * 消息 列表 评论 
+     * @param integer $lastID | 最后id
      */
-    public function notification_list_comment(){
+    public function notification_list_comment($lastID=0){
+        $obj_account_notification=load("account_notification");
         
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        $where=[
+            'limit'=>30,
+            "userID"=>$_SESSION['id'],
+            "type"=>"blog_comment",
+            "order"=>['id'=>"ASC"]
+        ];
+        if(!empty($lastID)){
+            $where['id,<']=$lastID;
+        }
+        $rs_account_notification=$obj_account_notification->getAll("*",$where,"notification_".$tbn);
+        
+        //由跟帖补全主贴信息 并且group
+        $obj_article_indexing=load("article_indexing");
+        $rs_account_notification=$obj_article_indexing->get_article_info_by_comment($rs_account_notification);
+        
+        return $rs;
     }
     
     /**
@@ -470,23 +489,27 @@ class user extends Api {
     public function notification_unread_count(){
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
-        $rs_account_notification=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>1],"notification_".$tbn);
-        
-        $rs=["blog_comment"=>0,'qqh'=>0,'follower'=>0,'buzz'=>0];
-        if(!empty($rs_account_notification)){
-            foreach($rs_account_notification as $v){
-                if($v['type']=='blog_comment')  $rs['blog_comment']++;
-                if($v['type']=='qqh')  $rs['qqh']++;
-                if($v['type']=='follower')  $rs['follower']++;
-                if($v['type']=='buzz')  $rs['buzz']++;
-            }
-        }
+        $rs['blog_comment']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'blog_comment'],"notification_".$tbn);
+        $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
+        $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
+        $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
         
         return $rs;
     }
     
-    
-    
+    /**
+     * 小铃铛页
+     * 消息 清空 计数
+     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follower)
+     */
+    public function notification_unread_clear($type='blog_comment'){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        
+        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type]);
+        
+        return true;
+    }
     
     
     
