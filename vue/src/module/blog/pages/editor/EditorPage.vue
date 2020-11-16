@@ -418,9 +418,6 @@ export default {
       
       loading: false,
       article: {},
-
-      
-      
     }
   }
 };

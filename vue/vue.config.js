@@ -4,6 +4,14 @@ module.exports = {
     sourceMap: process.env.NODE_ENV !== 'production'
   },
   devServer: {
-    proxy: 'http://beta.haiwai.com'
+    proxy: {
+      '/api': {
+        target: 'http://beta.haiwai.com',
+        ws: true,
+        changeOrigin: true
+      }
+    },
+    
+    // proxy: 'http://beta.haiwai.com'
   }
 };

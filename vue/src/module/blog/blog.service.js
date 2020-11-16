@@ -4,7 +4,12 @@ import API from "../../service/api"
  * Blog content class
  */
 class Blog extends API{
-
+    /**
+     * Get recommend article list
+     */
+    async recommend_article(){
+      return await this.sendget("blog/page/recommend_article/");
+    }
 
     /**
      * 返回博客文章列表
