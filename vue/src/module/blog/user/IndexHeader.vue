@@ -106,7 +106,7 @@ export default {
         
     },
     props:{
-        userID:String,
+        userID:Number,
     },
     data() {
         return {

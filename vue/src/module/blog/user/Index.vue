@@ -5,7 +5,7 @@
       </div>
       <div class="row">
        <div class="col-sm-8 col-12">
-            <index-header></index-header>
+            <index-header :userID="3"></index-header>
             <article-list-item 
             v-for="item in articlelists"
             v-bind:key="item.articleID"

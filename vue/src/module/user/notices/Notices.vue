@@ -46,6 +46,19 @@ import NoticeComment from "./NoticeComment";
 import NoticeFollow from "./NoticeFollow";
 import NoticeQqh from "./NoticeQqh";
 // import {DropDown} from "@/components"
+/** 测试数据
+  * 用户17登录
+  * http://local.haiwainew.com/api/v1/account/passport/login_status/?userID=17
+  * 
+  * 查看所有未读消息
+  * http://local.haiwainew.com/api/v1/account/user/notification_unread_count/
+  * 
+  * 查看未读的博客评论消息
+  * http://local.haiwainew.com/api/v1/account/user/notification_list_comment/
+  * 
+  * 清空特定类型的消息
+  * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
+ */
 export default {
   name: "notices",
   data() {

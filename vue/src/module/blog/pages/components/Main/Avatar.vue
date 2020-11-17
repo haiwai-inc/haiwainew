@@ -35,6 +35,7 @@ export default {
   },
   data(){
       return {
+        imgCDN:"https://cdn.wenxuecity.com",
         avatar:{
             UserID:1,
             avatarUrl:'/img/ryan.jpg',
