@@ -10,10 +10,11 @@ class extract_article_pic{
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_article_post=load("article_post");
         
-        
         $lastid=0;
         while( $rs_article_indexing = $this->obj_article_indexing->getAll("*",['treelevel'=>0,'is_pic'=>0,'order'=>['postID'=>'ASC'],'limit'=>20,'postID,>'=>$lastid,'visible'=>1]) ){
+            $postID_article_indexing=[];
             foreach($rs_article_indexing as $k=>$v){
+                $postID_article_indexing[]=$v['postID'];
                 $lastid=$v['postID'];
                 $post_tbn=substr('0'.$v['userID'],-1);
                 
@@ -32,12 +33,13 @@ class extract_article_pic{
                 
                 //format image
                 if(!empty($image)){
-                    if(substr($image,0,8)=='/upload/'){
-                        $image=file_domain.$image;
+                    //文学成本站图片
+                    if(substr($image,0,8)=='/upload/' && !empty($v['wxc_postID'])){
+                        $image="https://cdn.wenxuecity.com".$image;
                     }
                     
                     //save image
-                    $path=DOCUROOT."/upload/article/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                    $path=DOCUROOT."/upload/article/pic_1/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
                     if (!file_exists($path)) {
                         mkdir($path, 0777, true);
                     }
@@ -52,6 +54,10 @@ class extract_article_pic{
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 echo $lastid."\n";
             }
+            
+            //更新ES图片地址
+            $obj_article_noindex=load("search_article_noindex");
+            $obj_article_noindex->fetch_and_insert($postID_article_indexing);
         }
     }
 }
