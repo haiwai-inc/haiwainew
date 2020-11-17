@@ -19,7 +19,7 @@ class page extends Api {
         }
         
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getAll(['userID','count_follower','count_buzz','count_article','count_comment','count_read','description'],['id'=>$bloggerID,'status'=>1]);
+        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID','count_follower','count_buzz','count_article','count_comment','count_read','description'],['id'=>$bloggerID,'status'=>1]);
         if(empty($rs_blog_blogger)){
             $this->error="此博主不存在";
             $this->status=false;
