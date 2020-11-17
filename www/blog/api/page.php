@@ -228,11 +228,11 @@ class page extends Api {
     
     /**
      * 博客主页 二级页面
-     * 评论 列表 最新
+     * 文章 列表 新评
      * @param integer $bloggerID
      * @param integer $lastid | 最后一个postID
      */
-    public function comment_list_recent($bloggerID,$lastid=0){
+    public function article_list_comment($bloggerID,$lastid=0){
         if(empty($bloggerID)){
             $this->error="此博主不存在";
             $this->status=false;
@@ -251,7 +251,7 @@ class page extends Api {
             'treelevel'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
-            'order'=>['edit_date'=>'DESC']
+            'order'=>['comment_date'=>'DESC']
         ];
         if(!empty($lastid)){
             $fields['postID,<']=$lastid;
@@ -263,7 +263,7 @@ class page extends Api {
     
     /**
      * 博客主页 二级页面
-     * 评论 详情 最新
+     * 新评 详情 最新
      */
     public function comment_view_recent(){
         
