@@ -13,6 +13,7 @@
                 <span class="blog-user-index-des">{{authorInfo.description}} </span>
                 <span style="color:#39b8eb;font-size:0.8rem"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span><br>
                 <span class="blog-user-index-des">博客访问：{{authorInfo.read}}</span>
+                <span class="blog-user-index-des ml-4">粉丝：12345</span>
             </div>
             <div class="pr-3">
                 <n-button  

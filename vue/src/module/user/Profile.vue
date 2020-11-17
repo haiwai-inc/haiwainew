@@ -25,7 +25,6 @@
           <div>
               <p class="pt-3"><b>博客名</b></p>
               <fg-input
-                addon-left-icon="now-ui-icons users_circle-08"
                 placeholder="博客名"
               >
               </fg-input>
@@ -47,13 +46,11 @@
           <div>
              <p class="pt-3"><b>笔名</b></p>
               <fg-input
-                addon-left-icon="now-ui-icons text_bold"
                 placeholder="笔名"
               >
               </fg-input>
              <p class="pt-3"><b>个人简介</b></p>
               <fg-input
-                addon-left-icon="now-ui-icons text_bold"
                 placeholder="个人简介"
               >
               </fg-input>
