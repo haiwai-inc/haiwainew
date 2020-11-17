@@ -9,9 +9,25 @@ class page extends Api {
     /**
      * “别人的”博主信息页
      * 博主 信息
+     * @param integer $bloggerID
      */
-    public function blogger_info(){
+    public function blogger_info($bloggerID){
+        if(empty($bloggerID)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
         
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID','count_follower','count_buzz','count_article','count_comment','count_read','description'],['id'=>$bloggerID,'status'=>1]);
+        if(empty($rs_blog_blogger)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        $obj_account_user=load("account_user");
+        $rs_blog_blogger=$obj_account_user->get_basic_userinfo($rs_blog_blogger,"userID");
+        return $rs_blog_blogger[0];
     }
     
     /**
