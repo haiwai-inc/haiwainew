@@ -24,6 +24,7 @@ class extract_article_pic{
                 $doc = new DOMDocument();
                 @$doc->loadHTML($rs_article_post['msgbody']);
                 $elements = $doc->getElementsByTagName('img');
+                $image="";
                 foreach($elements as $element) {
                     if(!empty($element->getAttribute('src'))){
                         $image=$element->getAttribute('src');
@@ -32,7 +33,7 @@ class extract_article_pic{
                 }
                 
                 //format image
-                if(!empty($image)){
+                if(!empty($image) && strlen($image)<1000){
                     //文学成本站图片
                     if(substr($image,0,8)=='/upload/' && !empty($v['wxc_postID'])){
                         $image="https://cdn.wenxuecity.com".$image;
