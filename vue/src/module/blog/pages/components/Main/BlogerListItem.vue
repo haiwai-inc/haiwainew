@@ -142,7 +142,7 @@ export default {
   width:36px;
 }
 .hot-blogger-avatar img{
-  width:48px;
+  min-width:48px;
   height:48px;
 }
 .small img{
