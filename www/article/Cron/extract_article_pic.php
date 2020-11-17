@@ -39,19 +39,24 @@ class extract_article_pic{
                     }
                     
                     //save image
-                    $path=DOCUROOT."/upload/article/pic_1/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                    $dir="/upload/article/pic_1/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                    $path=DOCUROOT.$dir;
                     if (!file_exists($path)) {
                         mkdir($path, 0777, true);
                     }
                     $filename=$v['postID']."_1";
                     $rs_image=picture::saveImg($image,$path,$filename);
-                    
                     $is_pic=1;
                 }else{
                     $is_pic=-1;
                 }
                 
+                //更新索引
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
+                
+                //更新分表
+                $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                
                 echo $lastid."\n";
             }
             

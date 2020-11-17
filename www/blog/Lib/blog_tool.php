@@ -166,13 +166,14 @@ class blog_tool{
                 $old_avatar="https://cdn.wenxuecity.com/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
                 
                 //save image
-                $path=DOCUROOT."/upload/user/avatar/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
+                $dir="/upload/user/avatar/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
+                $path=DOCUROOT.$dir;
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 $filename=$fields['id']."_1";
                 $rs_image=picture::saveImg($old_avatar,$path,$filename);
-                $this->obj_account_user->update(['avatar'=>$rs_image],['id'=>$fields['id']]);
+                $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
             }
         }else{
             $fields=$check_account_user;
