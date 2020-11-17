@@ -173,7 +173,9 @@ class blog_tool{
                 }
                 $filename=$fields['id']."_1";
                 $rs_image=picture::saveImg($old_avatar,$path,$filename);
-                $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
+                if(!empty($rs_image)){
+                    $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
+                }
             }
         }else{
             $fields=$check_account_user;

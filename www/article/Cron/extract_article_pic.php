@@ -55,7 +55,9 @@ class extract_article_pic{
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 
                 //更新分表
-                $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                if($is_pic==1){
+                    $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                }
                 
                 echo $lastid."\n";
             }
