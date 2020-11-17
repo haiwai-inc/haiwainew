@@ -23,11 +23,13 @@
             </drop-down>
             
           </div>
-          <div class="d-flex" @click="showQqhView(index)">
-            <avatar :data="authorInfor" :imgHeight="48"></avatar>
+          <div class="d-flex align-items-center" @click="showQqhView(index)">
+            
+            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==userID?authorInfor.avararUrl:item.userinfo_touserID.avatar"
+              />
             <div class="pl-2">
-              <span class="name">{{item.basic_userinfo_userID.id==userID?item.basic_userinfo_touserID.username:item.basic_userinfo_userID.username}}</span>
-              <span class="wrap">接口缺少最后一条的msbody</span>
+              <span class="name">{{item.userinfo_userID.id==userID?item.userinfo_touserID.username:item.userinfo_userID.username}}</span>
+              <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
             </div>
 
           </div>
@@ -48,7 +50,7 @@
         <div class="col-4 pt-2 text-center">
           <b>
             与
-            <a href="#" target="_blank">呜啦啦</a>
+            <a href="#" target="_blank">{{touser.username}}</a>
             的对话
           </b>
         </div>
@@ -71,7 +73,7 @@
           :key="index"
           :class="{'message-l':item.userID!==userID,'message-r':item.userID===userID,}" >
             <a href="#" class="avatar"
-              ><img class="rounded-circle" src="/img/julie.jpg"
+              ><img class="rounded-circle" :src="item.userID!==userID?authorInfor.avararUrl:touser.avatar"
             /></a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
@@ -92,7 +94,7 @@
           type="primary"
           round 
           simple
-          @click.native="sendQqh(touserID)"
+          @click.native="sendQqh(touser.id)"
           >
             发送
           </n-button>
@@ -106,7 +108,7 @@
 import { Button,DropDown,} from '@/components';
 import { Input } from 'element-ui';
 import { LeftArrow } from "@/components/Icons";
-import Avatar from "../../blog/pages/components/Main/Avatar";
+// import Avatar from "../../blog/pages/components/Main/Avatar";
 import HaiwaiIcons from '@/components/Icons/Icons';
 import {formatDate} from '@/directives/formatDate.js';
 export default {
@@ -116,12 +118,12 @@ export default {
     [Input.name]: Input,
     DropDown,
     LeftArrow, 
-    Avatar,
+    // Avatar,
   },
   data(){
       return{
         userID:1,
-        touserID:2,
+        touser:{},
         msgID:0,
         iconmore3v:HaiwaiIcons.iconmore3v,
         showView:false,
@@ -156,8 +158,8 @@ export default {
       let res = await user.qqh_view(list[idx].id);
       this.qqhView=res.data;
       this.qqhView.data=res.data.data.reverse();
-      this.touserID=list[idx].basic_userinfo_userID.id===this.userID?list[idx].basic_userinfo_touserID.id:list[idx].basic_userinfo_userID.id;
-      console.log(this.touserID);
+      this.touser=list[idx].userinfo_userID.id===this.userID?list[idx].userinfo_touserID:list[idx].userinfo_userID;
+      console.log(this.touser);
     },
     showQqhView(idx){
       this.msgID=idx;
@@ -191,9 +193,10 @@ export default {
 .qiaoqiao-list .wrap {
   display: block;
   color:#999;
-  padding:8px 0;
-  /* padding: 20px 20px 20px 0;
-  min-height: 88px; */
+  padding:8px 20px 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .qiaoqiao-list ul {
   list-style: none;
@@ -204,24 +207,21 @@ export default {
   position: relative;
   border-top: 1px solid #f0f0f0;
 }
-.qiaoqiao-list .avatar,
-.qiaoqiao-view .avatar {
+.qiaoqiao-list .avatar img{
   float: left;
   /* margin: 20px 10px 20px 5px; */
   width: 48px;
   height: 48px;
 }
-.qiaoqiao-list .avatar img,
+
 .qiaoqiao-view .avatar img {
   width: 100%;
   height: 100%;
   border: 1px solid #ddd;
 }
 .qiaoqiao-list .name {
-  /* position: absolute;
-  top: 25px; */
   display: block;
-  padding-top:14px;
+  padding-top:10px;
   color: #14171a;
   font-weight: 700;
 }

@@ -9,7 +9,12 @@ module.exports = {
         target: 'http://beta.haiwai.com',
         ws: true,
         changeOrigin: true
-      }
+      },
+      '/data': {
+        target: 'https://cdn.wenxuecity.com',
+        ws: true,
+        changeOrigin: true
+      },
     },
     
     // proxy: 'http://beta.haiwai.com'
