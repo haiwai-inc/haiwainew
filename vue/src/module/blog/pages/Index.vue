@@ -18,8 +18,8 @@
           
         </div>
         <div class="col-sm-4 d-none d-sm-block">
-          <div class="hot-bloger">
-            <bloger-list v-bind:data="authorList" title="热门博主"></bloger-list>
+          <div class="hot-bloger" v-if="bloggerList.length>0">
+            <bloger-list v-bind:data="bloggerList" title="热门博主"></bloger-list>
           </div>
         </div>
       </div>
@@ -54,33 +54,18 @@ export default {
       }
       console.log(res);
     })
+    blog.recommand_blogger().then(res=>{
+      if(res.data.status){
+        this.res_bloggerList=res.data.data.data;
+        this.bloggerList=this.res_bloggerList;
+      }
+      console.log(this.bloggerList);
+    })
   },
   data() {
     return {
-      authorList : [
-    {
-      avatarUrl:'/img/avatar.jpg',
-      isHot:true,
-      name:'English Name',
-      firstLetter:'用',
-      description:'简介简介简介简介 English desciption',
-      isFollowed:true,
-    },{
-      avatarUrl:'/img/eva.jpg',
-      isHot:true,
-      name:'天煞地煞',
-      firstLetter:'天',
-      description:'简介简介简介简介哈哈哈简介简介简介简',
-      isFollowed:false,
-    },{
-      avatarUrl:'/img/julie.jpg',
-      isHot:true,
-      name:'用户名',
-      firstLetter:'用',
-      description:'简介简介简介简介',
-      isFollowed:false,
-    },
-  ],
+      res_bloggerList:[],
+      bloggerList : [],
       articlelists: [],
     };
   },

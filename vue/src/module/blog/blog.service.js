@@ -5,10 +5,17 @@ import API from "../../service/api"
  */
 class Blog extends API{
     /**
-     * Get recommend article list
+     * 返回推荐博文列表
      */
     async recommend_article(){
       return await this.sendget("blog/page/recommend_article/");
+    }
+
+    /**
+     * 返回推荐博主列表
+     */
+    async recommand_blogger(){
+      return await this.sendget("blog/page/recommand_blogger/");
     }
 
     /**

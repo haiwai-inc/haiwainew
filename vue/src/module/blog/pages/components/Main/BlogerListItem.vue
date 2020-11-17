@@ -1,31 +1,31 @@
 <template>
-    <div class="hot-blogger row no-gutters" id="author" :class="{noborder:type=='small'}">
-      <div class="col-2" :class="{'hot-blogger-avatar':type=='default',small:type=='small'}">
+    <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
+      <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
         <router-link to="/blog/user/1">
-        <icon-V class="text-primary lable" v-if="data.isHot"></icon-V>
+        <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
         <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
-          <div v-if="!data.avatarUrl" class="avatar-word">{{data.firstLetter}}</div>
+          <div v-if="!data.userinfo_userID.avatar" class="avatar-word">{{data.userinfo_userID.first_letter}}</div>
           <img 
-            v-if="data.avatarUrl" 
-            v-bind:alt="data.name" 
+            v-if="data.userinfo_userID.avatar" 
+            v-bind:alt="data.userinfo_userID.username" 
             class="rounded-circle" 
-            v-bind:src="data.avatarUrl" 
+            v-bind:src="data.userinfo_userID.avatar" 
             >
         </router-link>
       </div>
-      <div class='align-self-center right col-10'> 
+      <div class='align-self-center right pl-2'> 
           <div class="d-flex align-self-center">
               <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-                <router-link to="/blog/user/1">{{data.name}}
+                <router-link to="/blog/user/1">{{data.userinfo_userID.username}}
                 </router-link>
               </div>
               <div class='ml-auto' style="width: 75px;">
-                  <a v-if="!data.isFollowed" class="btn btn-link text-primary w-100 btn-follow" >
+                  <a v-if="!data.userinfo_userID.is_follower" class="btn btn-link text-primary w-100 btn-follow" >
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
                           关注
                       </div></a>
-                  <a v-if="data.isFollowed" class="btn btn-link text-default w-100 cancel-follow">
+                  <a v-if="data.userinfo_userID.is_follower" class="btn btn-link text-default w-100 cancel-follow">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
                               <icon-x :style="{fill:'#FF3636'}"></icon-x>
@@ -41,9 +41,8 @@
                   </a>
               </div>
           </div>
-          <div id="description" class="description" title="data.description">
-            <router-link to="/blog/user/1">{{data.description}}
-            </router-link>
+          <div id="description" class="description" :title="data.description">
+            {{data.description}}
           </div> 
       </div>
     </div>
@@ -68,12 +67,24 @@ export default {
       description: 'Alert type'
     },
     data:{
-      articleUrl:String,
-      name:String,
+      userID:Number,
+      count_follower:Number,
+      count_buzz:Number,
+      count_article:Number,
+      count_comment:Number,
+      count_read:Number,
       description:String,
-      firstLetter:String,
-      isFollowed:Boolean,
-      isHot:Boolean
+      userinfo_userID:{
+        id:Number,
+        username:String,
+        avatar:String,
+        description:String,
+        verified:Number,
+        status:Number,
+        first_letter:String,
+        is_hot_blogger:Number,
+        is_follower:Number
+      }
     }
   },
   components: {
@@ -82,9 +93,9 @@ export default {
     IconCheck,
     IconX,
     IconV
-  }
+  },
   
-};
+}
 
 </script>
 <style>
@@ -112,7 +123,7 @@ export default {
 }
 .hot-blogger-avatar .lable{
   position: absolute;
-  margin-left: 35px;
+  margin-left: 30px;
 } 
 .small .lable{
   position: absolute;
@@ -124,11 +135,19 @@ export default {
     line-height: 48px;
     font-size: 1.25rem;
 }
+.hot-blogger-avatar{
+  width:48px;
+}
+.small{
+  width:36px;
+}
 .hot-blogger-avatar img{
   width:48px;
+  height:48px;
 }
 .small img{
     width:36px;
+    height:36px;
 }
 .small .avatar-word{
     width:38px;
@@ -169,10 +188,10 @@ export default {
 }
 .hot-blogger .right .description{
   font-size: small;
-  /* overflow:hidden; 
-  text-overflow:ellipsis; 
-  white-space: nowrap;
-  display: block; */
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 @media (max-width: 575.98px){
     .list-itme .list-itme-image{
