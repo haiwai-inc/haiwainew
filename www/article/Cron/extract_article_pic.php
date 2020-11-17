@@ -47,17 +47,15 @@ class extract_article_pic{
                     $filename=$v['postID']."_1";
                     $rs_image=picture::saveImg($image,$path,$filename);
                     $is_pic=1;
+                    
+                    //更新分表
+                    $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
                 }else{
                     $is_pic=-1;
                 }
                 
                 //更新索引
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
-                
-                //更新分表
-                if($is_pic==1){
-                    $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
-                }
                 
                 echo $lastid."\n";
             }
