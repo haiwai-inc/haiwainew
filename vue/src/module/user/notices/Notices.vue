@@ -89,7 +89,7 @@ export default {
         },
         {
           id: 2,
-          title: "关注",
+          title: "粉丝",
           noticeList: [],
           unread: 3,
         },
