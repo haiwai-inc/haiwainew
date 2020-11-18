@@ -241,4 +241,15 @@ class article_indexing extends Model
 		}
 		return $rs;
 	}
+	
+	public function format_pic($rs, $key="pic"){
+	    foreach($rs as $k=>$v){
+	        //大图+小图
+	        $rs[$k]["o_pic"] = $v[$key];
+	        $rs[$k]["s_pic"] = str_replace("{$v['postID']}_headpic","{$v['postID']}_headpic_100_100",$v[$key]);
+	        $rs[$k]["pic"] = str_replace("{$v['postID']}_headpic","{$v['postID']}_headpic_320_210",$v[$key]);
+	    }
+	    return $rs;
+	}
+	
 }
