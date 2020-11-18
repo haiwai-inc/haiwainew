@@ -113,6 +113,10 @@ class account_user extends Model{
 	            //是否关注
 	            $item['is_follower']=(in_array($item['id'],$followerID_accout_follower))?1:0;
 	            
+	            //大图+小图
+	            $item['o_avatar']=$item['avatar'];
+	            $item['avatar']=str_replace("{$item['id']}_avatar","{$item['id']}_avatar_100_100",$item['avatar']);
+	            
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
 	        }
 	    }
