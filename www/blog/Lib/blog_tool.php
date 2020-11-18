@@ -158,7 +158,7 @@ class blog_tool{
             $fields['id']=$this->obj_account_user->insert($fields);
             
             //老用户头像拉到本地处理
-            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$pid]);
+            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$rs_account_legacy_user['pid']]);
             if(!empty($rs_account_legacy_user_album)){
                 $folder1=substr('0000'.$rs['userid'],-4,-2);
                 $folder2=substr('0000'.$rs['userid'],-2);
