@@ -175,7 +175,9 @@ class blog_tool{
                 $rs_image=picture::saveImg($old_avatar,$path,$filename);
                 
                 //小图
-                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                if(!empty($rs_image)){
+                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                }
             }
         }else{
             $fields=$check_account_user;

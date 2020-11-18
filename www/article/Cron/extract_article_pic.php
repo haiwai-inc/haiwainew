@@ -50,12 +50,14 @@ class extract_article_pic{
                     $rs_image=picture::saveImg($image,$path,$filename);
                     $is_pic=1;
                     
-                    //小图
-                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
-                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
-                    
-                    //更新分表
-                    $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                    if(!empty($rs_image)){
+                        //小图
+                        $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
+                        $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                        
+                        //更新分表
+                        $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                    }
                 }else{
                     $is_pic=-1;
                 }
