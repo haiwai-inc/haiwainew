@@ -48,9 +48,10 @@ class extract_article_pic{
                     }
                     $filename=$v['postID']."_headpic";
                     $rs_image=picture::saveImg($image,$path,$filename);
-                    $is_pic=1;
                     
                     if(!empty($rs_image)){
+                        $is_pic=1;
+                        
                         //小图
                         $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
                         $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
