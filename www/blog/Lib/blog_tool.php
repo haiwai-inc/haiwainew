@@ -162,7 +162,8 @@ class blog_tool{
             if(!empty($rs_account_legacy_user_album)){
                 $folder1=substr('0000'.$rs['userid'],-4,-2);
                 $folder2=substr('0000'.$rs['userid'],-2);
-                $old_avatar="https://cdn.wenxuecity.com/cache_data/members/{$folder1}/{$folder2}/400_600-{$rs_account_legacy_user_album['photoname']}";
+                //$old_avatar="https://cdn.wenxuecity.com/cache_data/members/{$folder1}/{$folder2}/400_600-{$rs_account_legacy_user_album['photoname']}";
+                $old_avatar="https://cdn.wenxuecity.com/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
                 
                 //save image
                 $dir="/upload/user/avatar/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
