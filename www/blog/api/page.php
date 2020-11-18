@@ -132,11 +132,12 @@ class page extends Api {
             $fields=[
                 'limit'=>30,
                 'visible'=>1,
-                'ORDER'=>['count_read'=>'DESC']
+                'order'=>['count_read'=>'DESC']
             ];
             if(!empty($lastid)){
-                $fields['postID,<']=$lastid;
+                $fields['count_read,<']=$lastid;
             }
+            
             $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],$fields);
             
             //ES补全postID信息
