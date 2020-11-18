@@ -43,3 +43,21 @@ if ($target == "all" || $target == "blogger") {
     }
     $search_blogger->initialize_index();
 }
+
+if ($target == "all" || $target == "category") {
+    $search_category = load("search_category");
+    $index_setting  = json_decode(json_encode($search_category->get_index_setting()), true);
+    if (!empty($index_setting) && empty($index_setting['error'])) {
+        $search_category->indexdel();
+    }
+    $search_category->initialize_index();
+}
+
+if ($target == "all" || $target == "tag") {
+    $search_tag = load("search_tag");
+    $index_setting  = json_decode(json_encode($search_tag->get_index_setting()), true);
+    if (!empty($index_setting) && empty($index_setting['error'])) {
+        $search_tag->indexdel();
+    }
+    $search_tag->initialize_index();
+}

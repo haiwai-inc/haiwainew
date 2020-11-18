@@ -19,7 +19,8 @@ class search_blogger extends Search
 					"analyzer": {
 						"substring_analyzer": {
 						  	"tokenizer": "standard",
-						  	"filter": ["lowercase", "substring"]
+						  	"filter": ["lowercase", "substring"],
+							"char_filter": ["tsconvert"]
 						}
 					},
 					"filter": {
@@ -28,7 +29,15 @@ class search_blogger extends Search
 							"min_gram": 2,
 							"max_gram": 15
 						}
-					}
+					},
+					"char_filter": {
+						"tsconvert" : {
+							"type" : "stconvert",
+							"delimiter" : "#",
+							"keep_both" : false,
+							"convert_type" : "t2s"
+						}
+					  }
 				}
 			},
 			"mappings": {
@@ -117,7 +126,7 @@ class search_blogger extends Search
 
             foreach ($bloggers as $blogger) {
 
-                $user              = $blogger["basic_userinfo_userID"];
+                $user              = $blogger["userinfo_userID"];
                 $blogger_formatted = [
                     "bloggerID" => $blogger['id'],
                     "userID"    => $blogger['userID'],
@@ -159,7 +168,7 @@ class search_blogger extends Search
 		$query = [];
 		if(is_string($keyword)){
 
-			$highlight = array("title"=>$this->object(), "msgbody"=>$this->object());
+			$highlight = array("name"=>$this->object(), "username"=>$this->object());
 			$should = [];
 			if($type=="all"||$type=="user"){
 				$should[]=$this->object(array("match" => array("username"=>$keyword)));
@@ -181,11 +190,12 @@ class search_blogger extends Search
 				"post_tags" => array( "</span>" ),
 				"fields" =>  $highlight
 			);
-		}
+		} 
 		else{
 			$query = $keyword;
 		}
 		$rs = $this->search($query);
+		debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
 	}

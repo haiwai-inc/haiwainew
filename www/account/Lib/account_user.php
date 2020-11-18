@@ -78,7 +78,7 @@ class account_user extends Model{
 	            $item['is_follower']=(in_array($item['id'],$followerID_accout_follower))?1:0;
 	            
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
-	        }
+			}
 	    }
 	    
 	    return $rs;

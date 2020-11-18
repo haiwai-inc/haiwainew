@@ -6,7 +6,8 @@ class search_category  extends Search{
     public function __construct()
     {
         parent::__construct();
-        $this->categorySet = '{
+        $this->categorySet = '
+        {
 			"settings": {
 				"index.number_of_replicas":"2",
 				"index.number_of_shards":"5",
@@ -14,17 +15,27 @@ class search_category  extends Search{
 				"analysis": {
 					"analyzer": {
 						"substring_analyzer": {
-						  	"tokenizer": "standard",
-						  	"filter": ["lowercase", "substring"]
-						}
-					},
+                            "type":"custom",
+                            "tokenizer" : "ik_max_word",
+						  	"filter": ["lowercase"],
+                            "char_filter": ["tsconvert"]
+                        }
+                    },
 					"filter": {
 						"substring": {
 							"type": "nGram",
 							"min_gram": 2,
 							"max_gram": 15
-						}
-					}
+                        }
+                    },
+                    "char_filter": {
+                        "tsconvert" : {
+                            "type" : "stconvert",
+                            "delimiter" : "#",
+                            "keep_both" : false,
+                            "convert_type" : "t2s"
+                        }
+                      }
 				}
 			},
 			"mappings": {
@@ -39,9 +50,12 @@ class search_category  extends Search{
 					"type": "integer"
 				  },
 				  "name": {
-					"analyzer": "ik_max_word",
+					"analyzer": "substring_analyzer",
 					"boost": 2,
-					"type": "text"
+                    "type": "text"
+                  },
+                  "count_article":{
+					"type": "integer"
 				  },
 				  "visible":{
 					"type": "integer"
@@ -53,15 +67,34 @@ class search_category  extends Search{
 
     public function initialize_index()
     {
-        debug::d($this->indexset(json_decode($this->bloggerSet)));
+        // debug::d(json_decode($this->categorySet, true));
+        // exit;
+        debug::d($this->indexset(json_decode($this->categorySet)));
     }
 
+    public function get_by_categoryIDs($categoryIDs)
+    {
+        $categories = $this->get($categoryIDs);
+        $categories = json_decode(json_encode($categories), true);
+        if (is_array($categoryIDs)) {
+            $categories_body = [];
+            foreach ($categories['docs'] as $doc) {
+                if (!empty($doc['found'])) {
+                    $doc_body     = $doc['_source'];
+                    $categories_body[] = $doc_body;
+                }
+            }
+            return $categories_body;
+        }
+        return $categories;
+    }
 
+    // elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.6.2/elasticsearch-analysis-stconvert-7.6.2.zip
 	public function search_by_name($keyword, $last_score=0){
         $query = [];
 		if(is_string($keyword)){
 
-			$highlight = array("title"=>$this->object(), "msgbody"=>$this->object());
+			$highlight = array("name"=>$this->object());
 			$should = [$this->object(array("match" => array("name"=>$keyword)))];
 			$query["should"] =$should;
 			$query["must_not"]=array(
@@ -84,6 +117,62 @@ class search_category  extends Search{
 		$rs = $this->search($query);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
+    }
+
+    public function add_new_categories($categories){
+        try{
+            $category_ids = [];
+            foreach($categories as $category){
+                $category_ids[] = $category['id'];
+            }
+            $result = $this->get_by_categoryIDs($category_ids);
+            $categoryID_map = [];
+            foreach($result as $post){
+				$categoryID_map[$post['id']] = true;
+            }
+            $count = 0;
+            $total = 0;
+            $data_string = "";
+            foreach($categories as $category){
+                $category_formatted = $this->get_formatted_category($category);
+                $count++;
+                $total++;
+                
+				if(!empty($categoryID_map[$category['id']])){
+					$data_string = $data_string.json_encode(['update' => ["_id"=>$category['id']]]) . "\n";
+					$data_string = $data_string.json_encode(array('doc'=>$category_formatted))."\n";
+				}
+				else{
+					$data_string = $data_string.json_encode(['index' => ["_id"=>$category['id']]]) . "\n";
+					$data_string = $data_string.json_encode($category_formatted)."\n";
+				}
+					
+
+                if ($count == 1000) {
+					$this->addBulk($data_string);
+					$data_string = "";
+					$count = 0;
+                }
+            }
+            if (!empty($count)) {
+                $this->addBulk($data_string);
+            }
+            return $total;
+
+        }
+        catch(Exception $e){
+            return 0;
+        }
+    }
+
+    public function get_formatted_category($category){
+        return [
+            "id"=>$category['id'],
+            "bloggerID"=>$category['bloggerID'],
+            "userID"=>$category['userID'],
+            "name"=>$category['name'],
+            "visible"=>$category['visible']
+        ];
     }
 
 }
