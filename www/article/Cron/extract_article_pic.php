@@ -9,6 +9,7 @@ class extract_article_pic{
     function start(){
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_article_post=load("article_post");
+        $this->obj_account_user=load("account_user");
         
         $lastid=0;
         while( $rs_article_indexing = $this->obj_article_indexing->getAll("*",['treelevel'=>0,'is_pic'=>0,'order'=>['postID'=>'ASC'],'limit'=>20,'postID,>'=>$lastid,'visible'=>1]) ){
@@ -45,9 +46,13 @@ class extract_article_pic{
                     if (!file_exists($path)) {
                         mkdir($path, 0777, true);
                     }
-                    $filename=$v['postID']."_1";
+                    $filename=$v['postID']."_headpic";
                     $rs_image=picture::saveImg($image,$path,$filename);
                     $is_pic=1;
+                    
+                    //小图
+                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
+                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
                     
                     //更新分表
                     $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");

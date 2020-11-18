@@ -135,7 +135,6 @@ class blog_tool{
     
     function add_to_user($rs){
         $rs_account_legacy_user=$this->obj_account_legacy_user->getOne("*",['userid'=>$rs['userid']]);
-        
         $check_account_user=$this->obj_account_user->getOne("*",['login_source'=>'wxc','username'=>$rs_account_legacy_user['username']]);
         if(empty($check_account_user)){
             //插入用户
@@ -159,11 +158,11 @@ class blog_tool{
             $fields['id']=$this->obj_account_user->insert($fields);
             
             //老用户头像拉到本地处理
-            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$rs_account_legacy_user['pid']]);
+            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$pid]);
             if(!empty($rs_account_legacy_user_album)){
                 $folder1=substr('0000'.$rs['userid'],-4,-2);
                 $folder2=substr('0000'.$rs['userid'],-2);
-                $old_avatar="https://cdn.wenxuecity.com/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
+                $old_avatar="https://cdn.wenxuecity.com/cache_data/members/{$folder1}/{$folder2}/400_600-{$rs_account_legacy_user_album['photoname']}";
                 
                 //save image
                 $dir="/upload/user/avatar/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
@@ -171,11 +170,11 @@ class blog_tool{
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                $filename=$fields['id']."_1";
+                $filename=$fields['id']."_avatar";
                 $rs_image=picture::saveImg($old_avatar,$path,$filename);
-                if(!empty($rs_image)){
-                    $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
-                }
+                
+                //小图
+                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
             }
         }else{
             $fields=$check_account_user;
