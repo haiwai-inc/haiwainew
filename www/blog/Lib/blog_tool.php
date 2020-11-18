@@ -176,6 +176,7 @@ class blog_tool{
                 
                 //小图
                 if(!empty($rs_image)){
+                    $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
                     $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
                 }
             }
