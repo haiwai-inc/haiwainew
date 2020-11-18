@@ -10,13 +10,12 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
-      '/data': {
-        target: 'https://cdn.wenxuecity.com',
+      '/upload': {
+        target: 'http://beta.haiwai.com',
         ws: true,
         changeOrigin: true
       },
     },
     
-    // proxy: 'http://beta.haiwai.com'
   }
 };

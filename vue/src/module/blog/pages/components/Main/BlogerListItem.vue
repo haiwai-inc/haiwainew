@@ -13,13 +13,13 @@
             >
         </router-link>
       </div>
-      <div class='align-self-center right pl-2'> 
-          <div class="d-flex align-self-center">
+      <div class='align-self-center right pl-2 flex-grow-1'> 
+          <div class="d-flex align-self-center justify-content-between">
               <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
                 <router-link to="/blog/user/1">{{data.userinfo_userID.username}}
                 </router-link>
               </div>
-              <div class='ml-auto' style="width: 75px;">
+              <div>
                   <a v-if="!data.userinfo_userID.is_follower" class="btn btn-link text-primary w-100 btn-follow" >
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
