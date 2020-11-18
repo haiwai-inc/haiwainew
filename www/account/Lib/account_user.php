@@ -4,6 +4,42 @@ class account_user extends Model{
 	protected $dbinfo=array("config"=>"account","type"=>"MySQL");
 
 	/**
+	 * 抓取并保存图片
+	 * 说明： 对于保持宽度的图片可以设置较大的高，对于保持高度的图片设置较大的宽
+	 */
+	function cutPic($filepath,$filename,$w,$h){
+	    //对图片进行大小处理
+	    $pic=new picture();
+	    $pic->filepath=$filepath; //材料图地址
+	    $pic->filename=$filename; //加工过后的名字
+	    $pic->save_dir= dirname($filepath); //材料图路径
+	    
+	    //设置裁剪信息
+	    $info = getimagesize($filepath);
+	    if($info[0]<=$info[1]){
+	        //宽小于等于高
+	        $pic->width=$w;
+	        $pic->GetSize( 1 );
+	        if($pic->height>$h) {
+	            $pic->height_tar = round($pic->height_orig * ($h/$pic->height));
+	            $pic->height = $h;
+	        }
+	    }else{
+	        //宽大于高
+	        $pic->height = $h;
+	        $pic->GetSize( 2 );
+	        if($pic->width>$w) {
+	            $pic->width_tar = round($pic->width_orig * ($w/$pic->width));
+	            $pic->width =$w;
+	        }
+	    }
+	    
+	    //执行图片处理
+	    $pic->readimage();
+	    $pic->writeimage();
+	}
+	
+	/**
 	 * Get a id=>user map
 	 * @param array $ids | List of ids
 	 * @return array $rs | id user map
@@ -76,6 +112,10 @@ class account_user extends Model{
 	            
 	            //是否关注
 	            $item['is_follower']=(in_array($item['id'],$followerID_accout_follower))?1:0;
+	            
+	            //大图+小图
+	            $item['o_avatar']=$item['avatar'];
+	            $item['avatar']=str_replace("{$item['id']}_avatar","{$item['id']}_avatar_100_100",$item['avatar']);
 	            
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
 			}

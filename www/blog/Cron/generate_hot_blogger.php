@@ -10,22 +10,9 @@ class generate_hot_blogger{
         $this->obj_blog_blogger=load("blog_blogger");
         $this->obj_account_user=load("account_user");
         
-        $rs_blog_blogger=$this->obj_blog_blogger->getAll("*",['status'=>1,'limit'=>200,'order'=>['count_read'=>'DESC']]);
+        $rs_blog_blogger=$this->obj_blog_blogger->getAll(['userID','count_follower','count_buzz','count_article','count_comment','count_read','description'],['status'=>1,'limit'=>200,'order'=>['count_read'=>'DESC']]);
         if(!empty($rs_blog_blogger)){
-            foreach($rs_blog_blogger as $v){
-                $tmp_blog_blogger[]=$v['userID'];
-            }
-            $rs_account_user=$this->obj_account_user->getAll("*",['or'=>['id'=>$tmp_blog_blogger]]);
-            foreach($rs_account_user as $v){
-                $hash_account_user[$v['id']]=$v;
-            }
-            foreach($rs_blog_blogger as $k=>$v){
-                if(!empty($hash_account_user[$v['userID']]['avatar'])){
-                    $rs_blog_blogger[$k]['avatar']=$hash_account_user[$v['userID']]['avatar'];
-                }else{
-                    $rs_blog_blogger[$k]['avatar']="";
-                }
-            }
+            $rs_blog_blogger=$this->obj_account_user->get_basic_userinfo($rs_blog_blogger,"userID");
         }
         
         $obj_memcache = func_initMemcached('cache01');

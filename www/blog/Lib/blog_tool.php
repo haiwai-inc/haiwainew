@@ -77,12 +77,13 @@ class blog_tool{
                 "wxc_postID"=>substr($rs['dateline'],0,10)."_blog_".$rs['postid'],
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
-                "bloggerID"=>empty($rs['blogger_new']['id'])?0:$rs['blogger_new']['id'],
+                "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
                 "categoryID"=>empty($rs['category_new']['id'])?0:$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
                 "edit_date"=>strtotime($rs['dateline']),
                 "like_date"=>strtotime($rs['dateline']),
+                "comment_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
             ];
@@ -134,19 +135,10 @@ class blog_tool{
     
     function add_to_user($rs){
         $rs_account_legacy_user=$this->obj_account_legacy_user->getOne("*",['userid'=>$rs['userid']]);
-        
         $check_account_user=$this->obj_account_user->getOne("*",['login_source'=>'wxc','username'=>$rs_account_legacy_user['username']]);
         if(empty($check_account_user)){
+            //插入用户
             $rs_account_legacy_user_details=$this->obj_account_legacy_user_details->getOne("*",["user_details_id"=>$rs['userid']]);
-            
-            //avatar
-            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['userid'=>$rs['userid']]);
-            if(!empty($rs_account_legacy_user_album)){
-                $folder1=substr('0000'.$rs['userid'],-4,-2);
-                $folder2=substr('0000'.$rs['userid'],-2);
-                $avatar="/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
-            }
-            
             $fields=[
                 'username'=>$rs_account_legacy_user['username'],
                 'description'=>empty($rs_account_legacy_user_details['summary'])?"":$rs_account_legacy_user_details['summary'],
@@ -163,8 +155,31 @@ class blog_tool{
                 'login_source'=>'wxc',
                 'avatar'=>empty($avatar)?"":$avatar,
             ];
-            
             $fields['id']=$this->obj_account_user->insert($fields);
+            
+            //老用户头像拉到本地处理
+            $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$rs_account_legacy_user['pid']]);
+            if(!empty($rs_account_legacy_user_album)){
+                $folder1=substr('0000'.$rs['userid'],-4,-2);
+                $folder2=substr('0000'.$rs['userid'],-2);
+                //$old_avatar="https://cdn.wenxuecity.com/cache_data/members/{$folder1}/{$folder2}/400_600-{$rs_account_legacy_user_album['photoname']}";
+                $old_avatar="https://cdn.wenxuecity.com/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
+                
+                //save image
+                $dir="/upload/user/avatar/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
+                $path=DOCUROOT.$dir;
+                if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+                $filename=$fields['id']."_avatar";
+                $rs_image=picture::saveImg($old_avatar,$path,$filename);
+                
+                //小图
+                if(!empty($rs_image)){
+                    $this->obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
+                    $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                }
+            }
         }else{
             $fields=$check_account_user;
         }

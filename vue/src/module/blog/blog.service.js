@@ -4,7 +4,19 @@ import API from "../../service/api"
  * Blog content class
  */
 class Blog extends API{
+    /**
+     * 返回推荐博文列表
+     */
+    async recommend_article(lastid){
+      return await this.sendget("blog/page/recommend_article/?lastid="+lastid);
+    }
 
+    /**
+     * 返回推荐博主列表
+     */
+    async recommand_blogger(){
+      return await this.sendget("blog/page/recommand_blogger/");
+    }
 
     /**
      * 返回博客文章列表

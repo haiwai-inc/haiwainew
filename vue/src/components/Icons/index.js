@@ -7,6 +7,8 @@ import LeftArrow from './LeftArrow';
 import IconPen from './IconPen.vue';
 import IconPublish from './IconPublish.vue';
 import IconPublished from './IconPublished.vue';
+import IconPrivate from './IconPrivate.vue';
+import IconPrivated from './IconPrivated.vue';
 import IconMail from './IconMail.vue';
 import IconPlus from './IconPlus.vue';
 import IconCheck from './IconCheck.vue';
@@ -28,7 +30,6 @@ import IconUser from './IconUser.vue';
 import IconArticle from './IconArticle.vue';
 import IconTag from './IconTag.vue';
 import IconTop from './IconTop.vue';
-import IconTime from './IconTime.vue';
 import IconFolder from './IconFolder.vue';
 import IconDelete from './IconDelete.vue';
 import IconBlogSet from './IconBlogSet.vue';
@@ -37,8 +38,9 @@ import IconV from './IconV.vue';
 import IconBlackList from './IconBlackList.vue';
 import IconArticleBg from './IconArticleBg.vue';
 import IconShare from './IconShare.vue';
-import IconPrivate from './IconPrivate.vue';
 import IconStar from './IconStar.vue';
+import IconSchedule from './IconSchedule.vue';
+import IconScheduled from './IconScheduled.vue';
 
 
 
@@ -53,6 +55,8 @@ export {
   IconMail,
   IconPublish,
   IconPublished,
+  IconPrivate,
+  IconPrivated,
   IconPlus,
   IconCheck,
   IconDraft,
@@ -71,7 +75,6 @@ export {
   IconUser,
   IconArticle,
   IconTop,
-  IconTime,
   IconFolder,
   IconDelete,
   IconBlogSet,
@@ -80,8 +83,8 @@ export {
   IconBlackList,
   IconArticleBg,
   IconShare,
-  IconPrivate,
-  IconStar,
+  IconSchedule,
+  IconScheduled,
   IconTag
 
 

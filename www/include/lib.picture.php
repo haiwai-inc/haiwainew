@@ -553,6 +553,9 @@ class picture{
         //获取图片文件，自动添加referer
         $http_fetch_data = self::curl_fetch( $url, $refer);
         $img = $http_fetch_data['data'];
+        if(empty($img)){
+            return false;
+        }
         
         //根据$iswrite设置决定是覆盖还是留原文件
         if($iswrite){

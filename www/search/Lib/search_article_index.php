@@ -112,6 +112,8 @@ class search_article_index extends Search
 		$rs = json_decode(json_encode($rs), true);
 		$article_index_obj = load("article_indexing");
 		$rs = $article_index_obj -> format_string($rs);
+		$rs = $article_index_obj -> format_pic($rs);
+		
 		$articles = [];
 		foreach ($rs as $k=>$v){
 			$articles[]= [

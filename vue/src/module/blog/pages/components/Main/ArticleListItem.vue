@@ -1,21 +1,21 @@
 <template>
   <div class="list-itme d-flex" >
     <div>
-      <router-link to="/blog/p/${data.articleID}">
-        <h4 class='article-title'>{{data.title}}</h4>
-        <p class="descript">{{data.description}}</p>
+      <router-link :to="'/blog/p/'+data.articleID">
+        <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
+        <p class="descript" v-html="data.postInfo_postID.msgbody"></p>
       </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
-          <icon-V class="text-primary lable" v-if="data.isHot"></icon-V>
+          <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
             <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> --> 
-              <router-link to="/blog/user/1">
-                {{data.author}}
+              <router-link :to="'/blog/user/'+data.userinfo_userID.id">
+                {{data.userinfo_userID.username}}
               </router-link>
           </div>
           <div class="tail-data">
-            <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.likes}}</span>
-            <span class="ml-3"><i class="now-ui-icons ui-2_chat-round"></i> {{data.commont}}</span>
+            <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>
+            <span class="ml-3"><i class="now-ui-icons ui-2_chat-round"></i> {{data.countinfo_postID.count_comment}}</span>
           </div>
             
         </div>
@@ -23,9 +23,9 @@
     <div 
       id="image" 
       class='list-itme-image' 
-      v-if="data.image"
-      v-bind:style="{backgroundImage:'url('+data.image+')'}">
-        <router-link to="/blog/p/${data.articleID}">
+      v-if="data.postInfo_postID.pic"
+      v-bind:style="{backgroundImage:'url('+data.postInfo_postID.pic+')'}">
+        <router-link to="/blog/p/${data.postID}">
           <div class="imgspace" id="imgspace"></div>
         </router-link>
     </div>
@@ -41,17 +41,25 @@ export default {
   props: {
     type:String,
     data:{
-      articleID:String,
-      articleUrl:String,
+      countinfo_postID:{},
+      create_date:Number,
+      id:Number,
+      postID:Number,
+      postInfo_postId:{},
       title:String,
-      description:String,
-      author:String,
-      authorID:String,
-      isHot:Boolean,
-      read:String,
-      comments:String,
-      likes:String,
-      image:[String]
+      userID:Number,
+      userinfo_userID:{}
+      // articleID:String,
+      // articleUrl:String,
+      // title:String,
+      // description:String,
+      // author:String,
+      // authorID:String,
+      // isHot:Boolean,
+      // read:String,
+      // comments:String,
+      // likes:String,
+      // image:[String]
     }
   },
   components: {
@@ -87,6 +95,12 @@ h4{
 h4.article-title{
   margin-bottom: .5rem;
   padding-top:1rem;
+}
+.list-itme .descript{
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 p.descript,div.list-itme-tail{
   color:#657786;

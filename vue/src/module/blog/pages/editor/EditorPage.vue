@@ -71,7 +71,7 @@
         class="aritcleItem d-flex justify-content-between align-items-center"
         :class="{active:item.articleId==articleActiveId,ispublished:item.isPublished}"
         >
-          <div class="flex-fill" @click="changeMenu(wenjiActiveId,item.articleId)">
+          <div class="flex-fill" @click="changeMenu(wenjiActiveId,item.articleId)"><icon-draft class="icon"></icon-draft>
             {{item.title}}
             <div><small>字数：{{item.wordCount}}</small></div>
           </div>
@@ -87,7 +87,7 @@
             href="#" 
             @click="modals.schedule = true"
             >
-              <icon-time class="icon"></icon-time>定时发布
+              <icon-schedule class="icon"></icon-schedule>定时发布
             </a>
             <a class="dropdown-item pl-4" href="#"><icon-top class="icon"></icon-top>置顶文章</a>
             <div class="submenu-item dropleft">
@@ -255,7 +255,7 @@
 <script>
 import { Button, DropDown, Modal, FormGroupInput, } from '@/components';
 import { DatePicker,TimePicker,Collapse,CollapseItem } from 'element-ui';
-import {HaiwaiLogoWhite,IconPlus,IconDelete,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconTime,IconX,IconPublish} from '@/components/Icons';
+import {HaiwaiLogoWhite,IconPlus,IconDelete,IconDraft,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconSchedule,IconX,IconPublish} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -275,13 +275,14 @@ export default {
     HaiwaiLogoWhite,
     IconPlus,
     IconDelete,
+    IconDraft,
     IconEdit,
     IconForbid,
     IconFolder,
     IconPrivate,
     IconPublish,
+    IconSchedule,
     IconTop,
-    IconTime,
     IconX
   },
 
@@ -418,9 +419,6 @@ export default {
       
       loading: false,
       article: {},
-
-      
-      
     }
   }
 };

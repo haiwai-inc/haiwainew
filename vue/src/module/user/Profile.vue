@@ -23,13 +23,12 @@
         </div>
          <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">修改博客头像背景</button></div>
           <div>
-              <p class="pt-3"><b>用户名</b></p>
+              <p class="pt-3"><b>博客名</b></p>
               <fg-input
-                addon-left-icon="now-ui-icons users_circle-08"
-                placeholder="用户名"
+                placeholder="博客名"
               >
               </fg-input>
-              <p class="pt-3"><b>简介</b></p>
+              <p class="pt-3"><b>博客简介</b></p>
               <fg-input
                 addon-left-icon="now-ui-icons text_bold"
                 placeholder="简介"
@@ -45,12 +44,17 @@
             <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary">修改我的头像</button></div>
           </div>
           <div>
-             <p class="pt-3"><b>用户名</b></p>
+             <p class="pt-3"><b>笔名</b></p>
               <fg-input
-                addon-left-icon="now-ui-icons text_bold"
-                placeholder="用户名"
+                placeholder="笔名"
               >
               </fg-input>
+             <p class="pt-3"><b>个人简介</b></p>
+              <fg-input
+                placeholder="个人简介"
+              >
+              </fg-input>
+            <p class="pt-3"><b>登录账号</b> : <span>fwe998</span></p>
             <p class="pt-3"><b>修改密码</b></p>
             <fg-input
               addon-left-icon="now-ui-icons objects_key-25"
@@ -128,15 +132,16 @@ export default {
 
 
 <style>
+
 .collection-box {
         background-color: #f0f8ff;
         border-radius: 16px;
         padding: 18px 0;
 }
-.left-nav-item{
-  padding: 12px 18px;
-  border-bottom:1px solid #ddd;
-  cursor: pointer;
+.left-nav-item {
+        padding: 12px 18px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
 }
 .left-nav-item .name {
   font-size: 1rem;

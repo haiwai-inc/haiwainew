@@ -1,5 +1,13 @@
 <?php
 
+
+/*
+ * 有一个用户系统的log记录小铃铛
+ * 最新评论加字段控制
+ * 
+ */
+
+
 /**
  * @author sida
  * [
@@ -428,21 +436,100 @@ class user extends Api {
         
     }
     
+    
+    
+    
     /**
      * 小铃铛页
-     * 文章 列表 赞 “我点的”
+     * 消息 列表 赞 
      */
-    public function article_list_buzz_mine(){
+    public function notification_list_buzz(){
+        
+    }
+    
+    /**
+     * 用户17登录
+     * http://local.haiwainew.com/api/v1/account/passport/login_status/?userID=17
+     * 
+     * 查看所有未读消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_unread_count/
+     * 
+     * 查看未读的博客评论消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_list_comment/
+     * 
+     * 清空特定类型的消息
+     * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
+     * 
+     * 小铃铛页   测试信息： userID=17, basecode=59252 59294
+     * 消息 列表 评论 
+     * @param integer $lastID | 最后id
+     */
+    public function notification_list_comment($lastID=0){
+        $obj_account_notification=load("account_notification");
+        
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        $where=[
+            'limit'=>30,
+            "userID"=>$_SESSION['id'],
+            "type"=>"blog_comment",
+            "order"=>['id'=>"ASC"]
+        ];
+        if(!empty($lastID)){
+            $where['id,<']=$lastID;
+        }
+        $rs_account_notification=$obj_account_notification->getAll("*",$where,"notification_".$tbn);
+        
+        //由跟帖补全主贴信息 并且group
+        $obj_article_indexing=load("article_indexing");
+        $rs_account_notification=$obj_article_indexing->get_article_info_by_comment($rs_account_notification);
+        
+        return $rs;
+    }
+    
+    /**
+     * 小铃铛页
+     * 消息 列表 订阅
+     */
+    public function notification_list_follower(){
         
     }
     
     /**
      * 小铃铛页
-     * 评论 列表 最新 “我发的”
+     * 消息 未读 计数
      */
-    public function comment_list_recent_mine(){
+    public function notification_unread_count(){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        $rs['blog_comment']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'blog_comment'],"notification_".$tbn);
+        $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
+        $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
+        $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
         
+        return $rs;
     }
+    
+    /**
+     * 小铃铛页
+     * 消息 清空 计数
+     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follower)
+     */
+    public function notification_unread_clear($type='blog_comment'){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        
+        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type]);
+        
+        return true;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 
