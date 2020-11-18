@@ -29,7 +29,7 @@ export default {
     refresh(){
       this.hotBloggerList.currentList += 10;
       this.hotBloggerList.count += 10;
-      if(this.hotBloggerList.count==200){
+      if(this.hotBloggerList.count>this.data.length){
         this.hotBloggerList.currentList = 0;
         this.hotBloggerList.count = 10;
       }

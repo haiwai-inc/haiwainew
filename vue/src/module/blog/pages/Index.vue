@@ -6,16 +6,22 @@
       </div>
       <div class="row">
         <div class="col-sm-8 col-12">
-          <div class="text-center" v-if="articlelists.length==0"><!-- loader -->
+          
+          <div
+          v-infinite-scroll="loadArticle"
+          infinite-scroll-disabled="noMore"
+           infinite-scroll-distance="50">
+            <article-list-item 
+              v-for="item in articlelists"
+              v-bind:key="item.id"
+              v-bind:data="item"
+              type="0">
+            </article-list-item>
+          </div>
+          <div class="text-center" v-if="loading.article"><!-- loader -->
             <i class="now-ui-icons loader_refresh spin"></i>
           </div>
-          <article-list-item 
-            v-for="item in articlelists"
-            v-bind:key="item.articleID"
-            v-bind:data="item"
-            type="0">
-          </article-list-item>
-          
+          <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div class="col-sm-4 d-none d-sm-block">
           <div class="hot-bloger" v-if="bloggerList.length>0">
@@ -30,7 +36,6 @@
 import MainMenu from './components/Main/MainMenu.vue';
 import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
-
 import blog from '../blog.service'
 
 export default {
@@ -40,30 +45,39 @@ export default {
     ArticleListItem,
     BlogerList,
   },
+  computed:{
+    
+  },
   methods:{
-    test(){
-      // console.log('hello index vue');
-      console.log(blog.recommend_article());
-      // blog.message();
+    loadArticle(){
+      blog.recommend_article(this.lastID.article).then(res=>{
+        if(res.data.status){
+          let arr = res.data.data;
+          this.noMore = arr.length<30 ? true : false;
+          this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
+          this.articlelists = this.articlelists.concat(arr) ;
+          this.loading.article=false;
+          console.log(arr,this.lastID,this.noMore);
+        }
+      })
+      
     },
   },
   created () {
-    blog.recommend_article().then(res=>{
-      if(res.data.status){
-        this.articlelists=res.data.data;
-      }
-      console.log(res);
-    })
     blog.recommand_blogger().then(res=>{
       if(res.data.status){
         this.res_bloggerList=res.data.data.data;
         this.bloggerList=this.res_bloggerList;
+        this.loading.blogger=false;
       }
-      console.log(this.bloggerList);
+      console.log(this.disabled);
     })
   },
   data() {
     return {
+      noMore:false,
+      lastID:{article:0,blogger:0},
+      loading:{article:true,blogger:true},
       res_bloggerList:[],
       bloggerList : [],
       articlelists: [],

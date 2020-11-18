@@ -7,8 +7,8 @@ class Blog extends API{
     /**
      * 返回推荐博文列表
      */
-    async recommend_article(){
-      return await this.sendget("blog/page/recommend_article/");
+    async recommend_article(lastid){
+      return await this.sendget("blog/page/recommend_article/?lastid="+lastid);
     }
 
     /**
