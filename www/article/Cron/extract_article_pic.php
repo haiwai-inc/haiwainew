@@ -58,6 +58,8 @@ class extract_article_pic{
                         
                         //更新分表
                         $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                    }else{
+                        $is_pic=-1;
                     }
                 }else{
                     $is_pic=-1;
