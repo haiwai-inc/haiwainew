@@ -8,11 +8,12 @@ class common extends Api{
     * @response 搜索结果
     *
     */
-    public function articles($keyword, $last_score){
+    public function articles($keyword, $last_score = 0){
         $tool_obj = load("search_tool");
         $articles = $tool_obj -> search_article($keyword, $last_score);
         $user_obj = load("account_user");
         $articles = $user_obj -> get_basic_userinfo($articles, "userID");
+
         return $articles;
     }
 
@@ -44,9 +45,18 @@ class common extends Api{
      * @response 搜索结果
      *
      */
-    public function categories($keyword){
-        $category_obj = load("blog_category");
-        return $category_obj->search_by_name($keyword);
+    public function categories($keyword, $last_score = 0){
+        $tool_obj = load("search_tool");
+
+        $category_obj = load("search_category");
+        $categories = $category_obj->search_by_name($keyword,$last_score);
+        $user_obj = load("account_user");
+        $blogger_obj = load("blog_blogger");
+
+        $categories = $user_obj->get_basic_userinfo($categories, "userID");
+        $categories = $blogger_obj->get_basic_bloggerinfo($categories, "bloggerID");
+
+        return $tool_obj->overwrite_highlight($categories);
     }
 
     /**
@@ -57,7 +67,7 @@ class common extends Api{
      *
      */
     public function tags($keyword){
-        $tag_obj = load("article_tag");
+        $tag_obj = load("search_tag");
         return $tag_obj->search_by_name($keyword);
     }
 
