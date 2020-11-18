@@ -118,7 +118,7 @@ class account_user extends Model{
 	            $item['avatar']=str_replace("{$item['id']}_avatar","{$item['id']}_avatar_100_100",$item['avatar']);
 	            
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
-	        }
+			}
 	    }
 	    
 	    return $rs;

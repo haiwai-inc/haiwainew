@@ -18,7 +18,7 @@
               type="0">
             </article-list-item>
           </div>
-          <div class="text-center" v-if="loading.article"><!-- loader -->
+          <div class="text-center py-5" v-if="loading.article"><!-- loader -->
             <i class="now-ui-icons loader_refresh spin"></i>
           </div>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
@@ -36,7 +36,7 @@
 import MainMenu from './components/Main/MainMenu.vue';
 import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
-import blog from '../blog.service'
+import blog from '../blog.service';
 
 export default {
   name: 'blog-index',
@@ -50,6 +50,7 @@ export default {
   },
   methods:{
     loadArticle(){
+      this.loading.article=true;
       blog.recommend_article(this.lastID.article).then(res=>{
         if(res.data.status){
           let arr = res.data.data;
@@ -60,7 +61,6 @@ export default {
           console.log(arr,this.lastID,this.noMore);
         }
       })
-      
     },
   },
   created () {

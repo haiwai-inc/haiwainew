@@ -17,6 +17,20 @@ class Blog extends API{
     async recommand_blogger(){
       return await this.sendget("blog/page/recommand_blogger/");
     }
+    
+    /** 
+     * 返回热榜标签（分类）
+     */
+    async hot_tag(){
+      return await this.sendget("blog/page/hot_tag/");
+    }
+
+    /**
+     * 返回热榜博文列表
+     */
+    async hot_article_list(tagID,lastid){
+      return await this.sendget("blog/page/hot_article_list/?tagID="+tagID+"&lastid="+lastid);
+    }
 
     /**
      * 返回博客文章列表
