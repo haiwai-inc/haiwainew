@@ -41,6 +41,7 @@ class page extends Api {
     /**
      * 二级页面 
      * 推荐 文章
+     * @param integer $lastid | 最后一个id
      */
     public function recommend_article($lastid=0){
         $obj_blog_recommend=load("blog_recommend");
@@ -107,6 +108,8 @@ class page extends Api {
             return $rs;
         }
         
+        //全部
+        $rs_memcache[0]=["id"=>0,"name"=>"全部",'visible'=>1];
         $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
         return $rs;
     }
