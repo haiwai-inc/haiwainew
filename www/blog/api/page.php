@@ -19,14 +19,21 @@ class page extends Api {
         }
         
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID','count_follower','count_buzz','count_article','count_comment','count_read','description','background'],['id'=>$bloggerID,'status'=>1]);
+        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID'],['id'=>$bloggerID,'status'=>1]);
         if(empty($rs_blog_blogger)){
             $this->error="此博主不存在";
             $this->status=false;
             return false;
         }
+        //添加用户信息
         $obj_account_user=load("account_user");
         $rs_blog_blogger=$obj_account_user->get_basic_userinfo($rs_blog_blogger,"userID");
+        
+        //添加博主信息
+        $rs_blog_blogger=$obj_blog_blogger->get_basic_bloggerinfo($rs_blog_blogger,"id");
+        debug::d($rs_blog_blogger);
+        exit;
+        
         return $rs_blog_blogger[0];
     }
     
