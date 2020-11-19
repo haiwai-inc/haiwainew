@@ -196,7 +196,6 @@ class blog_tool{
                 'userID'=>$rs['user_new']['id'],
                 'name'=>$rs_blog_legacy_blogger['title'],
                 'description'=>$rs_blog_legacy_blogger['description'],
-                'background'=>$rs_blog_legacy_blogger['blog_pic'],
                 'create_date'=>strtotime($rs_blog_legacy_blogger['dateline']),
                 'update_date'=>strtotime($rs_blog_legacy_blogger['dateline']),
                 'update_type'=>"register",
@@ -223,6 +222,7 @@ class blog_tool{
             //小图保存
             if(!empty($rs_image)){
                 $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+                $this->obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
             }
         }
         
