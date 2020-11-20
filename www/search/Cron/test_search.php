@@ -16,8 +16,8 @@ debug::d($rs);
 // debug::d($search_article_noindex -> get_by_postIDs([13316, 58471]));
 
 // debug::d($search_article_noindex -> get_by_postIDs([1331326, 943128]));
-// $result = $search_article -> search_tags([1,2,3,4,5,6,7,8,9,10]);
-// debug::d($result);
+$result = $search_article -> search_tags([1,2,3,4,5,6,7,8,9,10],15145);
+debug::d($result);
 // $result = $search_article_noindex -> get_postInfo([["postID"=>13316],["postID"=>9438]], "postID", false);
 // debug::d($result);
 // debug::d(count($result));
