@@ -82,7 +82,7 @@ export default {
         if(res.data.status){
           let arr = res.data.data;
           this.noMore = arr.length<30 ? true : false;
-          this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
+          this.lastID.article = arr.length===30 ? arr[arr.length-1].countinfo_postID.count_read : this.lastID.article;
           this.articlelists = this.articlelists.concat(arr) ;
           this.loading.article=false;
           console.log(arr,this.lastID.article,this.noMore);
