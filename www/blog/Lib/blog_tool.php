@@ -196,7 +196,6 @@ class blog_tool{
                 'userID'=>$rs['user_new']['id'],
                 'name'=>$rs_blog_legacy_blogger['title'],
                 'description'=>$rs_blog_legacy_blogger['description'],
-                'background'=>$rs_blog_legacy_blogger['blog_pic'],
                 'create_date'=>strtotime($rs_blog_legacy_blogger['dateline']),
                 'update_date'=>strtotime($rs_blog_legacy_blogger['dateline']),
                 'update_type'=>"register",
@@ -205,6 +204,26 @@ class blog_tool{
             $fields['id']=$this->obj_blog_blogger->insert($fields);
         }else{
             $fields=$check_blog_blogger;
+        }
+        
+        //保存博客背景图片到本地
+        if(!empty($rs_blog_legacy_blogger['blog_pic'])){
+            $old_blog_pic="https://cdn.wenxuecity.com/{$rs_blog_legacy_blogger['blog_pic']}";
+            
+            //save image
+            $dir="/upload/blog/background/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
+            $path=DOCUROOT.$dir;
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            $filename=$fields['id']."_background";
+            $rs_image=picture::saveImg($old_blog_pic,$path,$filename);
+            
+            //小图保存
+            if(!empty($rs_image)){
+                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+                $this->obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
+            }
         }
         
         return $fields;

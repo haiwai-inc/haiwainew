@@ -49,10 +49,11 @@ class blog_blogger extends Model{
 	 */
 	public function get_id_blogger_map($ids){
 		$bloggers = $this->get_bloggers_by_ids($ids);
+		
 		$rs = [];
 		if(!empty($bloggers)){
-			foreach($bloggers as $blogger){
-				$rs[$blogger['id']] = $blogger;
+			foreach($bloggers as $v){
+			    $rs[$v['id']] = $v;
 			}
 		}
 		return $rs;
@@ -75,12 +76,27 @@ class blog_blogger extends Model{
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
-			$hash_account_user = $this->get_id_blogger_map($tmp_rs_id);
+			$hash_blog_blogger = $this->get_id_blogger_map($tmp_rs_id);
 	        foreach($rs as $k=>$v){
-	            $rs[$k]['basic_bloggerinfo']=$hash_account_user[$v[$hashID]];
+	            $item=$hash_blog_blogger[$v[$hashID]];
+	            $item['o_avatar']=$item['background'];
+	            $item['background']=str_replace("{$v['id']}_background","{$item['id']}_background_750_420",$item['background']);
+	            $rs[$k]['bloggerinfo_'.$hashID]=$item;
 	        }
 	    }
+	    
 	    return $rs;
 	}
 }
 ?>
+
+
+
+
+
+
+
+
+
+
+
