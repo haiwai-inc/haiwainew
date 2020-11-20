@@ -31,8 +31,6 @@ class page extends Api {
         
         //添加博主信息
         $rs_blog_blogger=$obj_blog_blogger->get_basic_bloggerinfo($rs_blog_blogger,"id");
-        debug::d($rs_blog_blogger);
-        exit;
         
         return $rs_blog_blogger[0];
     }
