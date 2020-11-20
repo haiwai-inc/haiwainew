@@ -9,7 +9,7 @@
           <div class="name">
           <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
             <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> --> 
-              <router-link :to="'/blog/user/'+data.userinfo_userID.id">
+              <router-link :to="'/blog/user/'+data.userID">
                 {{data.userinfo_userID.username}}
               </router-link>
           </div>

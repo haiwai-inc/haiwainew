@@ -17,7 +17,49 @@ class Blog extends API{
     async recommand_blogger(){
       return await this.sendget("blog/page/recommand_blogger/");
     }
+    
+    /** 
+     * 返回热榜标签（分类）
+     */
+    async hot_tag(){
+      return await this.sendget("blog/page/hot_tag/");
+    }
 
+    /**
+     * 返回热榜博文列表
+     */
+    async hot_article_list(tagID,lastid){
+      return await this.sendget("blog/page/hot_article_list/?tagID="+tagID+"&lastid="+lastid);
+    }
+
+    /**
+     * 返回博主首页最新列表
+     */
+    async article_list_recent(bloggerID,lastid){
+      return await this.sendget("blog/page/article_list_recent/?bloggerID="+bloggerID+"&lastid="+lastid);
+    }
+
+    /**
+     * 返回博主首页最热列表
+     */
+    async article_list_hot(bloggerID,lastid){
+      return await this.sendget("blog/page/article_list_hot/?bloggerID="+bloggerID+"&lastid="+lastid);
+    }
+    
+    /**
+     * 返回博主首页新评列表
+     */
+    async article_list_comment(bloggerID,lastid){
+      return await this.sendget("blog/page/article_list_comment/?bloggerID="+bloggerID+"&lastid="+lastid);
+    }
+
+    /**
+     * 返回博主信息
+     */
+    async blogger_info(bloggerID){
+      return await this.sendget("blog/page/blogger_info/?bloggerID="+bloggerID);
+    }
+    
     /**
      * 返回博客文章列表
      * @param number bloger 

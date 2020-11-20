@@ -1,19 +1,20 @@
 <template>
-    <div class="blog-user-index">
-        <div class="user-bg" v-bind:style="{backgroundImage:'url('+authorInfo.backgroundImg+')'}">
+    <div class="blog-user-index" v-if="data.bloggerinfo_id.background">
+        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup"></div>
         </div>
         <div class="user-avatar d-flex py-2">
             <div>
-                <img :src="authorInfo.avatarUrl" :alt="authorInfo.name">
+                <img :src="data.userinfo_userID.avatar" :alt="data.userinfo_userID.username">
             </div>
             
             <div class="flex-grow-1">
-                <span class="blog-user-index-name">{{authorInfo.name}}</span><br>
-                <span class="blog-user-index-des">{{authorInfo.description}} </span>
-                <span style="color:#39b8eb;font-size:0.8rem"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span><br>
-                <span class="blog-user-index-des">博客访问：{{authorInfo.read}}</span>
-                <span class="blog-user-index-des ml-4">粉丝：12345</span>
+                <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span><br>
+                <span class="blog-user-index-des">{{data.bloggerinfo_id.description}} </span>
+                <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
+                <br>
+                <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
+                <span class="blog-user-index-des ml-4">粉丝：{{data.bloggerinfo_id.count_follower}}</span>
             </div>
             <div class="pr-3">
                 <n-button  
@@ -25,33 +26,21 @@
                 </n-button>
                 
                 <n-button 
-                :type="authorInfo.isFollowed?'default':'primary'" 
+                :type="data.userinfo_userID.is_follower?'default':'primary'" 
                 round 
                 simple 
                 @click="$router.push('/blog/user/1')"
                 class="editbtn ml-3"
                 size="sm"
                 >
-                    <icon-plus :style="authorInfo.isFollowed?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{authorInfo.isFollowed?'已关注':'关注'}}
+                    <icon-plus :style="data.userinfo_userID.is_follower?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{data.userinfo_userID.is_follower?'已关注':'关注'}}
                 </n-button>
             </div>
         </div>
-        <div class="profile-header mt-2">
-           <ul class="nav justify-content-center">
-              <li class="col nav-item text-center px-0">
-                 <a class="nav-link active" href="#">最新博文</a>
-              </li>
-              <li class="col nav-item text-center px-0">
-                 <a class="nav-link" href="#">最热博文</a>
-              </li>
-              <li class="col nav-item text-center px-0">
-                 <a class="nav-link" href="#">新评博文</a>
-              </li>
-           </ul>
-        </div>
+        
     <!-- Send QQH Modal -->
     <modal :show.sync="modals.sendQqhModal" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">向{{userID}}发送悄悄话</h4>
+      <h4 slot="header" class="title title-up" style="padding-top:5px">向 {{data.userinfo_userID.username}} 发送悄悄话</h4>
       
       <div class="datepicker-container d-flex justify-content-center">
         <el-input
@@ -76,7 +65,7 @@
         type="primary"
         round 
         simple
-        @click.native="sendQqh(userID)"
+        @click.native="sendQqh(data.id)"
         >
           发送
         </n-button>
@@ -95,6 +84,8 @@ import {
     Modal,
 } from '@/components';
 import { Input } from 'element-ui';
+import blog from '../blog.service';
+
 export default {
     name: 'blog-user-index-header',
     components:{
@@ -106,20 +97,28 @@ export default {
         Modal,
         
     },
-    props:{
-        userID:Number,
+    created(){
+        blog.blogger_info(this.$route.params.id).then(res=>{
+        this.data = res.data.data;
+        console.log(res);
+    })
     },
     data() {
         return {
-            authorInfo :{
-                avatarUrl:'/img/avatar.jpg',
-                isHot:true,
-                name:'English Name',
-                firstLetter:'用',
-                description:'简介简介简介简介 English desciption',
-                isFollowed:false,
-                read:12345,
-                backgroundImg:'/img/bg11.jpg'
+            data:{
+                bloggerinfo_id:{
+                    background:'',
+                    description:'',
+                    count_read:0,
+                    count_follower:0
+                },
+                id:0,
+                userID:0,
+                userinfo_userID:{
+                    avatar:'',
+                    username:'',
+                    is_follower:0
+                }
             },
             modals:{
                 sendQqhModal:false,
@@ -173,14 +172,6 @@ export default {
 .blog-user-index .blog-user-index-des{
     font-size: 0.85rem;
     color:gray
-}
-.profile-header .nav-link{
-     color:#657786  
-}
-.profile-header .nav-link.active {
-        color: #1D1D1D;
-        border-bottom: 2px solid #39B8EB;
-        font-weight: 600;
 }
 
 </style>

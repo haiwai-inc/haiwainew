@@ -19,14 +19,19 @@ class page extends Api {
         }
         
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID','count_follower','count_buzz','count_article','count_comment','count_read','description'],['id'=>$bloggerID,'status'=>1]);
+        $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID'],['id'=>$bloggerID,'status'=>1]);
         if(empty($rs_blog_blogger)){
             $this->error="此博主不存在";
             $this->status=false;
             return false;
         }
+        //添加用户信息
         $obj_account_user=load("account_user");
         $rs_blog_blogger=$obj_account_user->get_basic_userinfo($rs_blog_blogger,"userID");
+        
+        //添加博主信息
+        $rs_blog_blogger=$obj_blog_blogger->get_basic_bloggerinfo($rs_blog_blogger,"id");
+        
         return $rs_blog_blogger[0];
     }
     
@@ -132,11 +137,12 @@ class page extends Api {
             $fields=[
                 'limit'=>30,
                 'visible'=>1,
-                'ORDER'=>['count_read'=>'DESC']
+                'order'=>['count_read'=>'DESC']
             ];
             if(!empty($lastid)){
-                $fields['postID,<']=$lastid;
+                $fields['count_read,<']=$lastid;
             }
+            
             $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],$fields);
             
             //ES补全postID信息
