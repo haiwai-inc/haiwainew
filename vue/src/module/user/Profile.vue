@@ -1,5 +1,8 @@
 <template>
    <div class="container-sm">
+    <div class="d-none d-sm-block">
+      <main-menu type="-1"></main-menu>
+    </div>
       <div class="row">
          <div class="col-sm-4 left-top-nav">
             <div class="left-nav-item d-flex justify-content-between">
@@ -102,6 +105,7 @@
    </div>
 </template>
 <script>
+import MainMenu from "../blog/pages/components/Main/MainMenu.vue";
 import {IconAccountSet,IconBlogSet,IconBlackList,IconDelete} from '@/components/Icons';
 import Avatar from '../blog/pages/components/Main/Avatar';
 import {
@@ -112,6 +116,7 @@ export default {
   name: 'profile',
   components: {
     Avatar,
+    MainMenu,
     [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete
   },
 
