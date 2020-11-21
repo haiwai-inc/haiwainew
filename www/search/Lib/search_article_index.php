@@ -60,6 +60,12 @@ class search_article_index extends Search
                   "tags":{
                       "type":"integer"
 				  },
+				  "count_read":{
+					"type":"integer"
+				},
+				"count_like":{
+					"type":"integer"
+				},
 				  "create_date": {
 					"type": "date",
 					"format": "yyyy-MM-dd HH:mm:ss"
@@ -94,7 +100,7 @@ class search_article_index extends Search
 	}
 	
 
-	public function search_tags($tags, $last_score = 0, $order = array("postID"=>array("order"=>"desc"))){
+	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc"))){
 		$query["should"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
@@ -188,6 +194,8 @@ class search_article_index extends Search
 			"create_date"    => $this-> get_time_string($article['create_date']),
 			"edit_date"    => $this-> get_time_string($article['edit_date']),
 			"like_date"    => $this-> get_time_string($article['like_date']),
+			"count_read"=>$article['count_read'],
+			"count_like"=>$article['count_like'],
 			"pic" => $article['pic'],
 			"buzz" => $article['buzz'],
 		];
@@ -229,7 +237,9 @@ class search_article_index extends Search
                     "create_date"    => $this-> get_time_string($article['create_date']),
                     "edit_date"    => $this-> get_time_string($article['edit_date']),
                     "like_date"    => $this-> get_time_string($article['like_date']),
-                    "visible" => $article['visible'],
+					"visible" => $article['visible'],
+					"count_read"=>$article['count_read'],
+					"count_like"=>$article['count_like'],
 					"pic" => $article['pic'],
 					"buzz" => $article['buzz'],
 				];

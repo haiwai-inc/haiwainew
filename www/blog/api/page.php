@@ -344,9 +344,26 @@ class page extends Api {
     /**
      * 博客主页 编辑器页
      * 文集 列表
+     * @param integer $bloggerID
      */
-    public function category_list(){
+    public function category_list($bloggerID){
+        if(empty($bloggerID)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
         
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+        if(empty($rs_blog_blogger)){
+            $this->error="此博主不存在";
+            $this->status=false;
+            return false;
+        }
+        
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getAll("*",['limit'=>50,"bloggerID"=>$bloggerID]);
+        return $rs_blog_category;
     }
     
     
