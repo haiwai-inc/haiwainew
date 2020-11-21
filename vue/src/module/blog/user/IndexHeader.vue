@@ -4,7 +4,7 @@
             <div class="user-bgup"></div>
         </div>
         <div class="user-avatar d-flex py-2">
-            <div>
+            <div class="avatarbox">
                 <div 
                 v-if="!data.userinfo_userID.avatar" 
                 class="avatar-word" :style="{height:'90px',width:'90px',lineHeight:'90px'}">{{data.userinfo_userID.first_letter}}</div>
@@ -106,7 +106,7 @@ export default {
     mounted:function(){
         blog.blogger_info(this.$route.params.id).then(res=>{
             this.data = res.data.data;
-            this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:'/img/bg5.jpg';
+            this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
             console.log(this.data);
         })
     },
@@ -115,6 +115,7 @@ export default {
     },
     data() {
         return {
+            defaultBackground:'/img/bg5.jpg',
             data:{
                 bloggerinfo_id:{
                     background:'',
@@ -170,6 +171,7 @@ export default {
 }
 .blog-user-index .user-avatar img,
 .blog-user-index .avatar-word{
+    min-width: 90px;
     width:90px;
     height: 90px;
     margin: -30px 10px 10px 10px;
