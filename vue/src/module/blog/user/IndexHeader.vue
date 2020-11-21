@@ -1,11 +1,17 @@
 <template>
-    <div class="blog-user-index" v-if="data.bloggerinfo_id.background">
+    <div class="blog-user-index">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup"></div>
         </div>
         <div class="user-avatar d-flex py-2">
             <div>
-                <img :src="data.userinfo_userID.avatar" :alt="data.userinfo_userID.username">
+                <div 
+                v-if="!data.userinfo_userID.avatar" 
+                class="avatar-word" :style="{height:'90px',width:'90px',lineHeight:'90px'}">{{data.userinfo_userID.first_letter}}</div>
+                <img 
+                v-if="data.userinfo_userID.avatar" 
+                :src="data.userinfo_userID.avatar" 
+                :alt="data.userinfo_userID.username">
             </div>
             
             <div class="flex-grow-1">
@@ -97,11 +103,15 @@ export default {
         Modal,
         
     },
-    created(){
+    mounted:function(){
         blog.blogger_info(this.$route.params.id).then(res=>{
-        this.data = res.data.data;
-        console.log(res);
-    })
+            this.data = res.data.data;
+            this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:'/img/bg5.jpg';
+            console.log(this.data);
+        })
+    },
+    methods:{
+        
     },
     data() {
         return {
@@ -158,7 +168,8 @@ export default {
 .blog-user-index .user-avatar{
     background-color: #f6f6f6;
 }
-.blog-user-index .user-avatar img{
+.blog-user-index .user-avatar img,
+.blog-user-index .avatar-word{
     width:90px;
     height: 90px;
     margin: -30px 10px 10px 10px;
@@ -173,5 +184,11 @@ export default {
     font-size: 0.85rem;
     color:gray
 }
-
+.blog-user-index .avatar-word{
+    background-color: aliceblue;
+    text-align: center;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 90px;
+}
 </style>
