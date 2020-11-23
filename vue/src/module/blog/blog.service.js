@@ -54,7 +54,16 @@ class Blog extends API{
     }
 
     /**
+     * 返回博主文集列表
+     * @param number bloggerID
+     */
+    async category_list(bloggerID){
+      return await this.sendget("blog/page/category_list/?bloggerID="+bloggerID);
+    }
+
+    /**
      * 返回博主信息
+     * @param number bloggerID
      */
     async blogger_info(bloggerID){
       return await this.sendget("blog/page/blogger_info/?bloggerID="+bloggerID);

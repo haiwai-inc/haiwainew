@@ -61,6 +61,9 @@ import NoticeQqh from "./NoticeQqh";
  */
 export default {
   name: "notices",
+  mounted:function(){
+    this.getUnreadCount();
+  },
   data() {
     return {
       activeId: 0,
@@ -185,6 +188,11 @@ export default {
   },
   computed: {},
   methods: {
+    async getUnreadCount(){
+      let user = this.$store.state.user;
+      let res=await user.notification_unread_count();
+      console.log(res);
+    },
     whichActive(id) {
       this.activeId = id;
       console.log(this);

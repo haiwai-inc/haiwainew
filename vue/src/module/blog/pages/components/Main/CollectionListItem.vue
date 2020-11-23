@@ -1,8 +1,8 @@
 <template>
     
   <div class="collection-list-item d-flex justify-content-between">
-      <div class="name">{{data.title}}({{data.articleList.length}})</div>
-      <div class="descrip">阅读&nbsp; {{data.read}} <icon-right style="fill:#888"></icon-right></div> 
+      <div class="name">{{data.name}}({{data.count_article}})</div>
+      <div class="descrip"> <icon-right style="fill:#888"></icon-right></div> 
   </div>
        
 </template>

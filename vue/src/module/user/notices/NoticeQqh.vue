@@ -25,10 +25,10 @@
           </div>
           <div class="d-flex align-items-center" @click="showQqhView(index)">
             
-            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==userID?authorInfor.avararUrl:item.userinfo_touserID.avatar"
+            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
               />
             <div class="pl-2">
-              <span class="name">{{item.userinfo_userID.id==userID?item.userinfo_touserID.username:item.userinfo_userID.username}}</span>
+              <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
             </div>
 
@@ -71,9 +71,9 @@
           <li 
           v-for="(item,index) in qqhView.data" 
           :key="index"
-          :class="{'message-l':item.userID!==userID,'message-r':item.userID===userID,}" >
+          :class="{'message-l':item.userID!==loginUser.id,'message-r':item.userID===loginUser.id,}" >
             <a href="#" class="avatar"
-              ><img class="rounded-circle" :src="item.userID!==userID?authorInfor.avararUrl:touser.avatar"
+              ><img class="rounded-circle" :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
             /></a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
@@ -122,7 +122,9 @@ export default {
   },
   data(){
       return{
-        userID:1,
+        loginUser:{
+          id:1, //测试用，还差获取登录用户id的接口；
+        },
         touser:{},
         msgID:0,
         iconmore3v:HaiwaiIcons.iconmore3v,
@@ -154,12 +156,18 @@ export default {
     },
     async qqh_view(idx) {
       let list = this.qqhList.data;
+      if(list[idx].userinfo_userID.id===this.loginUser.id){
+        this.touser=list[idx].userinfo_touserID;
+        this.loginUser=list[idx].userinfo_userID;
+      }else{
+        this.touser=list[idx].userinfo_userID;
+        this.loginUser=list[idx].userinfo_touserID;
+      }
       let user = this.$store.state.user;
       let res = await user.qqh_view(list[idx].id);
       this.qqhView=res.data;
       this.qqhView.data=res.data.data.reverse();
-      this.touser=list[idx].userinfo_userID.id===this.userID?list[idx].userinfo_touserID:list[idx].userinfo_userID;
-      console.log(this.touser);
+      console.log(list,this.qqhView.data,this.loginUser,this.touser);
     },
     showQqhView(idx){
       this.msgID=idx;
@@ -167,7 +175,7 @@ export default {
       this.showView=true;
     },
     sendQqh(id){
-      this.send(this.userID,id,this.msgbody);
+      this.send(this.loginUser.id,id,this.msgbody);
     },
     async send(userID,touserID,msgbody) {
       let user = this.$store.state.user;

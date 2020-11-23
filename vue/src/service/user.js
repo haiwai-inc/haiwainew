@@ -86,6 +86,18 @@ class User extends API{
             return false;
         }
     }
+    /**
+     * 获取小铃铛未读数
+     */
+    async notification_unread_count(){
+        try{
+            let res = await this.get("api/v1/account/user/notification_unread_count/");
+            return res;
+        }
+        catch(e){
+            return false;
+        }
+    }
 }
 
 export default User

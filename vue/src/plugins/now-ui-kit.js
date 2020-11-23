@@ -7,6 +7,8 @@ import globalComponents from './globalComponents';
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueLazyload from 'vue-lazyload';
+import infiniteScroll from "vue-infinite-scroll";
+
 
 locale.use(lang);
 
@@ -23,5 +25,6 @@ export default {
         threshold: 0.1
       }
     });
+    Vue.use(infiniteScroll); 
   }
 };
