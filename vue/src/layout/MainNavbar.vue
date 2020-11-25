@@ -75,24 +75,24 @@
         <nav-link to="/bookmark">
           <i class="now-ui-icons location_bookmark"></i> 我的收藏
         </nav-link>
+        <hr class="mb-1 mt-1">
+        <nav-link to="/notices">
+          <i class="now-ui-icons ui-2_chat-round"></i> 我收到的评论
+        </nav-link>
         <nav-link to="/notices">
           <i class="now-ui-icons ui-1_email-85"></i> 我的悄悄话
         </nav-link>
          <nav-link to="/notices">
           <i class="now-ui-icons users_single-02"></i> 我的粉丝
         </nav-link>
-        <hr class="mb-3">
-        <nav-link to="/notices">
-          <i class="now-ui-icons ui-2_chat-round"></i> 我收到的评论
-        </nav-link>
          <nav-link to="/notices">
           <i class="now-ui-icons ui-2_favourite-28"></i> 我收到喜欢
         </nav-link>
-        <hr class="mb-2">
+        <hr class="mb-2 mt-1">
         <nav-link to="/profile">
           <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
         </nav-link>
-        <hr class="mb-3 mt-1">
+        <hr class="mb-1 mt-1">
         <nav-link to="/login">
           <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
         </nav-link>
