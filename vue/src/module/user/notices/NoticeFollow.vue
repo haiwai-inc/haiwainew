@@ -1,7 +1,7 @@
 <template>
     <div>
         <h6
-        class="pb-2"
+        class="pb-2 font-weight-normal"
         >{{follows.title}}</h6>
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item"></bloger-list-item>
     </div>

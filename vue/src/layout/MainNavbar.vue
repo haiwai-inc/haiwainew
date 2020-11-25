@@ -20,8 +20,7 @@
       </el-popover>
     </template>
     
-    <template slot="before-menu">
-      
+    <template slot="before-menu"> 
       <div style="max-width:500px;padding:0 18px;">
         <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
@@ -32,21 +31,6 @@
       </div>
     </template>
     <template slot="navbar-menu">     
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          style="margin-top:3px;z-index:1000"
-          rel="tooltip"
-          title="消息"
-          data-placement="bottom"
-          href="/notices"
-        >
-          <div class="noticealert"></div>
-          <i class="now-ui-icons ui-1_bell-53"></i>
-          <p class="d-lg-none d-xl-none">消息</p>
-        </a>
-        
-      </li>
       <drop-down
         class="nav-item dropdown"
         icon="now-ui-icons text_caps-small"
@@ -64,6 +48,19 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
+       <li class="nav-item">
+        <a
+          class="nav-link"
+          style="margin-top:3px;z-index:1000"
+          rel="tooltip"
+          title="消息"
+          data-placement="bottom"
+          href="/notices">
+          <div class="noticealert"></div>
+          <i class="now-ui-icons ui-1_bell-53"></i>
+          <p class="d-lg-none d-xl-none">消息</p>
+        </a> 
+      </li>
       <profile-drop-down
               tag="li"
               username="用户名"
