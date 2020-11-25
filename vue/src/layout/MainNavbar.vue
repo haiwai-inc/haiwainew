@@ -31,29 +31,7 @@
         </fg-input>
       </div>
     </template>
-    <template slot="navbar-menu">
-      
-      <profile-drop-down
-              tag="li"
-              username="这里是用户名"
-              avatarurl="/img/eva.jpg"
-              class="nav-item"
-      >
-        <nav-link to="/blog/user/1">
-          <i class="now-ui-icons users_single-02"></i> 我的主页
-        </nav-link>
-        <nav-link to="/bookmark">
-          <i class="now-ui-icons location_bookmark"></i> 我的收藏
-        </nav-link>
-        <nav-link to="/profile">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
-        </nav-link>
-        <nav-link to="/login">
-          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
-        </nav-link>
-        
-      </profile-drop-down>
-
+    <template slot="navbar-menu">     
       <li class="nav-item">
         <a
           class="nav-link"
@@ -86,8 +64,27 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
+      <profile-drop-down
+              tag="li"
+              username="用户名"
+              avatarurl="/img/eva.jpg"
+              class="nav-item">
+        <nav-link to="/blog/user/1">
+          <i class="now-ui-icons users_single-02"></i> 我的主页
+        </nav-link>
+        <nav-link to="/bookmark">
+          <i class="now-ui-icons location_bookmark"></i> 我的收藏
+        </nav-link>
+        <nav-link to="/profile">
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
+        </nav-link>
+        <nav-link to="/login">
+          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
+        </nav-link>
+        
+      </profile-drop-down>
       <div class="divider"></div>
-      <li class="nav-item">
+      <li class="nav-item ml-2">
         <n-button 
         type="primary" 
         round 

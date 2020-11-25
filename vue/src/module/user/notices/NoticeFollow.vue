@@ -16,7 +16,7 @@ export default {
   data(){
       return{
           follows:{
-              title:'粉丝',
+              title:'我的粉丝',
               authorList : [
             {
             avatarUrl:'/img/avatar.jpg',
