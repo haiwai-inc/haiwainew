@@ -2,8 +2,8 @@
   <div>
     <!-- 悄悄话列表 -->
     <div class="qiaoqiao-list"  v-if="!showView">
-      <h6 class="pb-2">
-        全部悄悄话
+      <h6 class="pb-2 font-weight-normal">
+        我的悄悄话
       </h6>
      
       <ul>
