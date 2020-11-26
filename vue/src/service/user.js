@@ -44,6 +44,21 @@ class User extends API{
             return false;
         }
     }
+
+    /**
+     * 
+     * 获取用户状态
+     */
+    async getUserStatus(){
+        try{
+            let res = await this.get("account/passport/login_status/");
+            return res
+        }
+        catch(e){
+            return e;
+        }
+    }
+
     /**
      * send qqh 
      * @param userID

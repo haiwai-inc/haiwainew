@@ -151,9 +151,9 @@ export default {
           this.modals.modalData=res.data
             setTimeout(()=>{
                 this.modals.modalData={};
-                // this.modals.sendQqhModal=res.data.status?false:true;
+                this.modals.sendQqhModal=res.data.status?false:true;
             },2000)
-          console.log(res);
+        //   console.log(res);
         }
     }
 }
