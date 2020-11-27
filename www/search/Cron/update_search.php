@@ -1,49 +1,92 @@
 <?php
-set_time_limit(600);
-define('DOCUROOT', str_replace("/search/Cron", "", dirname(__FILE__)));
-include DOCUROOT . '/inc.comm.php';
-$first_update_time = time() - 5*60;
+//后台操作添加
+set_time_limit(0);
+define( 'DOCUROOT',str_replace("/search/Cron","",dirname( __FILE__ )));
+include DOCUROOT.'/inc.comm.php';
+func_checkCliEnv();
 
-if(count($argv)>1){
-    if($argv[1] == "all"){
-        $first_update_time = 0;
+class update_search{
+    function __construct(){
+        $this->obj_article_indexing=load("article_indexing");
+        $this->obj_article_tag=load("article_tag");
+        $this->obj_article_post=load("article_post");
+        $this->obj_article_post_tag=load("article_post_tag");
+        $this->obj_article_post_buzz=load("article_post_buzz");
+    }
+    
+    function start(){
+        $lastid=0;
+        while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>200,'postID,>'=>$lastid,'visible'=>1]) ){
+            foreach($rs_article_indexing as $k=>$v){
+                $lastid=$v['postID'];
+                
+                //添加标题内容图片
+                $post_tbn=substr('0'.$v['userID'],-1);
+                $rs_article_post=$this->obj_article_post->getOne("*",['id'=>$v['postID']],"post_".$post_tbn);
+                if(!empty($rs_article_post)){
+                    foreach($rs_article_post as $kk=>$vv){
+                        $rs_article_indexing[$k][$kk]=$vv;
+                    }
+                }
+                
+                //添加点赞
+                $post_buzz_tbn=substr('0'.$v['postID'],-1);
+                $rs_article_post_buzz=$this->obj_article_post_buzz->getAll("*",['id'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
+                $rs_article_indexing[$k]['buzz']=[];
+                if(!empty($rs_article_post_buzz)){
+                    foreach($rs_article_post_buzz as $kk=>$vv){
+                        $rs_article_indexing[$k]['buzz'][]=$vv['userID'];
+                    }
+                }
+                
+                //添加标签
+                $post_tag_tbn=substr('0'.$v['postID'],-1);
+                $rs_article_post_tag=$this->obj_article_post_tag->getAll("*",['postID'=>$v['postID']],"post_tag_".$post_tag_tbn);
+                $rs_article_indexing[$k]['tags']=[];
+                if(!empty($rs_article_post_tag)){
+                    foreach($rs_article_post_tag as $kk=>$vv){
+                        $rs_article_indexing[$k]['tags'][]=$vv['tagID'];
+                    }
+                }
+                
+                echo $lastid."\n";
+            }
+            
+            //ES 导入文章总数
+            $indexed_article_number += $search_article->add_new_articles($rs_article_indexing);
+            $not_indexed_article_number += $search_article_noindex->add_new_articles($rs_article_indexing);
+            echo("<br>Total indexed article: ".$indexed_article_number."\n");
+            echo("<br>Total not indexed article pool: ".$not_indexed_article_number."\n");
+        }
     }
 }
 
-$search_article      = load("search_article_index");
-$search_article_noindex = load("search_article_noindex");
-$article_post_obj = load("article_post");
-$article_tag_obj  = load("article_post_tag");
-$article_buzz_obj  = load("article_post_buzz");
-$tag_obj          = load("article_tag");
-// Get first 1000 article
-$index_obj    = load("article_indexing");
-$group_number = 0;
-$iterations_max = 0;
-if(count($argv)>2){
-    if(is_numeric($argv[2])){
-        $iterations_max = intval($argv[2]);
-    }
-}
-$indexed_article_number = 0;
-$not_indexed_article_number = 0;
-while ($iterations_max==0 || $group_number < $iterations_max) {
-    try{
-    $final_list = $index_obj -> get_article_info(["visible" => 1, "limit" => [$group_number * 200, 200], "edit_date,>=" => $first_update_time]);
-    $group_number++;
-    if(count($final_list) < 1){
-        break;
-    }
+$obj=new update_search();
+$obj->start();
 
-    $indexed_article_number += $search_article->add_new_articles($final_list);
-    $not_indexed_article_number += $search_article_noindex->add_new_articles($final_list);
-    echo("<br>Total indexed article: ".$indexed_article_number."\n");
-    echo("<br>Total not indexed article pool: ".$not_indexed_article_number."\n");
-    }
-    catch(Exception $e){
-        debug::d($e);
-        continue;
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
