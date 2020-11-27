@@ -15,7 +15,6 @@ class sync_recommend_post{
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         $postID_legacy_hot_post=[];
         foreach($rs_legacy_hot_post as $v){
-            /*
             //检查是否导入
             $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$v['title']]);
             if(!empty($check_blog_hot)){
@@ -40,14 +39,10 @@ class sync_recommend_post{
             
             $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
             echo $v['id']."\n";
-            */
         }
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
-        
-        
-        $postID_legacy_hot_post=[49042,49043,49044];
         $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
     }
 }
