@@ -17,17 +17,34 @@ class search_article_index extends Search
 				"analysis": {
 					"analyzer": {
 						"substring_analyzer": {
-						  	"tokenizer": "standard",
-						  	"filter": ["lowercase", "substring"]
-						}
+                            "type":"custom",
+                            "tokenizer" :  "ik_max_word",
+						  	"filter": ["lowercase", "substring"],
+                            "char_filter": ["tsconvert"]
+                        },
+                        
+                        "search_sub_analyzer": {
+                            "type":"custom",
+                            "tokenizer" :  "ik_smart",
+						  	"filter": ["lowercase", "substring"],
+                            "char_filter": ["tsconvert"]
+                        }
 					},
 					"filter": {
 						"substring": {
-							"type": "nGram",
-							"min_gram": 2,
-							"max_gram": 15
+							"type": "edge_ngram",
+							"min_gram": 1,
+							"max_gram": 50
 						}
-					}
+					},
+					"char_filter": {
+                        "tsconvert" : {
+                            "type" : "stconvert",
+                            "delimiter" : ",",
+                            "keep_both" : true,
+                            "convert_type" : "t2s"
+                        }
+                      }
 				}
 			},
 			"mappings": {
@@ -46,14 +63,16 @@ class search_article_index extends Search
 					"enabled": false
 				  },
 				  "msgbody": {
-					"analyzer": "ik_smart",
+					"analyzer": "substring_analyzer",
+                    "search_analyzer":"search_sub_analyzer",
 					"type": "text"
 				  },
 				  "userID":{
 					"type": "integer"
 				  },
 				  "title": {
-					"analyzer": "ik_max_word",
+					"analyzer": "substring_analyzer",
+                    "search_analyzer":"search_sub_analyzer",
 					"boost": 2,
 					"type": "text"
                   },

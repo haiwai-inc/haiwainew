@@ -16,23 +16,30 @@ class search_category  extends Search{
 					"analyzer": {
 						"substring_analyzer": {
                             "type":"custom",
-                            "tokenizer" : "ik_max_word",
-						  	"filter": ["lowercase"],
+                            "tokenizer" :  "ik_max_word",
+						  	"filter": ["lowercase", "substring"],
+                            "char_filter": ["tsconvert"]
+                        },
+                        
+                        "search_sub_analyzer": {
+                            "type":"custom",
+                            "tokenizer" :  "ik_smart",
+						  	"filter": ["lowercase", "substring"],
                             "char_filter": ["tsconvert"]
                         }
                     },
 					"filter": {
 						"substring": {
-							"type": "nGram",
-							"min_gram": 2,
-							"max_gram": 15
+							"type": "edge_ngram",
+							"min_gram": 1,
+							"max_gram": 50
                         }
                     },
                     "char_filter": {
                         "tsconvert" : {
                             "type" : "stconvert",
-                            "delimiter" : "#",
-                            "keep_both" : false,
+                            "delimiter" : ",",
+                            "keep_both" : true,
                             "convert_type" : "t2s"
                         }
                       }
@@ -52,7 +59,8 @@ class search_category  extends Search{
 				  "name": {
 					"analyzer": "substring_analyzer",
 					"boost": 2,
-                    "type": "text"
+                    "type": "text",
+                    "search_analyzer": "search_sub_analyzer"
                   },
                   "count_article":{
 					"type": "integer"
