@@ -195,7 +195,7 @@ class search_article_index extends Search
 			"edit_date"    => $this-> get_time_string($article['edit_date']),
 			"like_date"    => $this-> get_time_string($article['like_date']),
 			"count_read"=>$article['count_read'],
-			"count_like"=>$article['count_like'],
+			"count_buzz"=>$article['count_buzz'],
 			"pic" => $article['pic'],
 			"buzz" => $article['buzz'],
 		];
@@ -239,7 +239,7 @@ class search_article_index extends Search
                     "like_date"    => $this-> get_time_string($article['like_date']),
 					"visible" => $article['visible'],
 					"count_read"=>$article['count_read'],
-					"count_like"=>$article['count_like'],
+					"count_buzz"=>$article['count_buzz'],
 					"pic" => $article['pic'],
 					"buzz" => $article['buzz'],
 				];
