@@ -25,7 +25,7 @@
           <notice-follow></notice-follow>
         </span>
         <span v-if="activeId === 3">
-          <h6 class="border-bottom pb-3">收到的喜欢</h6>
+          <h6 class="pb-3 font-weight-normal">我收到的喜欢</h6>
           <article-list-item
             v-for="item in articlelists"
             v-bind:key="item.articleID"
@@ -61,6 +61,9 @@ import NoticeQqh from "./NoticeQqh";
  */
 export default {
   name: "notices",
+  mounted:function(){
+    this.getUnreadCount();
+  },
   data() {
     return {
       activeId: 0,
@@ -77,25 +80,25 @@ export default {
       data: [
         {
           id: 0,
-          title: "评论",
+          title: "我收到的评论",
           noticeList: [],
           unread: 2,
         },
         {
           id: 1,
-          title: "悄悄话",
+          title: "我的悄悄话",
           noticeList: [],
           unread: 0,
         },
         {
           id: 2,
-          title: "粉丝",
+          title: "我的粉丝",
           noticeList: [],
           unread: 3,
         },
         {
           id: 3,
-          title: "喜欢",
+          title: "我收到的喜欢",
           noticeList: [],
           unread: 6,
         },
@@ -185,6 +188,11 @@ export default {
   },
   computed: {},
   methods: {
+    async getUnreadCount(){
+      let user = this.$store.state.user;
+      let res=await user.notification_unread_count();
+      console.log(res);
+    },
     whichActive(id) {
       this.activeId = id;
       console.log(this);

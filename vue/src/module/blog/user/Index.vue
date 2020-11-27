@@ -62,7 +62,10 @@ export default {
   },
   created () {
     this.loadArticle(this.currentTabId);
-    
+    blog.category_list(this.userID).then(res=>{
+        this.collectionList=res.data.data;
+        console.log(res);
+    })
   },
   methods:{
       changeTab(id){
@@ -120,60 +123,7 @@ export default {
         ],
         authorInfo : {},
         articlelists: [],
-        collectionList : [
-            {
-                id:12,
-                title:'飞鸟集',
-                articleList:[
-                    {
-                    articleID:'345678',
-                    articleUrl:'',
-                    title:'这里是标题....',
-                    description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-                    author:'这里是作者',
-                    authorID:'123456789',
-                    isHot:true,
-                    read:'3456',
-                    commont:'12',
-                    likes:'23',
-                    image:'/img/bg3.jpg',
-                    },{
-                    articleID:'34567',
-                    articleUrl:'',
-                    title:'这里是标题....',
-                    description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-                    author:'这里是作者',
-                    authorID:'123456',
-                    isHot:false,
-                    read:'3456',
-                    commont:'12',
-                    likes:'23',
-                    image:'/img/bg4.jpg',
-                    }
-                ],
-                read:12345,
-            },{
-                id:34,
-                title:'飞鸟集',
-                articleList:[],
-                read:12345,
-            },{
-                id:34,
-                title:'飞鸟集',
-                articleList:[],
-                read:12345,
-            },{
-                id:34,
-                title:'飞鸟集',
-                articleList:[],
-                read:12345,
-            },{
-                id:34,
-                title:'飞鸟集',
-                articleList:[],
-                read:12345,
-            },
-        ],
+        collectionList : [],
     };
   },
 };

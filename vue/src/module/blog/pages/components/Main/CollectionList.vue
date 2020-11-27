@@ -4,10 +4,13 @@
       <h4>{{title}}</h4>
       <n-button type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button>
     </div>
-    <collection-list-item 
-    v-for="(item,index) in data" 
-    v-bind:key="index" 
-    :data="item"></collection-list-item>
+    <div v-if="data.length===0" class="pl-3">暂无文集</div>
+    <div v-if="data.length!==0">
+      <collection-list-item 
+      v-for="(item,index) in data" 
+      v-bind:key="index" 
+      :data="item"></collection-list-item>
+    </div>
     <div v-if="data.length>4" class="collection-footer">展开全部 <icon-right class="ratate90"></icon-right></div>
   </div>
 </template>

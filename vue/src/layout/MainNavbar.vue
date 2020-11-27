@@ -20,8 +20,7 @@
       </el-popover>
     </template>
     
-    <template slot="before-menu">
-      
+    <template slot="before-menu"> 
       <div style="max-width:500px;padding:0 18px;">
         <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
@@ -31,44 +30,7 @@
         </fg-input>
       </div>
     </template>
-    <template slot="navbar-menu">
-      
-      <profile-drop-down
-              tag="li"
-              username="这里是用户名"
-              avatarurl="/img/eva.jpg"
-              class="nav-item"
-      >
-        <nav-link to="/blog/user/1">
-          <i class="now-ui-icons users_single-02"></i> 我的主页
-        </nav-link>
-        <nav-link to="/bookmark">
-          <i class="now-ui-icons location_bookmark"></i> 我的收藏
-        </nav-link>
-        <nav-link to="/profile">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
-        </nav-link>
-        <nav-link to="/login">
-          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
-        </nav-link>
-        
-      </profile-drop-down>
-
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          style="margin-top:3px;z-index:1000"
-          rel="tooltip"
-          title="消息"
-          data-placement="bottom"
-          href="/notices"
-        >
-          <div class="noticealert"></div>
-          <i class="now-ui-icons ui-1_bell-53"></i>
-          <p class="d-lg-none d-xl-none">消息</p>
-        </a>
-        
-      </li>
+    <template slot="navbar-menu">     
       <drop-down
         class="nav-item dropdown"
         icon="now-ui-icons text_caps-small"
@@ -86,8 +48,55 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
+       <li class="nav-item">
+        <a
+          class="nav-link"
+          style="margin-top:3px;z-index:1000"
+          rel="tooltip"
+          title="消息"
+          data-placement="bottom"
+          href="/notices">
+          <div class="noticealert"></div>
+          <i class="now-ui-icons ui-1_bell-53"></i>
+          <p class="d-lg-none d-xl-none">消息</p>
+        </a> 
+      </li>
+      <profile-drop-down
+              tag="li"
+              username="用户名"
+              avatarurl="/img/eva.jpg"
+              class="nav-item">
+        <nav-link to="/blog/user/1">
+          <i class="now-ui-icons users_single-02"></i> 我的主页
+        </nav-link>
+        <nav-link to="/bookmark">
+          <i class="now-ui-icons location_bookmark"></i> 我的收藏
+        </nav-link>
+        <hr class="mb-1 mt-1">
+        <nav-link to="/notices">
+          <i class="now-ui-icons ui-2_chat-round"></i> 我收到的评论
+        </nav-link>
+        <nav-link to="/notices">
+          <i class="now-ui-icons ui-1_email-85"></i> 我的悄悄话
+        </nav-link>
+         <nav-link to="/notices">
+          <i class="now-ui-icons users_single-02"></i> 我的粉丝
+        </nav-link>
+         <nav-link to="/notices">
+          <i class="now-ui-icons ui-2_favourite-28"></i> 我收到喜欢
+        </nav-link>
+        <hr class="mb-2 mt-1">
+        <nav-link to="/profile">
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
+        </nav-link>
+        <hr class="mb-1 mt-1">
+        <nav-link to="/login">
+          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
+        </nav-link>
+        
+      </profile-drop-down>
       <div class="divider"></div>
-      <li class="nav-item">
+      <li class="nav-item ml-2">
         <n-button 
         type="primary" 
         round 

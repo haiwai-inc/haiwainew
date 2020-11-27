@@ -9,7 +9,7 @@
           
           <div
           v-infinite-scroll="loadArticle"
-          infinite-scroll-disabled="noMore"
+          infinite-scroll-disabled="disabled"
            infinite-scroll-distance="50">
             <article-list-item 
               v-for="item in articlelists"
@@ -46,7 +46,9 @@ export default {
     BlogerList,
   },
   computed:{
-    
+    disabled () {
+      return this.loading.article || this.noMore
+    }
   },
   methods:{
     loadArticle(){
@@ -70,8 +72,8 @@ export default {
         this.bloggerList=this.res_bloggerList;
         this.loading.blogger=false;
       }
-      console.log(this.disabled);
-    })
+    });
+    this.loadArticle();
   },
   data() {
     return {

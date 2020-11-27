@@ -45,7 +45,7 @@ class account_user extends Model{
 	 * @return array $rs | id user map
 	 */
 	public function get_id_user_map($ids){
-		$users = $this->get_users_by_ids($ids);
+		$users = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$ids]]);
 		$rs = [];
 		if(!empty($users)){
 			foreach($users as $user){
@@ -53,18 +53,6 @@ class account_user extends Model{
 			}
 		}
 		return $rs;
-	}
-
-	/**
-	 * Get a list of user objects from db with list of ids
-	 * @param array $ids | List of ids
-	 * @param array $users | List of users
-	 */
-	public function get_users_by_ids($ids){
-		if(empty($ids)) return [];
-		if(!is_array($ids)) $ids = [$ids];
-		$users = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$ids]]);
-		return $users;
 	}
 
 	public function search_by_name($keyword){
@@ -75,7 +63,7 @@ class account_user extends Model{
 	//在包含用户ID的数组里，补全用户基本信息
 	function get_basic_userinfo($rs,$hashID='id'){
 	    if(!empty($rs)){
-	        //名博
+	        //加入名博
 	        $obj_memcache = func_initMemcached('cache01');
 	        $rs_memcache = $obj_memcache->get("blog_hot_blogger");
 	        $userID_rs_memcache=[];
@@ -85,7 +73,7 @@ class account_user extends Model{
 	            }
 	        }
 	        
-	        //如果登录 查询关注人
+	        //加入关注人
 	        $followerID_accout_follower=[];
 	        if(!empty($_SESSION['id'])){
 	            $obj_accout_follower=load("account_follower");
@@ -97,12 +85,19 @@ class account_user extends Model{
 	            }
 	        }
 	        
+	        //加入用户
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
-			$hash_account_user = $this->get_id_user_map($tmp_rs_id);
+			$rs_account_user = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$tmp_rs_id]]);
+			if(!empty($rs_account_user)){
+			    foreach($rs_account_user as $v){
+			        $hash_account_user[$v['id']] = $v;
+			    }
+			}
+			
 	        foreach($rs as $k=>$v){
-	            $item=$hash_account_user[$v[$hashID]];
+	            $item=empty($hash_account_user[$v[$hashID]])?[]:$hash_account_user[$v[$hashID]];
 	            
 	            //首字母
 	            $item['first_letter']=substr(strings::subString($item['username'],1), 0, -3);
