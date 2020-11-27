@@ -1,7 +1,7 @@
 <template>
     <div>  
-        <h6 class="border-bottom pb-3">
-          收到的评论
+        <h6 class="font-weight-normal pb-3">
+          我收到的评论
         </h6>
         <div v-for="(item,index) in comments" :key="index">
             <h5 

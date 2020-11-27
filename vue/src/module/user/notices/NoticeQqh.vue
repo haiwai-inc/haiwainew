@@ -2,12 +2,12 @@
   <div>
     <!-- 悄悄话列表 -->
     <div class="qiaoqiao-list"  v-if="!showView">
-      <h6 class="pb-2">
-        全部悄悄话
+      <h6 class="pb-2 font-weight-normal">
+        我的悄悄话
       </h6>
      
       <ul>
-        <li v-for="(item,index) in qqhList.data" :key="index">
+        <li v-for="(item,index) in qqhList" :key="index">
           <div class="pull-right dropdown">
             <drop-down
             class="nav-item dropdown"
@@ -50,7 +50,7 @@
         <div class="col-4 pt-2 text-center">
           <b>
             与
-            <a href="#" target="_blank">{{touser.username}}</a>
+            <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
             的对话
           </b>
         </div>
@@ -146,16 +146,29 @@ export default {
   },
   created: function () {
     this.qqh_list();
+    this.getUserInfo();
   },
   methods:{
+    async getUserInfo(){//获取登录用户信息
+      let user = this.$store.state.user;
+      let res = await user.getUserStatus();
+      this.loginUser = res.data.data;
+      console.log(this.loginUser);
+    },
+
     async qqh_list() {
       let user = this.$store.state.user;
       let res = await user.qqh_list();
-      this.qqhList=res.data;
-      console.log(this.qqhList);
+      this.qqhList=res.data.data;
+      this.qqhList.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
+        let aTime = a.last_messageinfo.dateline;
+        let bTime = b.last_messageinfo.dateline;
+        return bTime - aTime
+      });
     },
+
     async qqh_view(idx) {
-      let list = this.qqhList.data;
+      let list = this.qqhList;
       if(list[idx].userinfo_userID.id===this.loginUser.id){
         this.touser=list[idx].userinfo_touserID;
         this.loginUser=list[idx].userinfo_userID;
@@ -166,17 +179,19 @@ export default {
       let user = this.$store.state.user;
       let res = await user.qqh_view(list[idx].id);
       this.qqhView=res.data;
-      this.qqhView.data=res.data.data.reverse();
-      console.log(list,this.qqhView.data,this.loginUser,this.touser);
+      this.qqhView.data=res.data.data.reverse();//对话倒序排列
     },
+
     showQqhView(idx){
       this.msgID=idx;
       this.qqh_view(idx);
       this.showView=true;
     },
+
     sendQqh(id){
       this.send(this.loginUser.id,id,this.msgbody);
     },
+
     async send(userID,touserID,msgbody) {
       let user = this.$store.state.user;
       let res = await user.sendQqh(userID,touserID,msgbody);
