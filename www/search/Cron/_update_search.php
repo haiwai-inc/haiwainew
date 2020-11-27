@@ -29,7 +29,14 @@ $indexed_article_number = 0;
 $not_indexed_article_number = 0;
 while ($iterations_max==0 || $group_number < $iterations_max) {
     try{
+        
+    //主表查询
     $final_list = $index_obj -> get_article_info(["visible" => 1, "limit" => [$group_number * 200, 200], "edit_date,>=" => $first_update_time]);
+    debug::d(count($final_list));
+    exit;
+    
+    
+    
     $group_number++;
     if(count($final_list) < 1){
         break;
@@ -45,5 +52,31 @@ while ($iterations_max==0 || $group_number < $iterations_max) {
         continue;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
