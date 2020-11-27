@@ -12,6 +12,9 @@ class update_search{
         $this->obj_article_post=load("article_post");
         $this->obj_article_post_tag=load("article_post_tag");
         $this->obj_article_post_buzz=load("article_post_buzz");
+        
+        $this->obj_search_article=load("search_article_index");
+        $this->boj_search_article_noindex=load("search_article_noindex");
     }
     
     function start(){
@@ -53,8 +56,8 @@ class update_search{
             }
             
             //ES 导入文章总数
-            $indexed_article_number += $search_article->add_new_articles($rs_article_indexing);
-            $not_indexed_article_number += $search_article_noindex->add_new_articles($rs_article_indexing);
+            $indexed_article_number+=$this->obj_search_article->add_new_articles($rs_article_indexing);
+            $not_indexed_article_number+=$this->boj_search_article_noindex->add_new_articles($rs_article_indexing);
             echo("<br>Total indexed article: ".$indexed_article_number."\n");
             echo("<br>Total not indexed article pool: ".$not_indexed_article_number."\n");
         }

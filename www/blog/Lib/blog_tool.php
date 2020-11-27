@@ -1,5 +1,29 @@
 <?php
 class blog_tool{
+    
+    function __construct(){
+        //account
+        $this->obj_account_user=load("account_user");
+        $this->obj_account_legacy_user=load("account_legacy_user");
+        $this->obj_account_legacy_user_details=load("account_legacy_user_details");
+        $this->obj_account_legacy_user_album=load("account_legacy_user_album");
+        
+        //article
+        $this->obj_blog_category=load("blog_category");
+        $this->obj_article_indexing=load("article_indexing");
+        $this->obj_article_tag=load("article_tag");
+        $this->obj_article_post=load("article_post");
+        $this->obj_article_post_tag=load("article_post_tag");
+        
+        //blogger
+        $this->obj_blog_blogger=load("blog_blogger");
+        $this->obj_blog_legacy_blogger=load("blog_legacy_blogger");
+        $this->obj_blog_legacy_blogcat=load("blog_legacy_blogcat");
+        $this->obj_blog_legacy_blogcat_members=load("blog_legacy_blogcat_members");
+        $this->obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
+        $this->obj_blog_legacy_202005_msg=load("blog_legacy_202005_msg");
+    }
+    
     //import legacy blog data
     function load_all_db(){
         //account
