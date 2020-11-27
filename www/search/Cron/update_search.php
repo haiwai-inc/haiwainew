@@ -19,6 +19,7 @@ class update_search{
     
     function start(){
         $lastid=0;
+        $count=0;
         while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>200,'postID,>'=>$lastid,'visible'=>1]) ){
             foreach($rs_article_indexing as $k=>$v){
                 $lastid=$v['postID'];
@@ -53,13 +54,16 @@ class update_search{
                     }
                 }
                 
+                $count++;
                 echo $lastid."\n";
             }
             
             //ES 导入文章总数
-            $indexed_article_number+=$this->obj_search_article->add_new_articles($rs_article_indexing);
-            $not_indexed_article_number+=$this->boj_search_article_noindex->add_new_articles($rs_article_indexing);
+            $this->obj_search_article->add_new_articles($rs_article_indexing);
+            $this->boj_search_article_noindex->add_new_articles($rs_article_indexing);
         }
+        
+        echo "totally {$count}\n";
     }
 }
 
