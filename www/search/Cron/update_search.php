@@ -59,8 +59,6 @@ class update_search{
             //ES 导入文章总数
             $indexed_article_number+=$this->obj_search_article->add_new_articles($rs_article_indexing);
             $not_indexed_article_number+=$this->boj_search_article_noindex->add_new_articles($rs_article_indexing);
-            echo("<br>Total indexed article: ".$indexed_article_number."\n");
-            echo("<br>Total not indexed article pool: ".$not_indexed_article_number."\n");
         }
     }
 }
