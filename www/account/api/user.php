@@ -44,10 +44,10 @@ class user extends Api {
     public function blacklist_add($blockID){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id'],['status'=>1,'id'=>$blockID]);
-        if(empty($check_account_user))  $this->error="不是有效的屏蔽用户";$this->status=false;return false;
+        if(empty($check_account_user))  {$this->error="不是有效的屏蔽用户";$this->status=false;return false;}
             
         $obj_account_blacklist=load("account_blacklist");
-        if(!empty($check_account_blacklist))    $this->error="此用户已经被屏蔽";$this->status=false;return false;
+        if(!empty($check_account_blacklist))    {$this->error="此用户已经被屏蔽";$this->status=false;return false;}
             
         $obj_account_blacklist->insert(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
         
@@ -62,11 +62,11 @@ class user extends Api {
     public function blacklist_delete($blockID){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id'],['status'=>1,'id'=>$blockID]);
-        if(empty($check_account_user))  $this->error="不是有效的屏蔽用户";$this->status=false;return false;
+        if(empty($check_account_user))  {$this->error="不是有效的屏蔽用户";$this->status=false;return false;}
         
         $obj_account_blacklist=load("account_blacklist");
         $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
-        if(empty($check_account_blacklist)) $this->error="此用户未被列入黑名单";$this->status=false;return false;
+        if(empty($check_account_blacklist)) {$this->error="此用户未被列入黑名单";$this->status=false;return false;}
         
         $obj_account_blacklist->remove(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
         
@@ -105,11 +105,11 @@ class user extends Api {
     public function bookmark_add($postID){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id'],['treelevel'=>0,'visible'=>1,'postID'=>$postID]);
-        if(empty($check_article_indexing))  $this->error="此文章不存在";$this->status=false;return false;
+        if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_account_bookmark=load("account_bookmark");
         $check_account_book=$obj_account_bookmark->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$postID]);
-        if(!empty($check_account_book)) $this->error="此文章已经加入到了书签";$this->status=false;return false;
+        if(!empty($check_account_book)) {$this->error="此文章已经加入到了书签";$this->status=false;return false;}
             
         $obj_account_bookmark->insert(['userID'=>$_SESSION['id'],'postID'=>$postID]);
         
@@ -124,7 +124,7 @@ class user extends Api {
     public function bookmark_delete($postID){
         $obj_account_bookmark=load("account_bookmark");
         $check_account_book=$obj_account_bookmark->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$postID]);
-        if(empty($check_account_book))  $this->error="书签里没有此文章";$this->status=false;return false;
+        if(empty($check_account_book))  {$this->error="书签里没有此文章";$this->status=false;return false;}
         
         $obj_account_bookmark->remove(['userID'=>$_SESSION['id'],'postID'=>$postID]);
         
@@ -177,7 +177,7 @@ class user extends Api {
         $obj_account_qqh=load("account_qqh");
         $obj_account_qqh_post=load("account_qqh_post");
         
-        if($_SESSION['id']==$touserID)  $this->error="悄悄话的人就是自己";$this->status=false;return false;
+        if($_SESSION['id']==$touserID)  {$this->error="悄悄话的人就是自己";$this->status=false;return false;}
         
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
@@ -271,7 +271,7 @@ class user extends Api {
         }
         $rs_account_qqh_post=$obj_account_qqh_post->getAll("*",$where_account_qqh_post);
         
-        if(empty($rs_account_qqh_post)) $this->error="此对话不存在";$this->status=false;return false;
+        if(empty($rs_account_qqh_post)) {$this->error="此对话不存在";$this->status=false;return false;}
         
         //查询联系人信息
         $rs_account_qqh_post=$obj_account_user->get_basic_userinfo($rs_account_qqh_post,"userID");
@@ -296,12 +296,12 @@ class user extends Api {
     public function buzz_add($postID){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
-        if(empty($check_article_indexing))  $this->error="此文章不存在";$this->status=false;return false;
+        if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_article_post_buzz=load("article_post_buzz");
         $tbn=substr('0'.$postID,-1);
         $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
-        if(!empty($check_article_post_buzz))    $this->error="此文章您已经赞过了";$this->status=false;return false;
+        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经赞过了";$this->status=false;return false;}
         
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
@@ -328,12 +328,12 @@ class user extends Api {
     public function buzz_delete(){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
-        if(empty($check_article_indexing))  $this->error="此文章不存在";$this->status=false;return false;
+        if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_article_post_buzz=load("article_post_buzz");
         $tbn=substr('0'.$postID,-1);
         $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
-        if(!empty($check_article_post_buzz))    $this->error="此文章您已经赞过了";$this->status=false;return false;
+        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经赞过了";$this->status=false;return false;}
         
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
@@ -362,12 +362,12 @@ class user extends Api {
     public function follower_add($followerID){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
-        if(empty($check_account_user))  $this->error="此用户不存在";$this->status=false;return false;
-        if($check_account_user['id']==$_SESSION['ID'])  $this->error="请不要自己关注自己！";$this->status=false;return false;
+        if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
+        if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己关注自己！";$this->status=false;return false;}
         
         $obj_account_follower=load("account_follower");
         $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
-        if(!empty($check_account_follower)) $this->error="此用户您已经关注过了";$this->status=false;return false;
+        if(!empty($check_account_follower)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
         
         //添加关注列表
         $id=$obj_account_follower->insert(['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
@@ -388,12 +388,12 @@ class user extends Api {
     public function follower_delete($followerID){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
-        if(empty($check_account_user))  $this->error="此用户不存在";$this->status=false;return false;
-        if($check_account_user['id']==$_SESSION['ID'])  $this->error="请不要自己取消关注自己！";$this->status=false;return false;
+        if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
+        if($check_account_user['id']==$_SESSION['ID'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
         $obj_account_follower=load("account_follower");
         $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
-        if(empty($check_account_follower)) $this->error="此用户不在您的关注列表";$this->status=false;return false;
+        if(empty($check_account_follower)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
         
         //移除关注列表
         $id=$obj_account_follower->remove(['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
