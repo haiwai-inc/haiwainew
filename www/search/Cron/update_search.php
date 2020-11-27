@@ -6,14 +6,26 @@ include DOCUROOT.'/inc.comm.php';
 func_checkCliEnv();
 
 class update_search{
-    function __construct(){
+    public $action;
+    
+    function __construct($action){
+        $this->action=$action;
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_search_article=load("search_article_index");
         $this->boj_search_article_noindex=load("search_article_noindex");
     }
     
     function start(){
-        $lastid=0;
+        if($this->action=="all"){
+            //更新全部
+            $lastid=0;
+        }else{
+            //更新10分钟以前
+            $edit_date=times::getTime()-600;
+            $rs_lastid=$this->obj_article_indexing->getOne(['postID'],['edit_date,>'=>$edit_date,'order'=>['postID'=>"ASC"]]);
+            $lastid=empty($rs_lastid)?2147483647:$rs_lastid['postID'];
+        }
+        
         $count=0;
         while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>200,'postID,>'=>$lastid,'visible'=>1]) ){
             foreach($rs_article_indexing as $k=>$v){
@@ -34,8 +46,8 @@ class update_search{
         echo "totally {$count}\n";
     }
 }
-
-$obj=new update_search();
+$argv[1]=empty($argv[1])?"":$argv[1];
+$obj=new update_search($argv[1]);
 $obj->start();
 
 
