@@ -53,6 +53,44 @@ class article_indexing extends Model
         return $rs_article_indexing_main;
     }
     
+    //补全帖子信息
+    function get_basic_articleinfo($rs_article_indexing,$k,$v){
+        //添加标题内容图片
+        $post_tbn=substr('0'.$v['userID'],-1);
+        $obj_article_post=load("article_post");
+        $rs_article_post=$obj_article_post->getOne("*",['id'=>$v['postID']],"post_".$post_tbn);
+        if(!empty($rs_article_post)){
+            foreach($rs_article_post as $kk=>$vv){
+                $rs_article_indexing[$k][$kk]=$vv;
+            }
+            $rs_article_indexing[$k]["msgbody_origin"]=$rs_article_post['msgbody'];
+        }
+        
+        //添加点赞
+        $post_buzz_tbn=substr('0'.$v['postID'],-1);
+        $obj_article_post_tag=load("article_post_tag");
+        $rs_article_post_buzz=$obj_article_post_tag->getAll("*",['id'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
+        $rs_article_indexing[$k]['buzz']=[];
+        if(!empty($rs_article_post_buzz)){
+            foreach($rs_article_post_buzz as $kk=>$vv){
+                $rs_article_indexing[$k]['buzz'][]=$vv['userID'];
+            }
+        }
+        
+        //添加标签
+        $post_tag_tbn=substr('0'.$v['postID'],-1);
+        $obj_article_post_buzz=load("article_post_buzz");
+        $rs_article_post_tag=$obj_article_post_buzz->getAll("*",['postID'=>$v['postID']],"post_tag_".$post_tag_tbn);
+        $rs_article_indexing[$k]['tags']=[];
+        if(!empty($rs_article_post_tag)){
+            foreach($rs_article_post_tag as $kk=>$vv){
+                $rs_article_indexing[$k]['tags'][]=$vv['tagID'];
+            }
+        }
+        
+        return $rs_article_indexing;
+    }
+    
     
     //在包含postID的数组里，补全帖子的 ,点赞计数，留言计数，阅读计数
     function get_article_count($rs,$hashID='postID'){
