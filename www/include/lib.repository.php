@@ -162,6 +162,9 @@ class repository
 		$memCache=func_initMemcached("sourceNode");
 		$memCache->delete(systemVersion."cron_lock");
 		
+		//重新挂载
+		
+		
 		return $this->msg['unlock'];
 	}
 	

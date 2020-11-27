@@ -23,60 +23,20 @@ class blog_blogger extends Model{
 		return $bloggers;
 	}
 
-	// public function fetch_userinfo($blogger_rs){
-	// 	if(empty($blogger_rs)) return [];
-	// 	$user_ids = [];
-	// 	foreach($blogger_rs as $blogger){
-	// 		$user_ids[] = $blogger["userID"];
-	// 	}
-
-	// 	$user_obj = load("account_user");
-	// 	$users_map = $user_obj -> get_id_user_map($user_ids);
-
-	// 	$bloggers = [];
-	// 	foreach($blogger_rs as $blogger){
-	// 		if(empty($users_map[$blogger['userID']])) continue;
-	// 		$blogger['user'] = $users_map[$blogger['userID']];
-	// 		$bloggers[] = $blogger;
-	// 	}
-	// 	return $bloggers;
-	// }
-
-	/**
-	 * Get a id=>blogger map
-	 * @param array $ids | List of ids
-	 * @return array $rs | id blogger map
-	 */
-	public function get_id_blogger_map($ids){
-		$bloggers = $this->get_bloggers_by_ids($ids);
-		
-		$rs = [];
-		if(!empty($bloggers)){
-			foreach($bloggers as $v){
-			    $rs[$v['id']] = $v;
-			}
-		}
-		return $rs;
-	}
-
-	/**
-	 * Get a list of blogger objects from db with list of ids
-	 * @param array $ids | List of ids
-	 * @param array $users | List of bloggers
-	 */
-	public function get_bloggers_by_ids($ids){
-		if(empty($ids)) return [];
-		if(!is_array($ids)) $ids = [$ids];
-		$bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$ids]]);
-		return $bloggers;
-	}
-
+	//获取博客基本信息
 	function get_basic_bloggerinfo($rs,$hashID='id'){
 	    if(!empty($rs)){
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
-			$hash_blog_blogger = $this->get_id_blogger_map($tmp_rs_id);
+			
+	        $rs_blog_bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$tmp_rs_id]]);       
+	        if(!empty($rs_blog_bloggers)){
+	            foreach($rs_blog_bloggers as $v){
+	                $hash_blog_blogger[$v['id']]=$v;
+	            }
+	        }
+			
 	        foreach($rs as $k=>$v){
 	            $item=$hash_blog_blogger[$v[$hashID]];
 	            $item['o_avatar']=$item['background'];

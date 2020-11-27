@@ -302,11 +302,25 @@ class page extends Api {
         $obj_article_post=load("article_post");
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_post=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
-        if(empty($rs_article_post)){
-            $rs=['status'=>false,'msg'=>"no article",'data'=>""];
-            return $rs;
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)){
+            $this->error="此文章不存在";
+            $this->status=false;
+            return false;
         }
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo([$rs_article_indexing],"userID")[0];
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count([$rs_article_indexing])[0];
+        
+        return $rs_article_indexing;
     }
     
     /**
