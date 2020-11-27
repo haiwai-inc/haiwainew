@@ -12,19 +12,12 @@ class page extends Api {
      * @param integer $bloggerID
      */
     public function blogger_info($bloggerID){
-        if(empty($bloggerID)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($bloggerID))   $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID'],['id'=>$bloggerID,'status'=>1]);
-        if(empty($rs_blog_blogger)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_blog_blogger)) $this->error="此博主不存在";$this->status=false;return false;
+        
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_blog_blogger=$obj_account_user->get_basic_userinfo($rs_blog_blogger,"userID");
@@ -166,19 +159,11 @@ class page extends Api {
      * @param integer $lastid | 最后一个postID
      */
     public function article_list_recent($bloggerID,$lastid=0){
-        if(empty($bloggerID)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($bloggerID))   $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_blog_blogger)) $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
@@ -212,19 +197,11 @@ class page extends Api {
      * @param integer $lastid | 最后一个postID
      */
     public function article_list_hot($bloggerID,$lastid=0){
-        if(empty($bloggerID)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($bloggerID))   $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_blog_blogger)) $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
@@ -258,18 +235,11 @@ class page extends Api {
      * @param integer $lastid | 最后一个postID
      */
     public function article_list_comment($bloggerID,$lastid=0){
-        if(empty($bloggerID)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($bloggerID))   $this->error="此博主不存在";$this->status=false;return false;
+        
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_blog_blogger)) $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
@@ -361,19 +331,11 @@ class page extends Api {
      * @param integer $bloggerID
      */
     public function category_list($bloggerID){
-        if(empty($bloggerID)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($bloggerID))   $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)){
-            $this->error="此博主不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_blog_blogger)) $this->error="此博主不存在";$this->status=false;return false;
         
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getAll("*",['limit'=>50,"bloggerID"=>$bloggerID]);
