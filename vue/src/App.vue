@@ -10,3 +10,8 @@
 <script>
 export default {};
 </script>
+<style>
+.fontsize0 p{
+  font-size: 16px;
+}
+</style>
