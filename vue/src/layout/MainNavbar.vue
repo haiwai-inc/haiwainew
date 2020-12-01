@@ -36,9 +36,9 @@
         icon="now-ui-icons text_caps-small"
         style="margin-top:3px;"
       >
-        <a class="dropdown-item" href="#">小</a>
-        <a class="dropdown-item" href="#">中</a>
-        <a class="dropdown-item" href="#">大</a>
+        <a class="dropdown-item" href="#" @click="setFontSize(0)">小</a>
+        <a class="dropdown-item" href="#" @click="setFontSize(1)">中</a>
+        <a class="dropdown-item" href="#" @click="setFontSize(2)">大</a>
         <!-- <div class="divider"></div> -->
       </drop-down>
       <n-switch
@@ -134,8 +134,12 @@ export default {
     [Button.name]: Button,
     IconPen
   },
+  created: function () {
+    this.bodyclass = document.querySelector('body').classList.value;
+  },
   data(){
     return {
+      bodyclass:'',
       switches: {
         defaultOn: true,
         defaultOff: false
@@ -145,6 +149,11 @@ export default {
   methods:{
     submit(){
       this.$router.push('/search')
+    },
+    setFontSize(size){
+      console.log(this.bodyclass);
+      let cls = this.bodyclass + ' fontsize'+size;
+      document.querySelector('body').setAttribute('class',cls);
     }
   }
 };
