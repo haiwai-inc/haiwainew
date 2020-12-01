@@ -211,6 +211,7 @@ class search_article_noindex extends Search
 
     public function fetch_and_insert($postID)
     {
+
         if(empty($postID)){
             return;
         }
@@ -228,6 +229,7 @@ class search_article_noindex extends Search
 		        $rs_article_indexing=$obj_article_indexing->get_basic_articleinfo($rs_article_indexing,$k,$v);
 		    }
 		}
+		$rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
 
 		//导入ES
 		$this->add_new_articles($rs_article_indexing);
