@@ -64,9 +64,9 @@ class search_blogger extends Search
 				  },
 				  "name": {
 					"analyzer": "substring_analyzer",
-                    "search_analyzer":"search_sub_analyzer",
 					"boost": 2,
-					"type": "text"
+					"type": "text",
+                    "search_analyzer":"search_sub_analyzer"
 				  },
 				  "verified": {
 					"type": "integer"
