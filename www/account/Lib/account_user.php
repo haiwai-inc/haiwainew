@@ -63,6 +63,13 @@ class account_user extends Model{
 	//在包含用户ID的数组里，补全用户基本信息
 	function get_basic_userinfo($rs,$hashID='id'){
 	    if(!empty($rs)){
+	        foreach($rs as $v){
+	            $tmp_rs_id[]=$v[$hashID];
+	            if(!empty($v['postID'])){
+	                $tmp_rs_postID[]=$v['postID'];
+	            }
+	        }
+	        
 	        //加入名博
 	        $obj_memcache = func_initMemcached('cache01');
 	        $rs_memcache = $obj_memcache->get("blog_hot_blogger");
@@ -73,9 +80,10 @@ class account_user extends Model{
 	            }
 	        }
 	        
-	        //加入关注人
+	        //如果登录
 	        $followerID_accout_follower=[];
 	        if(!empty($_SESSION['id'])){
+	            //加入关注人
 	            $obj_accout_follower=load("account_follower");
 	            $rs_accout_follower=$obj_accout_follower->getAll("*",['userID'=>$_SESSION['id'],'limit'=>200]);
 	            if(!empty($rs_accout_follower)){
@@ -85,10 +93,8 @@ class account_user extends Model{
 	            }
 	        }
 	        
-	        //加入用户
-	        foreach($rs as $v){
-	            $tmp_rs_id[]=$v[$hashID];
-	        }
+	        
+	        //加入用户信息
 			$rs_account_user = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$tmp_rs_id]]);
 			if(!empty($rs_account_user)){
 			    foreach($rs_account_user as $v){
@@ -114,6 +120,7 @@ class account_user extends Model{
 	            
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
 			}
+			
 	    }
 	    
 	    return $rs;
