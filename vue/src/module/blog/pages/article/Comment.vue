@@ -54,6 +54,17 @@ export default {
 };
 </script>
 <style>
+
+.fontsize0 .comment .replyContent{
+  font-size: 1rem;
+}
+.fontsize1 .comment .replyContent{
+  font-size: 1.2rem;
+}
+.fontsize2 .comment .replyContent{
+  font-size: 1.4rem;
+}
+
 .comment .replyContent,.comment .replyFoot{
     font-size: 1rem;
     margin-bottom: 3px;
@@ -66,6 +77,7 @@ export default {
     font-size: .875rem;
     margin-left: 1rem;
 }
+
 @media (max-width: 575.98px){
 
 }

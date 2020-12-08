@@ -39,7 +39,7 @@
             <comment :data="articleDetail.comment"></comment>
           </div>
         </div>
-        <div class="col-sm-4 d-none d-sm-block">
+        <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
          <!-- r1 -->
             <div class="box my-3">
               <span class="blogger-box">
