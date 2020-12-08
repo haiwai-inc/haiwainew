@@ -137,7 +137,25 @@ class search_article_noindex extends Search
 		if(!empty($rs)){
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
+	            if(!empty($v['postID'])){
+	                $tmp_rs_postID[]=$v['postID'];
+	            }
 			}
+			
+			//如果登录
+			if(!empty($_SESSION['id'])){
+			    //加入书签
+			    if(!empty($tmp_rs_postID)){
+			        $obj_account_bookmark=load("account_bookmark");
+			        $rs_account_bookmark=$obj_account_bookmark->getAll("*",['userID'=>$_SESSION['id'],'OR'=>["postID"=>$tmp_rs_postID]]);
+			        if(!empty($rs_account_bookmark)){
+			            foreach($rs_account_bookmark as $v){
+			                $hash_account_bookmark[$v['postID']]=$v;
+			            }
+			        }
+			    }
+			}
+			
 			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
 	        foreach($rs as $k=>$v){
 				if(empty($hash_posts[$v[$hashID]])){
@@ -145,6 +163,9 @@ class search_article_noindex extends Search
 					continue;
 				}
 	            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
+	            
+	            //是否加入书签
+	            $rs[$k]["postInfo_{$hashID}"]['is_bookmark']=empty($hash_account_bookmark[$v['postID']])?0:1;
 	        }
 	    } 
 	    
@@ -211,6 +232,7 @@ class search_article_noindex extends Search
 
     public function fetch_and_insert($postID)
     {
+
         if(empty($postID)){
             return;
         }
@@ -228,6 +250,7 @@ class search_article_noindex extends Search
 		        $rs_article_indexing=$obj_article_indexing->get_basic_articleinfo($rs_article_indexing,$k,$v);
 		    }
 		}
+		$rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
 
 		//导入ES
 		$this->add_new_articles($rs_article_indexing);

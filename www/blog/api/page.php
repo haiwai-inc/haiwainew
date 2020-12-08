@@ -267,9 +267,9 @@ class page extends Api {
     /**
      * 文章详情页 编辑器页
      * 文章 详情
+     * @param integer $id | 主贴postID
      */
     public function article_view($id){
-        $obj_article_post=load("article_post");
         $obj_article_indexing=load("article_indexing");
         
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
@@ -281,24 +281,45 @@ class page extends Api {
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_article_indexing=$obj_account_user->get_basic_userinfo([$rs_article_indexing],"userID")[0];
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
         
         //添加文章计数信息
-        $rs_article_indexing=$obj_article_indexing->get_article_count([$rs_article_indexing])[0];
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing)[0];
         
         return $rs_article_indexing;
     }
     
     /**
+     * 96973
      * 文章详情页 
      * 文章 评论
+     * @param integer $id | 主贴postID
      */
     public function article_view_comment($id){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        if(empty($check_article_indexing)){
+            $this->error="此文章不存在";
+            $this->status=false;
+            return false;
+        }
         
+        //评论
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['order'=>['like_date'=>'DESC'],'treelevel'=>1,'visible'=>1,'basecode'=>$check_article_indexing['basecode']]);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        return $rs_article_indexing;
     }
     
     /**
@@ -319,7 +340,7 @@ class page extends Api {
     
     /**
      * 文章详情页 
-     * 文章 博主
+     * 文章 博主 
      */
     public function article_view_blogger($id){
         

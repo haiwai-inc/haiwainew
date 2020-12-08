@@ -18,16 +18,24 @@ class search_blogger extends Search
 				"analysis": {
 					"analyzer": {
 						"substring_analyzer": {
-						  	"tokenizer": "standard",
+                            "type":"custom",
+                            "tokenizer" :  "ik_max_word",
 						  	"filter": ["lowercase", "substring"],
-							"char_filter": ["tsconvert"]
-						}
+                            "char_filter": ["tsconvert"]
+                        },
+                        
+                        "search_sub_analyzer": {
+                            "type":"custom",
+                            "tokenizer" :  "ik_smart",
+						  	"filter": ["lowercase", "substring"],
+                            "char_filter": ["tsconvert"]
+                        }
 					},
 					"filter": {
 						"substring": {
-							"type": "nGram",
-							"min_gram": 2,
-							"max_gram": 15
+							"type": "edge_ngram",
+							"min_gram": 1,
+							"max_gram": 50
 						}
 					},
 					"char_filter": {
@@ -49,14 +57,16 @@ class search_blogger extends Search
 					"type": "integer"
 				  },
 				  "username": {
-					"analyzer": "ik_max_word",
+					"analyzer": "substring_analyzer",
+                    "search_analyzer":"search_sub_analyzer",
 					"boost": 2,
 					"type": "text"
 				  },
 				  "name": {
-					"analyzer": "ik_max_word",
+					"analyzer": "substring_analyzer",
 					"boost": 2,
-					"type": "text"
+					"type": "text",
+                    "search_analyzer":"search_sub_analyzer"
 				  },
 				  "verified": {
 					"type": "integer"
@@ -195,7 +205,6 @@ class search_blogger extends Search
 			$query = $keyword;
 		}
 		$rs = $this->search($query);
-		debug::d($rs);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
 	}

@@ -21,5 +21,7 @@ blog/Cron/generate_hot_blogger.php   ->  file_domain
 # elastic search
 search/Cron/init_indexes.php // create and initialize search index for article and article pool
 search/Cron/update_search.php [all] [iteration_number]// update new article from database to es, [all] ignore 15 min limit, [iteration_number] iteration_number*200 = total number indexed
+search/Cron/update_blogger.php  //update blogger and username
+search/Cron/update_category_tag.php  //update category and tag names
 
 password: haiwai2020
