@@ -38,9 +38,9 @@ class blog_blogger extends Model{
 	        }
 			
 	        foreach($rs as $k=>$v){
-	            $item=$hash_blog_blogger[$v[$hashID]];
+				$item=$hash_blog_blogger[$v[$hashID]];
 	            $item['o_avatar']=$item['background'];
-	            $item['background']=str_replace("{$v['id']}_background","{$item['id']}_background_750_420",$item['background']);
+	            $item['background']=str_replace("{$v[$hashID]}_background","{$item['id']}_background_750_420",$item['background']);
 	            $rs[$k]['bloggerinfo_'.$hashID]=$item;
 	        }
 	    }
