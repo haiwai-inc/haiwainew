@@ -1,5 +1,5 @@
 <?php
-class common extends Api{
+class page extends Api{
     /**
     * Search by keywords for articles
     *
@@ -42,6 +42,7 @@ class common extends Api{
      * Search by name for category
      *
      * @param string $keyword
+     * @param string $last_score
      * @response 搜索结果
      *
      */
@@ -82,7 +83,11 @@ class common extends Api{
     public function tag_articles($tags, $last_id = 0){
         if(empty($tags)) return [];
         if(!is_array($tags)){
-            $tags = [$tags];
+            if(is_int($tags))
+                $tags = [$tags];
+            else if (is_string($tags)){
+                 $tags = explode(',', $tags);
+            }
         }
         $tag_list = [];
         foreach($tags as $tag){
