@@ -1,13 +1,13 @@
 <template>
     <div id="avatar">
-        <router-link :to="data.authorHomepage">
-          <div v-if="!data.avatarUrl" class="avatar-word" :style="{height:imgHeight+'px',width:imgHeight+'px',lineHeight:imgHeight+'px'}">{{data.firstLetter}}</div>
+        <router-link :to="'/blog/user/'+data.id">
+          <div v-if="!data.avatar" class="avatar-word" :style="{height:imgHeight+'px',width:imgHeight+'px',lineHeight:imgHeight+'px',minWidth:imgHeight+'px'}">{{data.first_letter}}</div>
           <img 
-            :style="{height:imgHeight+'px'}"
-            v-if="data.avatarUrl" 
-            v-bind:alt="data.name" 
+            :style="{height:imgHeight+'px',minWidth:imgHeight+'px'}"
+            v-if="data.avatar" 
+            v-bind:alt="data.username" 
             class="rounded-circle" 
-            v-bind:src="data.avatarUrl" 
+            v-bind:src="data.avatar" 
             >
         </router-link>
     </div>
@@ -24,13 +24,13 @@ export default {
     },
     imgHeight:Number,
     data:{
-        avatarUrl:String,
-        name:String,
-        authorHomepage:String,
+        avatar:String,
+        username:String,
+        id:Number,
         description:String,
-        firstLetter:String,
-        isFollowed:Boolean,
-        isHot:Boolean
+        first_letter:String,
+        is_follower:Boolean,
+        is_hot_blogger:Boolean
     }
   },
   data(){

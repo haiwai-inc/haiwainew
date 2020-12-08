@@ -78,6 +78,21 @@ class Blog extends API{
     }
 
     /**
+     * 返回正文页内容
+     * @param number id 
+     */
+    async article_view(id){
+      return await this.sendget("blog/page/article_view/?id="+id)
+    }
+
+    /**
+     * 返回正文页评论
+     * @param number id 
+     */
+    async article_view_comment(id){
+      return await this.sendget("blog/page/article_view_comment/?id="+id)
+    }
+    /**
      * 返回单个博客文章
      * @param number blogid 
      */

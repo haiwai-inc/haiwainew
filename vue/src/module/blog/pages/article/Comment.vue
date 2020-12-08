@@ -1,12 +1,13 @@
 <template>
   <div class="comment">
     <div v-for="(item, index) in data" :key="index" class="d-flex align-items-start mt-2">
-        <avatar :data="item" :imgHeight="38" class="mr-2"></avatar>
+        <avatar :data="item.userinfo_userID" :imgHeight="38" class="mr-2"></avatar>
         <div>
-            <span class="replyName">{{item.name}}</span><span class="replyTime">{{item.time}}</span>
-            <p class="replyContent" v-html="item.content"></p>
+            <span class="replyName">{{item.userinfo_userID.username}}</span><span class="replyTime">{{item.edit_date*1000 | formatDate}}</span>
+            <p class="replyContent" v-html="item.postInfo_postID.msgbody"></p>
             <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{item.like!==0?item.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a><a href="#" class="ml-5" style="color:gray">删除</a></p>
-            <div v-if="item.replies.length>0">
+            <!-- <div v-if="item.replies.length>0"> -->
+            <div v-if="item.replies">
                 <div :id="index" v-show="item.showReply">
                     <div v-for="(r,idx) in item.replies" :key="'r'+idx" class="d-flex align-items-start mt-2">
                         <avatar :data="r" :imgHeight="32" class="mr-2"></avatar>
@@ -24,8 +25,9 @@
   </div>
 </template>
 <script>
-import {IconLikeOutline,IconMessage} from '@/components/Icons'
-import Avatar from '../components/Main/Avatar'
+import {IconLikeOutline,IconMessage} from '@/components/Icons';
+import Avatar from '../components/Main/Avatar';
+import {formatDate} from '@/directives/formatDate.js';
 export default {
   name: 'comment',
   props:{
@@ -41,6 +43,12 @@ export default {
           console.log(id)
           return data[id].showReply?data[id].showReply=false:data[id].showReply=true;
       }
+  },
+  filters: {
+    formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
   }
 //   item.showReply?item.showReply==false:item.showReply==true
 };

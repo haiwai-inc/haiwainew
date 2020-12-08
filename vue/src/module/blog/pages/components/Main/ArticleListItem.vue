@@ -1,7 +1,7 @@
 <template>
   <div class="list-itme d-flex" >
     <div>
-      <router-link :to="'/blog/p/'+data.articleID">
+      <router-link :to="'/blog/p/'+data.postID">
         <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
         <p class="descript" v-html="data.postInfo_postID.msgbody"></p>
       </router-link>
