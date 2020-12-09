@@ -331,22 +331,6 @@ class page extends Api {
     }
     
     /**
-     * 文章详情页 
-     * 文章 文集
-     */
-    public function article_view_category($id){
-        
-    }
-    
-    /**
-     * 文章详情页 
-     * 文章 博主 
-     */
-    public function article_view_blogger($id){
-        
-    }
-    
-    /**
      * 博客主页 编辑器页
      * 文集 列表
      * @param integer $bloggerID

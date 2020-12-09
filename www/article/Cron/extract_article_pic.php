@@ -25,41 +25,54 @@ class extract_article_pic{
                 $doc = new DOMDocument();
                 @$doc->loadHTML($rs_article_post['msgbody']);
                 $elements = $doc->getElementsByTagName('img');
-                $image="";
+                $image_pool=[];
                 foreach($elements as $element) {
                     if(!empty($element->getAttribute('src'))){
-                        $image=$element->getAttribute('src');
-                        break;
+                        $image_pool[]=$element->getAttribute('src');
                     }
                 }
                 
-                //format image
-                if(!empty($image) && strlen($image)<1000){
-                    //文学成本站图片
-                    if(substr($image,0,8)=='/upload/' && !empty($v['wxc_postID'])){
-                        $image="https://cdn.wenxuecity.com".$image;
-                    }
-                    
-                    //save image
-                    $dir="/upload/article/pic_1/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
-                    $path=DOCUROOT.$dir;
-                    if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
-                    }
-                    $filename=$v['postID']."_headpic";
-                    $rs_image=picture::saveImg($image,$path,$filename);
-                    
-                    if(!empty($rs_image)){
-                        $is_pic=1;
+                //更新头图
+                $count=0;
+                if(!empty($image_pool)){
+                    foreach($image_pool as $kk=>$vv){
+                        //字符串图片类型暂不处理
+                        if(strlen($vv)>1000){
+                            continue;
+                        }
                         
-                        //小图
-                        $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
-                        $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                        //文学城本站图片
+                        if(substr($vv,0,8)=='/upload/' && !empty($v['wxc_postID'])){
+                            $image="https://cdn.wenxuecity.com".$vv;
+                        }else{
+                            $image=$vv;
+                        }
                         
-                        //更新分表
-                        $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
-                    }else{
-                        $is_pic=-1;
+                        //保存头图
+                        $dir="/upload/article/pic/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                        $path=DOCUROOT.$dir;
+                        if (!file_exists($path)) {
+                            mkdir($path, 0777, true);
+                        }
+                        $filename=$v['postID']."_".$count;
+                        $rs_image=picture::saveImg($image,$path,$filename);
+                        if(!empty($rs_image)){
+                            //头图压缩为小图
+                            if($count==0){
+                                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_320_210",320,210);
+                                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+                                
+                                //更新分表
+                                $this->obj_article_post->update(['pic'=>"{$dir}/{$rs_image}"],['id'=>$v['postID']],"post_{$post_tbn}");
+                                $is_pic=1;
+                            }
+                            
+                            //替换文章内容图片路径
+                            $rs_article_post['msgbody']=str_replace($vv, $dir.$rs_image, $rs_article_post['msgbody']);
+                            $count++;
+                        }else{
+                            $is_pic=-1;
+                        }
                     }
                 }else{
                     $is_pic=-1;
@@ -67,6 +80,9 @@ class extract_article_pic{
                 
                 //更新索引
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
+                
+                //更新文章内容
+                $this->obj_article_post->update(['msgbody'=>$rs_article_post['msgbody']],['id'=>$v['postID']],"post_{$post_tbn}");
                 
                 echo $lastid."\n";
             }
