@@ -68,7 +68,7 @@ class extract_article_pic{
                             }
                             
                             //替换文章内容图片路径
-                            $rs_article_post['msgbody']=str_replace($vv, $dir.$rs_image, $rs_article_post['msgbody']);
+                            $rs_article_post['msgbody']=str_replace($vv, "{$dir}/{$rs_image}", $rs_article_post['msgbody']);
                             $count++;
                         }else{
                             $is_pic=-1;
