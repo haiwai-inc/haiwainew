@@ -265,11 +265,7 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
-        if(empty($rs_article_indexing)){
-            $this->error="此文章不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -286,7 +282,6 @@ class page extends Api {
     }
     
     /**
-     * 96973
      * 文章详情页 
      * 文章 评论
      * @param integer $id | 主贴postID
@@ -294,11 +289,7 @@ class page extends Api {
     public function article_view_comment($id){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
-        if(empty($check_article_indexing)){
-            $this->error="此文章不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($check_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //评论
         $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['order'=>['like_date'=>'DESC'],'treelevel'=>1,'visible'=>1,'basecode'=>$check_article_indexing['basecode']]);
