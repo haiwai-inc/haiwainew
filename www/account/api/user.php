@@ -485,12 +485,28 @@ class user extends Api {
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
         
-        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type]);
+        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type],"notification_".$tbn);
         
         return true;
     }
     
-    
+    /**
+     * 小铃铛页
+     * 消息 列表
+     * @param integer $lastID | 最后消息的id
+     */
+    public function notification_list($lastID=0){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        
+        $fields=['userID'=>$_SESSION['id']];
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
+        }
+        
+        $rs_account_notification=$obj_account_notification->getAll("*",$fields,"notification_".$tbn);
+        return $rs_account_notification;
+    }
     
     
     
