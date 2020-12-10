@@ -29,47 +29,6 @@ class page extends Api {
     }
     
     /**
-     * 二级页面
-     * 关注 文章 列表
-     * @param integer $followerID | 关注人的ID
-     */
-    public function follower_article_list($followerID=0){
-        $obj_account_follower=load("account_follower");
-        $obj_account_user=load("account_user");
-        
-        if(!empty($followerID)){
-            $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
-            if(empty($check_account_user))  {$this->error="此关注用户已不存在";$this->status=false;return false;}
-            
-            $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
-            if(empty($check_account_follower)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
-            $followerID_account_follower[]=$followerID;
-        }else{
-            $rs_account_follower=$obj_account_follower->getAll("*",['userID'=>$_SESSION['id']]);
-            if(empty($rs_account_follower))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
-            foreach($rs_account_follower as $v){
-                $followerID_account_follower[]=$v['followerID'];
-            }
-        }
-        
-        //索引表
-        $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['visible'=>1,'OR'=>['userID'=>$followerID_account_follower]]);
-        
-        //添加用户信息
-        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
-        
-        //添加ES信息
-        $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
-        
-        //添加文章计数信息
-        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
-        
-        return $rs_article_indexing;
-    }
-    
-    /**
      * 二级页面 
      * 推荐 文章
      * @param integer $lastid | 最后一个id
