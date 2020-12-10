@@ -306,8 +306,8 @@ class user extends Api {
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
-        //帖子赞+1
-        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        //帖子赞+1 修改时间
+        $obj_article_indexing->update(['edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){

@@ -69,7 +69,7 @@ class article_indexing extends Model
         //添加点赞
         $post_buzz_tbn=substr('0'.$v['postID'],-1);
         $obj_article_post_tag=load("article_post_tag");
-        $rs_article_post_buzz=$obj_article_post_tag->getAll("*",['id'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
+        $rs_article_post_buzz=$obj_article_post_tag->getAll("*",['postID'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
         $rs_article_indexing[$k]['buzz']=[];
         if(!empty($rs_article_post_buzz)){
             foreach($rs_article_post_buzz as $kk=>$vv){
