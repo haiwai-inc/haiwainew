@@ -303,7 +303,7 @@ class user extends Api {
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
         //帖子赞+1 修改时间
-        $obj_article_indexing->update(['like_date'=>times::getTime(),'edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){
@@ -448,7 +448,7 @@ class user extends Api {
      */
     public function my_buzz_article_list($lastID=0){
         $obj_article_indexing=load("article_indexing");
-        $fields=['limit'=>20,'userID'=>$_SESSION['id'],'order'=>['like_date'=>'DESC'],'count_buzz,!='=>0];
+        $fields=['limit'=>20,'userID'=>$_SESSION['id'],'order'=>['buzz_date'=>'DESC'],'count_buzz,!='=>0];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }

@@ -47,6 +47,51 @@ class blog_blogger extends Model{
 	    
 	    return $rs;
 	}
+	
+	//转文章为博客类型
+	function to_blog_article($data){
+	    $fields_indexing=[
+	        'bloggerID'=>$data['bloggerID'],
+	    ];
+	    
+	    //文集
+	    $obj_blog_category=load("blog_category");
+	    $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$data['bloggerID'],'id'=>$data['categoryID']]);
+	    
+	    if(!empty($check_blog_category)){
+	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+	        $fields_indexing['categoryID']=$check_blog_category['id'];
+	    }
+	    
+	    //修改索引表
+	    $obj_article_indexing=load("article_indexing");
+	    $obj_article_indexing->update($fields_indexing,['postID'=>$data['postID']]);
+	    
+	    //修改博客
+	    $time=times::getTime();
+	    $check_blogger=$this->getOne('*',['id'=>$data['bloggerID']]);
+	    $fields_blogger=[
+	        'count_article'=>$check_blogger['count_article']+1,
+	        'update_date'=>$time,
+	        'update_type'=>'post_article',
+	        'update_ip'=>http::getIP()
+	    ];
+	    $this->update($fields_blogger,['id'=>$data['bloggerID']]);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 ?>
 
