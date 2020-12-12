@@ -14,7 +14,8 @@ class user extends Api {
      * @param obj $module_data | 博客的数据
      * @post article_data,module_data
      */
-    public function article_add($article_data="",$module_data=""){
+    public function article_add($article_data,$module_data){
+        /*
         $article_data=[
             'title'=>"用户3主贴标题",
             'msgbody'=>"用户3主贴内容",
@@ -29,6 +30,7 @@ class user extends Api {
             "bloggerID"=>3,
             "categoryID"=>1,
         ];
+        */
         
         //验证用户发帖信息
         $obj_article_indexing=load("article_indexing");
@@ -96,8 +98,12 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 修改
+     * @param obj $article_data | 文章的数据
+     * @param obj $module_data | 博客的数据
+     * @post article_data,module_data
      */
-    public function article_update(){
+    public function article_update($article_data,$module_data){
+        /*
         $article_data=[
             'title'=>"用户3主贴标题修改",
             'msgbody'=>"用户3主贴内容修改",
@@ -113,6 +119,7 @@ class user extends Api {
             "bloggerID"=>3,
             "categoryID"=>1,
         ];
+        */
         
         //验证用户修改帖子信息
         $obj_article_indexing=load("article_indexing");
