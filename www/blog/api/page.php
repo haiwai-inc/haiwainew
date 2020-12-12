@@ -29,14 +29,6 @@ class page extends Api {
     }
     
     /**
-     * 二级页面
-     * 关注 文章 默认
-     */
-    public function follower_article_default(){
-        
-    }
-    
-    /**
      * 二级页面 
      * 推荐 文章
      * @param integer $lastid | 最后一个id
@@ -273,11 +265,7 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
-        if(empty($rs_article_indexing)){
-            $this->error="此文章不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -294,7 +282,6 @@ class page extends Api {
     }
     
     /**
-     * 96973
      * 文章详情页 
      * 文章 评论
      * @param integer $id | 主贴postID
@@ -302,14 +289,34 @@ class page extends Api {
     public function article_view_comment($id){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
-        if(empty($check_article_indexing)){
-            $this->error="此文章不存在";
-            $this->status=false;
-            return false;
-        }
+        if(empty($check_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //评论
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['order'=>['like_date'=>'DESC'],'treelevel'=>1,'visible'=>1,'basecode'=>$check_article_indexing['basecode']]);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['order'=>['buzz_date'=>'DESC'],'treelevel'=>1,'visible'=>1,'basecode'=>$check_article_indexing['basecode']]);
+        if(empty($rs_article_indexing)){
+            return $rs_article_indexing;
+        }
+        
+        //补全二层评论
+        foreach($rs_article_indexing as $k=>$v){
+            $basecode_article_indexing[$v['postID']]=$v['postID'];
+        }
+        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['treelevel'=>2,'visible'=>1,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
+        if(!empty($rs_article_reply)){
+            //ES补全postID信息
+            $obj_article_noindex=load("search_article_noindex");
+            $rs_article_reply=$obj_article_noindex->get_postInfo($rs_article_reply,'postID',true);
+            
+            //添加用户信息
+            $obj_account_user=load("account_user");
+            $rs_article_reply=$obj_account_user->get_basic_userinfo($rs_article_reply,"userID");
+            foreach($rs_article_reply as $v){
+                $hash_article_reply[$v['basecode']][]=$v;
+            }
+            foreach($rs_article_indexing as $k=>$v){
+                $rs_article_indexing[$k]['reply']=empty($hash_article_reply[$v['postID']])?[]:$hash_article_reply[$v['postID']];
+            }
+        }
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -327,22 +334,6 @@ class page extends Api {
      * 文章 相关
      */
     public function article_view_related($id){
-        
-    }
-    
-    /**
-     * 文章详情页 
-     * 文章 文集
-     */
-    public function article_view_category($id){
-        
-    }
-    
-    /**
-     * 文章详情页 
-     * 文章 博主 
-     */
-    public function article_view_blogger($id){
         
     }
     

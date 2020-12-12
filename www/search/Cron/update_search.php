@@ -23,7 +23,7 @@ class update_search{
             //更新10分钟以前
             $edit_date=times::getTime()-600;
             $rs_lastid=$this->obj_article_indexing->getOne(['postID'],['edit_date,>'=>$edit_date,'order'=>['postID'=>"ASC"]]);
-            $lastid=empty($rs_lastid)?2147483647:$rs_lastid['postID'];
+            $lastid=empty($rs_lastid)?2147483647:$rs_lastid['postID']-1;
         }
         
         $count=0;

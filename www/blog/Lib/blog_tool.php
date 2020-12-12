@@ -106,8 +106,6 @@ class blog_tool{
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
                 "edit_date"=>strtotime($rs['dateline']),
-                "like_date"=>strtotime($rs['dateline']),
-                "comment_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
             ];
@@ -117,7 +115,7 @@ class blog_tool{
             $post_tbn=substr('0'.$rs['user_new']['id'],-1);
             $fields_post=[
                 "id"=>$postID,
-                "title"=>empty($rs['title'])?"reply":$rs['title'],
+                "title"=>empty($rs['title'])?"reply {$basecode}":$rs['title'],
                 "msgbody"=>$rs_blog_legacy_202005_msg['msgbody'],
             ];
             $this->obj_article_post->insert($fields_post,"post_{$post_tbn}");
@@ -260,10 +258,9 @@ class blog_tool{
                 return false;
             }
             
-            $check_blog_category=$this->obj_blog_category->getOne("*",['userID'=>$rs['user_new']['id'],'bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
+            $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
             if(empty($check_blog_category)){
                 $field=[
-                    "userID"=>$rs['user_new']['id'],
                     "bloggerID"=>$rs['blogger_new']['id'],
                     "name"=>$rs_blog_legacy_blogcat_members['category'],
                 ];
