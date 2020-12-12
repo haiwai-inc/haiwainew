@@ -67,15 +67,20 @@ class blog_blogger extends Model{
 	    $obj_article_indexing=load("article_indexing");
 	    $obj_article_indexing->update($fields_indexing,['postID'=>$data['postID']]);
 	    
-	    //修改博客
+	    //修改博主计数信息
 	    $time=times::getTime();
 	    $check_blogger=$this->getOne('*',['id'=>$data['bloggerID']]);
 	    $fields_blogger=[
-	        'count_article'=>$check_blogger['count_article']+1,
 	        'update_date'=>$time,
-	        'update_type'=>'post_article',
 	        'update_ip'=>http::getIP()
 	    ];
+	    if(!empty($data['add'])){
+	        $fields_blogger['count_article']=$check_blogger['count_article']+1;
+	        $fields_blogger['update_type']='add_article';
+	    }
+	    if(!empty($data['edit'])){
+	        $fields_blogger['update_type']='edit_article';
+	    }
 	    $this->update($fields_blogger,['id'=>$data['bloggerID']]);
 	}
 	

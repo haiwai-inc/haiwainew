@@ -158,6 +158,25 @@ class article_indexing extends Model
 	    return true;
 	}
 	
+	//验证用户修改帖子信息
+	public function article_update_validation($data){
+	    if(empty($data['postID']) || empty($data['typeID'])){
+	        return false;
+	    }
+	    
+	    //检查主贴
+	    $check_article_indexing=$this->getOne(['id','userID','bloggerID'],['postID'=>$data['postID']]);
+	    if(empty($check_article_indexing)){
+	        return false;
+	    }
+	    
+	    if($check_article_indexing['userID']!=$_SESSION['id']){
+	        return false;
+	    }
+	    
+	    return true;
+	}
+	
 	//验证回复
 	public function article_reply_validation($data){
 	    if(empty($data['postID']) || empty($data['typeID'])){
@@ -169,7 +188,6 @@ class article_indexing extends Model
 	    if(empty($check_article_indexing)){
 	        return false;
 	    }
-	    
 	    return true;
 	}
 	

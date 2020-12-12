@@ -14,8 +14,7 @@ class user extends Api {
      * @param obj $module_data | 博客的数据
      * @post article_data,module_data
      */
-    public function article_add($article_data,$module_data){
-        /*
+    public function article_add($article_data="",$module_data=""){
         $article_data=[
             'title'=>"用户3主贴标题",
             'msgbody'=>"用户3主贴内容",
@@ -26,10 +25,10 @@ class user extends Api {
             "typeID"=>1,
         ];
         $module_data=[
+            "add"=>true,
             "bloggerID"=>3,
             "categoryID"=>1,
         ];
-        */
         
         //验证用户发帖信息
         $obj_article_indexing=load("article_indexing");
@@ -56,6 +55,7 @@ class user extends Api {
             "msgbody"=>$article_data['msgbody'],
         ];
         $obj_article_post->insert($fields_post,"post_{$post_tbn}");
+        
         //添加文章 tag
         if(!empty($article_data['tagname'])){
             $obj_article_tag=load("article_tag");
@@ -94,15 +94,100 @@ class user extends Api {
     }
     
     /**
+     * 编辑器页
+     * 文章 修改
+     */
+    public function article_update(){
+        $article_data=[
+            'title'=>"用户3主贴标题修改",
+            'msgbody'=>"用户3主贴内容修改",
+            'tagname'=>[
+                "测试用户1",
+                "测试用户3"
+            ],
+            "postID"=>144816,
+            "typeID"=>1,
+        ];
+        $module_data=[
+            "edit"=>true,
+            "bloggerID"=>3,
+            "categoryID"=>1,
+        ];
+        
+        //验证用户修改帖子信息
+        $obj_article_indexing=load("article_indexing");
+        if(!$obj_article_indexing->article_update_validation($article_data+$module_data))   {$this->error="修改帖子验证未通过";$this->status=false;return false;}
+        
+        //主贴信息
+        $rs_article_post=$obj_article_indexing->getOne(['postID','userID'],['postID'=>$article_data['postID']]);
+        
+        //修改文章 post
+        $obj_article_post=load("article_post");
+        $time=times::getTime();
+        $fields_indexing=[
+            "is_pic"=>0,
+            "edit_date"=>$time,
+        ];
+        $obj_article_indexing->update($fields_indexing,['postID'=>$article_data['postID']]);
+        $post_tbn=substr('0'.$rs_article_post['userID'],-1);
+        $fields_post=[
+            "title"=>$article_data['title'],
+            "msgbody"=>$article_data['msgbody'],
+        ];
+        $obj_article_post->update($fields_post,['id'=>$rs_article_post['postID']],"post_{$post_tbn}");
+        
+        //修改文章 tag
+        if(!empty($article_data['tagname'])){
+            $obj_article_tag=load("article_tag");
+            $obj_article_post_tag=load("article_post_tag");
+            
+            $post_tag_tbn=substr('0'.$article_data['postID'],-1);
+            $obj_article_post_tag->remove(['postID'=>$rs_article_post['postID']],"post_tag_".$post_tag_tbn);
+            foreach($article_data['tagname'] as $v){
+                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
+                if(empty($check_article_tag)){
+                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
+                }else{
+                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
+                }
+                
+                $post_tagID=$obj_article_post_tag->get_id();
+                $fields_post_tag=[
+                    "id"=>$post_tagID,
+                    "postID"=>$article_data['postID'],
+                    "tagID"=>$check_article_tag['id'],
+                ];
+                $obj_article_post_tag->insert($fields_post_tag,"post_tag_".$post_tag_tbn);
+            }
+        }
+        
+        //修改博客类型文章
+        if($article_data['typeID']==1){
+            $obj_blog_blogger=load("blog_blogger");
+            $obj_blog_blogger->to_blog_article($module_data);
+        }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$rs_article_post['postID']]);
+        
+        return true;
+    }
+    
+    /**
      * 文章详情页
      * 文章 回复
+     * @param obj $article_data | 文章的数据
+     * @post article_data
      */
-    public function article_reply(){
+    public function article_reply($article_data){
+        /*
          $article_data=[
              'msgbody'=>"用户6回复回复内容",
              'postID'=>144819,
              "typeID"=>1,
          ];
+         */
          
          //检查主贴
          $obj_article_indexing=load("article_indexing");
@@ -168,21 +253,6 @@ class user extends Api {
      */
     public function article_save_auto($bloggerID,$data){
         
-    }
-    
-    /**
-     * 编辑器页 
-     * 文章 修改
-     * @param integer $bloggerID
-     * @param object $data| data array.
-     */
-    public function article_update($bloggerID,$article){
-        $this->common->updateAll(['activity_report'=>$activity_report],['student_id'=>$studentID]);
-        if($activity_report==0){
-            $obj=load('student_activity');
-            $obj->remove(["student_id"=>$studentID]);
-        }
-        return  [];
     }
     
     /**
