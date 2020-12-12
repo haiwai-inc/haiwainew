@@ -5,6 +5,7 @@ import NowUiKit from './plugins/now-ui-kit';
 import API from './service/api';
 import Vuex from 'vuex';
 import User from './service/user';
+import Search from './service/blog/search';
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.config.productionTip = false;
@@ -17,7 +18,8 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    user:new User()
+    user:new User(),
+    search:new Search(),
   },
   mutations: {
     increment (state) {
