@@ -13,25 +13,9 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 博客的数据
      * @post article_data,module_data
+     * @response /article/api_response/article_add.txt
      */
     public function article_add($article_data,$module_data){
-        /*
-        $article_data=[
-            'title'=>"用户3主贴标题",
-            'msgbody'=>"用户3主贴内容",
-            'tagname'=>[
-                "测试用户1",
-                "测试用户2"
-            ],
-            "typeID"=>1,
-        ];
-        $module_data=[
-            "add"=>true,
-            "bloggerID"=>3,
-            "categoryID"=>1,
-        ];
-        */
-        
         //验证用户发帖信息
         $obj_article_indexing=load("article_indexing");
         if(!$obj_article_indexing->article_add_validation($article_data+$module_data))   {$this->error="发帖验证未通过";$this->status=false;return false;}
@@ -101,26 +85,9 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 博客的数据
      * @post article_data,module_data
+     * @response /article/api_response/article_update.txt
      */
     public function article_update($article_data,$module_data){
-        /*
-        $article_data=[
-            'title'=>"用户3主贴标题修改",
-            'msgbody'=>"用户3主贴内容修改",
-            'tagname'=>[
-                "测试用户1",
-                "测试用户3"
-            ],
-            "postID"=>144816,
-            "typeID"=>1,
-        ];
-        $module_data=[
-            "edit"=>true,
-            "bloggerID"=>3,
-            "categoryID"=>1,
-        ];
-        */
-        
         //验证用户修改帖子信息
         $obj_article_indexing=load("article_indexing");
         if(!$obj_article_indexing->article_update_validation($article_data+$module_data))   {$this->error="修改帖子验证未通过";$this->status=false;return false;}
@@ -186,16 +153,9 @@ class user extends Api {
      * 文章 回复
      * @param obj $article_data | 文章的数据
      * @post article_data
+     * @response /article/api_response/article_reply.txt
      */
     public function article_reply($article_data){
-        /*
-         $article_data=[
-             'msgbody'=>"用户6回复回复内容",
-             'postID'=>144819,
-             "typeID"=>1,
-         ];
-         */
-         
          //检查主贴
          $obj_article_indexing=load("article_indexing");
          $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);

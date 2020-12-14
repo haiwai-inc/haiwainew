@@ -21,6 +21,7 @@
 <pre style="font-size:16px;">{%$docs->description|default:"No description for this function."%}</pre>
 <br>
 
+<!-- 
 <h3>Request URI Parameters</h3>
 {%if !empty($docs->request->get)%}
 <table>
@@ -50,8 +51,9 @@
 <pre>Not Available.</pre>
 {%/if%}
 <br>
+-->
 
-<h3>Request Body Parameters</h3>
+<h3>请求参数：</h3>
 {%if !empty($docs->request->post)%}
 <table>
     <thead>
@@ -81,7 +83,7 @@
 {%/if%}
 <br>
 
-<h3>Response Information</h3>
+<h3>接口说明：</h3>
 <hr>
 {%if !empty($docs->response)%}
 {%foreach from=$docs->response item=val%}
@@ -91,7 +93,7 @@
 <pre>Not Available.</pre>
 {%/if%}
 
-
+<!-- 
 <h3>Response Formats</h3>
 {%if !empty($docs->formats)%}
 {%foreach from=$docs->formats item=format%}
@@ -126,7 +128,7 @@
 <pre>Not Available.</pre>
 {%/if%}
 <br>
-
+-->
 
 <div>
 	API Version {%$smarty.get.version%} {%$docs->classname%}->{%$docs->name%}({%$docs->paramStr|default:''%}); Last modified {%$docs->lastmodify|date_format:"%m/%d/%Y %H:%M"%}

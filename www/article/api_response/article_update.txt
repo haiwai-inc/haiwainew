@@ -1,0 +1,17 @@
+请求的参数结构如下：
+
+$article_data=[
+    'title'=>"用户3主贴标题修改",
+    'msgbody'=>"用户3主贴内容修改",
+    'tagname'=>[
+        "测试用户1",
+        "测试用户3"
+    ],
+    "postID"=>144816,
+    "typeID"=>1,
+];
+$module_data=[
+    "edit"=>true,
+    "bloggerID"=>3,
+    "categoryID"=>1,
+];
