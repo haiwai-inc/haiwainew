@@ -5,7 +5,7 @@ import NowUiKit from './plugins/now-ui-kit';
 import API from './service/api';
 import Vuex from 'vuex';
 import User from './service/user';
-import Search from './service/blog/search';
+import Search from './module/search/search.service.js';
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.config.productionTip = false;

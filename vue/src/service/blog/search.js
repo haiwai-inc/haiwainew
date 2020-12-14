@@ -14,8 +14,8 @@ class Search extends API{
      * @param string keyword        搜索关键词
      * @param number last_score     翻页用，之前页面分数最低的
      * */ 
-    async search_articles(kw){
-        return await this.sendget("search/page/articles/?keyword="+kw)
+    async search_articles(kw,ls){
+        return await this.sendget("search/page/articles/?keyword="+kw+"&last_score="+ls)
     }
 
    /**

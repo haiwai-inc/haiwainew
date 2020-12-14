@@ -169,16 +169,17 @@ export default {
     },
     
     handleSelect(item) {
-      this.keyword = item.name
-      this.doSearch(this.keyword);
+      this.keyword = item.name;
+      console.log(item);
+      this.doSearch(this.keyword,item.id);
     },
 
     onSubmit(){
-      this.doSearch(this.keyword);
+      this.doSearch(this.keyword,0);
     },
 
-    doSearch(k){
-      console.log(k);
+    async doSearch(k,tag){
+      this.$router.push({path:'/search',query:{keyword:k,tag:tag}});
     },
 
     setFontSize(size){
@@ -193,7 +194,6 @@ export default {
   beforeCreate(){
   },
   mounted() {
-    console.log(this.search);
   }
 };
 </script>

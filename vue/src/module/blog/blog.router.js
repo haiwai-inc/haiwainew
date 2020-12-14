@@ -32,10 +32,5 @@ export default [
         path: '/blog/user/:id',
         name: 'bloguserindex',
         components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
-      },
-      {
-          path: '/search',
-          name: 'search',
-          components: { default: resolve => require (['./pages/Search.vue'],resolve), header: MainNavbar },
-      },
+      }
 ]
