@@ -206,6 +206,7 @@ class user extends Api {
      * 悄悄话页
      * 悄悄话 列表
      * @param integer $lastID | 最后一个悄悄话信息对话框的message_dateline
+     * @response /account/api_response/qqh_list.txt
      */
     public function qqh_list($lastID=0){
         $obj_account_qqh=load("account_qqh");
@@ -221,7 +222,6 @@ class user extends Api {
             $where_account_qqh_post['last_message_dateline,<']=$lastID;
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
-        
         if(!empty($rs_account_qqh)){
             //查询联系人信息
             $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
@@ -403,20 +403,6 @@ class user extends Api {
     }
     
     /**
-     * 测试信息： userID=17, basecode=59252 59294
-     * 
-     * 用户17登录
-     * http://local.haiwainew.com/api/v1/account/passport/login_status/?userID=17
-     * 
-     * 查看所有未读消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_unread_count/
-     * 
-     * 查看未读的博客评论消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_list_comment/
-     * 
-     * 清空特定类型的消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
-     * 
      * 我的 新评论 列表 
      * @param integer $lastID | 最后id
      */
