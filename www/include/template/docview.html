@@ -21,8 +21,7 @@
 <pre style="font-size:16px;">{%$docs->description|default:"No description for this function."%}</pre>
 <br>
 
-<!-- 
-<h3>Request URI Parameters</h3>
+<h3>GET 请求参数</h3>
 {%if !empty($docs->request->get)%}
 <table>
     <thead>
@@ -51,9 +50,8 @@
 <pre>Not Available.</pre>
 {%/if%}
 <br>
--->
 
-<h3>请求参数：</h3>
+<h3>POST请求参数：</h3>
 {%if !empty($docs->request->post)%}
 <table>
     <thead>

@@ -1,26 +1,16 @@
 <?php
-
-
-/*
- * 有一个用户系统的log记录小铃铛
- * 最新评论加字段控制
- * 
- */
-
-
 /**
  * @author sida
  * [
  *  'data'=>[],
  *  'error'=>[
- *      ['name'=>'user','msg'=>''],
- *      ['name'=>'password','msg'=>'']
+ *      ['name'=>'name1','msg'=>'msg1'],
+ *      ['name'=>'name1','msg'=>'msg1']
  *  ],
  *  'status'=>true
  *  ]
  */
 class user extends Api {
-
     public $space = true;
     
     public function __construct() {
