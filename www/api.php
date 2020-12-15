@@ -13,16 +13,6 @@ include 'inc.comm.php';
  *  ]
  */
 if(!empty($_GET['docs'])){
-    echo "<h2>所有数据返回结构</h2>";
-    $format=[
-        'data'=>[],
-        'error'=>[
-            ['name'=>'name1','msg'=>'msg1'],
-            ['name'=>'name1','msg'=>'msg1']
-         ],
-         'status'=>true
-    ];
-    debug::D($format);
     echo "<h2>所有模组接口</h2>";
     $dirs=array_filter(glob('*'), 'is_dir');
     if(!empty($dirs)){
@@ -40,6 +30,16 @@ if(!empty($_GET['docs'])){
             }
         }
     }
+    echo "<h2>所有数据返回结构</h2>";
+    $format=[
+        'data'=>[],
+        'error'=>[
+            ['name'=>'name1','msg'=>'msg1'],
+            ['name'=>'name1','msg'=>'msg1']
+        ],
+        'status'=>true
+    ];
+    debug::D($format);
     exit;
 }
 
