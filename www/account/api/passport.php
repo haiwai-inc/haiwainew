@@ -2,7 +2,6 @@
 
 /**
  * @author sida
- * ['data'=>[],'msg'=>[],'status'=>true]
  */
 class passport extends Api {
 
