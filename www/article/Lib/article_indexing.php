@@ -63,7 +63,8 @@ class article_indexing extends Model
             foreach($rs_article_post as $kk=>$vv){
                 $rs_article_indexing[$k][$kk]=$vv;
             }
-	    $rs_article_indexing[$k]['msgbody_origin']=$rs_article_post['msgbody'];
+	        $rs_article_indexing[$k]['msgbody_origin']=$rs_article_post['msgbody'];
+	        $rs_article_indexing[$k]['msgbody']=strip_tags($rs_article_post['msgbody']);
         }
 
         //添加点赞
