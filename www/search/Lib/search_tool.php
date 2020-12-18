@@ -8,7 +8,8 @@ class search_tool{
         $articles = $search_article_obj->search_by_keyword($keyword, $last_score);
         $user_obj = load("account_user");
         $articles = $user_obj->get_basic_userinfo($articles, "userID");
-        return $this->overwrite_highlight($articles);
+        $articles = $this->overwrite_highlight($articles);
+        return $this->fetch_article_info($articles);
     }
 
     public function search_blogger($keyword, $type, $last_score = 0){
@@ -32,5 +33,16 @@ class search_tool{
             }
         }
         return $rs;
+    }
+
+
+    public function fetch_article_info($articles){
+        $user_obj = load("account_user");
+        $articles = $user_obj -> get_basic_userinfo($articles, "userID");
+        $search_noindex = load("search_article_noindex");
+        $articles = $search_noindex->get_postInfo($articles);
+        $obj_article_indexing=load("article_indexing");
+        $articles=$obj_article_indexing->get_article_count($articles);
+        return $articles;
     }
 }

@@ -11,9 +11,6 @@ class page extends Api{
     public function articles($keyword, $last_score = 0){
         $tool_obj = load("search_tool");
         $articles = $tool_obj -> search_article($keyword, $last_score);
-        $user_obj = load("account_user");
-        $articles = $user_obj -> get_basic_userinfo($articles, "userID");
-
         return $articles;
     }
 
@@ -96,8 +93,7 @@ class page extends Api{
         $article_index_obj = load("search_article_index");
         $articles = $article_index_obj->search_tags($tag_list, $last_id);
 
-        $user_obj = load("account_user");
-        $articles = $user_obj -> get_basic_userinfo($articles, "userID");
-        return $articles;
+        $tool_obj = load("search_tool");
+        return $tool_obj->fetch_article_info($articles);
     }
 }
