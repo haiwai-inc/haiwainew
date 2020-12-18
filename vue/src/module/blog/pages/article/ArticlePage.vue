@@ -47,7 +47,7 @@
                        <span>上一篇</span>
                     </a>
                  </div>
-                 <div class="article-menub article-menut " role="button" >查看xx连载目录</div>
+                 <div class="article-menub article-menut " role="button" >xx连载目录</div>
                  <div class="article-menub">
                     <a class="text-black" href="#">
                        <span>下一篇</span>
