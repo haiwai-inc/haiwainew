@@ -53,9 +53,6 @@ class search_category  extends Search{
 				  "bloggerID": {
 					"type": "integer"
 				  },
-				  "userID": {
-					"type": "integer"
-				  },
 				  "name": {
 					"analyzer": "substring_analyzer",
 					"boost": 2,
@@ -177,7 +174,7 @@ class search_category  extends Search{
         return [
             "id"=>$category['id'],
             "bloggerID"=>$category['bloggerID'],
-            "userID"=>$category['userID'],
+            // "userID"=>$category['userID'],
             "name"=>$category['name'],
             "visible"=>$category['visible']
         ];
