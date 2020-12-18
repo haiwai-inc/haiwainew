@@ -17,34 +17,62 @@
         <div class="mt-2 px-3">川普</div>
       </div>
       <div class="col-sm-8 col-12">
-        <span v-if="activeId === 0">
-          <article-list-item
-            v-for="item in articlelists"
-            v-bind:key="item.articleID"
-            v-bind:data="item"
-            type="0"
-          >
-          </article-list-item>
-        </span>
-        <span v-if="activeId === 1">
-          用户
-        </span>
-        <span v-if="activeId === 2">
-          标签
-        </span>
-        <span v-if="activeId === 3">
-          文集
-          
-        </span>
+        <div v-if="activeId === 0">
+          <span v-if="search.article.data.data.length>0">
+            {{search.article.data.data[0].postID}}
+            <article-list-item
+              v-for="item in search.article.data.data"
+              v-bind:key="item.postID"
+              v-bind:data="item"
+              type="0"
+            >
+            </article-list-item>
+          </span>
+          <span v-if="search.article.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+        </div>
+        <div v-if="activeId === 1">
+          <span v-if="search.blogger.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <span v-if="search.blogger.data.data.length>0">
+            <bloger-list-item 
+            v-for="(item,index) in search.blogger.data.data" 
+            v-bind:key="index" 
+            :data="item"></bloger-list-item>
+          </span>
+            
+        </div>
+        <div v-if="activeId === 2">
+          <span v-if="search.tag_articles.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <span v-if="search.tag_articles.data.data.length>0">
+            <article-list-item
+              v-for="item in search.tag_articles.data.data"
+              v-bind:key="item.postID"
+              v-bind:data="item"
+              type="0"
+            >
+            </article-list-item>
+          </span>
+        </div>
+        <div v-if="activeId === 3">
+          <span v-if="search.categories.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <span v-if="search.categories.data.data.length>0">
+            <div style="padding:10px 0;border-bottom:#eee 1px solid" v-for="(item,index) in search.categories.data.data" :key="index">
+              <div style="font-weight:700;font-size:1.3rem;padding-bottom:5px" v-html="item.name"></div>
+              <div class="d-flex"><avatar :data="item.userinfo_userID" :imgHeight="18" class="mr-2"></avatar>
+              <span style="margin-top:2px">{{item.userinfo_userID.username}}</span></div>
+              <span style="color:gray;font-size:0.85rem">{{item.bloggerinfo_bloggerID.count_article}} 篇文章，博客访问：{{item.bloggerinfo_bloggerID.count_read}}</span> 
+            </div>
+          </span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import MainMenu from "./components/Main/MainMenu.vue";
-import LeftNavItem from "./components/Main/LeftNavItem";
-import ArticleListItem from "./components/Main/ArticleListItem.vue";
-// import Avatar from "./components/Main/Avatar";
+import MainMenu from "../../blog/pages/components/Main/MainMenu.vue";
+import LeftNavItem from "../../blog/pages/components/Main/LeftNavItem";
+import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem.vue";
+import BlogerListItem from "../../blog/pages/components/Main/BlogerListItem.vue"
+import Avatar from "../../blog/pages/components/Main/Avatar";
 // import NoticeComment from "./NoticeComment";
 // import NoticeFollow from "./NoticeFollow";
 // import { LeftArrow, IconMore3v } from "@/components/Icons";
@@ -53,8 +81,11 @@ export default {
   name: "search",
   data() {
     return {
+      search:this.$store.state.search,
       activeId: 0,
       hideArrow:true,
+      keyword:'',
+      tag:0,
       authorInfor: {
         avatarUrl: "/img/julie.jpg",
         isHot: true,
@@ -90,85 +121,14 @@ export default {
           unread: 6,
         },
       ],
-      articlelists: [
-        {
-          articleID: "345678",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg3.jpg",
-        },
-        {
-          articleID: "34567",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456",
-          isHot: false,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg4.jpg",
-        },
-        {
-          articleID: "3456",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "12345",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg1.jpg",
-        },
-        {
-          articleID: "345",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: false,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "",
-        },
-        {
-          articleID: "3456789",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "",
-        },
-      ],
     };
   },
   components: {
     LeftNavItem,
     MainMenu,
     ArticleListItem,
-    // Avatar,
+    BlogerListItem,
+    Avatar,
 //     DropDown,
     // NoticeComment,
     // NoticeFollow,
@@ -179,9 +139,29 @@ export default {
   methods: {
     whichActive(id) {
       this.activeId = id;
-      console.log(this);
+      console.log(id);
+    },
+    async doSearch(k,tag){
+      this.$store.state.search.article = await this.search.search_articles(k,0);
+      this.$store.state.search.blogger = await this.search.search_bloggers(k,0,'all',0);
+      this.$store.state.search.categories = await this.search.search_categories(k,0);
+      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tag,0);
+      // this.search = this.$store.state.search;
+      console.log(this.search);
     },
   },
+  created() {
+    this.keyword = this.$route.query.keyword
+    this.tag = this.$route.query.tag
+    this.doSearch(this.keyword,this.tag);
+  },
+  watch:{
+    $route(){
+      this.keyword = this.$route.query.keyword
+      this.tag = this.$route.query.tag
+      this.doSearch(this.keyword,this.tag);
+    }
+  }
 };
 </script>
 <style>

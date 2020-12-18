@@ -6,7 +6,9 @@ class admin extends Api {
         $this->sess = true;
     }
 
-    
+    public function index(){
+        
+    }
     
     
     

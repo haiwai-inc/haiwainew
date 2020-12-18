@@ -1,26 +1,16 @@
 <?php
-
-
-/*
- * 有一个用户系统的log记录小铃铛
- * 最新评论加字段控制
- * 
- */
-
-
 /**
  * @author sida
  * [
  *  'data'=>[],
  *  'error'=>[
- *      ['name'=>'user','msg'=>''],
- *      ['name'=>'password','msg'=>'']
+ *      ['name'=>'name1','msg'=>'msg1'],
+ *      ['name'=>'name1','msg'=>'msg1']
  *  ],
  *  'status'=>true
  *  ]
  */
 class user extends Api {
-
     public $space = true;
     
     public function __construct() {
@@ -80,9 +70,7 @@ class user extends Api {
      */
     public function blacklist_list($lastID=0){
         $obj_account_blacklist=load("account_blacklist");
-        $fields=[
-            'userID'=>$_SESSION['id']
-        ];
+        $fields=['userID'=>$_SESSION['id'],'limit'=>20];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
@@ -141,9 +129,7 @@ class user extends Api {
         $obj_article_post=load("article_post");
         $obj_account_qqh=load("account_qqh");
         
-        $fields=[
-            'userID'=>$_SESSION['id']
-        ];
+        $fields=['userID'=>$_SESSION['id'],'limit'=>20];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
@@ -210,6 +196,7 @@ class user extends Api {
      * 悄悄话页
      * 悄悄话 列表
      * @param integer $lastID | 最后一个悄悄话信息对话框的message_dateline
+     * @response /account/api_response/qqh_list.txt
      */
     public function qqh_list($lastID=0){
         $obj_account_qqh=load("account_qqh");
@@ -225,7 +212,6 @@ class user extends Api {
             $where_account_qqh_post['last_message_dateline,<']=$lastID;
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
-        
         if(!empty($rs_account_qqh)){
             //查询联系人信息
             $rs_account_qqh=$obj_account_user->get_basic_userinfo($rs_account_qqh,"userID");
@@ -306,8 +292,8 @@ class user extends Api {
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
-        //帖子赞+1
-        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        //帖子赞+1 修改时间
+        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){
@@ -407,28 +393,6 @@ class user extends Api {
     }
     
     /**
-     * 小铃铛页
-     * 我的 点赞人 列表 
-     */
-    public function my_buzz_list(){
-        
-    }
-    
-    /**
-     * 测试信息： userID=17, basecode=59252 59294
-     * 
-     * 用户17登录
-     * http://local.haiwainew.com/api/v1/account/passport/login_status/?userID=17
-     * 
-     * 查看所有未读消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_unread_count/
-     * 
-     * 查看未读的博客评论消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_list_comment/
-     * 
-     * 清空特定类型的消息
-     * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
-     * 
      * 我的 新评论 列表 
      * @param integer $lastID | 最后id
      */
@@ -436,7 +400,7 @@ class user extends Api {
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
         $where=[
-            'limit'=>30,
+            'limit'=>20,
             "userID"=>$_SESSION['id'],
             "type"=>"blog_comment",
             "order"=>['id'=>"ASC"]
@@ -454,11 +418,45 @@ class user extends Api {
     }
     
     /**
+     * 小铃铛页
+     * 我的 点赞人 列表
+     * @param integer $lastID | 最后的文章ID
+     */
+    public function my_buzz_article_list($lastID=0){
+        $obj_article_indexing=load("article_indexing");
+        $fields=['limit'=>20,'userID'=>$_SESSION['id'],'order'=>['buzz_date'=>'DESC'],'count_buzz,!='=>0];
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID','userID','blogID'],$fields);
+        if(empty($rs_article_indexing)){
+            return [];
+        }
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        return $rs_article_indexing;
+    }
+    
+    /**
      * 我的粉丝
      * 我的 粉丝 列表
+     * @param integer $lastID | 最后的id
      */
-    public function my_follower_list(){
+    public function my_follower_list($lastID=0){
+        $obj_account_follower=load("account_follower");
+        $fields=["followerID"=>$_SESSION['id'],'limit'=>20];
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
+        }
+        $rs_account_follower=$obj_account_follower->getAll("*",$fields);
         
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_account_follower=$obj_account_user->get_basic_userinfo($rs_account_follower,"userID");
+        
+        return $rs_account_follower;
     }
     
     /**
@@ -485,12 +483,28 @@ class user extends Api {
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
         
-        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type]);
+        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type],"notification_".$tbn);
         
         return true;
     }
     
-    
+    /**
+     * 小铃铛页
+     * 消息 列表
+     * @param integer $lastID | 最后消息的id
+     */
+    public function notification_list($lastID=0){
+        $obj_account_notification=load("account_notification");
+        $tbn=substr('0'.$_SESSION['id'],-1);
+        
+        $fields=['userID'=>$_SESSION['id'],'limit'=>20];
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
+        }
+        
+        $rs_account_notification=$obj_account_notification->getAll("*",$fields,"notification_".$tbn);
+        return $rs_account_notification;
+    }
     
     
     

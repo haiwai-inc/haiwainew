@@ -93,7 +93,7 @@ class search_article_index extends Search
 					"type": "date",
 					"format": "yyyy-MM-dd HH:mm:ss"
 				  },
-				  "like_date": {
+				  "buzz_date": {
 					"type": "date",
 					"format": "yyyy-MM-dd HH:mm:ss"
 				  },
@@ -212,7 +212,7 @@ class search_article_index extends Search
 			"visible" => $article['visible'],
 			"create_date"    => $this-> get_time_string($article['create_date']),
 			"edit_date"    => $this-> get_time_string($article['edit_date']),
-			"like_date"    => $this-> get_time_string($article['like_date']),
+			"buzz_date"    => $this-> get_time_string($article['buzz_date']),
 			"count_read"=>$article['count_read'],
 			"count_buzz"=>$article['count_buzz'],
 			"pic" => $article['pic'],
@@ -255,7 +255,7 @@ class search_article_index extends Search
                     "tags"    => $article['tags'],
                     "create_date"    => $this-> get_time_string($article['create_date']),
                     "edit_date"    => $this-> get_time_string($article['edit_date']),
-                    "like_date"    => $this-> get_time_string($article['like_date']),
+                    "buzz_date"    => $this-> get_time_string($article['buzz_date']),
 					"visible" => $article['visible'],
 					"count_read"=>$article['count_read'],
 					"count_buzz"=>$article['count_buzz'],

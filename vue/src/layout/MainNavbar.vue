@@ -22,12 +22,26 @@
     
     <template slot="before-menu"> 
       <div style="max-width:500px;padding:0 18px;">
-        <fg-input style="margin:0;"
+        <el-autocomplete
+          class="inline-input"
+          v-model="keyword"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入内容"
+          :trigger-on-focus="false"
+          @select="handleSelect"
+          @keyup.enter.native="onSubmit"
+        ><i slot="prefix" class="el-input__icon el-icon-search"></i>
+          
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.name }}</div>
+          </template>
+        </el-autocomplete>
+        <!-- <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
           placeholder="搜索文章/用户..."
           @keyup.enter.native="submit"
         >
-        </fg-input>
+        </fg-input> -->
       </div>
     </template>
     <template slot="navbar-menu">     
@@ -115,8 +129,10 @@
 
 <script>
 import { IconPen } from '@/components/Icons'
-import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, FormGroupInput, Button,  } from '@/components';
-import { Popover } from 'element-ui';
+import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, } from '@/components';
+import { Popover, Autocomplete } from 'element-ui';
+import blog from '../module/blog/blog.service.js';
+
 export default {
   name: 'main-navbar',
   props: {
@@ -130,12 +146,10 @@ export default {
     NavLink,
     [Popover.name]: Popover,
     [Switch.name]: Switch,
-    [FormGroupInput.name]: FormGroupInput,
+    // [FormGroupInput.name]: FormGroupInput,
     [Button.name]: Button,
-    IconPen
-  },
-  created: function () {
-    this.bodyclass = document.querySelector('body').classList.value;
+    [Autocomplete.name]: Autocomplete,
+    IconPen,
   },
   data(){
     return {
@@ -143,23 +157,51 @@ export default {
       switches: {
         defaultOn: true,
         defaultOff: false
-      }
+      },
+      keyword: '',
+      search:this.$store.state.search,
     };
   },
   methods:{
-    submit(){
-      this.$router.push('/search')
+    async querySearch(queryString, cb) {
+      let results = await this.search.getautocomplete(queryString);
+      cb(results.data.data);// 调用 callback 返回建议列表的数据
     },
+    
+    handleSelect(item) {
+      this.keyword = item.name;
+      console.log(item);
+      this.doSearch(this.keyword,item.id);
+    },
+
+    onSubmit(){
+      this.doSearch(this.keyword,0);
+    },
+
+    async doSearch(k,tag){
+      this.$router.push({path:'/search',query:{keyword:k,tag:tag}});
+    },
+
     setFontSize(size){
       console.log(this.bodyclass);
       let cls = this.bodyclass + ' fontsize'+size;
       document.querySelector('body').setAttribute('class',cls);
     }
+  },
+  created: function () {
+    this.bodyclass = document.querySelector('body').classList.value;
+  },
+  beforeCreate(){
+  },
+  mounted() {
   }
 };
 </script>
 
-<style scoped>
+<style>
+.el-input__inner{
+  border-radius: 20px;
+}
 .editicon{
   fill:#32caf9;
   margin-right:4px;

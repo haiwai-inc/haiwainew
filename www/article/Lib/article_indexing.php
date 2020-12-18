@@ -69,7 +69,7 @@ class article_indexing extends Model
         //添加点赞
         $post_buzz_tbn=substr('0'.$v['postID'],-1);
         $obj_article_post_tag=load("article_post_tag");
-        $rs_article_post_buzz=$obj_article_post_tag->getAll("*",['id'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
+        $rs_article_post_buzz=$obj_article_post_tag->getAll("*",['postID'=>$v['postID']],"post_buzz_".$post_buzz_tbn);
         $rs_article_indexing[$k]['buzz']=[];
         if(!empty($rs_article_post_buzz)){
             foreach($rs_article_post_buzz as $kk=>$vv){
@@ -135,5 +135,92 @@ class article_indexing extends Model
 	    }
 	    return $rs;
 	}
+
+	//验证发帖
+	public function article_add_validation($data){
+	    if(empty($data['typeID'])){
+	        return false;
+	    }
+	    
+	    //检查博客
+        if($data['typeID']==1){
+            if(empty($data['bloggerID'])){
+                return false;
+            }
+            
+	        $obj_blog_blogger=load("blog_blogger");
+	        $check_blog_blogger=$obj_blog_blogger->getOne(['id'],['status'=>1,'id'=>$data['bloggerID']]);
+	        if(empty($check_blog_blogger)){
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+	
+	//验证用户修改帖子信息
+	public function article_update_validation($data){
+	    if(empty($data['postID']) || empty($data['typeID'])){
+	        return false;
+	    }
+	    
+	    //检查主贴
+	    $check_article_indexing=$this->getOne(['id','userID','bloggerID'],['postID'=>$data['postID']]);
+	    if(empty($check_article_indexing)){
+	        return false;
+	    }
+	    
+	    if($check_article_indexing['userID']!=$_SESSION['id']){
+	        return false;
+	    }
+	    
+	    return true;
+	}
+	
+	//验证回复
+	public function article_reply_validation($data){
+	    if(empty($data['postID']) || empty($data['typeID'])){
+	        return false;
+	    }
+	    
+	    //检查主贴
+	    $check_article_indexing=$this->getOne(['id'],['postID'=>$data['postID']]);
+	    if(empty($check_article_indexing)){
+	        return false;
+	    }
+	    return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

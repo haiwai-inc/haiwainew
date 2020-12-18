@@ -28,7 +28,7 @@
                 size="sm"
                 @click="openModal()"
                 >
-                    <icon-mail style="width:16px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.8rem;">发悄悄话</span>
+                    <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.9rem;">发悄悄话</span>
                 </n-button>
                 
                 <n-button 

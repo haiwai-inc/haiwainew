@@ -144,8 +144,8 @@ class search_article_noindex extends Search
 			
 			//如果登录
 			if(!empty($_SESSION['id'])){
-			    //加入书签
 			    if(!empty($tmp_rs_postID)){
+			        //加入书签
 			        $obj_account_bookmark=load("account_bookmark");
 			        $rs_account_bookmark=$obj_account_bookmark->getAll("*",['userID'=>$_SESSION['id'],'OR'=>["postID"=>$tmp_rs_postID]]);
 			        if(!empty($rs_account_bookmark)){
@@ -166,6 +166,9 @@ class search_article_noindex extends Search
 	            
 	            //是否加入书签
 	            $rs[$k]["postInfo_{$hashID}"]['is_bookmark']=empty($hash_account_bookmark[$v['postID']])?0:1;
+	            
+	            //是否点赞
+	            $rs[$k]["postInfo_{$hashID}"]['is_buzz']=(!empty($_SESSION['id']) && in_array($_SESSION['id'],$hash_posts[$v[$hashID]]['buzz']))?1:0;
 	        }
 	    } 
 	    
@@ -251,9 +254,25 @@ class search_article_noindex extends Search
 		    }
 		}
 		$rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
-
+		
 		//导入ES
 		$this->add_new_articles($rs_article_indexing);
 		return true;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

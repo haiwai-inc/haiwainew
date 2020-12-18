@@ -6,44 +6,48 @@
       </div>
       <div class="row">
         <div class="col-sm-8 col-12" v-if="showpage">
-          <h4>{{articleDetail.postInfo_postID.title}}</h4>
-          <div class="d-flex justify-content-between">
-            <span class="blogger-box">
-              <bloger-list-item :data="articleDetail" type="small"></bloger-list-item>
+          <div v-if="!articleDetail.status" class="text-center text-warning">{{articleDetail.error}}</div>
+          <div v-if="articleDetail.status">
+            <h4>{{articleDetail.data.postInfo_postID.title}}</h4>
+            <div class="d-flex justify-content-between">
+              <span class="blogger-box">
+                <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item>
+              </span>
+            
+            <span class="media-icons">
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
+                <span style="fill:#39B8EB" v-html="icons.like"></span>
+              </button>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢">
+                <span style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
+              </button>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="articleDetail.data.postInfo_postID.is_bookmark">
+                <!-- <icon-star></icon-star> -->
+                <span v-html="icons.star"></span>
+              </button>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="!articleDetail.data.postInfo_postID.is_bookmark">
+                <span v-html="icons.star_outline"></span>
+              </button>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
+                <span style=" fill:#39B8EB;" v-html="icons.share"></span>
+              </button>
             </span>
-          
-          <span class="media-icons">
-            <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
-              <span style="fill:#39B8EB" v-html="icons.like"></span>
-            </button>
-            <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢">
-              <span style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
-            </button>
-            <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="articleDetail.postInfo_postID.is_bookmark">
-               <!-- <icon-star></icon-star> -->
-              <span v-html="icons.star"></span>
-            </button>
-            <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="!articleDetail.postInfo_postID.is_bookmark">
-              <span v-html="icons.star_outline"></span>
-            </button>
-            <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
-              <span style=" fill:#39B8EB;" v-html="icons.share"></span>
-            </button>
-          </span>
+            </div>
+            <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
+              <!-- blog 正文 -->
+            </div>
           </div>
-          <div class="content" v-html="articleDetail.postInfo_postID.msgbody">
-            <!-- blog 正文 -->
-          </div>
-          <div class="comment" v-if="showcomment">
-            <h4>评论（{{articleDetail.comment.length}}）</h4>
-            <comment :data="articleDetail.comment"></comment>
+          <div v-if="showcomment && !comment.status" class="text-center">评论数据获取失败</div>
+          <div class="comment" v-if="showcomment && comment.status">
+            <h4>评论（{{comment.data.length}}）</h4>
+            <comment :data="comment.data"></comment>
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
          <!-- r1 -->
             <div class="box my-3">
               <span class="blogger-box">
-                <bloger-list-item :data="articleDetail" type="small"></bloger-list-item>
+                <!-- <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item> -->
               </span>
                <!-- 左边相同样式 -->
                <span v-for="(item,index) in recommend.authorArticle" :key="index">
@@ -105,21 +109,23 @@ export default {
     RecommendListItem,
     Comment,
   },
-  created: function () {
+  mounted: function () {
     this.article_view()
   },
   methods:{
     article_view(){
+      this.showpage = false;
+      this.showcomment = false;
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
-        this.articleDetail = res.data.data;
+        this.articleDetail = res.data;
         this.showpage = true;
         console.log(res)
       })
       blog.article_view_comment(postid).then(res=>{
-        this.articleDetail.comment = res.data.data;
+        this.comment = res.data;
         this.showcomment=true;
-        console.log(this.articleDetail)
+        console.log(this.comment)
       })
     }
   },
@@ -129,6 +135,7 @@ export default {
       showcomment:false,
       showpage:false,
       articleDetail: {},
+      comment:{},
       recommend:{
         authorArticle:[
           {

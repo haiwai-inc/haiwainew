@@ -1,0 +1,59 @@
+模拟登录人用户1
+[0] 用户1收到用户2的回复
+[1] 用户1发送用户3
+[2] 用户1发送用户4
+[3] 用户5发送用户1
+
+未读消息逻辑：  
+	userID || touserID <=> $_SESSION['id']
+	userID 		<=> new_message
+	touserID	<=> to_new_message
+	[0] [new_message] => 1
+	[1] [new_message] => 0
+	[2] [new_message] => 0
+	[3] [to_new_message] => 1
+
+返回数据主结构如下：
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [userID] => 1
+            [touserID] => 2
+            [new_message] => 1
+            [to_new_message] => 1
+            [last_messageID] => 4
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [userID] => 1
+            [touserID] => 3
+            [new_message] => 0
+            [to_new_message] => 1
+            [last_messageID] => 2
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [userID] => 1
+            [touserID] => 4
+            [new_message] => 0
+            [to_new_message] => 1
+            [last_messageID] => 3
+        )
+
+    [3] => Array
+        (
+            [id] => 4
+            [userID] => 5
+            [touserID] => 1
+            [new_message] => 0
+            [to_new_message] => 1
+            [last_messageID] => 5
+        )
+
+)
