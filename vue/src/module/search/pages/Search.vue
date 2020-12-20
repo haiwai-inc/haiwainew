@@ -12,14 +12,13 @@
           :activeId="activeId"
           v-on:whichActive="whichActive"
         ></left-nav-item>
-        <div class="d-flex justify-content-between mt-1 p-3"><span class="text-muted">最近搜索</span><span>清空</span></div>
+        <!-- <div class="d-flex justify-content-between mt-1 p-3"><span class="text-muted">最近搜索</span><span>清空</span></div>
         <div class="mt-3 px-3">孙悟空的文集</div>
-        <div class="mt-2 px-3">川普</div>
+        <div class="mt-2 px-3">川普</div> -->
       </div>
       <div class="col-sm-8 col-12">
         <div v-if="activeId === 0">
           <span v-if="search.article.data.data.length>0">
-            {{search.article.data.data[0].postID}}
             <article-list-item
               v-for="item in search.article.data.data"
               v-bind:key="item.postID"
@@ -38,9 +37,18 @@
             v-bind:key="index" 
             :data="item"></bloger-list-item>
           </span>
-            
         </div>
         <div v-if="activeId === 2">
+          <div v-if="search.tag.data.data.length!==0">
+            <b>相关标签</b><div class="w-100"></div>
+            <el-button class="search_tag"
+            size="mini" 
+            round 
+            v-for="item in search.tag.data.data" 
+            :key="item.id"
+            :id="item.id"
+            @click="tagChange(item.id)">{{item.name}}</el-button>
+          </div>
           <span v-if="search.tag_articles.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
           <span v-if="search.tag_articles.data.data.length>0">
             <article-list-item
@@ -73,6 +81,7 @@ import LeftNavItem from "../../blog/pages/components/Main/LeftNavItem";
 import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem.vue";
 import BlogerListItem from "../../blog/pages/components/Main/BlogerListItem.vue"
 import Avatar from "../../blog/pages/components/Main/Avatar";
+import { Button, } from 'element-ui';
 // import NoticeComment from "./NoticeComment";
 // import NoticeFollow from "./NoticeFollow";
 // import { LeftArrow, IconMore3v } from "@/components/Icons";
@@ -85,16 +94,8 @@ export default {
       activeId: 0,
       hideArrow:true,
       keyword:'',
-      tag:0,
-      authorInfor: {
-        avatarUrl: "/img/julie.jpg",
-        isHot: true,
-        authorHomepage: "",
-        name: "用户名",
-        firstLetter: "用",
-        description: "简介简介简介简介",
-        isFollowed: true,
-      },
+      tagres:[],
+      tags:[],
       data: [
         {
           id: 0,
@@ -129,6 +130,7 @@ export default {
     ArticleListItem,
     BlogerListItem,
     Avatar,
+    [Button.name]:Button,
 //     DropDown,
     // NoticeComment,
     // NoticeFollow,
@@ -141,30 +143,70 @@ export default {
       this.activeId = id;
       console.log(id);
     },
+    tagChange(id){
+      let idx = this.tags.indexOf(id);
+      let obj = document.getElementById(id);
+      if( idx === -1 ){
+        this.tags.push(id);
+        obj.classList.add("activeTag");
+        console.log(idx);
+      }else{
+        this.tags.splice(idx,1);
+        obj.classList.remove("activeTag");
+        console.log(obj.outerHTML);
+      }
+      console.log(this.tags,idx);
+      this.get_tags_articles(this.tags.length==0?this.tagres:this.tags,0);
+    },
     async doSearch(k,tag){
       this.$store.state.search.article = await this.search.search_articles(k,0);
       this.$store.state.search.blogger = await this.search.search_bloggers(k,0,'all',0);
+      this.$store.state.search.tag = await this.search.getautocomplete(k);
+      
       this.$store.state.search.categories = await this.search.search_categories(k,0);
-      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tag,0);
       // this.search = this.$store.state.search;
       console.log(this.search);
+      this.get_all_tag_articles();
     },
+    async get_all_tag_articles(){
+      
+      this.$store.state.search.tag.data.data.forEach(t=>{
+        this.tagres.push(t.id)
+      })
+      this.get_tags_articles(this.tagres,0);
+        console.log(this.$store.state.search.tag_articles)
+    },
+    async get_tags_articles(tags,lastID){
+      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tags,lastID);
+    }
   },
   created() {
     this.keyword = this.$route.query.keyword
-    this.tag = this.$route.query.tag
-    this.doSearch(this.keyword,this.tag);
+    this.doSearch(this.keyword);
   },
   watch:{
     $route(){
       this.keyword = this.$route.query.keyword
-      this.tag = this.$route.query.tag
-      this.doSearch(this.keyword,this.tag);
+      this.doSearch(this.keyword);
     }
   }
 };
 </script>
 <style>
+.activeTag{
+  border:1px #39B8EB solid !important;
+  color: #39B8EB !important;
+  background-color: #39b9eb15 !important;
+}
+.search_tag{
+  margin: 5px 10px 5px 0 !important;
+  outline:none !important;
+}
+.search_tag.el-button:focus{
+  background: #FFF;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+}
 /*悄悄话列表页*/
 .qiaoqiao-list .menu {
   margin-bottom: 20px;
