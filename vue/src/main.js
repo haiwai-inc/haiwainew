@@ -6,6 +6,7 @@ import API from './service/api';
 import Vuex from 'vuex';
 import User from './service/user';
 import Search from './module/search/search.service.js';
+import jquery from 'jquery'
 // import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.config.productionTip = false;

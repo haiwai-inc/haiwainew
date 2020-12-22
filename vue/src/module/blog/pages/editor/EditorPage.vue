@@ -145,6 +145,7 @@
         @blur="onEditorBlur"
         @input="onEditorInput"
         @destroy="onEditorDestroy"></ckeditor> -->
+        <div id="summernote"></div>
 
         <n-button 
         type="primary" 
@@ -257,9 +258,19 @@ import { Button, DropDown, Modal, FormGroupInput, } from '@/components';
 import { DatePicker,TimePicker,Collapse,CollapseItem } from 'element-ui';
 import {HaiwaiLogoWhite,IconPlus,IconDelete,IconDraft,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconSchedule,IconX,IconPublish} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons';
+import $ from "jquery";
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap-reboot.css';
+// import 'bootstrap/dist/css/bootstrap-grid.css';
+// import 'summernote/dist/summernote.min.css';
+import 'summernote/dist/summernote-bs4.css';
+import 'bootswatch/dist/lux/bootstrap.css';
+import 'summernote';
+import 'bootstrap';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from '../../blog.service';
+
 
 export default {
   name: 'profile',
@@ -295,9 +306,13 @@ export default {
     
     async fetchData() {
       let blogid = 0;
-      if (this.$route.params.blogid!=undefined) {
-        blogid = this.$route.params.blogid;
-        this.article = await blog.getArticle(blogid);
+      console.log(this.$route.query)
+      if (this.$route.query.blogid!=undefined) {
+        blogid = this.$route.query.blogid;
+        // this.article = await blog.getArticle(blogid);
+        this.article = (await blog.article_view(blogid)).data.data.postInfo_postID 
+        console.log(this.article)
+        $('#summernote').summernote('code', this.article.msgbody);
       }
     },
 
@@ -305,6 +320,23 @@ export default {
       blog.update(1,this.article);
     },
 
+    initEditor(){
+      console.log($('#summernote'))
+      // $(document).ready(function() {
+        $('#summernote').summernote({
+          height: 600, 
+          callbacks:{
+            onImageUpload: this.uploadImage
+          }
+            
+        });
+      // });
+    },
+
+    uploadImage(files, editor, $editable){
+      // console.log("Uploading")
+      console.log(files)
+    },
     //for editor
     toggleEditorDisabled() {
       this.editorDisabled = !this.editorDisabled;
@@ -360,6 +392,10 @@ export default {
 
   created () {
     this.fetchData()
+  },
+  mounted () {
+    this.initEditor()
+
   },
 
   data(){
