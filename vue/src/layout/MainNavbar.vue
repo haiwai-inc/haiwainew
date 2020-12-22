@@ -22,7 +22,7 @@
     
     <template slot="before-menu"> 
       <div style="max-width:500px;padding:0 18px;">
-        <el-autocomplete
+        <!-- <el-autocomplete
           class="inline-input"
           v-model="keyword"
           :fetch-suggestions="querySearch"
@@ -35,13 +35,14 @@
           <template slot-scope="{ item }">
             <div class="name">{{ item.name }}</div>
           </template>
-        </el-autocomplete>
-        <!-- <fg-input style="margin:0;"
+        </el-autocomplete> -->
+        <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
           placeholder="搜索文章/用户..."
-          @keyup.enter.native="submit"
+          v-model="keyword"
+          @keyup.enter.native="onSubmit"
         >
-        </fg-input> -->
+        </fg-input>
       </div>
     </template>
     <template slot="navbar-menu">     
@@ -129,8 +130,8 @@
 
 <script>
 import { IconPen } from '@/components/Icons'
-import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, } from '@/components';
-import { Popover, Autocomplete } from 'element-ui';
+import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupInput } from '@/components';
+import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
 
 export default {
@@ -146,9 +147,9 @@ export default {
     NavLink,
     [Popover.name]: Popover,
     [Switch.name]: Switch,
-    // [FormGroupInput.name]: FormGroupInput,
+    [FormGroupInput.name]: FormGroupInput,
     [Button.name]: Button,
-    [Autocomplete.name]: Autocomplete,
+    // [Autocomplete.name]: Autocomplete,
     IconPen,
   },
   data(){

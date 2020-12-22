@@ -9,7 +9,7 @@ class Blog extends API{
    * 返回推荐博文列表
    */
   async recommend_article(lastid){
-    return await this.sendget("blog/page/recommend_article/?lastid="+lastid);
+    return await this.sendget("blog/page/recommend_article/?lastID="+lastid);
   }
 
   /**
@@ -30,28 +30,28 @@ class Blog extends API{
    * 返回热榜博文列表
    */
   async hot_article_list(tagID,lastid){
-    return await this.sendget("blog/page/hot_article_list/?tagID="+tagID+"&lastid="+lastid);
+    return await this.sendget("blog/page/hot_article_list/?tagID="+tagID+"&lastID="+lastid);
   }
 
   /**
    * 返回博主首页最新列表
    */
   async article_list_recent(bloggerID,lastid){
-    return await this.sendget("blog/page/article_list_recent/?bloggerID="+bloggerID+"&lastid="+lastid);
+    return await this.sendget("blog/page/article_list_recent/?bloggerID="+bloggerID+"&lastID="+lastid);
   }
 
   /**
    * 返回博主首页最热列表
    */
   async article_list_hot(bloggerID,lastid){
-    return await this.sendget("blog/page/article_list_hot/?bloggerID="+bloggerID+"&lastid="+lastid);
+    return await this.sendget("blog/page/article_list_hot/?bloggerID="+bloggerID+"&lastID="+lastid);
   }
   
   /**
    * 返回博主首页新评列表
    */
   async article_list_comment(bloggerID,lastid){
-    return await this.sendget("blog/page/article_list_comment/?bloggerID="+bloggerID+"&lastid="+lastid);
+    return await this.sendget("blog/page/article_list_comment/?bloggerID="+bloggerID+"&lastID="+lastid);
   }
 
   /**

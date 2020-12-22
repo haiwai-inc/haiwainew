@@ -43,7 +43,7 @@ export default {
   cursor: pointer;
 }
 .left-nav-item .name {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600
 }
 .left-nav-item .descrip{

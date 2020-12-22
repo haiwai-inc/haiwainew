@@ -4,10 +4,23 @@
         <main-menu type="-1"></main-menu>
       </div>
       <div class="row">
-       <div class="col-sm-8 col-12">
-            
+       <div class="col-sm-8 col-12">   
             <div class="profile-header mt-2">
-            文集头写在这个div里面
+             <!-- header start -->  
+              <div class="user-avatar d-flex py-2 px-4">
+                 <div class="flex-grow-1">
+                   <span class="blog-user-index-name">美国往事</span>
+                   <br>
+                   <span class="blog-user-index-des">21篇文章</span>
+                   <span class="blog-user-index-des ml-4">阅读.10853</span>
+                 </div>
+                 <div>
+                  <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
+                    <span style=" fill:#39B8EB;" v-html="icons.share"></span>
+                 </button>
+                 </div>
+              </div>
+             <!-- header end -->
             </div>
             <div
             v-infinite-scroll="loadArticle"
@@ -39,6 +52,7 @@ import MainMenu from '../pages/components/Main/MainMenu.vue';
 import ArticleListItem from '../pages/components/Main/ArticleListItem.vue';
 import UserIndexSort from '../pages/components/Main/UserIndexSort.vue';
 import CollectionList from '../pages/components/Main/CollectionList.vue';
+import icons from "@/components/Icons/Icons";
 
 import blog from '../blog.service';
 
@@ -125,5 +139,12 @@ export default {
     color: #1D1D1D;
     border-bottom: 2px solid #39B8EB;
     font-weight: 600;
+}
+.blog-user-index {
+        background-color: #f6f6f6;
+}
+.blog-user-index .blog-user-index-des {
+        font-size: 0.85rem;
+        color: gray;
 }
 </style>

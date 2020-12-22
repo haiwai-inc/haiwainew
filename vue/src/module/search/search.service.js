@@ -1,6 +1,7 @@
 import API from "../../service/api";
 
 class Search extends API{
+    tag={data:{data:[]}};
     article={data:{data:[]}};
     blogger={data:{data:[]}};
     categories={data:{data:[]}};
