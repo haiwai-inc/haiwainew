@@ -7,10 +7,10 @@ class Search extends API{
     categories={data:{data:[]}};
     tag_articles={data:{data:[]}};
     /**
-     * 获取autocomplete列表
+     * 获取tag列表
      * @param string keyword 
      */
-    async getautocomplete(kw){
+    async get_tags(kw){
         return await this.sendget("search/page/tags/?keyword="+kw)
     }
 
