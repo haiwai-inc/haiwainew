@@ -10,7 +10,7 @@
           :key="index"
           :data="item"
           :activeId="activeId"
-          v-on:whichActive="whichActive"
+          v-on:which-active="whichActive"
         ></left-nav-item>
       </div>
       <div class="col-sm-8 col-12">

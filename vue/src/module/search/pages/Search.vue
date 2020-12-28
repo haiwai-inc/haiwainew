@@ -10,7 +10,7 @@
           :key="index"
           :data="item"
           :activeId="activeId"
-          v-on:whichActive="whichActive"
+          v-on:which-active="whichActive"
         ></left-nav-item>
         <!-- <div class="d-flex justify-content-between mt-1 p-3"><span class="text-muted">最近搜索</span><span>清空</span></div>
         <div class="mt-3 px-3">孙悟空的文集</div>
