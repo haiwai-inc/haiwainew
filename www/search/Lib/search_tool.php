@@ -41,6 +41,9 @@ class search_tool{
         $articles = $user_obj -> get_basic_userinfo($articles, "userID");
         $search_noindex = load("search_article_noindex");
         $articles = $search_noindex->get_postInfo($articles);
+        foreach($articles as $k=>$v){
+            $articles[$k]['postInfo_postID']['msgbody'] = $v['msgbody'];
+        }
         $obj_article_indexing=load("article_indexing");
         $articles=$obj_article_indexing->get_article_count($articles);
         return $articles;
