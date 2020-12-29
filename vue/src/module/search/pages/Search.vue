@@ -61,8 +61,8 @@
             <el-button class="search_tag"
             size="mini" 
             round 
-            v-for="item in search.tag.data.data" 
-            :key="item.id"
+            v-for="(item,index) in search.tag.data.data" 
+            :key="index"
             :id="item.id"
             @click="tagChange(item.id)">{{item.name}}</el-button>
           </div>
@@ -77,6 +77,7 @@
             </article-list-item>
           </span>
         </div>
+        <!-- 文集 -->
         <div v-if="activeId === 3">
           <span v-if="search.categories.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
           <span v-if="search.categories.data.data.length>0">
