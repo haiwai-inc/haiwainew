@@ -29,7 +29,7 @@ export default {
   },
   methods:{
     wActive(id){
-      this.$emit('whichActive',id);
+      this.$emit('which-active',id);
     }
   }
 };

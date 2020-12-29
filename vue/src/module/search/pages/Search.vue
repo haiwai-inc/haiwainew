@@ -10,7 +10,7 @@
           :key="index"
           :data="item"
           :activeId="activeId"
-          v-on:whichActive="whichActive"
+          v-on:which-active="whichActive"
         ></left-nav-item>
         <!-- <div class="d-flex justify-content-between mt-1 p-3"><span class="text-muted">最近搜索</span><span>清空</span></div>
         <div class="mt-3 px-3">孙悟空的文集</div>
@@ -18,7 +18,11 @@
       </div>
       <div class="col-sm-8 col-12">
         <div v-if="activeId === 0">
-          <span v-if="search.article.data.data.length>0">
+
+          <div v-if="search.article.data.data.length>0"
+          v-infinite-scroll="infinite(0)"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50">
             <article-list-item
               v-for="item in search.article.data.data"
               v-bind:key="item.postID"
@@ -26,6 +30,16 @@
               type="0"
             >
             </article-list-item>
+          </div>
+          <div class="text-center py-5" v-if="loading.article"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
+          </div>
+          <p class="text-center py-4" v-if="noMore.article">没有更多了</p>
+
+
+
+          <span>
+            
           </span>
           <span v-if="search.article.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
         </div>
@@ -96,6 +110,9 @@ export default {
       keyword:'',
       tagres:[],
       tags:[],
+      lastID:{article:0,blogger:0,tag_articles:0,categories:0},
+      loading:{article:false},
+      noMore:{article:false},
       data: [
         {
           id: 0,
@@ -137,7 +154,11 @@ export default {
     // LeftArrow,
     // IconMore3v,
   },
-  computed: {},
+  computed:{
+    disabled () {console.log(this.loading.article,this.noMore.articl)
+      return this.loading.article || this.noMore.article
+    }
+  },
   methods: {
     whichActive(id) {
       this.activeId = id;
@@ -158,18 +179,35 @@ export default {
       console.log(this.tags,idx);
       this.get_tags_articles(this.tags.length==0?this.tagres:this.tags,0);
     },
-    async doSearch(k,tag){
-      this.$store.state.search.article = await this.search.search_articles(k,0);
-      this.$store.state.search.blogger = await this.search.search_bloggers(k,0,'all',0);
-      this.$store.state.search.tag = await this.search.getautocomplete(k);
-      
-      this.$store.state.search.categories = await this.search.search_categories(k,0);
-      // this.search = this.$store.state.search;
-      console.log(this.search);
+    async doSearch(k){
+      this.get_articles(k,0);
+      this.get_bloggers(k,0,'all',0);
+      this.get_tags(k);
+      this.get_categories(k,0);
       this.get_all_tag_articles();
     },
+
+    async get_articles(k,lastID){
+      this.loading.article = true;
+      if (lastID==0){
+        this.$store.state.search.article = await this.search.search_articles(k,lastID);
+      }else{
+        // let arr = await this.search.search_articles(k,this.lastID.article);
+        // let data = this.$store.state.search.article.data.data;
+        // data = data.concat(arr);
+        console.log("shaqingkuang")
+      }
+      this.loading.article = false;
+      let res = this.$store.state.search.article.data.data
+      this.lastID.article = res[res.length-1].postID
+    },
+    async get_bloggers(k,lastID,type,w){
+      this.$store.state.search.blogger = await this.search.search_bloggers(k,lastID,type,w);
+    },
+    async get_tags(k){
+      this.$store.state.search.tag = await this.search.get_tags(k);
+    },
     async get_all_tag_articles(){
-      
       this.$store.state.search.tag.data.data.forEach(t=>{
         this.tagres.push(t.id)
       })
@@ -178,6 +216,14 @@ export default {
     },
     async get_tags_articles(tags,lastID){
       this.$store.state.search.tag_articles = await this.search.search_tag_articles(tags,lastID);
+    },
+    async get_categories(k,lastID){
+      this.$store.state.search.categories = await this.search.search_categories(k,lastID);
+    },
+    infinite(id){
+      
+      if (id==0)  console.log(this.keyword,this.lastID.article)
+      
     }
   },
   created() {
