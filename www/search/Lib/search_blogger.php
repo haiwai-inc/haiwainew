@@ -174,7 +174,7 @@ class search_blogger extends Search
         }
 	} 
 	
-	public function search_by_name($keyword, $last_score=0, $type="all"){
+	public function search_by_name($keyword, $last_score=0, $type="all", $last_id = 0){
 		$query = [];
 		if(is_string($keyword)){
 
@@ -191,9 +191,9 @@ class search_blogger extends Search
 				$this->object(array("term" => array("status"=>0)))
 			);
 
-			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
+			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "userID"=>array("order" =>"desc")))];
 			if(!empty($last_score)){
-				$query["search_after"] = [$last_score, 0];
+				$query["search_after"] = [$last_score, $last_id];
 			}
 			$query["highlight"] = array(
 				"pre_tags" => array( "<span style='color:#39B8EB'>" ),

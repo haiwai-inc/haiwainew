@@ -3,18 +3,18 @@ class search_tool{
 
 
 
-    public function search_article($keyword, $last_score = 0){
+    public function search_article($keyword, $last_score = 0, $last_id = 0){
         $search_article_obj = load("search_article_index");
-        $articles = $search_article_obj->search_by_keyword($keyword, $last_score);
+        $articles = $search_article_obj->search_by_keyword($keyword, $last_score, $last_id);
         $user_obj = load("account_user");
         $articles = $user_obj->get_basic_userinfo($articles, "userID");
         $articles = $this->overwrite_highlight($articles);
         return $this->fetch_article_info($articles);
     }
 
-    public function search_blogger($keyword, $type, $last_score = 0){
+    public function search_blogger($keyword, $type, $last_score = 0, $last_id = 0){
         $search_blogger_obj = load("search_blogger");
-        $bloggers = $search_blogger_obj->search_by_name($keyword, $last_score, $type);
+        $bloggers = $search_blogger_obj->search_by_name($keyword, $last_score, $type, $last_id);
         $user_obj = load("account_user");
         $blogger_obj = load("blog_blogger");
         $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");

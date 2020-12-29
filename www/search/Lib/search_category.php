@@ -95,7 +95,7 @@ class search_category  extends Search{
     }
 
     // elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.6.2/elasticsearch-analysis-stconvert-7.6.2.zip
-	public function search_by_name($keyword, $last_score=0){
+	public function search_by_name($keyword, $last_score=0, $last_id = 0){
         $query = [];
 		if(is_string($keyword)){
 
@@ -106,9 +106,9 @@ class search_category  extends Search{
 				$this->object(array("term" => array("status"=>0)))
 			);
 
-			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc")))];
+			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "id"=>array("order" =>"desc")))];
 			if(!empty($last_score)){
-				$query["search_after"] = [$last_score, 0];
+				$query["search_after"] = [$last_score, $last_id];
 			}
 			$query["highlight"] = array(
 				"pre_tags" => array( "<span style='color:#39B8EB'>" ),

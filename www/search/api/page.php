@@ -5,12 +5,13 @@ class page extends Api{
     *
     * @param string $keyword
     * @param string $last_score
+    * @param string $last_id
     * @response 搜索结果
     *
     */
-    public function articles($keyword, $last_score = 0){
+    public function articles($keyword, $last_score = 0, $last_id = 0){
         $tool_obj = load("search_tool");
-        $articles = $tool_obj -> search_article($keyword, $last_score);
+        $articles = $tool_obj -> search_article($keyword, $last_score, $last_id);
         return $articles;
     }
 
@@ -21,13 +22,14 @@ class page extends Api{
      * @param string $type
      * @param boolean $with_article
      * @param string $last_score
+     * @param string $last_id
      * @response 搜索结果
      *
      */
-    public function bloggers($keyword, $type = "all", $with_article = false, $last_score = 0)
+    public function bloggers($keyword, $type = "all", $with_article = false, $last_score = 0, $last_id = 0)
     {
         $tool_obj = load("search_tool");
-        $rs = $tool_obj->search_blogger($keyword, $type, $last_score);
+        $rs = $tool_obj->search_blogger($keyword, $type, $last_score, $last_id);
         if(!empty($with_article)){
             $rs = array_slice($rs, 0 , 3);
         }
@@ -40,14 +42,15 @@ class page extends Api{
      *
      * @param string $keyword
      * @param string $last_score
+     * @param string $last_id
      * @response 搜索结果
      *
      */
-    public function categories($keyword, $last_score = 0){
+    public function categories($keyword, $last_score = 0, $last_id = 0){
         $tool_obj = load("search_tool");
 
         $category_obj = load("search_category");
-        $categories = $category_obj->search_by_name($keyword,$last_score);
+        $categories = $category_obj->search_by_name($keyword,$last_score, $last_id);
         $user_obj = load("account_user");
         $blogger_obj = load("blog_blogger");
 
@@ -96,4 +99,32 @@ class page extends Api{
         $tool_obj = load("search_tool");
         return $tool_obj->fetch_article_info($articles);
     }
+
+
+
+    /**
+     * Search by name for tag
+     *
+     * @param string $keyword
+     * @response 搜索结果 list of tags
+     *
+     */
+    public function tags_article_combined($keyword){
+        $rs = ["tags"=>[], "articles"=>[]];
+        $tag_obj = load("search_tag");
+        $tags = $tag_obj->search_by_name($keyword);
+        $rs['tags'] = $tags; 
+        if(empty($tags)) return $rs;
+        $tag_ids = [];
+
+        foreach($tags as $tag){
+            $tag_ids[] = $tag['id'];
+        }
+
+        $rs['tags'] = $tags; 
+        $rs['articles'] = $this->tag_articles($tag_ids);
+        return $rs;
+    }
+
+
 }

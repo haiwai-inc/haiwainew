@@ -317,6 +317,7 @@ export default {
     },
 
     save(){
+      this.article.msgbody = $('#summernote').summernote('code');
       blog.update(1,this.article);
     },
 

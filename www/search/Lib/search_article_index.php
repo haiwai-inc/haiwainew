@@ -294,7 +294,7 @@ class search_article_index extends Search
 	}
 	
 
-	function search_by_keyword($keyword, $last_score = 0){
+	function search_by_keyword($keyword, $last_score = 0, $last_id = 0){
 		$query = [];
 		if(is_string($keyword)){
 			$highlight = array("title"=>$this->object(), "msgbody"=>$this->object());
@@ -304,9 +304,9 @@ class search_article_index extends Search
 				$this->object(array("term" => array("visible"=>0)))
 			);
 
-			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"),"edit_date"=>array("order"=>"desc")))];
-			if(!empty($last_score )){
-				$query["search_after"]=[$last_score, 0];
+			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc") ,"postID"=>array("order"=>"desc"),"edit_date"=>array("order"=>"desc")))];
+			if(!empty($last_score)){ 
+				$query["search_after"]=[$last_score, $last_id, 0];
 			}
 			$query["highlight"] = array(
 				"pre_tags" => array( "<span style='color:#39B8EB'>" ),
