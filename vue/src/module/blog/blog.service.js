@@ -136,6 +136,17 @@ class Blog extends API{
   async delete(blogid){
       return await this.sendget("blog/dashboard/delete/?id="+blogid)
   }
+  
+  /**
+   * 上传图片
+   * @param FormData data 
+   * @return url
+   * @error false
+   */
+  async uploadImage(data){
+    
+      return await this.sendpost("blog/page/uploadImage/",data);
+  }
 
   async sendget(url){
       try{

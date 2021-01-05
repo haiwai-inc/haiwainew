@@ -1,4 +1,5 @@
 <template>
+
   <div class="row no-gutters publisher">
     <div class="col-md-2 menu1">
       <div class="header">
@@ -258,15 +259,20 @@ import { Button, DropDown, Modal, FormGroupInput, } from '@/components';
 import { DatePicker,TimePicker,Collapse,CollapseItem } from 'element-ui';
 import {HaiwaiLogoWhite,IconPlus,IconDelete,IconDraft,IconEdit,IconForbid,IconFolder,IconPrivate,IconTop,IconSchedule,IconX,IconPublish} from '@/components/Icons';
 import HaiwaiIcons from '@/components/Icons/Icons';
+import "jquery/dist/jquery"
 import $ from "jquery";
+import jQuery from "jquery"
 // import 'bootstrap/dist/css/bootstrap.css';
 // import 'bootstrap/dist/css/bootstrap-reboot.css';
 // import 'bootstrap/dist/css/bootstrap-grid.css';
 // import 'summernote/dist/summernote.min.css';
 import 'summernote/dist/summernote-bs4.css';
 import 'bootswatch/dist/lux/bootstrap.css';
-import 'summernote';
-import 'bootstrap';
+import 'summernote/dist/summernote.js'
+import 'bootstrap'
+import lang from './language'
+
+
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from '../../blog.service';
@@ -305,12 +311,12 @@ export default {
     },
     
     async fetchData() {
-      let blogid = 0;
+      let postid = 0;
       console.log(this.$route.query)
-      if (this.$route.query.blogid!=undefined) {
-        blogid = this.$route.query.blogid;
+      if (this.$route.query.postid!=undefined) {
+        postid = this.$route.query.postid;
         // this.article = await blog.getArticle(blogid);
-        this.article = (await blog.article_view(blogid)).data.data.postInfo_postID 
+        this.article = (await blog.article_view(postid)).data.data.postInfo_postID 
         console.log(this.article)
         $('#summernote').summernote('code', this.article.msgbody);
       }
@@ -322,21 +328,55 @@ export default {
     },
 
     initEditor(){
-      console.log($('#summernote'))
-      // $(document).ready(function() {
+      // await import ("summernote/lang/summernote-zh-CN.js")
+      this.editor_language()
         $('#summernote').summernote({
+          lang:"zh-CN",
           height: 600, 
+          fontNames: ['宋体','仿宋','楷体','黑体','幼圆','华文行楷','华文隶书','华文细黑','新宋体',
+            'Microsoft Yahei',
+            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+            'Impact','Tahoma','Times New Roman', 'Verdana'],
+          fontNamesIgnoreCheck: ['宋体','仿宋','楷体','黑体','幼圆','华文行楷','华文隶书','华文细黑','新宋体',
+            'Microsoft Yahei',
+            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+            'Impact','Tahoma','Times New Roman', 'Verdana'],
           callbacks:{
             onImageUpload: this.uploadImage
-          }
-            
-        });
-      // });
+          },
+        }); 
     },
 
-    uploadImage(files, editor, $editable){
-      // console.log("Uploading")
-      console.log(files)
+    uploadImage(files){
+      console.log("Uploading")
+      let data = new FormData();
+      // console.log(data);
+      // console.log("Uploading Done")
+      data.append("file", files);
+      blog.uploadImage(data).then(rs=>{
+        console.log(rs)
+        if(rs['error']){
+          alert("上传图片失败")
+        }
+        else{
+          console.log(rs['data']['data'])
+          $('#summernote').summernote("insertImage", "http://japan.people.com.cn/NMediaFile/2018/0921/MAIN201809211240000389013678253.jpg", 'filename');
+        }
+          
+
+        // editor.insertImage($editable, url);
+      }, err=>{
+      })
+    // $.ajax({
+    //   data: data,
+    //   type: "POST",
+    //   url: "Your URL POST (php)",
+    //   cache: false,
+    //   contentType: false,
+    //   processData: false,
+    //   success: function(url) {
+    //     editor.insertImage(welEditable, url);
+    //   }});
     },
     //for editor
     toggleEditorDisabled() {
@@ -384,8 +424,10 @@ export default {
     changeMenu(wid,aid){
       this.wenjiActiveId = wid;
       this.articleActiveId = aid;
-    }
-    
+    },
+    editor_language() {
+  $.extend($.summernote.lang, lang);
+},
   },
 
   beforeCreate(){
@@ -398,6 +440,8 @@ export default {
     this.initEditor()
 
   },
+
+  
 
   data(){
     return{

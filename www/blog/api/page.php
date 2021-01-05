@@ -389,6 +389,16 @@ class page extends Api {
         
         return $rs_article_indexing;
     }
+
+    /**
+     * 编辑器传图
+     * @param object $file
+     * @post file
+     * 
+     */
+    function uploadImage($file){
+        return "https://www.google.com/url?sa=i&url=https%3A%2F%2Fm.baike.com%2Fwiki%2F%25E8%25A5%25BF%25E9%2587%258E%25E4%25B8%2583%25E6%25BF%2591%2F4998337%3Fbaike_source%3Dinnerlink&psig=AOvVaw2dUI1U_kP25R_675f8g7Di&ust=1609893790389000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNi72-_Hg-4CFQAAAAAdAAAAABAD";
+    }
     
     
 }
