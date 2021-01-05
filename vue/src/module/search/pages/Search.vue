@@ -17,15 +17,16 @@
         <div class="mt-2 px-3">川普</div> -->
       </div>
       <div class="col-sm-8 col-12">
+        <!-- 文章 -->
         <div v-if="activeId === 0">
-
+          <span v-if="search.article.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
           <div v-if="search.article.data.data.length>0"
-          v-infinite-scroll="infinite(0)"
+          v-infinite-scroll="infiniteGet"
           infinite-scroll-disabled="disabled"
           infinite-scroll-distance="50">
             <article-list-item
-              v-for="item in search.article.data.data"
-              v-bind:key="item.postID"
+              v-for="(item,index) in search.article.data.data"
+              v-bind:key="index"
               v-bind:data="item"
               type="0"
             >
@@ -35,31 +36,33 @@
             <i class="now-ui-icons loader_refresh spin"></i>
           </div>
           <p class="text-center py-4" v-if="noMore.article">没有更多了</p>
-
-
-
-          <span>
-            
-          </span>
-          <span v-if="search.article.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
         </div>
+        <!-- 用户 -->
         <div v-if="activeId === 1">
           <span v-if="search.blogger.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <span v-if="search.blogger.data.data.length>0">
+          <div v-if="search.blogger.data.data.length>0"
+          v-infinite-scroll="infiniteGet"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50">
             <bloger-list-item 
             v-for="(item,index) in search.blogger.data.data" 
             v-bind:key="index" 
             :data="item"></bloger-list-item>
-          </span>
+          </div>
+          <div class="text-center py-5" v-if="loading.blogger"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
+          </div>
+          <p class="text-center py-4" v-if="noMore.blogger">没有更多了</p>
         </div>
+        <!-- 标签 -->
         <div v-if="activeId === 2">
           <div v-if="search.tag.data.data.length!==0">
             <b>相关标签</b><div class="w-100"></div>
             <el-button class="search_tag"
             size="mini" 
             round 
-            v-for="item in search.tag.data.data" 
-            :key="item.id"
+            v-for="(item,index) in search.tag.data.data" 
+            :key="index"
             :id="item.id"
             @click="tagChange(item.id)">{{item.name}}</el-button>
           </div>
@@ -74,6 +77,7 @@
             </article-list-item>
           </span>
         </div>
+        <!-- 文集 -->
         <div v-if="activeId === 3">
           <span v-if="search.categories.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
           <span v-if="search.categories.data.data.length>0">
@@ -110,9 +114,9 @@ export default {
       keyword:'',
       tagres:[],
       tags:[],
-      lastID:{article:0,blogger:0,tag_articles:0,categories:0},
-      loading:{article:false},
-      noMore:{article:false},
+      lastScore:{article:0,blogger:0,tag_articles:0,categories:0},
+      loading:{article:false,blogger:false,tag_articles:false,categories:false},
+      noMore:{article:false,blogger:false,tag_articles:false,categories:false},
       data: [
         {
           id: 0,
@@ -155,14 +159,17 @@ export default {
     // IconMore3v,
   },
   computed:{
-    disabled () {console.log(this.loading.article,this.noMore.articl)
-      return this.loading.article || this.noMore.article
+    disabled () {
+      let status = this.activeId==0 ? this.loading.article || this.noMore.article:
+      this.activeId==1 ? this.loading.blogger || this.noMore.blogger:
+      this.activeId==2 ? this.loading.tag_articles || this.noMore.tag_articles:
+      this.loading.categories || this.noMore.categories;
+      return status;
     }
   },
   methods: {
     whichActive(id) {
       this.activeId = id;
-      console.log(id);
     },
     tagChange(id){
       let idx = this.tags.indexOf(id);
@@ -170,13 +177,10 @@ export default {
       if( idx === -1 ){
         this.tags.push(id);
         obj.classList.add("activeTag");
-        console.log(idx);
       }else{
         this.tags.splice(idx,1);
         obj.classList.remove("activeTag");
-        console.log(obj.outerHTML);
       }
-      console.log(this.tags,idx);
       this.get_tags_articles(this.tags.length==0?this.tagres:this.tags,0);
     },
     async doSearch(k){
@@ -186,23 +190,42 @@ export default {
       this.get_categories(k,0);
       this.get_all_tag_articles();
     },
-
-    async get_articles(k,lastID){
+    nomoreStatus(rl){
+      return rl<30?true:false
+    },
+    async get_articles(k,lastScore){
       this.loading.article = true;
-      if (lastID==0){
-        this.$store.state.search.article = await this.search.search_articles(k,lastID);
+      if (lastScore==0){
+        this.$store.state.search.article = await this.search.search_articles(k,lastScore);
+        let rl = this.$store.state.search.article.data.data;
+        this.lastScore.article = rl[rl.length-1]._score;
+        this.noMore.article = this.nomoreStatus(rl.length);
       }else{
-        // let arr = await this.search.search_articles(k,this.lastID.article);
-        // let data = this.$store.state.search.article.data.data;
-        // data = data.concat(arr);
-        console.log("shaqingkuang")
+        let r = await this.search.search_articles(k,lastScore);
+        let arr = r.data.data;
+        this.$store.state.search.article.data.data = this.$store.state.search.article.data.data.concat(arr);
+        let data = this.$store.state.search.article.data.data;
+        this.lastScore.article = data[data.length-1]._score;
+        this.noMore.article = this.nomoreStatus(arr.length);
       }
       this.loading.article = false;
-      let res = this.$store.state.search.article.data.data
-      this.lastID.article = res[res.length-1].postID
     },
-    async get_bloggers(k,lastID,type,w){
-      this.$store.state.search.blogger = await this.search.search_bloggers(k,lastID,type,w);
+    async get_bloggers(k,lastScore,type,w){
+      this.loading.blogger = true;
+      if(lastScore==0){
+        this.$store.state.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
+        let rl = this.$store.state.search.blogger.data.data;
+        this.lastScore.blogger = rl[rl.length-1]._score;
+        this.noMore.blogger = this.nomoreStatus(rl.length);
+      }else{
+        let r = await this.search.search_bloggers(k,lastScore,type,w);
+        let arr = r.data.data;
+        this.$store.state.search.blogger.data.data = this.$store.state.search.blogger.data.data.concat(arr);
+        let data = this.$store.state.search.blogger.data.data;
+        this.lastScore.blogger = data[data.length-1]._score;
+        this.noMore.blogger = this.nomoreStatus(arr.length);
+      }
+      this.loading.blogger = false;
     },
     async get_tags(k){
       this.$store.state.search.tag = await this.search.get_tags(k);
@@ -214,16 +237,19 @@ export default {
       this.get_tags_articles(this.tagres,0);
         console.log(this.$store.state.search.tag_articles)
     },
-    async get_tags_articles(tags,lastID){
-      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tags,lastID);
+    async get_tags_articles(tags,lastScore){
+      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
     },
-    async get_categories(k,lastID){
-      this.$store.state.search.categories = await this.search.search_categories(k,lastID);
+    async get_categories(k,lastScore){
+      this.$store.state.search.categories = await this.search.search_categories(k,lastScore);
     },
-    infinite(id){
-      
-      if (id==0)  console.log(this.keyword,this.lastID.article)
-      
+    infiniteGet(){
+      if (this.activeId==0) {
+        this.get_articles(this.keyword,this.lastScore.article);
+      } 
+      if (this.activeId==1){
+        this.get_bloggers(this.keyword,this.lastScore.blogger,'all',0);
+      }
     }
   },
   created() {
