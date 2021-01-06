@@ -186,6 +186,8 @@ class user extends Api {
          //同步ES索引
          $obj_article_noindex=load("search_article_noindex");
          $obj_article_noindex->fetch_and_insert([$postID]);
+         
+         return true;
     }
     
     /**
