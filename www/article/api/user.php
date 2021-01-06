@@ -150,12 +150,12 @@ class user extends Api {
     
     /**
      * 文章详情页
-     * 文章 回复
+     * 文章 回复 添加
      * @param obj $article_data | 文章的数据
      * @post article_data
      * @response /article/api_response/article_reply.txt
      */
-    public function article_reply($article_data){
+    public function article_reply_add($article_data){
          //检查主贴
          $obj_article_indexing=load("article_indexing");
          $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
@@ -188,6 +188,26 @@ class user extends Api {
          $obj_article_noindex->fetch_and_insert([$postID]);
          
          return true;
+    }
+    
+    /**
+     * 文章详情页
+     * 文章 回复 删除
+     * @param int $id | 回复的postID
+     */
+    public function article_reply_delete($id){
+        
+    }
+    
+    /**
+     * 文章详情页
+     * 文章 回复 修改
+     * @param obj $article_data | 文章的数据
+     * @post article_data
+     * @response /article/api_response/article_reply.txt
+     */
+    public function article_reply_update($article_data){
+        
     }
     
     /**
