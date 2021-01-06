@@ -312,7 +312,7 @@ class page extends Api {
             $rs_article_reply=$obj_account_user->get_basic_userinfo($rs_article_reply,"userID");
             
             //添加计数信息
-            $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+            $rs_article_reply=$obj_article_indexing->get_article_count($rs_article_reply);
             foreach($rs_article_reply as $v){
                 $hash_article_reply[$v['basecode']][]=$v;
             }
