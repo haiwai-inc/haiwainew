@@ -174,6 +174,8 @@ class blog_tool{
                 'update_date'=>strtotime($rs_account_legacy_user['dateline']),
                 'update_type'=>"register",
                 'update_ip'=>$rs_account_legacy_user["ipaddress"],
+                'login_data'=>'wxcusername',
+                'login_token'=>md5("wxc123456"),
                 'login_source'=>'wxc',
                 'avatar'=>empty($avatar)?"":$avatar,
             ];

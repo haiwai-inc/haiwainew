@@ -310,6 +310,9 @@ class page extends Api {
             //添加用户信息
             $obj_account_user=load("account_user");
             $rs_article_reply=$obj_account_user->get_basic_userinfo($rs_article_reply,"userID");
+            
+            //添加计数信息
+            $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
             foreach($rs_article_reply as $v){
                 $hash_article_reply[$v['basecode']][]=$v;
             }
@@ -325,6 +328,9 @@ class page extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
         return $rs_article_indexing;
     }
