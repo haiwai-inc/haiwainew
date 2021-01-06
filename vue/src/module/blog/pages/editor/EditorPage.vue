@@ -113,23 +113,6 @@
       <div><span style="font-size:13px;padding-left:8px;">自动保存中...   已保存</span></div>
       <div class="d-flex justify-content-between py-2">
         <input class="editorTitle" type="text" v-model="article.title" placeholder="新建博文标题">
-        <n-button 
-        v-if="true"
-        type="primary" 
-        round 
-        simple 
-        @click.native="modals.publish = true"
-        class="editbtn">
-          发布文章
-        </n-button>
-        <n-button 
-        v-if="false"
-        type="default" 
-        link 
-        @click.native="save"
-        class="editbtn">
-          <icon-x :style="{fill:'gray'}"></icon-x>取消发布
-        </n-button>
       </div>
 
       <!-- 编辑器 -->
@@ -147,15 +130,32 @@
         @input="onEditorInput"
         @destroy="onEditorDestroy"></ckeditor> -->
         <div id="summernote"></div>
-
         <n-button 
+        v-if="true"
+        type="primary" 
+        round 
+        simple 
+        @click.native="modals.publish = true"
+        class="editbtn">
+          发布文章
+        </n-button>
+        <n-button 
+        v-if="false"
+        type="default" 
+        link 
+        @click.native="save"
+        class="editbtn">
+          <icon-x :style="{fill:'gray'}"></icon-x>取消发布
+        </n-button>
+
+        <!-- <n-button 
         type="primary" 
         round 
         simple 
         @click="save"
         class="editbtn">
           <icon-plus class="editicon"></icon-plus>保存
-        </n-button>
+        </n-button> -->
     </div>
 
     <!-- Add Wenji Modal -->
@@ -600,5 +600,9 @@ body,html,#app,.wrapper,.publisher{
 }
 .el-date-table td.disabled div span{
   color:#ffffff8f !important;
+}
+.btn-round.btn-simple{
+        background: #fff;
+        border: 1px solid #38b8eb;
 }
 </style>
