@@ -324,20 +324,20 @@ class user extends Api {
         $obj_article_post_buzz=load("article_post_buzz");
         $tbn=substr('0'.$postID,-1);
         $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
-        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经取消点赞了";$this->status=false;return false;}
+        if(empty($check_article_post_buzz))    {$this->error="此文章您已经取消点赞了";$this->status=false;return false;}
         
-        //添加人
-        $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
+        //取消添加人
+        $obj_article_post_buzz->remove(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
         //帖子赞-1
         $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']-1],['postID'=>$postID]);
         
-        //博主赞+1
+        //博主赞-1
         if($check_article_indexing['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
             $check_blog_blogger=$obj_blog_blogger->getOne(['id','count_buzz'],['id'=>$check_article_indexing['bloggerID']]);
             if(!empty($check_blog_blogger)){
-                $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
+                $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']-1],['id'=>$check_blog_blogger['id']]);
             }
         }
         
