@@ -293,7 +293,7 @@ class user extends Api {
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
         //帖子赞+1 修改时间
-        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){
@@ -303,6 +303,10 @@ class user extends Api {
                 $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
             }
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
         
         return "已赞";
     }
@@ -324,8 +328,8 @@ class user extends Api {
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
-        //帖子赞+1
-        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        //帖子赞-1
+        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']-1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){
@@ -335,6 +339,10 @@ class user extends Api {
                 $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
             }
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
         
         return "已取消赞";
     }
