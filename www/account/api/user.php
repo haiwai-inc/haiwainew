@@ -314,8 +314,9 @@ class user extends Api {
     /**
      * 用户
      * 赞 取消
+     * @param integer $postID | 文章的postID
      */
-    public function buzz_delete(){
+    public function buzz_delete($postID){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
         if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
