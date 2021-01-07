@@ -109,9 +109,9 @@
         </li>
       </ul>
     </div>
-    <div class="col-md-7 editor">
-      <div><span style="font-size:13px;padding-left:8px;">自动保存中...   已保存</span></div>
-      <div class="d-flex justify-content-between py-2">
+    <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
+      <div ref="saving"><span style="font-size:13px;padding-left:8px;">自动保存中...   已保存</span></div>
+      <div class="d-flex justify-content-between py-2" ref="titleBox">
         <input class="editorTitle" type="text" v-model="article.title" placeholder="新建博文标题">
         <n-button 
         v-if="true"
@@ -147,15 +147,17 @@
         @input="onEditorInput"
         @destroy="onEditorDestroy"></ckeditor> -->
         <div id="summernote"></div>
-
+        <div ref="saveBox">
         <n-button 
         type="primary" 
         round 
         simple 
         @click="save"
-        class="editbtn">
+        class="editbtn"
+        >
           <icon-plus class="editicon"></icon-plus>保存
         </n-button>
+        </div>
     </div>
 
     <!-- Add Wenji Modal -->
@@ -330,9 +332,17 @@ export default {
     initEditor(){
       // await import ("summernote/lang/summernote-zh-CN.js")
       this.editor_language()
+      let height = this.$refs.editorContainer.clientHeight;
+      console.log(height)
+      height -= this.$refs.saving.clientHeight + this.$refs.titleBox.clientHeight + this.$refs.saveBox.clientHeight
+      
+      console.log(this.$refs.saving.clientHeight)
+      console.log(this.$refs.titleBox.clientHeight)
+      console.log(this.$refs.saveBox.clientHeight)
+      console.log(height)
         $('#summernote').summernote({
           lang:"zh-CN",
-          height: 600, 
+          height: height, 
           fontNames: ['宋体','仿宋','楷体','黑体','幼圆','华文行楷','华文隶书','华文细黑','新宋体',
             'Microsoft Yahei',
             'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
