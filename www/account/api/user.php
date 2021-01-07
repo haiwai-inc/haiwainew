@@ -324,7 +324,7 @@ class user extends Api {
         $obj_article_post_buzz=load("article_post_buzz");
         $tbn=substr('0'.$postID,-1);
         $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
-        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经赞过了";$this->status=false;return false;}
+        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经取消点赞了";$this->status=false;return false;}
         
         //添加人
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
