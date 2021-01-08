@@ -196,12 +196,12 @@ class article_indexing extends Model
 	public function format_article_view_comment($rs_article_indexing,$userID){
 	    if(!empty($rs_article_indexing)){
 	        foreach($rs_article_indexing as $k=>$v){
-	            $rs_article_indexing[$k]['is_writer']=false;
+	            $rs_article_indexing[$k]['has_author']=false;
 	            $rs_article_indexing[$k]['showreply']=false;
 	            if(!empty($v['reply'])){
 	                foreach($v['reply'] as $vv){
 	                    if($vv['userID']==$userID){
-	                        $rs_article_indexing[$k]['is_writer']=true;
+	                        $rs_article_indexing[$k]['has_author']=true;
 	                        break;
 	                    }
 	                }
