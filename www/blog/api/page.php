@@ -332,8 +332,8 @@ class page extends Api {
         //添加计数信息
         $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
-        //添加二级评论是否有作者
-        $rs_article_indexing=$obj_article_indexing->get_writer($rs_article_indexing,$check_article_indexing['userID']);
+        //前端微调
+        $rs_article_indexing=$obj_article_indexing->format_article_view_comment($rs_article_indexing,$check_article_indexing['userID']);
         
         return $rs_article_indexing;
     }
