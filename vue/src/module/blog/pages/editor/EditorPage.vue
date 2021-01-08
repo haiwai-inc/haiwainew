@@ -266,8 +266,8 @@ import jQuery from "jquery"
 // import 'bootstrap/dist/css/bootstrap-reboot.css';
 // import 'bootstrap/dist/css/bootstrap-grid.css';
 // import 'summernote/dist/summernote.min.css';
-import 'summernote/dist/summernote-bs4.css';
 import 'bootswatch/dist/lux/bootstrap.css';
+import 'summernote/dist/summernote-bs4.css';
 import 'summernote/dist/summernote.js'
 import 'bootstrap'
 import lang from './language'
@@ -604,5 +604,9 @@ body,html,#app,.wrapper,.publisher{
 .btn-round.btn-simple{
         background: #fff;
         border: 1px solid #38b8eb;
+}
+.note-editor.note-frame.fullscreen
+{
+background: #fff
 }
 </style>
