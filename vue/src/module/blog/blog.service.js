@@ -93,6 +93,31 @@ class Blog extends API{
   async article_view_comment(id){
     return await this.sendget("blog/page/article_view_comment/?id="+id)
   }
+
+  /**
+   * 发表/回复评论
+   * @param obj article_data | post 对象{'msgbody'=>"回复内容",'postID'=>144819,"typeID"=>1,}
+   */
+  async article_reply_add(obj){
+    return await this.sendpost("article/user/article_reply_add/",obj)
+  }
+
+  /**
+   * 点赞
+   * @param number postID 
+   */
+  async buzz_add(postID){
+    return await this.sendget("account/user/buzz_add/?postID="+postID)
+  }
+  
+  /**
+   * 取消点赞
+   * @param postID $postID 
+   */
+  async buzz_delete(postID){
+    return await this.sendget("account/user/buzz_delete/?postID="+postID)
+  }
+
   /**
    * 返回单个博客文章
    * @param number blogid 
@@ -135,17 +160,6 @@ class Blog extends API{
    */
   async delete(blogid){
       return await this.sendget("blog/dashboard/delete/?id="+blogid)
-  }
-  
-  /**
-   * 上传图片
-   * @param FormData data 
-   * @return url
-   * @error false
-   */
-  async uploadImage(data){
-    
-      return await this.sendpost("blog/page/uploadImage/",data);
   }
 
   async sendget(url){
