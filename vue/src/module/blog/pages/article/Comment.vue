@@ -15,9 +15,9 @@
               @click="reply(item)">回复</a>
             <a
             v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a></p>
-            <!-- <div v-if="item.replies.length>0"> -->
+            <!-- <div v-if="item.replies.length>0"> https://cloud.tencent.com/developer/article/1360724 -->
             <div v-if="item.reply.length>0">
-              <div :id="index" v-show="item.showreply">
+              <div :id="item.postID" style="display:none">
                 <div v-for="(r,idx) in item.reply" :key="'r'+idx" class="d-flex align-items-start mt-2">
                   <avatar :data="r.userinfo_userID" :imgHeight="32" class="mr-2"></avatar>
                   <div>
@@ -25,11 +25,16 @@
                       <span class="ml-2 text-primary" style="font-size:0.85rem" v-if="item.has_author">[作者]</span>
                       <span class="replyTime">{{r.edit_date*1000 | formatDate}}</span>
                       <p class="replyContent" v-html="r.postInfo_postID.msgbody"></p>
-                      <p class="replyFoot"><icon-like-outline :style="{stroke:'gray',height:'18px'}"></icon-like-outline> {{r.like!==0?r.like:''}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message><a href="#" style="color:gray">回复</a><a class="ml-5" style="color:gray">删除</a></p>
+                      <p class="replyFoot">
+                        <span @click="like(r)"><icon-like-outline :style="{fill:r.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>{{r.countinfo_postID.count_buzz}}
+                        <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
+                        <a href="#" style="color:gray" @click="reply(r)">回复</a>
+                        <a v-if="r.userID==loginuserID" class="ml-5" style="color:gray">删除</a>
+                      </p>
                   </div>
                 </div>
               </div>
-              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="item.showreply=item.showreply?false:true">{{item.showreply?'隐藏':'显示'}} {{item.reply.length}} 条回复<span class="ml-2" v-if="item.has_author">[含作者]</span></button>
+              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(item.postID)">{{replyshowstatus}} {{item.reply.length}} 条回复<span class="ml-2" v-if="item.has_author">[含作者]</span></button>
             </div>
         </div>
     </div>
@@ -56,6 +61,22 @@
         >
       </template>
     </modal>
+<!-- 登录 modal -->
+    <modal :show.sync="modals.login" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px"><span class="text-muted">登录/注册</span></h4>
+      <p>待开发！！！</p>
+      <template slot="footer">
+        <n-button 
+        class="mr-3"
+        type="default" 
+        link
+        @click.native="modals.login = false"
+        >
+          取消
+        </n-button>
+        
+      </template>
+    </modal>
   </div>
 </template>
 <script>
@@ -79,14 +100,34 @@ export default {
       [Button.name]: Button,
   },
   mounted: function () {
-    account.login_status().then(res=>{
-      this.loginuserID = res.data.data.UserID
-    })
+    account.login_status().then(res=>{ //判断是否登录
+      if(res.data.data==undefined){
+        this.loginuserID = -1
+      }else{
+        this.loginuserID = res.data.data.UserID ;
+      }
+    });
   },
   methods:{
+    // logedin () {
+    //   let status;
+    //   account.login_status().then(res=>{ //判断是否登录
+    //     if(res.data.data==undefined){
+    //       status = false;
+    //     }else{
+    //       status = true ;
+    //     }
+    //     return status;
+    //   })
+    // },
     // 点赞、取消点赞
-    like(item){console.log(item.postInfo_postID.is_buzz);
-      item.postInfo_postID.is_buzz==0?this.buzz_add(item.postID):this.buzz_delete(item.postID);
+    like(item){
+      if(this.loginuserID!=-1){
+        item.postInfo_postID.is_buzz==0?this.buzz_add(item.postID):this.buzz_delete(item.postID);
+      }else{
+        this.modals.login = true ;
+      }
+      
     },
     buzz_add(id){
       blog.buzz_add(id).then(res=>{
@@ -129,12 +170,17 @@ export default {
     },
     checkstatus(){
       this.replybtndisable = this.replymsgbody?false:true;
+    },
+    replystatus(id){
+      let obj = document.getElementById(id);
+      obj.style.display = obj.style.display=='none'?'block':'none';
+      this.replyshowstatus = obj.style.display=='none'?'显示':'隐藏';
     }
-    
   },
   data(){
     return {
       loginuserID:0,
+      replyshowstatus:'显示',
       replymsgbody:'',
       replyusername:'',
       replybtndisable:true,
@@ -142,6 +188,7 @@ export default {
       modals: {
         reply: false,
         delete: false,
+        login:false
       },
     }
   },
