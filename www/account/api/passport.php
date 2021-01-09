@@ -18,11 +18,9 @@ class passport extends Api {
         if(empty($_SESSION['UserID']) || !empty($userID)){
             $obj_account_user=load("account_user");
             $rs_account_user=$obj_account_user->getOne(['id','auth_group','username','description','background','avatar'],['id'=>$userID]);
-            $rs_account_user['avatar']=$rs_account_user['avatar'];
             
             $_SESSION=$rs_account_user;
             $_SESSION['UserID']=$rs_account_user['id'];
-            $_SESSION['UserName']=$rs_account_user['username'];
             $_SESSION['UserLevel']=$rs_account_user['auth_group'];
             
             if(empty($rs_account_user)){
@@ -48,9 +46,31 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录
+     * @param integer $login_data|登录信息
+     * @param integer $login_token|登录凭证
+     * @param integer $login_source|登录类型
      */
-    public function user_login(){
+    public function user_login($login_data,$login_token,$login_source){
+        $obj_account_user_login=load("account_user_login");
         
+        //海外登录
+        if($login_source=="haiwai"){
+        }
+        //文学城登录
+        elseif($login_source=="wxc"){
+            $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
+            if(!$rs_user_login['status'])   {
+                $this->error=$rs_user_login['error'];
+                $this->status=false;
+                return false;
+            }
+        }else{
+            $this->error="登录不合法";
+            $this->status=false;
+            return false;
+        }
+        
+        return $rs_user_login;
     }
     
     /**
