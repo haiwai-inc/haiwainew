@@ -285,14 +285,25 @@ class page extends Api {
      * 文章详情页 
      * 文章 评论
      * @param integer $id | 主贴postID
+     * @param integer $lastID | 评论最后一个postID
      */
-    public function article_view_comment($id){
+    public function article_view_comment($id,$lastID=0){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
         if(empty($check_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //评论
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['order'=>['postID'=>'DESC'],'treelevel'=>1,'visible'=>1,'basecode'=>$check_article_indexing['basecode']]);
+        $fields=[
+            'order'=>['postID'=>'DESC'],
+            'treelevel'=>1,
+            'visible'=>1,
+            'basecode'=>$check_article_indexing['basecode'],
+            'limit'=>20,
+        ];
+        if(!empty($lastID)){
+            $fields['postID,<']=$lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],$fields);
         if(empty($rs_article_indexing)){
             return $rs_article_indexing;
         }
