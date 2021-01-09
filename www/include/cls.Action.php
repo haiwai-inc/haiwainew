@@ -36,30 +36,6 @@ abstract class Action {
 		if(!empty($_SERVER)){
 			$this->self=$_SERVER["SCRIPT_NAME"];
 		}
-		
-		//对admin.wxc.com进行处理
-		if(strtolower(substr($_SERVER['HTTP_HOST'],0,5))=='admin'||strstr($_SERVER['HTTP_HOST'],'mywxc.com')){
-			$returnURL = "/members/passport.php?act=login&redirect=".rawurlencode($_SERVER['REQUEST_URI']);
-			
-			//必须是管理权限 和 编辑 和 博客管理员 和 论坛管理员
-			if(!$this->isAdmin() && empty($_SESSION['manager'][1]) && empty($_SESSION['manager'][3]) && empty($_SESSION['manager'][4])){
-				if(strtolower(substr($_SERVER['REQUEST_URI'],0,8))!='/members') go($returnURL);
-			}
-			
-			//如果通过框架管理口登录的用户，强制注销后，再统一登录
-			if(empty($_SESSION['UserID'])||empty($_SESSION['UserName'])){
-				foreach($_SESSION as $key=>$val) unset($_SESSION[$key]);
-				
-				$pools = array('uniqueUID','sid','loc');
-				foreach($_COOKIE as $key=>$val){
-					if(!in_array($key,$pools)){
-						setcookie($key, '', null, '/', '.wenxuecity.com');
-						if (isset($_COOKIE[$key])) unset($_COOKIE[$key]);			
-					}
-				}
-				if(strtolower(substr($_SERVER['REQUEST_URI'],0,8))!='/members') go($returnURL);
-			}
-		}
 	}
 	// 析构
 	function __destruct(){
