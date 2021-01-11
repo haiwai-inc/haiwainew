@@ -266,7 +266,7 @@ import jQuery from "jquery"
 // import 'bootstrap/dist/css/bootstrap-reboot.css';
 // import 'bootstrap/dist/css/bootstrap-grid.css';
 // import 'summernote/dist/summernote.min.css';
-import 'bootswatch/dist/lux/bootstrap.css';
+// import 'bootswatch/dist/lux/bootstrap.css';
 import 'summernote/dist/summernote-bs4.css';
 import 'summernote/dist/summernote.js'
 import 'bootstrap'
@@ -601,12 +601,27 @@ body,html,#app,.wrapper,.publisher{
 .el-date-table td.disabled div span{
   color:#ffffff8f !important;
 }
-.btn-round.btn-simple{
-        background: #fff;
-        border: 1px solid #38b8eb;
+
+.publisher h1, h2, h3, h4, h5, h6 {
+        text-transform: uppercase;
+        letter-spacing: 3px;
 }
-.note-editor.note-frame.fullscreen
-{
-background: #fff
+
+.publisher h1, .h1 {
+        font-size: 2rem;
 }
+.publisher  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1a1a1a;
+}
+.publisher .note-btn-group .note-btn{
+  background-color: transparent;
+  color: #55595c
+}
+.publisher a {
+        color: #1a1a1a
+ }       
+
 </style>
