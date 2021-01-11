@@ -295,11 +295,11 @@ class page extends Api {
         //评论
         $fields=[
             'order'=>['postID'=>'DESC'],
-            'treelevel'=>1,
             'visible'=>1,
-            'basecode'=>$check_article_indexing['basecode'],
+            'basecode'=>$check_article_indexing['postID'],
             'limit'=>20,
         ];
+        
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
@@ -307,6 +307,77 @@ class page extends Api {
         if(empty($rs_article_indexing)){
             return $rs_article_indexing;
         }
+        
+        //补全二层评论
+        foreach($rs_article_indexing as $k=>$v){
+            $basecode_article_indexing[$v['postID']]=$v['postID'];
+        }
+        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['treelevel'=>2,'visible'=>1,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
+        if(!empty($rs_article_reply)){
+            //ES补全postID信息
+            $obj_article_noindex=load("search_article_noindex");
+            $rs_article_reply=$obj_article_noindex->get_postInfo($rs_article_reply,'postID',true);
+            
+            //添加用户信息
+            $obj_account_user=load("account_user");
+            $rs_article_reply=$obj_account_user->get_basic_userinfo($rs_article_reply,"userID");
+            
+            //添加计数信息
+            $rs_article_reply=$obj_article_indexing->get_article_count($rs_article_reply);
+            foreach($rs_article_reply as $v){
+                $hash_article_reply[$v['basecode']][]=$v;
+            }
+            foreach($rs_article_indexing as $k=>$v){
+                $rs_article_indexing[$k]['reply']=empty($hash_article_reply[$v['postID']])?[]:$hash_article_reply[$v['postID']];
+            }
+        }
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
+        //前端微调
+        $rs_article_indexing=$obj_article_indexing->format_article_view_comment($rs_article_indexing,$check_article_indexing['userID']);
+        
+        return $rs_article_indexing;
+    }
+    
+    /**
+     * 文章详情页
+     * 文章 评论 一条
+     * @param integer $id | 1级回复basecode
+     */
+    public function article_view_comment_one($id){
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)){$this->error="此回复不存在";$this->status=false;return false;}
+        
+        $rs_article_indexing_main=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$rs_article_indexing['basecode']]);
+        if(empty($rs_article_indexing_main)){$this->error="此回复的主贴不存在";$this->status=false;return false;}
+        
+        //补全主贴
+        $rs_article_indexing_main=$this->article_view($rs_article_indexing_main['postID']);
+        
+        //补全跟帖
+        $rs_article_indexing_reply=$this->article_view_comment($id);
+        debug::D($rs_article_indexing_main);
+        exit();
+        
+        
+        
+        
+        $obj_article_indexing=load("article_indexing");
+        
+        //一级评论
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)){$this->error="此回复不存在";$this->status=false;return false;}
         
         //补全二层评论
         foreach($rs_article_indexing as $k=>$v){
