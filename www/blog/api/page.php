@@ -368,6 +368,9 @@ class page extends Api {
         //补全跟帖
         $rs_article_indexing_main['reply']=$this->article_view_comment($id);
         
+        //前端微调
+        $rs_article_indexing_main=$obj_article_indexing->format_article_view_comment([$rs_article_indexing_main],$rs_article_indexing_main['userID']);
+        
         return $rs_article_indexing_main;
     }
     

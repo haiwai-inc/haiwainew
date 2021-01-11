@@ -40,6 +40,8 @@ class passport extends Api {
      */
     public function user_logout(){
         session_unset();
+        unset($_COOKIE['wxc_login']);
+        setcookie('wxc_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
         return true;
     }
     
@@ -77,7 +79,7 @@ class passport extends Api {
      * 用户注册页
      * 用户 注册
      */
-    public function user_register(){
+    public function user_register($register_data,$login_source){
         
     }
     

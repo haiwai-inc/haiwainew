@@ -192,21 +192,39 @@ class user extends Api {
     
     /**
      * 文章详情页
-     * 文章 回复 删除
-     * @param int $id | 回复的postID
-     */
-    public function article_reply_delete($id){
-        
-    }
-    
-    /**
-     * 文章详情页
      * 文章 回复 修改
      * @param obj $article_data | 文章的数据
      * @post article_data
      * @response /article/api_response/article_reply.txt
      */
     public function article_reply_update($article_data){
+        $article_data=[
+            'msgbody'=>"更新内容",
+            'postID'=>144823,
+            "typeID"=>1,
+        ];
+        
+        //检查修改帖子
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
+        if(empty($check_article_indexing)) {$this->error="修改的帖子不存在";$this->status=false;return false;}
+        
+        //更新帖子
+        $time=times::getTime();
+        $obj_article_indexing->update(['edit_date'=>$time],['postID'=>$article_data['postID']]);
+        
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+    }
+    
+    /**
+     * 文章详情页
+     * 文章 回复 删除
+     * @param int $id | 回复的postID
+     */
+    public function article_reply_delete($id){
         
     }
     
