@@ -356,7 +356,7 @@ class page extends Api {
      */
     public function article_view_comment_one($id){
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此回复不存在";$this->status=false;return false;}
         
         $rs_article_indexing_main=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$rs_article_indexing['basecode']]);
