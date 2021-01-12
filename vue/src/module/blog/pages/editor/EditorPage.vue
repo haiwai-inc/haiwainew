@@ -660,9 +660,14 @@ html,
   font-size: 1rem;
   font-weight: 700;
 }
-.publisher .editorTitle {
-  font-size: 32px;
-  border: 0;
+.publisher .editorTitle{
+font-size: 30px;
+padding: 10px;
+border: 0;
+}
+.publisher input.editorTitle:focus{
+color: #495057;
+outline: 0;
 }
 .publisher .dropdown .icon {
   margin-right: 5px;
