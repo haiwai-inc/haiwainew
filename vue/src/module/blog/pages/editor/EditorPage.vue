@@ -336,6 +336,8 @@ import "summernote/dist/summernote-bs4.css";
 import "summernote/dist/summernote-bs4.js";
 import "./emoji/emoji.css";
 import "./emoji/config.js";
+// import "./emoji/summernote-ext-emoji-ajax.css";
+// import "./emoji/summernote-ext-emoji-ajax.js";
 import "./audio/summernote-audio.css";
 import "./audio/summernote-audio";
 // import "./emoji/tam-emoji.min.js";
@@ -435,18 +437,18 @@ export default {
       // await import ("summernote/lang/summernote-zh-CN.js")
       this.editor_language();
       let height = this.$refs.editorContainer.clientHeight;
-      console.log(height);
-      height -=
-        this.$refs.saving.clientHeight +
-        this.$refs.titleBox.clientHeight +
-        this.$refs.saveBox.clientHeight;
+      // console.log(height);
+      // height -=
+      //   this.$refs.saving.clientHeight +
+      //   this.$refs.titleBox.clientHeight +
+      //   this.$refs.saveBox.clientHeight;
       // console.log(this.uploadImage)
       $("#summernote").summernote({
         lang: "zh-CN",
-        height: height,
+        height: height*0.6,
         toolbar: [
-          // ["style", ["style"]],
           ["font", ["bold", 'italic', "underline", "strikethrough"]],
+          ["style", ["style"]],
           ["para", ["paragraph"]],
           ["insert", ["link", "picture", "video", "audio", "emoji"]],
           ["font",["fontsize"]],
