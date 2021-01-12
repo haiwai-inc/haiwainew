@@ -137,6 +137,17 @@ class Blog extends API{
   }
 
   /**
+   * 上传图片
+   * @param FormData data 
+   * @return url
+   * @error false
+   */
+  async uploadImage(data){
+
+    return await this.sendpost("blog/page/uploadImage/",data);
+}
+
+  /**
    * 新建博客自动保存
    * @param number bloger 
    * @param object data

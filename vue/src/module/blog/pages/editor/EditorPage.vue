@@ -334,10 +334,10 @@ import jQuery from "jquery";
 import "summernote/dist/summernote-bs4.css";
 // import "bootswatch/dist/flatly/bootstrap.css";
 import "summernote/dist/summernote-bs4.js";
-import "./audio/summernote-audio.css";
-import "./audio/summernote-audio";
 import "./emoji/emoji.css";
 import "./emoji/config.js";
+import "./audio/summernote-audio.css";
+import "./audio/summernote-audio";
 // import "./emoji/tam-emoji.min.js";
 import "bootstrap";
 import lang from "./language";
@@ -397,43 +397,9 @@ export default {
       blog.update(1, this.article);
     },
 
-    initEditor() {
-      // await import ("summernote/lang/summernote-zh-CN.js")
-      this.editor_language();
-      let height = this.$refs.editorContainer.clientHeight;
-      console.log(height);
-      height -=
-        this.$refs.saving.clientHeight +
-        this.$refs.titleBox.clientHeight +
-        this.$refs.saveBox.clientHeight;
-
-      $("#summernote").summernote({
-        lang: "zh-CN",
-        height: height,
-        toolbar: [
-          // ["style", ["style"]],
-          ["font", ["bold", 'italic', "underline", "strikethrough"]],
-          ["para", ["paragraph"]],
-          ["insert", ["link", "picture", "video", "audio", "emoji"]],
-          ["font",["fontsize"]],
-          ["color", ["forecolor", "backcolor"]],
-          ["table", ["table"]],
-          ["para", ["ul", "ol"]],
-          ["font", ["clear"]],
-          ["view", ["fullscreen", "codeview", "help"]],
-        ],
-        callbacks: {
-          onImageUpload: this.uploadImage,
-          onAudioUpload: this.uploadAudio
-        },
-      });
-    },
-
     uploadImage(files) {
-      console.log("Uploading");
+      console.log("HHAHHA")
       let data = new FormData();
-      // console.log(data);
-      // console.log("Uploading Done")
       data.append("file", files);
       blog.uploadImage(data).then(
         (rs) => {
@@ -463,6 +429,38 @@ export default {
       //   success: function(url) {
       //     editor.insertImage(welEditable, url);
       //   }});
+    },
+
+    initEditor() {
+      // await import ("summernote/lang/summernote-zh-CN.js")
+      this.editor_language();
+      let height = this.$refs.editorContainer.clientHeight;
+      console.log(height);
+      height -=
+        this.$refs.saving.clientHeight +
+        this.$refs.titleBox.clientHeight +
+        this.$refs.saveBox.clientHeight;
+      // console.log(this.uploadImage)
+      $("#summernote").summernote({
+        lang: "zh-CN",
+        height: height,
+        toolbar: [
+          // ["style", ["style"]],
+          ["font", ["bold", 'italic', "underline", "strikethrough"]],
+          ["para", ["paragraph"]],
+          ["insert", ["link", "picture", "video", "audio", "emoji"]],
+          ["font",["fontsize"]],
+          ["color", ["forecolor", "backcolor"]],
+          ["table", ["table"]],
+          ["para", ["ul", "ol"]],
+          ["font", ["clear"]],
+          ["view", ["fullscreen", "codeview", "help"]],
+        ],
+        callbacks: {
+          onImageUpload: this.uploadImage,
+          onAudioUpload: this.uploadAudio
+        },
+      });
     },
 
     uploadAudio(files) {
