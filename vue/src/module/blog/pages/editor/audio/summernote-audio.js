@@ -184,6 +184,9 @@
                 var mp3RegExp = /^.+.(mp3)$/;
                 var mp3Match = url.match(mp3RegExp);
 
+                var mp4RegExp = /^.+.(mp4)$/;
+                var mp4Match = url.match(mp4RegExp);
+
                 var oggRegExp = /^.+.(ogg|oga)$/;
                 var oggMatch = url.match(oggRegExp);
 
@@ -191,7 +194,7 @@
                 var base64Match = url.match(base64RegExp);
 
                 var $audio;
-                if (mp3Match || oggMatch || base64Match) {
+                if (mp3Match || oggMatch || base64Match || mp4Match) {
                     $audio = $('<audio controls>')
                             .attr('src', url);
                 } else {

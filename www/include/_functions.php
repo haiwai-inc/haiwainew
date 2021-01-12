@@ -361,44 +361,46 @@ function func_throwException($msg,$code=0){
  * 此函数会设置cookie_domain 的作用域，用于 session 同步,完成初始化工作
  */
 function func_initSession(){
-	if(!isset($_SESSION)){
-		$global=conf("global");
-		//用于本地测试
-		if(!empty($global['system']['serverid'])){
-			if($global['system']['serverid']=='svn'){
-				ini_set('session.cookie_domain', null);
-				ini_set('session.cookie_path', '/');
-				@session_start();
-				return;
-			}
-
-		}
-		//生产环境
-		$sess=conf("global","session");
-		$domain=empty($sess["sessiondomain"])?null:$sess["sessiondomain"];
-		$path=empty($sess["sessionpath"])?null:$sess["sessionpath"];
-
-		if(!empty($domain) && strstr($_SERVER['HTTP_HOST'],'wenxuecity.com')){
-			if( is_numeric($domain) ){//根据访问域名设置动态的session域
-				$domainstr=substr($_SERVER['HTTP_HOST'],strpos($_SERVER['HTTP_HOST'],"."));//目标域名字符串
-				ini_set('session.cookie_domain', $domainstr);
-				
-			}else{ 
-				ini_set('session.cookie_domain', $domain);
-				
-			}
-		}
-		if(!empty($sess["sessionpath"])&&empty(ini_get('session.cookie_path'))){
-			ini_set('session.cookie_path', $path);
-			session_name('sid'); 
-		}
-		if(!empty($sess['type'])){
-			if($sess['type']=='files'){
-				if(!empty($sess['savepath'])) ini_set("session.save_path",$sess['savepath']);
-			}
-		}	
-		@session_start();
-	}
+    if(!isset($_SESSION)){
+        $global=conf();
+        
+        //用于本地测试
+        if(!empty($global['system']['serverid'])){
+            if($global['system']['serverid']=='svn'){
+                ini_set('session.cookie_domain', null);
+                ini_set('session.cookie_path', '/');
+                @session_start();
+                return;
+            }
+            
+        }
+        
+        //生产环境
+        $sess=conf("global","session");
+        $domain=empty($sess["sessiondomain"])?null:$sess["sessiondomain"];
+        $path=empty($sess["sessionpath"])?null:$sess["sessionpath"];
+        
+        if(!empty($domain) && strstr($_SERVER['HTTP_HOST'],'wenxuecity.com')){
+            if( is_numeric($domain) ){//根据访问域名设置动态的session域
+                $domainstr=substr($_SERVER['HTTP_HOST'],strpos($_SERVER['HTTP_HOST'],"."));//目标域名字符串
+                ini_set('session.cookie_domain', $domainstr);
+            }else{
+                ini_set('session.cookie_domain', $domain);
+            }
+        }
+        
+        if(!empty($sess["sessionpath"])){
+            ini_set('session.cookie_path', $path);
+        }
+        
+        if(!empty($sess['type'])){
+            if($sess['type']=='files'){
+                if(!empty($sess['savepath'])) ini_set("session.save_path",$sess['savepath']);
+            }
+        }
+        session_name('sid');
+        @session_start();
+    }
 }
 
 /**

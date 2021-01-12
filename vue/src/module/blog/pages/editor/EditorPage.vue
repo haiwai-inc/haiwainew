@@ -332,10 +332,13 @@ import jQuery from "jquery";
 // import 'bootstrap/dist/css/bootstrap-grid.css';
 // import 'summernote/dist/summernote.min.css';
 import "summernote/dist/summernote-bs4.css";
-import "bootswatch/dist/lux/bootstrap.css";
-import "summernote/dist/summernote.js";
-import "./summernote-audio.css";
-import "./summernote-audio";
+// import "bootswatch/dist/flatly/bootstrap.css";
+import "summernote/dist/summernote-bs4.js";
+import "./audio/summernote-audio.css";
+import "./audio/summernote-audio";
+import "./emoji/emoji.css";
+import "./emoji/config.js";
+// import "./emoji/tam-emoji.min.js";
 import "bootstrap";
 import lang from "./language";
 
@@ -378,7 +381,6 @@ export default {
 
     async fetchData() {
       let postid = 0;
-      console.log(this.$route.query);
       if (this.$route.query.postid != undefined) {
         postid = this.$route.query.postid;
         // this.article = await blog.getArticle(blogid);
@@ -405,20 +407,19 @@ export default {
         this.$refs.titleBox.clientHeight +
         this.$refs.saveBox.clientHeight;
 
-      console.log(this.$refs.saving.clientHeight);
-      console.log(this.$refs.titleBox.clientHeight);
-      console.log(this.$refs.saveBox.clientHeight);
-      console.log(height);
       $("#summernote").summernote({
         lang: "zh-CN",
         height: height,
         toolbar: [
-          ["style", ["style"]],
-          ["font", ["bold", "underline", "clear"]],
-          ["color", ["color"]],
-          ["para", ["ul", "ol", "paragraph"]],
+          // ["style", ["style"]],
+          ["font", ["bold", 'italic', "underline", "strikethrough"]],
+          ["para", ["paragraph"]],
+          ["insert", ["link", "picture", "video", "audio", "emoji"]],
+          ["font",["fontsize"]],
+          ["color", ["forecolor", "backcolor"]],
           ["table", ["table"]],
-          ["insert", ["link", "picture", "video", "audio"]],
+          ["para", ["ul", "ol"]],
+          ["font", ["clear"]],
           ["view", ["fullscreen", "codeview", "help"]],
         ],
         callbacks: {
@@ -465,7 +466,12 @@ export default {
     },
 
     uploadAudio(files) {
-      console.log(files)
+      // console.log(files)
+      $("#summernote").summernote(
+        "audio.insertAudio",
+        "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
+        "filename"
+      );
     },
     //for editor
     toggleEditorDisabled() {
@@ -691,8 +697,31 @@ html,
 .el-date-table td.disabled div span {
   color: #ffffff8f !important;
 }
-.btn-round.btn-simple {
-  background: #fff;
-  border: 1px solid #38b8eb;
+
+.publisher h1, h2, h3, h4, h5, h6 {
+        text-transform: uppercase;
+        letter-spacing: 3px;
 }
+
+.publisher h1, .h1 {
+        font-size: 2rem;
+}
+.publisher  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1a1a1a;
+}
+.publisher .note-btn-group .note-btn{
+  background-color: transparent;
+  color: #55595c
+}
+.publisher a {
+        color: #1a1a1a
+ }       
+
+.note-toolbar, .card-header{
+  background-color: lightgray !important;
+}
+
 </style>

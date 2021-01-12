@@ -293,7 +293,7 @@ class user extends Api {
         $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
         //帖子赞+1 修改时间
-        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'edit_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        $obj_article_indexing->update(['buzz_date'=>times::getTime(),'count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
         
         //博主赞+1
         if($check_article_indexing['typeID']==1){
@@ -303,6 +303,10 @@ class user extends Api {
                 $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
             }
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
         
         return "已赞";
     }
@@ -310,8 +314,9 @@ class user extends Api {
     /**
      * 用户
      * 赞 取消
+     * @param integer $postID | 文章的postID
      */
-    public function buzz_delete(){
+    public function buzz_delete($postID){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
         if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
@@ -319,22 +324,26 @@ class user extends Api {
         $obj_article_post_buzz=load("article_post_buzz");
         $tbn=substr('0'.$postID,-1);
         $check_article_post_buzz=$obj_article_post_buzz->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID],"post_buzz_{$tbn}");
-        if(!empty($check_article_post_buzz))    {$this->error="此文章您已经赞过了";$this->status=false;return false;}
+        if(empty($check_article_post_buzz))    {$this->error="此文章您已经取消点赞了";$this->status=false;return false;}
         
-        //添加人
-        $obj_article_post_buzz->insert(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
+        //取消添加人
+        $obj_article_post_buzz->remove(['postID'=>$postID,'userID'=>$_SESSION['id']],"post_buzz_{$tbn}");
         
-        //帖子赞+1
-        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']+1],['postID'=>$postID]);
+        //帖子赞-1
+        $obj_article_indexing->update(['count_buzz'=>$check_article_indexing['count_buzz']-1],['postID'=>$postID]);
         
-        //博主赞+1
+        //博主赞-1
         if($check_article_indexing['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
             $check_blog_blogger=$obj_blog_blogger->getOne(['id','count_buzz'],['id'=>$check_article_indexing['bloggerID']]);
             if(!empty($check_blog_blogger)){
-                $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']+1],['id'=>$check_blog_blogger['id']]);
+                $obj_blog_blogger->update(['count_buzz'=>$check_blog_blogger['count_buzz']-1],['id'=>$check_blog_blogger['id']]);
             }
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
         
         return "已取消赞";
     }
@@ -375,7 +384,7 @@ class user extends Api {
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
-        if($check_account_user['id']==$_SESSION['ID'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
+        if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
         $obj_account_follower=load("account_follower");
         $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);

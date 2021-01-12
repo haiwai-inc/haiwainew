@@ -62,8 +62,15 @@
           </div>
           <div v-if="showcomment && !comment.status" class="text-center">评论数据获取失败</div>
           <div class="comment" v-if="showcomment && comment.status">
-            <h4>评论（{{comment.data.length}}）</h4>
-            <comment :data="comment.data"></comment>
+            <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+            <n-button 
+              type="primary"
+              round 
+              simple 
+              :disabled="replybtndisable" 
+              @click="article_reply_add">发表评论</n-button>
+            <h4 class="mb-1">评论（{{comment.data.length}}）</h4>
+            <comment :data="comment.data" v-on:reget-commnet="getComment"></comment>
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
@@ -120,6 +127,7 @@
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
+import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
 import blog from '../../blog.service';
@@ -131,9 +139,13 @@ export default {
     BlogerListItem,
     RecommendListItem,
     Comment,
+    [Button.name]: Button,
   },
   mounted: function () {
     this.article_view()
+  },
+  computed:{
+    
   },
   methods:{
     article_view(){
@@ -143,10 +155,30 @@ export default {
       blog.article_view(postid).then(res=>{
         this.articleDetail = res.data;
         this.showpage = true;
-        console.log(res)
+        console.log(res);
+        this.getComment();
       })
-      blog.article_view_comment(postid).then(res=>{
+    },
+    article_reply_add(){
+      let obj = {
+        article_data:{msgbody:this.replymsgbody,
+        postID:this.articleDetail.data.postID,
+        typeID:1}
+      }
+      this.replybtndisable = true;
+      blog.article_reply_add(obj).then(res=>{
+        this.replybtndisable = false;
+        this.getComment();
+        this.replymsgbody="";
+      })
+    },
+    checkstatus(){
+      this.replybtndisable = this.replymsgbody?false:true;
+    },
+    getComment(){
+      blog.article_view_comment(this.$route.params.id).then(res=>{
         this.comment = res.data;
+        // this.comment.data = res.data.data.reverse();
         this.showcomment=true;
         console.log(this.comment)
       })
@@ -159,6 +191,8 @@ export default {
       showpage:false,
       articleDetail: {},
       comment:{},
+      replymsgbody:"",
+      replybtndisable:true,
       recommend:{
         authorArticle:[
           {
@@ -223,7 +257,13 @@ padding: 0 18px;
   margin-top: 15px;
   font-weight:400
 }
-
+.article-page .comment{
+  border-top: #ddd 1px solid;
+  padding:10px 0;
+}
+.article-page .comment textarea{
+  border: #ddd 1px solid;
+}
 /* menu */
 .article-menu {
         display: flex;

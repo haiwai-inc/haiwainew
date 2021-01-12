@@ -192,7 +192,24 @@ class article_indexing extends Model
 	    return true;
 	}
 	
-	
+	//前端微调
+	public function format_article_view_comment($rs_article_indexing,$userID){
+	    if(!empty($rs_article_indexing)){
+	        foreach($rs_article_indexing as $k=>$v){
+	            $rs_article_indexing[$k]['has_author']=false;
+	            if(!empty($v['reply'])){
+	                foreach($v['reply'] as $vv){
+	                    if($vv['userID']==$userID){
+	                        $rs_article_indexing[$k]['has_author']=true;
+	                        break;
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    
+	    return $rs_article_indexing;
+	}
 	
 	
 	

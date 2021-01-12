@@ -162,37 +162,31 @@ class Api{
 		
 		//检查权限
 		if(in_array($method,$this->authPool)) $this->authz($method);
-		if($this->space)
-		    if(empty($_SESSION['UserID']))
-		        $this->error("User Is Not Login!","User Access Forbidden!",0,'403');
-		        if($this->admin)
-		            if(empty($_SESSION['UserLevel'])) $this->error("Administrator Is Not Loign!","User Access Forbidden!",0,'403');
-		            //显示文档
-		            if($method == 'apidocs') $this->apidocs();
-		            if(!empty($_GET["api_document_{$method}_view"])) $this->viewdoc();
-		            
-		            //执行api
-		            if(!$methodObj = $this->classCache->public_method->$method) $this->error('api',$method);
-		            
-		            //运行参数
-		            $parameters = [];
-		            $this->__initRequestPayload();
-		            //debug::D($_GET);
-		            //debug::D($_POST);
-		            if(isset($methodObj->request->get))$parameters = $this->__getParamValue($methodObj->request->get,$_GET,$parameters);
-		            if(isset($methodObj->request->post))$parameters = $this->__getParamValue($methodObj->request->post,$_POST,$parameters);
-		            
-		            //debug::D($methodObj->param);
-		            //debug::D($parameters);
-		            
-		            //按函数定义重排参数顺序
-		            $parameters = $this->__resortParameters($methodObj->param,$parameters);
-		            //echo "result=>";debug::D($parameters);exit;
-		            
-		            
-		            //获得结果
-		            $result = call_user_func_array(array($this, $method), $parameters);
-		            $this->display($result);
+		if($this->space && empty($_SESSION['UserID'])){
+		    $this->error("User Is Not Login!","User Access Forbidden!",0,'403');
+		}
+		if($this->admin && empty($_SESSION['UserLevel'])){
+		    $this->error("Administrator Is Not Loign!","User Access Forbidden!",0,'403');
+		}
+        //显示文档
+        if($method == 'apidocs') $this->apidocs();
+        if(!empty($_GET["api_document_{$method}_view"])) $this->viewdoc();
+        
+        //执行api
+        if(!$methodObj = $this->classCache->public_method->$method) $this->error('api',$method);
+        
+        //运行参数
+        $parameters = [];
+        $this->__initRequestPayload();
+        if(isset($methodObj->request->get))$parameters = $this->__getParamValue($methodObj->request->get,$_GET,$parameters);
+        if(isset($methodObj->request->post))$parameters = $this->__getParamValue($methodObj->request->post,$_POST,$parameters);
+        
+        //按函数定义重排参数顺序
+        $parameters = $this->__resortParameters($methodObj->param,$parameters);
+        
+        //获得结果
+        $result = call_user_func_array(array($this, $method), $parameters);
+        $this->display($result);
 	}
 	
 	/**
@@ -256,12 +250,10 @@ class Api{
 		if(!$this->sess) $this->sess = true;
 		
 		//自动登录
-		/*
-		if(empty($_SESSION['user']['id'])){
-			$obj_members_passport=load("members_passport");
-			$obj_members_passport->check_auto_login();
+		if(empty($_SESSION['UserID']) && !empty($_COOKIE['wxc_login'])){
+		    $obj_account_user_login=load("account_user_login");
+		    $obj_account_user_login->auto_login();
 		}
-		*/
 	}
 	
 	protected function initClassCache(){
@@ -658,7 +650,6 @@ class Api{
 	private function display($result){
 		header("Access-Control-Allow-Origin: *");
 		header("Content-Type: application/json; charset=UTF-8");
-		
 		$rs=[
 		    "data"=>$result,
 		    "error"=>$this->error,
