@@ -87,11 +87,19 @@ class Blog extends API{
   }
 
   /**
+   * 返回一个第一级的评论
+   * @param number id
+   */
+  async article_view_comment_one(id){
+    return await this.sendget("blog/page/article_view_comment_one/?id="+id)
+  }
+
+  /**
    * 返回正文页评论
    * @param number id 
    */
-  async article_view_comment(id){
-    return await this.sendget("blog/page/article_view_comment/?id="+id)
+  async article_view_comment(id,lastID){
+    return await this.sendget("blog/page/article_view_comment/?id="+id+"&lastID="+lastID)
   }
 
   /**

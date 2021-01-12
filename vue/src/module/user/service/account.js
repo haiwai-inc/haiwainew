@@ -4,9 +4,16 @@ class Account extends API{
 
 
     async login_status(){
-        return await this.sendget("account/passport/login_status/")
+        return await this.sendget("account/passport/login_status/");
     }
 
+    async follower_add(followerID){
+        return await this.sendget("account/user/follower_add/?followerID="+followerID);
+    }
+
+    async follower_delete(followerID){
+        return await this.sendget("account/user/follower_delete/?followerID="+followerID);
+    }
 
     async sendget(url){
         try{

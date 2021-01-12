@@ -8,7 +8,8 @@ import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueLazyload from 'vue-lazyload';
 import infiniteScroll from "vue-infinite-scroll";
-
+import {Message,Alert} from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 locale.use(lang);
 
@@ -26,5 +27,7 @@ export default {
       }
     });
     Vue.use(infiniteScroll); 
+    Vue.use(Alert);
+    Vue.prototype.$message = Message;
   }
 };

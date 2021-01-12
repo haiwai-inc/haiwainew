@@ -20,12 +20,12 @@
                 </router-link>
               </div>
               <div>
-                  <a v-if="!data.userinfo_userID.is_follower" class="btn btn-link text-primary w-100 btn-follow" >
+                  <a v-if="!data.userinfo_userID.is_follower" class="btn btn-link text-primary w-100 btn-follow" @click="follower_add(data.userID)">
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
                           关注
                       </div></a>
-                  <a v-if="data.userinfo_userID.is_follower" class="btn btn-link text-default w-100 cancel-follow">
+                  <a v-if="data.userinfo_userID.is_follower" class="btn btn-link text-default w-100 cancel-follow" @click="follower_delete(data.userID)">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
                               <icon-x :style="{fill:'#FF3636'}"></icon-x>
@@ -57,6 +57,7 @@ import {
 import {
   Button,
 } from '@/components';
+import account from '../../../../user/service/account';
 
 export default {
   name: 'bloger-list-item',
@@ -94,7 +95,45 @@ export default {
     IconX,
     IconV
   },
-  
+  mounted: function () {
+    account.login_status().then(res=>{ //判断是否登录 - 开发环境
+      if(res.data.data==undefined){
+        this.loginuserID = -1
+      }else{
+        this.loginuserID = res.data.data.UserID ;
+      }
+    });
+  },
+  methods:{
+    follower_add(id){
+      if(this.loginuserID!=-1){
+        account.follower_add(id).then(res=>{console.log(res.data.data)
+          if(res.data.data == true) {
+            data.userinfo_userID.is_follower = 1;
+          }else{
+            this.$message.error(res.data.error);
+          }
+        });
+      }
+    },
+    follower_delete(id){
+      if(this.loginuserID!=-1){
+        account.follower_delete(id).then(res=>{
+          if(res.data.data == true) {
+            data.userinfo_userID.is_follower = 0;
+          }else{
+            this.$message.error(res.data.error);
+          }
+        });
+      }
+    },
+  },
+  data(){
+    return {
+      loginuserID:-1,
+      error:''
+    }
+  }
 }
 
 </script>

@@ -70,7 +70,7 @@
               :disabled="replybtndisable" 
               @click="article_reply_add">发表评论</n-button>
             <h4 class="mb-1">评论（{{comment.data.length}}）</h4>
-            <comment :data="comment.data" v-on:reget-commnet="getComment"></comment>
+            <comment :data="comment.data"></comment>
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
@@ -176,7 +176,7 @@ export default {
       this.replybtndisable = this.replymsgbody?false:true;
     },
     getComment(){
-      blog.article_view_comment(this.$route.params.id).then(res=>{
+      blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
         this.comment = res.data;
         // this.comment.data = res.data.data.reverse();
         this.showcomment=true;
@@ -193,6 +193,7 @@ export default {
       comment:{},
       replymsgbody:"",
       replybtndisable:true,
+      lastID:0,
       recommend:{
         authorArticle:[
           {
