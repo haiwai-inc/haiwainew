@@ -70,20 +70,21 @@
               :disabled="replybtndisable" 
               @click="article_reply_add">发表评论</n-button>
             <h4 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h4>
-            <div
-            v-infinite-scroll="getComment"
             
-            infinite-scroll-distance="0">
+          </div>
+          <div class="commentlist" 
+            v-infinite-scroll="test"
+            infinite-scroll-disabled="disabled"
+            infinite-scroll-distance="50">
               <comment 
               v-for="item in comment"
               :key="item.postID"
               :data="item"></comment>
-            </div>
-            <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
-                <i class="now-ui-icons loader_refresh spin"></i>
-            </div>
-            <p class="text-center py-4" v-if="noMore">没有更多了</p>
           </div>
+          <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
+              <i class="now-ui-icons loader_refresh spin"></i>
+          </div>
+          <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
          <!-- r1 -->
@@ -177,7 +178,7 @@ export default {
       this.replybtndisable = true;
       blog.article_reply_add(obj).then(res=>{
         this.replybtndisable = false;
-        // this.getComment();
+        this.getComment();
         this.replymsgbody="";
       })
     },
@@ -189,14 +190,17 @@ export default {
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
         let r = res.data.data;
         this.comment = this.comment.concat(r);
-        if(r.length<3){
+        if(r.length<20){
           this.noMore = true;
         }
         // this.comment.data = res.data.data.reverse();
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
-        console.log(this.comment,res.data.status,this.noMore)
+        console.log(this.comment,this.loading.comment,this.noMore)
       })
+    },
+    test(){
+      console.log("gogo")
     }
   },
   computed:{
@@ -287,6 +291,9 @@ padding: 0 18px;
 }
 .article-page .comment textarea{
   border: #ddd 1px solid;
+}
+.article-page .commentlist{
+  overflow-y: auto;
 }
 /* menu */
 .article-menu {
