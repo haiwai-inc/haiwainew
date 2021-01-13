@@ -6,7 +6,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://local.haiwai.com',
+        target: 'http://beta.haiwai.com',
         ws: true,
         changeOrigin: true
       },

@@ -72,10 +72,9 @@
             <h4 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h4>
             
           </div>
-          <div class="commentlist" 
+          <div 
             v-infinite-scroll="test"
-            infinite-scroll-disabled="disabled"
-            infinite-scroll-distance="50">
+            infinite-scroll-distance="0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
@@ -178,25 +177,32 @@ export default {
       this.replybtndisable = true;
       blog.article_reply_add(obj).then(res=>{
         this.replybtndisable = false;
-        this.getComment();
+        this.getFirst20();
         this.replymsgbody="";
       })
     },
     checkstatus(){
       this.replybtndisable = this.replymsgbody?false:true;
     },
+    getFirst20(){
+      this.lastID = 0;
+      this.comment = [];
+      this.getComment();
+    },
     getComment(){
       this.loading.comment = true;
+      this.noMore = false;
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
         let r = res.data.data;
         this.comment = this.comment.concat(r);
+        this.lastID = this.comment[r.length-1].postID;
         if(r.length<20){
           this.noMore = true;
         }
         // this.comment.data = res.data.data.reverse();
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
-        console.log(this.comment,this.loading.comment,this.noMore)
+        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
       })
     },
     test(){
@@ -292,9 +298,7 @@ padding: 0 18px;
 .article-page .comment textarea{
   border: #ddd 1px solid;
 }
-.article-page .commentlist{
-  overflow-y: auto;
-}
+
 /* menu */
 .article-menu {
         display: flex;
