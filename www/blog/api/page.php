@@ -264,7 +264,7 @@ class page extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
@@ -289,7 +289,7 @@ class page extends Api {
      */
     public function article_view_comment($id,$lastID=0){
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
         if(empty($check_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //评论
@@ -297,13 +297,13 @@ class page extends Api {
             'order'=>['postID'=>'DESC'],
             'visible'=>1,
             'basecode'=>$check_article_indexing['postID'],
-            'limit'=>20,
+            'limit'=>3,
         ];
         
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],$fields);
         if(empty($rs_article_indexing)){
             return $rs_article_indexing;
         }
@@ -312,7 +312,7 @@ class page extends Api {
         foreach($rs_article_indexing as $k=>$v){
             $basecode_article_indexing[$v['postID']]=$v['postID'];
         }
-        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date'],['treelevel'=>2,'visible'=>1,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
+        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['treelevel'=>2,'visible'=>1,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
         if(!empty($rs_article_reply)){
             //ES补全postID信息
             $obj_article_noindex=load("search_article_noindex");
@@ -343,35 +343,26 @@ class page extends Api {
         //添加计数信息
         $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
-        //前端微调
-        $rs_article_indexing=$obj_article_indexing->format_article_view_comment($rs_article_indexing,$check_article_indexing['userID']);
-        
         return $rs_article_indexing;
     }
     
     /**
      * 文章详情页
      * 文章 评论 一条
-     * @param integer $id | 1级回复basecode
+     * @param integer $id | 1级回复postID
      */
     public function article_view_comment_one($id){
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此回复不存在";$this->status=false;return false;}
         
-        $rs_article_indexing_main=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date'],['visible'=>1,'postID'=>$rs_article_indexing['basecode']]);
-        if(empty($rs_article_indexing_main)){$this->error="此回复的主贴不存在";$this->status=false;return false;}
-        
         //补全主贴
-        $rs_article_indexing_main=$this->article_view($rs_article_indexing_main['postID']);
+        $rs_article_indexing=$this->article_view($rs_article_indexing['postID']);
         
         //补全跟帖
-        $rs_article_indexing_main['reply']=$this->article_view_comment($id);
+        $rs_article_indexing['reply']=$this->article_view_comment($id);
         
-        //前端微调
-        $rs_article_indexing_main=$obj_article_indexing->format_article_view_comment([$rs_article_indexing_main],$rs_article_indexing_main['userID']);
-        
-        return $rs_article_indexing_main;
+        return $rs_article_indexing;
     }
     
     /**
