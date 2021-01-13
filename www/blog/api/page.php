@@ -297,7 +297,7 @@ class page extends Api {
             'order'=>['postID'=>'DESC'],
             'visible'=>1,
             'basecode'=>$check_article_indexing['postID'],
-            'limit'=>20,
+            'limit'=>3,
         ];
         
         if(!empty($lastID)){
