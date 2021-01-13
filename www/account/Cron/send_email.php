@@ -13,7 +13,7 @@ class send_email{
 				$lastid=$v['id'];
 				$function=$v['function'];
 				$success=$obj_account_user_email->$function($v['name'],$v['email'],unserialize($v['data']));
-				$obj_account_user_email->update(['success'=>$success,'visible'=>0],['id'=>$v['id']]);
+				$obj_account_user_email->update(['success'=>$success,'visible'=>1],['id'=>$v['id']]);
 				
 				echo "{$v['id']}\n";
 			}
