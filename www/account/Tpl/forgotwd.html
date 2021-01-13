@@ -1,0 +1,42 @@
+<template>
+<div class="mx-auto content">
+   <h3 class="font-weight-normal mb-1">找回密码</h3>
+   <h2 class="subtitle">验证码将会发送至你的注册邮箱</h2>
+   <fg-input
+      addon-left-icon="now-ui-icons ui-1_email-85"
+      placeholder="邮箱"
+      >
+   </fg-input>
+   <div>
+      <n-button type="primary" round class="w-100" size="lg">取回您的密码</n-button>
+   </div>
+</div>
+</template>
+<script>
+import {
+  Button,
+  FormGroupInput,
+} from '@/components';
+import {
+} from '@/components/Icons';
+export default {
+  name: 'forgotwd-page',
+  bodyClass: 'forgotwd-page',
+  components: {
+    [Button.name]: Button,
+    [FormGroupInput.name]: FormGroupInput,
+  },
+};
+</script>
+<style>
+.forgotwd-page .forgotwd-label{
+  line-height: 18px;
+  padding-left: 24px
+  }
+.forgotwd-page .subtitle {
+        margin: 4px 0 40px;
+        font-size: 15px;
+        font-weight: 400;
+        color: #8590a6
+}
+</style>
