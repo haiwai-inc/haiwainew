@@ -60,8 +60,8 @@
                  </div>
             </div>
           </div>
-          <div v-if="showcomment && !comment.status" class="text-center">评论数据获取失败</div>
-          <div class="comment" v-if="showcomment && comment.status">
+          <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
+          <div class="comment" v-if="showcomment">
             <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
@@ -69,8 +69,20 @@
               simple 
               :disabled="replybtndisable" 
               @click="article_reply_add">发表评论</n-button>
-            <h4 class="mb-1">评论（{{comment.data.length}}）</h4>
-            <comment :data="comment.data"></comment>
+            <h4 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h4>
+            <div
+            v-infinite-scroll="getComment"
+            
+            infinite-scroll-distance="0">
+              <comment 
+              v-for="item in comment"
+              :key="item.postID"
+              :data="item"></comment>
+            </div>
+            <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
+                <i class="now-ui-icons loader_refresh spin"></i>
+            </div>
+            <p class="text-center py-4" v-if="noMore">没有更多了</p>
           </div>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
@@ -144,9 +156,6 @@ export default {
   mounted: function () {
     this.article_view()
   },
-  computed:{
-    
-  },
   methods:{
     article_view(){
       this.showpage = false;
@@ -168,7 +177,7 @@ export default {
       this.replybtndisable = true;
       blog.article_reply_add(obj).then(res=>{
         this.replybtndisable = false;
-        this.getComment();
+        // this.getComment();
         this.replymsgbody="";
       })
     },
@@ -176,12 +185,23 @@ export default {
       this.replybtndisable = this.replymsgbody?false:true;
     },
     getComment(){
+      this.loading.comment = true;
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
-        this.comment = res.data;
+        let r = res.data.data;
+        this.comment = this.comment.concat(r);
+        if(r.length<3){
+          this.noMore = true;
+        }
         // this.comment.data = res.data.data.reverse();
-        this.showcomment=true;
-        console.log(this.comment)
+        this.showcomment=res.data.status?true:false;
+        this.loading.comment = false;
+        console.log(this.comment,res.data.status,this.noMore)
       })
+    }
+  },
+  computed:{
+    disabled () {
+      return this.loading.comment || this.noMore
     }
   },
   data() {
@@ -190,10 +210,12 @@ export default {
       showcomment:false,
       showpage:false,
       articleDetail: {},
-      comment:{},
+      comment:[],
       replymsgbody:"",
       replybtndisable:true,
       lastID:0,
+      noMore:false,
+      loading:{comment:false},
       recommend:{
         authorArticle:[
           {
@@ -258,9 +280,10 @@ padding: 0 18px;
   margin-top: 15px;
   font-weight:400
 }
-.article-page .comment{
-  border-top: #ddd 1px solid;
+.article-page .commentlable{
+  border-bottom: #ddd 1px solid;
   padding:10px 0;
+  margin-bottom: 12px;
 }
 .article-page .comment textarea{
   border: #ddd 1px solid;

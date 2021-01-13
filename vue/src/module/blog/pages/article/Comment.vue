@@ -1,38 +1,40 @@
 <template>
-  <div class="comment">
-    <div v-for="(item, index) in data" :key="index" class="d-flex align-items-start mt-2">
-        <avatar :data="item.userinfo_userID" :imgHeight="38" class="mr-2"></avatar>
+  <div class="comment d-flex align-items-start mt-2">
+    
+    <!-- <div v-for="(item, index) in data" :key="index" class="d-flex align-items-start mt-2"> -->
+        <avatar :data="data.userinfo_userID" :imgHeight="38" class="mr-2"></avatar>
         <div>
-            <span class="replyName">{{item.userinfo_userID.username}}</span><span class="replyTime">{{item.edit_date*1000 | formatDate}}</span>
-            <p class="replyContent" v-html="item.postInfo_postID.msgbody"></p>
+            <span class="replyName">{{data.userinfo_userID.username}}</span><span class="replyTime">{{data.edit_date*1000 | formatDate}}</span>
+            <p class="replyContent" v-html="data.postInfo_postID.msgbody"></p>
             <p class="replyFoot">
               <span 
-              @click="like(item)">
+              @click="like(data)">
                 <icon-like-outline 
-                :style="{fill:item.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>
-              {{item.countinfo_postID.count_buzz}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
+                :style="{fill:data.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>
+              {{data.countinfo_postID.count_buzz}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
               <a href="#" style="color:gray"
-              @click="reply(item)">回复</a>
-            <el-popconfirm v-if="item.userID==loginuserID"
+              @click="reply(data)">回复</a>
+            <el-popconfirm v-if="data.userID==loginuserID"
               placement="top-end"
               confirm-button-text='删除'
               cancel-button-text='取消'
               title="确定删除这条回复吗？"
               :hide-icon="true"
-              @confirm="article_reply_delete(item.postID)"
+              @confirm="article_reply_delete(data.postID)"
             >
               <a slot="reference" class="ml-5" style="color:gray">删除</a>
             </el-popconfirm>
+          </p>
             <!-- <a
-            v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a></p> -->
+            v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a> -->
             <!-- <div v-if="item.replies.length>0"> https://cloud.tencent.com/developer/article/1360724 -->
-            <div v-if="item.reply.length>0">
-              <div :id="item.postID" style="display:none">
-                <div v-for="(r,idx) in item.reply" :key="'r'+idx" class="d-flex align-items-start mt-2">
+            <div v-if="data.reply.length>0">
+              <div :id="data.postID" style="display:none">
+                <div v-for="(r,idx) in data.reply" :key="'r'+idx" class="d-flex align-items-start mt-2">
                   <avatar :data="r.userinfo_userID" :imgHeight="32" class="mr-2"></avatar>
                   <div>
                       <span class="replyName">{{r.userinfo_userID.username}}</span>
-                      <span class="ml-2 text-primary" style="font-size:0.85rem" v-if="item.has_author">[作者]</span>
+                      <span class="ml-2 text-primary" style="font-size:0.85rem" v-if="data.has_author">[作者]</span>
                       <span class="replyTime">{{r.edit_date*1000 | formatDate}}</span>
                       <p class="replyContent" v-html="r.postInfo_postID.msgbody"></p>
                       <p class="replyFoot">
@@ -54,10 +56,10 @@
                   </div>
                 </div>
               </div>
-              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(item.postID)">{{replyshowstatus}} {{item.reply.length}} 条回复<span class="ml-2" v-if="item.has_author">[含作者]</span></button>
+              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(data.postID)">{{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="data.has_author">[含作者]</span></button>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 <!-- 回复 modal -->
     <modal :show.sync="modals.reply" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px"><span class="text-muted">回复</span> {{currentItem.userinfo_userID.username}} <span class="text-muted">评论</span></h4>
@@ -226,6 +228,7 @@ export default {
       replymsgbody:'',
       replyusername:'',
       replybtndisable:true,
+      noMore:false,
       currentItem:{userinfo_userID:{username:''}},
       modals: {
         reply: false,
