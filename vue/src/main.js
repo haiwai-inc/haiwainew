@@ -7,7 +7,8 @@ import Vuex from 'vuex';
 import User from './service/user';
 import Search from './module/search/search.service.js';
 import jquery from 'jquery'
-// import CKEditor from '@ckeditor/ckeditor5-vue';
+import VueSocialSharing from 'vue-social-sharing'
+
 
 Vue.config.productionTip = false;
 
@@ -15,7 +16,8 @@ Vue.prototype.$api = new API();
 
 Vue.use(NowUiKit);
 Vue.use(Vuex);
-// Vue.use( CKEditor );
+
+Vue.use(VueSocialSharing);
 
 const store = new Vuex.Store({
   state: {

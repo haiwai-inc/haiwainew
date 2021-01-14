@@ -28,9 +28,31 @@
               <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="!articleDetail.data.postInfo_postID.is_bookmark">
                 <span v-html="icons.star_outline"></span>
               </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
+              
+              <el-popover
+              placement="top-end"
+              trigger="click"
+              ><div class="shareIcons">
+                <ShareNetwork
+                v-for="item in shareNetworks"
+                :key="item.network"
+                :network="item.network"
+                :url="shareItem.url"
+                :title="shareItem.title"
+                :description="shareItem.description"
+                quote=""
+                hashtags=""
+                >
+                  <span class="shareIcon mr-1" v-html="item.icon"></span>  
+                </ShareNetwork>
+                <a href="#"><span class="shareIcon" v-html="icons.wechat"></span></a>
+              </div>
+                
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
                 <span style=" fill:#39B8EB;" v-html="icons.share"></span>
               </button>
+            </el-popover>
+              
             </span>
             </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
@@ -143,7 +165,7 @@ import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
 import blog from '../../blog.service';
-
+import { Popover } from 'element-ui';
 export default {
   name: 'article-page',
   components: {
@@ -152,6 +174,7 @@ export default {
     RecommendListItem,
     Comment,
     [Button.name]: Button,
+    [Popover.name]:Popover
   },
   mounted: function () {
     this.article_view()
@@ -163,6 +186,8 @@ export default {
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
         this.articleDetail = res.data;
+        this.shareItem.title = this.articleDetail.data.postInfo_postID.title;
+        this.shareItem.description = this.articleDetail.data.postInfo_postID.msgbody;
         this.showpage = true;
         console.log(res);
         this.getComment();
@@ -226,6 +251,30 @@ export default {
       lastID:0,
       noMore:false,
       loading:{comment:false},
+      shareItem:{
+        url:window.location.href,
+        title:'',
+        description:''
+      },
+      shareNetworks:[
+        {
+          network:'facebook',
+          icon:icons.facebook
+        },{
+          network:'twitter',
+          icon:icons.twitter
+        },{
+          network:'line',
+          icon:icons.line
+        },{
+          network:'weibo',
+          icon:icons.weibo
+        },{
+          network:'whatsapp',
+          icon:icons.whatsapp
+        }
+
+      ],
       recommend:{
         authorArticle:[
           {
@@ -327,7 +376,13 @@ padding: 0 18px;
 }
 
 /* r2 */
-
+.shareIcons a:hover{
+  text-decoration: none;
+}
+.shareIcon svg{
+  width:28px;
+  height:28px;
+}
 .article-page h4{
   margin-bottom: 0;
 }
