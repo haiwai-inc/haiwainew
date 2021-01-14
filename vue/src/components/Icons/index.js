@@ -3,6 +3,9 @@ import WxcLogoWhite from './WxcLogoWhite';
 import WxcLogoGreen from './WxcLogoGreen';
 import GoogleLogo from './GoogleLogo';
 import FacebookLogo from './FacebookLogo';
+import WechatLogo from './WechatLogo.vue';
+import LineLogo from './LineLogo.vue';
+import CopyLogo from './CopyLogo.vue';
 import LeftArrow from './LeftArrow';
 import IconPen from './IconPen.vue';
 import IconPublish from './IconPublish.vue';
@@ -41,6 +44,7 @@ import IconShare from './IconShare.vue';
 import IconStar from './IconStar.vue';
 import IconSchedule from './IconSchedule.vue';
 import IconScheduled from './IconScheduled.vue';
+
 
 
 
@@ -85,7 +89,9 @@ export {
   IconShare,
   IconSchedule,
   IconScheduled,
-  IconTag
-
+  IconTag,
+  CopyLogo,
+  LineLogo,
+  WechatLogo
 
 };
