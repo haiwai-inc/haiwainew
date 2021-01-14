@@ -198,21 +198,19 @@ class user extends Api {
      * @response /article/api_response/article_reply.txt
      */
     public function article_reply_update($article_data){
-        $article_data=[
-            'msgbody'=>"更新内容",
-            'postID'=>144823,
-            "typeID"=>1,
-        ];
-        
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="修改的帖子不存在";$this->status=false;return false;}
         
-        //更新帖子
+        //更新帖子时间
         $time=times::getTime();
         $obj_article_indexing->update(['edit_date'=>$time],['postID'=>$article_data['postID']]);
         
+        //更新内容
+        $obj_article_post=load("article_post");
+        $post_tbn=substr('0'.$check_article_indexing['userID'],-1);
+        $obj_article_post->update(['msgbody'=>$article_data['msgbody']],['postID'=>$check_article_indexing['postID']],"post_{$post_tbn}");
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
@@ -225,7 +223,17 @@ class user extends Api {
      * @param int $id | 回复的postID
      */
     public function article_reply_delete($id){
+        //检查修改帖子
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$id]);
+        if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
+        //更新帖子状态
+        $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
     }
     
     /**
@@ -346,7 +354,7 @@ class user extends Api {
     
     
     
-    
+    //   /vue/vue.config.js
     
     
     
