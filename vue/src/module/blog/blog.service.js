@@ -127,6 +127,22 @@ class Blog extends API{
   }
 
   /**
+   * 收藏、加书签
+   * @param postID $postID
+   */ 
+  async bookmark_add(postID){
+    return await this.sendget("account/user/bookmark_add/?postID="+postID)
+  }
+
+  /**
+   * 取消收藏、取消书签
+   * @param postID $postID
+   */ 
+  async bookmark_delete(postID){
+    return await this.sendget("account/user/bookmark_delete/?postID="+postID)
+  }
+
+  /**
    * 返回单个博客文章
    * @param number blogid 
    */

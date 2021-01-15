@@ -16,17 +16,15 @@
             
             <span class="media-icons">
               <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
-                <span style="fill:#39B8EB" v-html="icons.like"></span>
+                
               </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢">
-                <span style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" @click="like()">
+                <span v-if="articleDetail.data.postInfo_postID.is_buzz" style="fill:#39B8EB" v-html="icons.like"></span>
+                <span v-if="!articleDetail.data.postInfo_postID.is_buzz" style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
               </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="articleDetail.data.postInfo_postID.is_bookmark">
-                <!-- <icon-star></icon-star> -->
-                <span v-html="icons.star"></span>
-              </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="!articleDetail.data.postInfo_postID.is_bookmark">
-                <span v-html="icons.star_outline"></span>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" @click="bookmark()">
+                <span v-if="articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star"></span>
+                <span v-if="!articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star_outline"></span>
               </button>
               
               <el-popover
@@ -238,6 +236,46 @@ export default {
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
         console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+      })
+    },
+    // 喜欢
+    like(){
+      if( this.articleDetail.data.postInfo_postID.is_buzz==0){
+        this.buzz_add(this.articleDetail.data);
+      }else{
+        this.buzz_delete(this.articleDetail.data);
+      }
+    },
+    buzz_add(item){
+      blog.buzz_add(item.postID).then(res=>{
+        console.log(res);
+        if(res.data.data=="已赞"){
+          this.articleDetail.data.postInfo_postID.is_buzz=1
+        }
+      })
+    },
+    buzz_delete(item){
+      blog.buzz_delete(item.postID).then(res=>{
+        console.log(res)
+        if(res.data.data=="已取消赞"){
+          this.articleDetail.data.postInfo_postID.is_buzz=0
+        }
+      })
+    },
+    // 收藏
+    bookmark(){
+      this.articleDetail.data.postInfo_postID.is_bookmark?this.bookmark_delete(this.articleDetail.data):this.bookmark_add(this.articleDetail.data)
+    },
+    bookmark_add(item){
+      blog.bookmark_add(item.postID).then(res=>{
+        console.log(res);
+        this.articleDetail.data.postInfo_postID.is_bookmark=1;
+      })
+    },
+    bookmark_delete(item){
+      blog.bookmark_delete(item.postID).then(res=>{
+        console.log(res);
+        this.articleDetail.data.postInfo_postID.is_bookmark=0;
       })
     },
     test(){
