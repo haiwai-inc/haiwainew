@@ -267,11 +267,11 @@ export default {
           network:'line',
           icon:icons.line
         },{
-          network:'weibo',
-          icon:icons.weibo
-        },{
           network:'whatsapp',
           icon:icons.whatsapp
+        },{
+          network:'weibo',
+          icon:icons.weibo
         }
 
       ],
