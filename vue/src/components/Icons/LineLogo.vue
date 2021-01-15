@@ -1,6 +1,6 @@
 <template>
-<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="博客PC" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g  transform="translate(-395.000000, -264.000000)">
             <rect id="Rectangle" fill="#F2F2F2" x="-2" y="115" width="1009" height="255"></rect>
             <g id="line" transform="translate(357.000000, 255.000000)">
