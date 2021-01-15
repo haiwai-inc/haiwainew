@@ -186,10 +186,11 @@ export default {
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
         this.articleDetail = res.data;
-        this.shareItem.title = this.articleDetail.data.postInfo_postID.title;
-        this.shareItem.description = this.articleDetail.data.postInfo_postID.msgbody;
+        let descrip = res.data.data.postInfo_postID.msgbody
+        this.shareItem.title = res.data.data.postInfo_postID.title;
+        this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
         this.showpage = true;
-        console.log(res);
+        console.log(this.shareItem.description);
         this.getComment();
       })
     },
