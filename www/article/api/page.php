@@ -13,7 +13,6 @@ class page extends Api {
      */
     public function article_buzz_list($id){
         $obj_article_indexing=load("article_indexing");
-        
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
@@ -33,6 +32,28 @@ class page extends Api {
         $buzz_user=$obj_account_user->get_basic_userinfo($buzz_user,"userID");
         return $buzz_user;
     }
+    
+    /**
+     * 分享文章
+     * @param string url | 分享链接
+     * @param integer $id | 主贴postID
+     */
+    public function article_share($url,$id){
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID'],['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        $obj_search_article_noindex=load("search_article_noindex");
+        $rs_search_article_noindex=$obj_search_article_noindex->get_postInfo([$rs_article_indexing])[0];
+        
+        $rs=['qr_code'=>picture::QRCode($url, 200),'article_data'=>$rs_search_article_noindex];
+        return $rs;
+    }
+    
+    
+    
+    
+    
     
     
 }
