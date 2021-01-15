@@ -1,12 +1,11 @@
 <template>
 <svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <title>Group</title>
     <defs>
         <filter id="filter-1">
             <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.223529 0 0 0 0 0.721569 0 0 0 0 0.921569 0 0 0 1.000000 0"></feColorMatrix>
         </filter>
     </defs>
-    <g id="博客PC" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="博客-发博客-4_发布成功" transform="translate(-674.000000, -264.000000)">
             <rect id="Rectangle" fill="#F2F2F2" x="-2" y="115" width="1009" height="255"></rect>
             <g id="copy-link" transform="translate(652.000000, 256.000000)" fill="#FFFFFF" stroke="#AAB8C2">

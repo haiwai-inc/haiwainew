@@ -1,7 +1,7 @@
 <template>
 <svg width="23px" height="20px" viewBox="0 0 23 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="博客-发博客-4_发布成功" transform="translate(-544.000000, -265.000000)">
+        <g transform="translate(-544.000000, -265.000000)">
             <g id="weixin" transform="translate(509.000000, 256.000000)">
                 <rect id="Rectangle-Copy-10" stroke="#06B226" fill="#FFFFFF" x="0" y="0" width="131" height="38" rx="19"></rect>
                 <g id="wechat" transform="translate(35.000000, 7.000000)">
@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-    name: 'wxc-logo-green',
+    name: 'wechat-logo',
 };
 </script>
 <style>
