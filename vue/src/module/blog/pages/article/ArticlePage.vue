@@ -32,6 +32,7 @@
               <el-popover
               placement="top-end"
               trigger="click"
+              v-model="share.showShareBar"
               ><div class="shareIcons">
                 <ShareNetwork
                 v-for="item in shareNetworks"
@@ -43,16 +44,24 @@
                 quote=""
                 hashtags=""
                 >
-                  <span class="shareIcon mr-1" v-html="item.icon"></span>  
+                  <span class="shareIcon mr-1" v-html="item.icon" @click="share.showShareBar=false"></span>  
                 </ShareNetwork>
-                <a href="#"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                <el-popover 
+                placement="bottom-end"
+                width="400" 
+                trigger="click"
+                v-model="share.wechatQR">
+                  <div>这里是url QR code</div>
+                  <div @click="share.wechatQR=false">关闭</div>
+                  <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                </el-popover>
               </div>
                 
               <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
                 <span style=" fill:#39B8EB;" v-html="icons.share"></span>
               </button>
             </el-popover>
-              
+            
             </span>
             </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
@@ -252,6 +261,10 @@ export default {
       lastID:0,
       noMore:false,
       loading:{comment:false},
+      share:{
+        showShareBar:false,
+        wechatQR:false
+      },
       shareItem:{
         url:window.location.href,
         title:'',
