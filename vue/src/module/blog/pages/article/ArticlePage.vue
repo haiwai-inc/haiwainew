@@ -48,6 +48,7 @@
                 placement="bottom-end"
                 width="400" 
                 trigger="click"
+                visible-arrow="false"
                 v-model="share.wechatQR">
                   <div>这里是url QR code</div>
                   <div @click="share.wechatQR=false">关闭</div>
@@ -103,11 +104,16 @@
           </div>
           <div 
             v-infinite-scroll="test"
+          infinite-scroll-disabled="disabled"
             infinite-scroll-distance="0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
-              :data="item"></comment>
+              :data="item"
+              :loginuserID="loginuserID"
+              :author="articleDetail.data.userID"
+              v-on:regetcomment="rewrite"
+              ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
               <i class="now-ui-icons loader_refresh spin"></i>
@@ -172,6 +178,7 @@ import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
 import blog from '../../blog.service';
+import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
 export default {
   name: 'article-page',
@@ -184,7 +191,19 @@ export default {
     [Popover.name]:Popover
   },
   mounted: function () {
-    this.article_view()
+    this.article_view();
+    account.login_status().then(res=>{ //判断是否登录
+      if(res.data.data==undefined){
+        this.loginuserID = -1
+      }else{
+        this.loginuserID = res.data.data.UserID ;
+      }
+    });
+  },
+  computed:{
+    disabled () {
+      return this.loading.comment || this.noMore
+    }
   },
   methods:{
     article_view(){
@@ -232,10 +251,20 @@ export default {
         if(r.length<20){
           this.noMore = true;
         }
-        // this.comment.data = res.data.data.reverse();
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
-        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        // console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+      })
+    },
+    rewrite(id){
+      console.log("reget",id);
+      blog.article_view_comment_one(id).then(res=>{
+        this.comment.forEach(obj=>{
+          if (obj.postID==id){
+            let idx = this.comment.indexOf(obj);
+            this.comment.splice(idx,1,res.data.data) 
+          }
+        })
       })
     },
     // 喜欢
@@ -282,14 +311,10 @@ export default {
       console.log("gogo")
     }
   },
-  computed:{
-    disabled () {
-      return this.loading.comment || this.noMore
-    }
-  },
   data() {
     return {
       icons:icons,
+      loginuserID:-1,
       showcomment:false,
       showpage:false,
       articleDetail: {},
@@ -397,7 +422,7 @@ padding: 0 18px;
   margin-bottom: 12px;
 }
 .article-page .comment textarea{
-  border: #ddd 1px solid;
+  border: #ddd 1px solid ;
 }
 
 /* menu */
