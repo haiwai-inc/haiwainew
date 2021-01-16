@@ -294,6 +294,7 @@ class page extends Api {
         
         //评论
         $fields=[
+            'treelevel,!='=>0,
             'order'=>['postID'=>'DESC'],
             'visible'=>1,
             'basecode'=>$check_article_indexing['postID'],
