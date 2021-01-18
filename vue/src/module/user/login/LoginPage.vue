@@ -25,11 +25,15 @@
             <wxc-logo-green></wxc-logo-green>  <span style="color:#468045">文学城</span> 账号登录
           </n-button>
           
-          <n-button type="default" round simple class="w-100 mb-3">
-            <google-logo></google-logo>  Google 账号登录
+          <n-button type="default" round simple class="w-100 mb-3 d-flex">
+            <div id="google-signin-button"></div>
+            <!-- <google-logo></google-logo>  Google 账号登录 -->
           </n-button>
           <n-button type="default" round simple class="w-100 mb-3">
             <facebook-logo></facebook-logo>  facebook 账号登录
+          </n-button>
+          <n-button type="default" round simple class="w-100 mb-3">
+            <!-- <facebook-logo></facebook-logo>  微信登录 -->
           </n-button>
           <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
@@ -61,7 +65,7 @@ export default {
     [FormGroupInput.name]: FormGroupInput,
     //WxcLogoWhite,
     WxcLogoGreen,
-    GoogleLogo,
+    // GoogleLogo,
     FacebookLogo
   },
   data() {
@@ -74,9 +78,27 @@ export default {
       }
     };
   },
+  mounted() {
+    gapi.signin2.render('google-signin-button', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'dark',
+        'onsuccess': this.onGoogleSignIn,
+        'onfailure': this.onGoogleFailure,
+      })
+  },
   methods:{
       isShowLogin(v){
           this.$emit('onchange',v)
+      },
+      onGoogleSignIn (user) {
+        const profile = user.getBasicProfile()
+        var id_token = user.getAuthResponse().id_token;
+      },
+      onGoogleFailure(error) {
+        console.log(error);
       }
   }
 };
@@ -100,4 +122,6 @@ export default {
   line-height: 18px;
   padding-left: 24px;
 }
+
+
 </style>
