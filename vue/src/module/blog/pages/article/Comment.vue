@@ -57,6 +57,7 @@
                         <el-popover 
                 placement="bottom-start"
                 width="375" 
+                @show="reply(r)"
                 trigger="click">
                   <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
                   <n-button 
@@ -67,9 +68,9 @@
         @click="article_reply_add()"
           >回复</n-button
         >
-                  <a href="javascript:void(0)" slot="reference" style="color:gray" @click="reply(r)"><span>回复</span></a>
+                  <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
                 </el-popover>
-                        <!-- <a href="#" style="color:gray" @click="reply(r)">回复</a> -->
+                        
                         <el-popconfirm v-if="r.userID==loginuserID"
                           placement="top-end"
                           confirm-button-text='删除'
@@ -155,7 +156,7 @@ export default {
   },
   mounted: function () {
     
-    console.log(this.data)
+    // console.log(this.data)
   },
   computed:{
     has_author () {
@@ -211,13 +212,14 @@ export default {
       }else{
         this.replymsgbody = "";
       }
+      console.log(this.currentItem)
       // this.modals.reply = true;
       // this.replyusername = item.userinfo_userID.username;
     },
     article_reply_add(){
       let obj = {
         article_data:{msgbody:this.replymsgbody,
-        postID:this.currentItem.postID,
+        postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
         typeID:1}
       }
       this.replybtndisable = true;

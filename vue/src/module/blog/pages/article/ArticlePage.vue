@@ -50,8 +50,9 @@
                 trigger="click"
                 visible-arrow="false"
                 v-model="share.wechatQR">
-                  <div>这里是url QR code</div>
-                  <div @click="share.wechatQR=false">关闭</div>
+                  <div class="float-right" @click="share.wechatQR=false">关闭</div>
+                  <div class="mt-5">打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮</div>
+                  <img style="margin: 0 95px;" :src="shareItem.QRcode" alt="">
                   <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
                 </el-popover>
               </div>
@@ -171,6 +172,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
@@ -253,7 +255,7 @@ export default {
         }
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
-        // console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
       })
     },
     rewrite(id){
@@ -331,7 +333,8 @@ export default {
       shareItem:{
         url:window.location.href,
         title:'',
-        description:''
+        description:'',
+        QRcode:'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+window.location.href
       },
       shareNetworks:[
         {
