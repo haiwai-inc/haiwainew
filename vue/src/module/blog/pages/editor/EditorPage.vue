@@ -390,11 +390,20 @@ export default {
           await blog.article_view(postid)
         ).data.data.postInfo_postID;
         console.log(this.article);
-        $("#summernote").summernote("code", this.article.msgbody);
+        this.setEditorContent(this.article.msgbody)
+        // $("#summernote").summernote("code", this.article.msgbody);
       }
     },
 
+    setEditorContent(content){
+      $("#summernote").summernote("code", content);
+    },
+    getEditorContent(){
+      return $("#summernote").summernote("code");
+    },
+
     save() {
+      console.log(this.getEditorContent())
       this.article.msgbody = $("#summernote").summernote("code");
       blog.update(1, this.article);
     },
