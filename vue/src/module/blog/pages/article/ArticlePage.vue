@@ -16,22 +16,21 @@
             
             <span class="media-icons">
               <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
-                <span style="fill:#39B8EB" v-html="icons.like"></span>
+                
               </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢">
-                <span style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" @click="like()">
+                <span v-if="articleDetail.data.postInfo_postID.is_buzz" style="fill:#39B8EB" v-html="icons.like"></span>
+                <span v-if="!articleDetail.data.postInfo_postID.is_buzz" style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
               </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="articleDetail.data.postInfo_postID.is_bookmark">
-                <!-- <icon-star></icon-star> -->
-                <span v-html="icons.star"></span>
-              </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" v-if="!articleDetail.data.postInfo_postID.is_bookmark">
-                <span v-html="icons.star_outline"></span>
+              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" @click="bookmark()">
+                <span v-if="articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star"></span>
+                <span v-if="!articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star_outline"></span>
               </button>
               
               <el-popover
               placement="top-end"
               trigger="click"
+              v-model="share.showShareBar"
               ><div class="shareIcons">
                 <ShareNetwork
                 v-for="item in shareNetworks"
@@ -43,16 +42,25 @@
                 quote=""
                 hashtags=""
                 >
-                  <span class="shareIcon mr-1" v-html="item.icon"></span>  
+                  <span class="shareIcon mr-1" v-html="item.icon" @click="share.showShareBar=false"></span>  
                 </ShareNetwork>
-                <a href="#"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                <el-popover 
+                placement="bottom-end"
+                width="400" 
+                trigger="click"
+                visible-arrow="false"
+                v-model="share.wechatQR">
+                  <div>这里是url QR code</div>
+                  <div @click="share.wechatQR=false">关闭</div>
+                  <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                </el-popover>
               </div>
                 
               <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
                 <span style=" fill:#39B8EB;" v-html="icons.share"></span>
               </button>
             </el-popover>
-              
+            
             </span>
             </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
@@ -96,11 +104,16 @@
           </div>
           <div 
             v-infinite-scroll="test"
+          infinite-scroll-disabled="disabled"
             infinite-scroll-distance="0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
-              :data="item"></comment>
+              :data="item"
+              :loginuserID="loginuserID"
+              :author="articleDetail.data.userID"
+              v-on:regetcomment="rewrite"
+              ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
               <i class="now-ui-icons loader_refresh spin"></i>
@@ -165,6 +178,7 @@ import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
 import blog from '../../blog.service';
+import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
 export default {
   name: 'article-page',
@@ -177,7 +191,19 @@ export default {
     [Popover.name]:Popover
   },
   mounted: function () {
-    this.article_view()
+    this.article_view();
+    account.login_status().then(res=>{ //判断是否登录
+      if(res.data.data==undefined){
+        this.loginuserID = -1
+      }else{
+        this.loginuserID = res.data.data.UserID ;
+      }
+    });
+  },
+  computed:{
+    disabled () {
+      return this.loading.comment || this.noMore
+    }
   },
   methods:{
     article_view(){
@@ -225,24 +251,70 @@ export default {
         if(r.length<20){
           this.noMore = true;
         }
-        // this.comment.data = res.data.data.reverse();
         this.showcomment=res.data.status?true:false;
         this.loading.comment = false;
-        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        // console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+      })
+    },
+    rewrite(id){
+      console.log("reget",id);
+      blog.article_view_comment_one(id).then(res=>{
+        this.comment.forEach(obj=>{
+          if (obj.postID==id){
+            let idx = this.comment.indexOf(obj);
+            this.comment.splice(idx,1,res.data.data) 
+          }
+        })
+      })
+    },
+    // 喜欢
+    like(){
+      if( this.articleDetail.data.postInfo_postID.is_buzz==0){
+        this.buzz_add(this.articleDetail.data);
+      }else{
+        this.buzz_delete(this.articleDetail.data);
+      }
+    },
+    buzz_add(item){
+      blog.buzz_add(item.postID).then(res=>{
+        console.log(res);
+        if(res.data.data=="已赞"){
+          this.articleDetail.data.postInfo_postID.is_buzz=1
+        }
+      })
+    },
+    buzz_delete(item){
+      blog.buzz_delete(item.postID).then(res=>{
+        console.log(res)
+        if(res.data.data=="已取消赞"){
+          this.articleDetail.data.postInfo_postID.is_buzz=0
+        }
+      })
+    },
+    // 收藏
+    bookmark(){
+      this.articleDetail.data.postInfo_postID.is_bookmark?this.bookmark_delete(this.articleDetail.data):this.bookmark_add(this.articleDetail.data)
+    },
+    bookmark_add(item){
+      blog.bookmark_add(item.postID).then(res=>{
+        console.log(res);
+        this.articleDetail.data.postInfo_postID.is_bookmark=1;
+      })
+    },
+    bookmark_delete(item){
+      blog.bookmark_delete(item.postID).then(res=>{
+        console.log(res);
+        this.articleDetail.data.postInfo_postID.is_bookmark=0;
       })
     },
     test(){
       console.log("gogo")
     }
   },
-  computed:{
-    disabled () {
-      return this.loading.comment || this.noMore
-    }
-  },
   data() {
     return {
       icons:icons,
+      loginuserID:-1,
       showcomment:false,
       showpage:false,
       articleDetail: {},
@@ -252,6 +324,10 @@ export default {
       lastID:0,
       noMore:false,
       loading:{comment:false},
+      share:{
+        showShareBar:false,
+        wechatQR:false
+      },
       shareItem:{
         url:window.location.href,
         title:'',
@@ -346,7 +422,7 @@ padding: 0 18px;
   margin-bottom: 12px;
 }
 .article-page .comment textarea{
-  border: #ddd 1px solid;
+  border: #ddd 1px solid ;
 }
 
 /* menu */

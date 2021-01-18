@@ -12,19 +12,33 @@
                 <icon-like-outline 
                 :style="{fill:data.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>
               {{data.countinfo_postID.count_buzz}} <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
-              <a href="#" style="color:gray"
-              @click="reply(data)">回复</a>
-            <el-popconfirm v-if="data.userID==loginuserID"
-              placement="top-end"
-              confirm-button-text='删除'
-              cancel-button-text='取消'
-              title="确定删除这条回复吗？"
-              :hide-icon="true"
-              @confirm="article_reply_delete(data.postID)"
-            >
-              <a slot="reference" class="ml-5" style="color:gray">删除</a>
-            </el-popconfirm>
-          </p>
+              <el-popover 
+                placement="bottom-start"
+                width="375" 
+                trigger="click">
+                  <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                  <n-button 
+                  type="primary"
+                  round 
+                  simple
+                  :disabled="replybtndisable"
+                  @click="article_reply_add()"
+                    >回复</n-button
+                  >
+                  <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>回复</span></a>
+                </el-popover>
+              <!-- <a style="color:gray" @click="reply(data)">回复</a> -->
+              <el-popconfirm v-if="data.userID==loginuserID"
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                title="确定删除这条回复吗？"
+                :hide-icon="true"
+                @confirm="article_reply_delete(data.postID)"
+              >
+                <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray">删除</a>
+              </el-popconfirm>
+            </p>
             <!-- <a
             v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a> -->
             <!-- <div v-if="item.replies.length>0"> https://cloud.tencent.com/developer/article/1360724 -->
@@ -34,13 +48,28 @@
                   <avatar :data="r.userinfo_userID" :imgHeight="32" class="mr-2"></avatar>
                   <div>
                       <span class="replyName">{{r.userinfo_userID.username}}</span>
-                      <span class="ml-2 text-primary" style="font-size:0.85rem" v-if="data.has_author">[作者]</span>
+                      <span class="ml-2 text-primary" style="font-size:0.85rem" v-if="r.userID==author">[作者]</span>
                       <span class="replyTime">{{r.edit_date*1000 | formatDate}}</span>
                       <p class="replyContent" v-html="r.postInfo_postID.msgbody"></p>
                       <p class="replyFoot">
                         <span @click="like(r)"><icon-like-outline :style="{fill:r.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>{{r.countinfo_postID.count_buzz}}
                         <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
-                        <a href="#" style="color:gray" @click="reply(r)">回复</a>
+                        <el-popover 
+                placement="bottom-start"
+                width="375" 
+                trigger="click">
+                  <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                  <n-button 
+        type="primary"
+        round 
+        simple
+        :disabled="replybtndisable"
+        @click="article_reply_add()"
+          >回复</n-button
+        >
+                  <a href="javascript:void(0)" slot="reference" style="color:gray" @click="reply(r)"><span>回复</span></a>
+                </el-popover>
+                        <!-- <a href="#" style="color:gray" @click="reply(r)">回复</a> -->
                         <el-popconfirm v-if="r.userID==loginuserID"
                           placement="top-end"
                           confirm-button-text='删除'
@@ -49,14 +78,13 @@
                           :hide-icon="true"
                           @confirm="article_reply_delete(r.postID)"
                         >
-                          <a slot="reference" class="ml-5" style="color:gray;cursor:pointer">删除</a>
+                          <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray;">删除</a>
                         </el-popconfirm>
-                        
                       </p>
                   </div>
                 </div>
               </div>
-              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(data.postID)">{{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="data.has_author">[含作者]</span></button>
+              <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(data.postID)">{{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="has_author">[含作者]</span></button>
             </div>
         </div>
     <!-- </div> -->
@@ -105,15 +133,16 @@
 import {IconLikeOutline,IconMessage} from '@/components/Icons';
 import { Modal, Button } from '@/components';
 import Avatar from '../components/Main/Avatar';
-import account from '../../../user/service/account';
 import {formatDate} from '@/directives/formatDate.js';
 import blog from '../../blog.service';
-import {Popconfirm} from 'element-ui';
+import {Popconfirm,Popover} from 'element-ui';
 
 export default {
   name: 'comment',
   props:{
-      data:{}
+      data:{},
+      author:Number,
+      loginuserID:Number
   },
   components: {
       Avatar,
@@ -121,16 +150,23 @@ export default {
       IconMessage,
       Modal,
       [Button.name]: Button,
-      [Popconfirm.name]:Popconfirm
+      [Popconfirm.name]:Popconfirm,
+      [Popover.name]:Popover
   },
   mounted: function () {
-    account.login_status().then(res=>{ //判断是否登录
-      if(res.data.data==undefined){
-        this.loginuserID = -1
-      }else{
-        this.loginuserID = res.data.data.UserID ;
-      }
-    });
+    
+    console.log(this.data)
+  },
+  computed:{
+    has_author () {
+      let s = 0
+      this.data.reply.forEach(obj=>{
+        if(obj.userID == this.author) {
+          s++
+        } ;
+      })
+      return s>0?true:false
+    }
   },
   methods:{
     // logedin () {
@@ -152,6 +188,7 @@ export default {
       }else{
         this.modals.login = true ;
       }
+        console.log(this.currentItem);
       
     },
     buzz_add(item){
@@ -169,8 +206,13 @@ export default {
     // 回复
     reply(item){
       this.currentItem = item ;
-      this.modals.reply = true;
-      this.replyusername = item.userinfo_userID.username;
+      if(item.treelevel==2){
+        this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
+      }else{
+        this.replymsgbody = "";
+      }
+      // this.modals.reply = true;
+      // this.replyusername = item.userinfo_userID.username;
     },
     article_reply_add(){
       let obj = {
@@ -192,25 +234,12 @@ export default {
     },
     regetComment(){
       let id = 0;
-      if(this.currentItem.reply==undefined){
+      if(this.currentItem.treelevel==2){
         id = this.currentItem.basecode;
-        console.log('undefined')
       }else{
         id = this.currentItem.postID;
-        console.log(id);
       }
-      blog.article_view_comment_one(id).then(res=>{
-        // this.writeback(res.data.data);
-        console.log(res.data);
-      })
-    },
-    writeback(item){
-      this.data.forEach(obj=>{
-        if (obj.postID==item.postID){
-          obj.postInfo_postID=item.postInfo_postID
-          obj.countinfo_postID=item.countinfo_postID
-        }
-      })
+      this.$emit("regetcomment",id);
     },
     checkstatus(){
       this.replybtndisable = this.replymsgbody?false:true;
@@ -219,11 +248,10 @@ export default {
       let obj = document.getElementById(id);
       obj.style.display = obj.style.display=='none'?'block':'none';
       this.replyshowstatus = obj.style.display=='none'?'显示':'隐藏';
-    }
+    },
   },
   data(){
     return {
-      loginuserID:0,
       replyshowstatus:'显示',
       replymsgbody:'',
       replyusername:'',
