@@ -516,7 +516,9 @@ class user extends Api {
     }
     
     
-    
+    public function init_sse(){
+        
+    }
     
     
     

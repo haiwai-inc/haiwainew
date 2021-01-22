@@ -56,6 +56,9 @@ import {
   FacebookLogo
 } from '@/components/Icons';
 
+import account from "../service/account";
+
+console.log(account)
 export default {
   name: 'login-page',
   bodyClass: 'login-page',
@@ -96,6 +99,7 @@ export default {
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile()
         var id_token = user.getAuthResponse().id_token;
+        account.google_sign_in(id_token);
       },
       onGoogleFailure(error) {
         console.log(error);

@@ -81,6 +81,9 @@ class search_category  extends Search{
     {
         $categories = $this->get($categoryIDs);
         $categories = json_decode(json_encode($categories), true);
+        if(!empty($categories["error"])){
+            return [];
+        }
         if (is_array($categoryIDs)) {
             $categories_body = [];
             foreach ($categories['docs'] as $doc) {
