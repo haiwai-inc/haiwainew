@@ -7,6 +7,7 @@
         </router-link>
       </div>
       <div class="d-sm-none">
+        <!-- for mobile -->
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item title="日记本" name="1">
             <div>
@@ -756,4 +757,9 @@ outline: 0;
   background-color: lightgray !important;
 }
 
+@media (max-width: 575.98px){
+  .publisher .menu1{
+    height:auto;
+  }
+}
 </style>
