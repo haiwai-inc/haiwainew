@@ -25,10 +25,8 @@
             <wxc-logo-green></wxc-logo-green>  <span style="color:#468045">文学城</span> 账号登录
           </n-button>
           
-          <n-button type="default" round simple class="w-100 mb-3 d-flex">
-            <div id="google-signin-button"></div>
-            <!-- <google-logo></google-logo>  Google 账号登录 -->
-          </n-button>
+          <div id="google-signin-button" class="mb-3"></div>
+            
           <n-button type="default" round simple class="w-100 mb-3">
             <facebook-logo></facebook-logo>  facebook 账号登录
           </n-button>
@@ -52,20 +50,17 @@ import {
 import {
   //WxcLogoWhite,
   WxcLogoGreen,
-  GoogleLogo,
   FacebookLogo
 } from '@/components/Icons';
 
 export default {
   name: 'login-page',
-  bodyClass: 'login-page',
   components: {
     [Button.name]: Button,
     [Checkbox.name]: Checkbox,
     [FormGroupInput.name]: FormGroupInput,
     //WxcLogoWhite,
     WxcLogoGreen,
-    // GoogleLogo,
     FacebookLogo
   },
   data() {
@@ -81,10 +76,10 @@ export default {
   mounted() {
     gapi.signin2.render('google-signin-button', {
         'scope': 'profile email',
-        'width': 240,
+        'width': 350,
         'height': 50,
         'longtitle': true,
-        'theme': 'dark',
+        'theme': 'light',
         'onsuccess': this.onGoogleSignIn,
         'onfailure': this.onGoogleFailure,
       })
@@ -122,6 +117,8 @@ export default {
   line-height: 18px;
   padding-left: 24px;
 }
-
-
+/* google btn */
+#google-signin-button .abcRioButton{
+  border-radius: 25px;
+}
 </style>
