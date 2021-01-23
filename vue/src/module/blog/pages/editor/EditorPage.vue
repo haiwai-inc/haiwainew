@@ -308,6 +308,10 @@
   </div>
 </template>
 <script>
+
+
+
+
 import { Button, DropDown, Modal, FormGroupInput } from "@/components";
 import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
 import {
@@ -541,6 +545,20 @@ export default {
   },
   mounted() {
     this.initEditor();
+    var source = new EventSource("/sse.php", { withCredentials: true });
+  source.onopen = function (event) {
+    console.log(event);
+  };
+  source.onclose = function (event){
+    console.log(event);
+  }
+  source.onerror = function (event) {
+    console.log(event);
+  // handle error event
+};
+  source.onmessage = function (message){
+    console.log(message)
+  }
   },
 
   data() {

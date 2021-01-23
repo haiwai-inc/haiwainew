@@ -537,14 +537,6 @@ final class Factory {
 				$this->redirectHttps();
 			}
 		}
-		
-		//检查自动登录
-		if(empty($_SESSION['UserID'])){
-			if(!empty($_COOKIE['autologin_wxc']) && !empty($_COOKIE['userid_wxc']) ){
-				$obj=load("members_login");
-				$obj->userautologin();
-			}
-		}	
 	}
 	
 	private function redirectHttps(){

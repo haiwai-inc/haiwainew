@@ -168,9 +168,37 @@ class passport extends Api {
         
     }
     
+    /**
+     * 用户注册页
+     * 用户 通过Google注册或登录
+     * @param string $token|用户登录Google账号获取的token
+     */
+    public function user_google_login($token){
+        $client = new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  // Specify the CLIENT_ID of the app that accesses the backend
+        $payload = $client->verifyIdToken($token);
+        if ($payload) {
+            $userid = $payload['sub'];
+            // debug::d($payload);
+            // If request specified a G Suite domain:
+            //$domain = $payload['hd'];
+        } else {
+            // Invalid ID token
+        }
+    }
+
+    /**
+     * 用户注册页
+     * 用户 通过微信注册或登录
+     * @param string $code|用户登录微信账号获取的code
+     */
+    public function user_wechat_login($code){
+
+    }
     
     
-    
+    public function init_sse(){
+        
+    }
     
     
     
