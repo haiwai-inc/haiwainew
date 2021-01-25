@@ -38,7 +38,7 @@ class Account extends API{
     }
   
     async google_sign_in(token){
-        return await this.sendget("account/passport/user_google_login/?token="+token);
+        return await this.sendget("account/passport/user_login_google/?token="+token);
     }
 
 
