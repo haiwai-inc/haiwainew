@@ -6,8 +6,7 @@
           <haiwai-logo-white></haiwai-logo-white>
         </router-link>
       </div>
-      <div class="d-sm-none">
-        <!-- for mobile -->
+      <div class="d-sm-none"> <!-- for mobile -->
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item title="日记本" name="1">
             <div>
@@ -35,7 +34,8 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <button class="btn btn-link m-3" @click="modals.addwenji = true">
+        <category-list></category-list>
+        <!-- <button class="btn btn-link m-3" @click="modals.addwenji = true">
           <icon-plus></icon-plus
           ><span style="font-size:1rem;color:#14171A">新建文集</span>
         </button>
@@ -67,23 +67,12 @@
               >
             </drop-down>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <div
-        style="text-align:center;border-bottom:1px #ddd solid;padding:24px 0;"
-      >
-        <n-button
-          type="primary"
-          round
-          simple
-          @click="addArticle()"
-          class="editbtn"
-        >
-          <icon-plus class="editicon"></icon-plus>新建文章
-        </n-button>
-      </div>
+      <category-article-list></category-article-list>
+      
       <ul>
         <li
           v-for="(item, index) in articleList"
@@ -219,7 +208,7 @@
     </div>
 
     <!-- Add Wenji Modal -->
-    <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
+    <!-- <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
         请编辑新文集名称
       </h4>
@@ -237,7 +226,7 @@
         </n-button>
         <n-button type="primary" round simple>保存</n-button>
       </template>
-    </modal>
+    </modal> -->
 
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
@@ -308,18 +297,18 @@
   </div>
 </template>
 <script>
-
-
+import CategoryList from "./components/CategoryList.vue";
+import CategoryArticleList from "./components/CategoryArticleList";
 
 
 import { Button, DropDown, Modal, FormGroupInput } from "@/components";
 import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
 import {
   HaiwaiLogoWhite,
-  IconPlus,
+  // IconPlus,
   IconDelete,
   IconDraft,
-  IconEdit,
+  // IconEdit,
   IconForbid,
   IconFolder,
   IconPrivate,
@@ -329,7 +318,7 @@ import {
   IconPublish,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
-import "jquery/dist/jquery";
+import "jquery/dist/jquery"; 
 import $ from "jquery";
 import jQuery from "jquery";
 // import 'bootstrap/dist/css/bootstrap.css';
@@ -357,6 +346,8 @@ import blog from "../../blog.service";
 export default {
   name: "profile",
   components: {
+    CategoryList,
+    CategoryArticleList,
     [Button.name]: Button,
     DropDown,
     Modal,
@@ -366,10 +357,10 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
-    IconPlus,
+    // IconPlus,
     IconDelete,
     IconDraft,
-    IconEdit,
+    // IconEdit,
     IconForbid,
     IconFolder,
     IconPrivate,
@@ -522,7 +513,7 @@ export default {
     addArticle() {
       var newarticle = {
         articleId: 9089,
-        title: "新填的文章",
+        title: "新建的文章",
         wordCount: 0,
         isPublished: false,
       };

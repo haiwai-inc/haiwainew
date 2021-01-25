@@ -58,19 +58,21 @@ export default {
       isOpen: false
     };
   },
-  provide() {
-    return {
-      closeDropDown: this.closeDropDown
-    }
-  },
+  // provide() {
+  //   return {
+  //     closeDropDown: this.closeDropDown
+  //   }
+  // },
   methods: {
     toggleDropDown() {
       this.isOpen = !this.isOpen;
       this.$emit('change', this.isOpen);
     },
     closeDropDown() {
-      this.isOpen = false;
-      this.$emit('change', this.isOpen);
+      if(this.isOpen){
+        this.isOpen = false;
+        this.$emit('change', this.isOpen);
+      }
     }
   }
 };
