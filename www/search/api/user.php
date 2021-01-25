@@ -28,4 +28,39 @@ class user extends Api
 
         return $rs;
     }
+
+
+    /**
+     * Login By Facebook
+     *
+     * @param string $token
+     * @response 搜索结果
+     *
+     * @response 用户未登录，返回错误信息
+     */
+    public function facebookLogin($token){
+        $fb = new Facebook\Facebook([
+            'app_id' => '793976421331830',
+            'app_secret' => 'ac4725b1caad7a7335dbba706667ecf5',
+            'default_graph_version' => 'v2.10',
+            ]);
+          
+          try {
+            // Returns a `Facebook\Response` object
+            $response = $fb->get('/me?fields=id,name,email', "$token");
+          } catch(Exception $e) {
+            echo 'Facebook SDK an error: ' . $e->getMessage();
+            exit;
+          }
+        //   } catch(Facebook\Exception\SDKException $e) {
+        //     echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        //     exit;
+        //   }
+          
+          $user = $response->getGraphUser();
+          debug::d($user->getEmail());
+          debug::d($user);
+          echo 'Name: ' . $user['name'];
+          return $user;
+    }
 }

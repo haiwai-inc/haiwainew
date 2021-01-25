@@ -19,6 +19,26 @@
     <link href="summernote.css" rel="stylesheet"> -->
   </head>
   <body class="sidebar-collapse">
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '793976421331830',
+          xfbml      : true,
+          version    : 'v9.0'
+        });
+        FB.AppEvents.logPageView();
+      };
+    
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+
     <noscript>
       <strong>海外博客需要您的浏览器支持 JavaScript 语音，请确保 JavaScript 可用。</strong>
     </noscript>

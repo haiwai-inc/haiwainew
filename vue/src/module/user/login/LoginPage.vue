@@ -27,7 +27,7 @@
           
           <div id="google-signin-button" class="mb-3"></div>
             
-          <n-button type="default" round simple class="w-100 mb-3">
+          <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
             <facebook-logo></facebook-logo>  facebook 账号登录
           </n-button>
           
@@ -83,7 +83,15 @@ export default {
         'theme': 'light',
         'onsuccess': this.onGoogleSignIn,
         'onfailure': this.onGoogleFailure,
-      })
+      });
+    AppleID.auth.init({
+                clientId : '[CLIENT_ID]',
+                scope : '[SCOPES]',
+                redirectURI : '[REDIRECT_URI]',
+                state : '[STATE]',
+                nonce : '[NONCE]',
+                usePopup : true //or false defaults to false
+            });
   },
   methods:{
       isShowLogin(v){
@@ -98,6 +106,14 @@ export default {
       },
       onGoogleFailure(error) {
         console.log(error);
+      },
+      facebookLogin(){
+        console.log("haha")
+        FB.login(function(response){
+            // handle the response 
+            console.log(response);
+            account.facebook_sign_in(response.authResponse.accessToken);
+        }, {scope: 'email'});
       }
   }
 };
