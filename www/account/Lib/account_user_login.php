@@ -25,7 +25,7 @@ class account_user_login extends Model{
 	    
 	    //设置session
 	    $this->set_user_session($check_account_user);
-	    return $rs_status;
+	    return true;
 	}
 	
 	//文学城登录
@@ -50,8 +50,78 @@ class account_user_login extends Model{
 	    
 	    //设置session
 	    $this->set_user_session($check_account_user);
-	    return $rs_status;
+	    return true;
 	}
+	
+	//google 注册/登录
+	public function google_login($login_token){
+	    //$client=new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  
+	    //$rs_client=$client->verifyIdToken($login_token);
+	    $rs_client=["sub"=>110169484474386276334,"aud"=>"1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com","email"=>"sida9567_google@gmail.com"];//==========
+	    if(!empty($rs_client)) {
+	        $login_data=$rs_client['email'];
+	        
+	        //查看是否注册
+	        $obj_account_user=load("account_user");
+	        $check_account_user=$obj_account_user->getOne("*",['email'=>$login_data]);
+	        if(!empty($check_account_user)){
+	            //检测用户信息
+	            $rs_status=$this->check_user($check_account_user);
+	            if(!$rs_status['status']){
+	                return $rs_status;
+	            }
+	        }
+	        
+	        //查看是否绑定
+	        $obj_account_user_auth=load("account_user_auth");
+	        $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"google"]);
+	        if(!empty($rs_account_user_auth)){
+	            $login_token=md5($rs_client['sub'].$rs_client['aud']);
+	            if($check_account_auth['login_token']!=$login_token){
+	                $rs_status['status']=false;
+	                $rs_status['error']="google认证错误";
+	                return $rs_status;
+	            }
+	        }
+	        
+	        //注册用户
+	        if(empty($check_account_user)){
+	            $time=times::gettime();
+	            $ip=http::getIP();
+	            $fields=[
+                    'username'=>strstr($login_data,'@',true),
+                    'email'=>$login_data,
+                    'verified'=>1,
+                    'ip'=>$ip,
+                    'login_date'=>$time,
+                    'create_date'=>$time,
+                    'update_date'=>$time,
+                    'update_type'=>"register",
+                    'update_ip'=>$ip,
+                ];
+	            $userID=$obj_account_user->insert($fields);
+	        }
+	        
+	        //绑定google
+	        if(empty($rs_account_user_auth)){
+	            $obj_account_user_auth->insert(['userID'=>$userID,'login_data'=>$login_data,'login_token'=>$login_token,'login_source'=>"google"]);     
+	        }
+	        
+	        //设置登录cookie
+	        $rs_account_user=$obj_account_user->getOne("*",['email'=>$login_data]);
+	        $this->set_user_cookie($rs_account_user);
+	        
+	        //设置session
+	        $this->set_user_session($rs_account_user);
+	        return true;
+	    }else{
+	        //非法登录
+	        $rs_status['status']=false;
+	        $rs_status['error']="登录信息错误";
+	        return $rs_status;
+	    }
+	}
+	
 	
 	//设置cookie
 	function set_user_cookie($rs_account_user){
@@ -116,6 +186,13 @@ class account_user_login extends Model{
 	    }
 	    
 	    return ["status"=>true];
+	}
+	
+	//查看google绑定
+	function check_user_google($check_account_auth,$login_token){
+	    if($check_account_auth['login_token']!=$login_token){
+	        
+	    }
 	}
 	
 	private function rand($min = NULL, $max = NULL) {
