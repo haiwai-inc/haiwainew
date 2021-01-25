@@ -12,7 +12,7 @@ class generate_hot_tag{
         $rs_article_tag=$this->obj_article_tag->getAll("*",['visible'=>1,'limit'=>20,'order'=>['count_article'=>'DESC']]);
         
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("blog_hot_tag",$rs_article_tag,false, 3600*24);
+        $obj_memcache->set("blog_hot_tag",$rs_article_tag,3600*24);
     }
 }
 

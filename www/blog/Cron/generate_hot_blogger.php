@@ -16,7 +16,7 @@ class generate_hot_blogger{
         }
         
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("blog_hot_blogger",$rs_blog_blogger,false, 3600*24);
+        $obj_memcache->set("blog_hot_blogger",$rs_blog_blogger, 3600*24);
     }
 }
 
