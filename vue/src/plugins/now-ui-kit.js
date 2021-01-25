@@ -10,6 +10,7 @@ import VueLazyload from 'vue-lazyload';
 import infiniteScroll from "vue-infinite-scroll";
 import {Message,Alert} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// import "bootstrap/dist/js/bootstrap"
 
 locale.use(lang);
 
