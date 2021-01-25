@@ -47,30 +47,37 @@ class passport extends Api {
     
     /**
      * 用户登录页
-     * 用户 登录
+     * 用户 登录 海外
      * @param integer $login_data|登录信息
      * @param integer $login_token|登录凭证
-     * @param integer $login_source|登录类型
      */
-    public function user_login($login_data,$login_token,$login_source){
+    public function user_login($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
-        
-        //海外登录
-        if($login_source=="haiwai"){
-            $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
-        }
-        //文学城登录
-        elseif($login_source=="wxc"){
-            $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
-        }
-        
-        //非法登录
-        if(empty($rs_user_login['status']))   {
-            $this->error=empty($rs_user_login['error'])?"无效登录":$rs_user_login['error'];
-            $this->status=false;
-            return false;
-        }
-        
+        $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
+        return $rs_user_login;
+    }
+    
+    /**
+     * 用户登录页
+     * 用户 登录 文学城
+     * @param integer $login_data|登录信息
+     * @param integer $login_token|登录凭证
+     */
+    public function user_login_wxc($login_data,$login_token){
+        $obj_account_user_login=load("account_user_login");
+        $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
+        return $rs_user_login;
+    }
+    
+    /**
+     * 用户登录页
+     * 用户 登录 google
+     * @param integer $login_token|登录凭证
+     * @response /account/api_response/user_login_google.txt
+     */
+    public function user_login_google($login_token=null){
+        $obj_account_user_login=load("account_user_login");
+        $rs_user_login=$obj_account_user_login->google_login($login_token);
         return $rs_user_login;
     }
     
@@ -118,10 +125,8 @@ class passport extends Api {
             'create_date'=>$time,
             'update_date'=>$time,
             'update_type'=>"register",
-            'update_ip'=>$ip,
-            'login_source'=>'haiwai',
+            'update_ip'=>$ip
         ];
-        
         $obj_account_user->insert($fields);
         
         //发送邮件
@@ -130,7 +135,6 @@ class passport extends Api {
         
         //登录
         $this->user_login($email,$password,"haiwai");
-        
         return true;
     }
     
@@ -168,24 +172,6 @@ class passport extends Api {
         
     }
     
-    /**
-     * 用户注册页
-     * 用户 通过Google注册或登录
-     * @param string $token|用户登录Google账号获取的token
-     */
-    public function user_google_login($token){
-        $client = new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  // Specify the CLIENT_ID of the app that accesses the backend
-        $payload = $client->verifyIdToken($token);
-        if ($payload) {
-            $userid = $payload['sub'];
-            // debug::d($payload);
-            // If request specified a G Suite domain:
-            //$domain = $payload['hd'];
-        } else {
-            // Invalid ID token
-        }
-    }
-
     /**
      * 用户注册页
      * 用户 通过微信注册或登录
