@@ -47,6 +47,9 @@ class Account extends API{
         console.log(message)
     }
 
+    async facebook_sign_in(token){
+        return await this.sendget("search/user/facebookLogin/?token="+token);
+    }
 
 
 }
