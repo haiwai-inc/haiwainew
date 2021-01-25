@@ -152,6 +152,23 @@ class Blog extends API{
   }
 
   /**
+   * 返回文集列表
+   * @param number $bloggerID 
+   */
+  async category_list(bloggerID){
+    return await this.sendget("blog/page/category_list/?bloggerID="+bloggerID)
+  }
+
+  /**
+   * 返回某文集的文章列表
+   * @param number $id 
+   * @param number $lastID
+   */
+  async category_list(id,lastID){
+    return await this.sendget("blog/page/category_article_list/?id="+id+"&lastID="+lastID)
+  }
+
+  /**
    * 新建博客文章
    * @param number bloger 
    * @param object data

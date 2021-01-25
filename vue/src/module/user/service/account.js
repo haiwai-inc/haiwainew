@@ -41,8 +41,6 @@ class Account extends API{
         return await this.sendget("account/passport/user_login_google/?login_token="+token);
     }
 
-
-
     signal(message){
         console.log(message)
     }

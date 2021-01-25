@@ -18,7 +18,7 @@
           </span>
         </div>
         <div>
-          <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox>
+          <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> -->
           <n-button type="primary" round class="w-100" size="lg">登录</n-button>
           <p class="text-center checkbox my-2">或</p>
           <n-button type="default" round simple class="w-100 mb-3">
@@ -100,7 +100,9 @@ export default {
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile()
         var id_token = user.getAuthResponse().id_token;
-        account.google_sign_in(id_token);
+        account.google_sign_in(id_token).then(res=>{
+          console.log(res.data.data)
+        });
       },
       onGoogleFailure(error) {
         console.log(error);

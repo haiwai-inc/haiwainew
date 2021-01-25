@@ -49,15 +49,14 @@
    //BlogerList
    },
    data() {
-   return {
-   //bloggerList : [],
-   //res_bloggerList:[],
-   user:this.$store.state.user
-   };
+      return {
+      //bloggerList : [],
+      //res_bloggerList:[],
+      user:this.$store.state.user
+      };
    },
    methods:{
    },
    };
 </script>
 <style></style>
-Type a message
