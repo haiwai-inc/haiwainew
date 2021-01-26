@@ -104,8 +104,6 @@ export default {
             this.$store.state.user.userinfo = res.data.data;
             this.$router.push('/')
           }
-          console.log(this.$store.state.user,res.data);
-          console.log(res.data.data);
           gapi.auth2.getAuthInstance().disconnect();
         });
       },
