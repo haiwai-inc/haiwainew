@@ -55,9 +55,9 @@ class account_user_login extends Model{
 	
 	//google 注册/登录
 	public function google_login($login_token){
-	    //$client=new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  
-	    //$rs_client=$client->verifyIdToken($login_token);
-	    $rs_client=["sub"=>110169484474386276334,"aud"=>"1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com","email"=>"sida9567_google@gmail.com"];//==========
+	    $client=new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  
+	    $rs_client=$client->verifyIdToken($login_token);
+	    //$rs_client=["sub"=>110169484474386276334,"aud"=>"1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com","email"=>"sida9567_google@gmail.com"];//==========
 	    if(!empty($rs_client)) {
 	        $login_token=md5($rs_client['sub'].$rs_client['aud']);
 	        $login_data=$rs_client['email'];
