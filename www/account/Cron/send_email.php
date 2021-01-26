@@ -18,6 +18,17 @@ class send_email{
 				echo "{$v['id']}\n";
 			}
 		}
+	    
+	    
+	    /*
+	    $obj_account_user=load("account_user");
+	    $rs_account_user=$obj_account_user->getAll("*",["id,<="=>78]);
+	    
+	    $obj_account_user_auth=load("account_user_auth");
+	    foreach($rs_account_user as $v){
+	        $obj_account_user_auth->update(["login_data"=>$v['id']."sida9567@gmail.com"],['userID'=>$v['id']]);
+	    }
+	    */
 	}
 }
 $obj = new send_email();

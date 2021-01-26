@@ -42,6 +42,7 @@ class passport extends Api {
         session_unset();
         unset($_COOKIE['wxc_login']);
         setcookie('wxc_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
+        setcookie();
         return true;
     }
     

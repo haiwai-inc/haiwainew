@@ -105,6 +105,8 @@ export default {
             this.$router.push('/')
           }
           console.log(this.$store.state.user,res.data);
+          console.log(res.data.data);
+          gapi.auth2.getAuthInstance().disconnect();
         });
       },
       onGoogleFailure(error) {
