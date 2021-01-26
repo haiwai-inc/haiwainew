@@ -7,7 +7,7 @@ class account_user_login extends Model{
 	public function haiwai_login($email,$password){
 	    //查看用户状态
 	    $obj_account_user=load("account_user");
-	    $check_account_user=$obj_account_user->getOne("*",['email'=>$email,'login_source'=>"haiwai"]);
+	    $check_account_user=$obj_account_user->getOne("*",['email'=>$email]);
 	    $rs_status=$this->check_user($check_account_user);
 	    if(!$rs_status['status']){
 	        return $rs_status;
@@ -30,18 +30,34 @@ class account_user_login extends Model{
 	
 	//文学城登录
 	public function wxc_login($login_data,$login_token){
-	    //查看用户状态
+	    //查看是否注册
 	    $obj_account_user=load("account_user");
-	    $check_account_user=$obj_account_user->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
-	    $rs_status=$this->check_user($check_account_user);
-	    if(!$rs_status['status']){
+	    $check_account_user=$obj_account_user->getOne("*",['email'=>$login_data]);
+	    if(!empty($check_account_user)){
+	        //检测用户信息
+	        $rs_status=$this->check_user($check_account_user);
+	        if(!$rs_status['status']){
+	            return $rs_status;
+	        }
+	    }else{
+	        $rs_status['status']=false;
+	        $rs_status['error']="此帐号未绑定文学城";
 	        return $rs_status;
 	    }
 	    
-	    //检测密码
-	    if(md5($login_token)!=$check_account_user['login_token']){
+	    //查看是否绑定
+	    $obj_account_user_auth=load("account_user_auth");
+	    $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
+	    if(!empty($rs_account_user_auth)){
+	        //检测文学成密码
+	        if(md5($login_token)!=$rs_account_user_auth['login_token']){
+	            $rs_status['status']=false;
+	            $rs_status['error']="登录密码错误";
+	            return $rs_status;
+	        }
+	    }else{
 	        $rs_status['status']=false;
-	        $rs_status['error']="密码错误";
+	        $rs_status['error']="此帐号未绑定文学城";
 	        return $rs_status;
 	    }
 	    
@@ -49,15 +65,14 @@ class account_user_login extends Model{
 	    $this->set_user_cookie($check_account_user);
 	    
 	    //设置session
-	    $rs_user_session=$this->set_user_session($rs_account_user);
+	    $rs_user_session=$this->set_user_session($check_account_user);
 	    return $rs_user_session;
 	}
 	
 	//google 注册/登录
 	public function google_login($login_token){
-	    //$client=new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  
-	    //$rs_client=$client->verifyIdToken($login_token);
-	    $rs_client=["sub"=>110169484474386276334,"aud"=>"1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com","email"=>"sida9567_google@gmail.com"];//==========
+	    $client=new Google_Client(['client_id' => GOOGLE_CLIENT_ID]);  
+	    $rs_client=$client->verifyIdToken($login_token);
 	    if(!empty($rs_client)) {
 	        $login_token=md5($rs_client['sub'].$rs_client['aud']);
 	        $login_data=$rs_client['email'];

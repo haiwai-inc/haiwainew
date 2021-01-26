@@ -81,7 +81,7 @@ export default {
   },
   methods:{
     sendTagId(id){
-      this.$emit('getTagId',id)
+      this.$emit('get-tagid',id)
     }
   }
 };
