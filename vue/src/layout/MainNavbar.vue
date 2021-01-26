@@ -63,7 +63,7 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
-       <li class="nav-item">
+       <li class="nav-item" v-if="$store.state.user.userinfo.id">
         <a
           class="nav-link"
           style="margin-top:3px;z-index:1000"
@@ -108,7 +108,7 @@
           <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
         </nav-link>
         <hr class="mb-1 mt-1">
-        <a href="javascript:void(0)" @click="logout">
+        <a href="javascript:void(0)" @click="logout" class="dropdown-item">
           <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
         </a>
         
