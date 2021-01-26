@@ -101,7 +101,8 @@ export default {
         const profile = user.getBasicProfile()
         var id_token = user.getAuthResponse().id_token;
         account.google_sign_in(id_token).then(res=>{
-          console.log(res.data.data)
+          console.log(res.data.data);
+          gapi.auth2.getAuthInstance().disconnect();
         });
       },
       onGoogleFailure(error) {
