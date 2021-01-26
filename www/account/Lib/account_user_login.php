@@ -30,21 +30,6 @@ class account_user_login extends Model{
 	
 	//文学城登录
 	public function wxc_login($login_data,$login_token){
-	    //查看是否注册
-	    $obj_account_user=load("account_user");
-	    $check_account_user=$obj_account_user->getOne("*",['email'=>$login_data]);
-	    if(!empty($check_account_user)){
-	        //检测用户信息
-	        $rs_status=$this->check_user($check_account_user);
-	        if(!$rs_status['status']){
-	            return $rs_status;
-	        }
-	    }else{
-	        $rs_status['status']=false;
-	        $rs_status['error']="此帐号未绑定文学城";
-	        return $rs_status;
-	    }
-	    
 	    //查看是否绑定
 	    $obj_account_user_auth=load("account_user_auth");
 	    $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
@@ -53,6 +38,20 @@ class account_user_login extends Model{
 	        if(md5($login_token)!=$rs_account_user_auth['login_token']){
 	            $rs_status['status']=false;
 	            $rs_status['error']="登录密码错误";
+	            return $rs_status;
+	        }
+	    }else{
+	        $rs_status['status']=false;
+	        $rs_status['error']="此帐号未绑定文学城";
+	        return $rs_status;
+	    }
+	    
+	    //检测用户信息
+	    $obj_account_user=load("account_user");
+	    $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_user_auth['userID']]);
+	    if(!empty($check_account_user)){
+	        $rs_status=$this->check_user($check_account_user);
+	        if(!$rs_status['status']){
 	            return $rs_status;
 	        }
 	    }else{
@@ -114,12 +113,12 @@ class account_user_login extends Model{
                     'update_type'=>"register",
                     'update_ip'=>$ip,
                 ];
-	            $userID=$obj_account_user->insert($fields);
+	            $check_account_user['id']=$obj_account_user->insert($fields);
 	        }
 	        
 	        //绑定google
 	        if(empty($rs_account_user_auth)){
-	            $obj_account_user_auth->insert(['userID'=>$userID,'login_data'=>$login_data,'login_token'=>$login_token,'login_source'=>"google"]);     
+	            $obj_account_user_auth->insert(['userID'=>$check_account_user['id'],'login_data'=>$login_data,'login_token'=>$login_token,'login_source'=>"google"]);     
 	        }
 	        
 	        //设置登录cookie
@@ -159,11 +158,10 @@ class account_user_login extends Model{
 	    $rs_user_session['UserID']=$rs_account_user['id'];
 	    $rs_user_session['UserLevel']=$rs_account_user['auth_group'];
 	    $rs_user_session['id']=$rs_account_user['id'];
-	    $rs_user_session['username']=$rs_account_user['username'];
-	    $rs_user_session['description']=$rs_account_user['description'];
-	    $rs_user_session['background']=$rs_account_user['background'];
-	    $rs_user_session['avatar']=$rs_account_user['avatar'];
 	    $_SESSION=$rs_user_session;
+	    
+	    $obj_account_user=load("account_user");
+	    $rs_user_session=$obj_account_user->get_basic_userinfo([$rs_user_session])[0];
 	    return $rs_user_session;
 	}
 	

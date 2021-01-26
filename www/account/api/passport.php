@@ -15,9 +15,9 @@ class passport extends Api {
      * 用户 认证
      */
     public function login_status($userID=0) {
+        $obj_account_user=load("account_user");
         if(empty($_SESSION['UserID']) || !empty($userID)){
-            $obj_account_user=load("account_user");
-            $rs_account_user=$obj_account_user->getOne(['id','auth_group','username','description','background','avatar'],['id'=>$userID]);
+            $rs_account_user=$obj_account_user->getOne(['id','auth_group'],['id'=>$userID]);
             
             $_SESSION=$rs_account_user;
             $_SESSION['UserID']=$rs_account_user['id'];
@@ -26,11 +26,13 @@ class passport extends Api {
             if(empty($rs_account_user)){
                 $this->error='User not logged in';
                 $this->status=false;
+                return false;
             }
         }else{
             $rs_account_user=$_SESSION;
         }
         
+        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user])[0];
         return $rs_account_user;
     }
     
@@ -42,7 +44,6 @@ class passport extends Api {
         session_unset();
         unset($_COOKIE['wxc_login']);
         setcookie('wxc_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
-        setcookie();
         return true;
     }
     
@@ -93,7 +94,7 @@ class passport extends Api {
         $password=urldecode($password);
         
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email,'login_source'=>"haiwai"]);
+        $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email]);
         if(!empty($check_account_user)){$this->error="此用户已经被注册";$this->status=false;return false;}
         
         //验证邮箱
@@ -128,6 +129,7 @@ class passport extends Api {
             'update_type'=>"register",
             'update_ip'=>$ip
         ];
+        
         $obj_account_user->insert($fields);
         
         //发送确认邮件
@@ -135,7 +137,7 @@ class passport extends Api {
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
         $obj_memcache->set($token,true, 600);
-        $obj_account_user_email->insert(['function'=>"register",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
         
         //登录
         $this->user_login($email,$password,"haiwai");
