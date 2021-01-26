@@ -126,17 +126,17 @@ class passport extends Api {
             'login_date'=>$time,
             'create_date'=>$time,
             'update_date'=>$time,
-            'update_type'=>"register",
+            'update_type'=>"register_haiwai",
             'update_ip'=>$ip
         ];
         
-        $obj_account_user->insert($fields);
+        $userID=$obj_account_user->insert($fields);
         
         //发送确认邮件
         $obj_account_user_email=load("account_user_email");
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set($token,true, 600);
+        $obj_memcache->set($token,$userID, 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
         
         //登录
@@ -152,8 +152,10 @@ class passport extends Api {
     public function user_register_verified($token){
         $obj_memcache = func_initMemcached('cache01');
         $check_memcache=$obj_memcache->get($token);
-        if(empty($check_memcache))  {$this->error="认证错误，请重新注册";$this->status=false;return false;}
+        if(empty($check_memcache))  {$this->error="认证错误，请重新发送验证码";$this->status=false;return false;}
         
+        $obj_account_user=load("account_user");
+        $obj_account_user->update(['verified'=>1,'update_type'=>"verified"],['id'=>$check_memcache]);
         return "恭喜您成功注册海外博客";
     }
     

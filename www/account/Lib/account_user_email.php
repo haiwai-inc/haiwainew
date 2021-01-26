@@ -28,13 +28,13 @@ class account_user_email extends Model{
     }
     
     //用户注册
-    function register($name,$email,$data){
+    function register_verified($name,$email,$data){
         if(empty($name) || empty($email)){
             return false;
         }
         
         $this->smartyObj->assign("data",$data);
-        $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/register.html");
+        $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/register_verified.html");
         $title="test!";
         $confirmation= func_sendMail($title,$content,$text='',$email,$name,$this->config);
         
