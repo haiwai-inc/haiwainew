@@ -63,7 +63,7 @@
         on-text="简"
         off-text="繁"
       ></n-switch>
-       <li class="nav-item">
+       <li class="nav-item" v-if="$store.state.user.userinfo.id">
         <a
           class="nav-link"
           style="margin-top:3px;z-index:1000"
@@ -80,7 +80,8 @@
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
-              username="用户名"
+              :data="$store.state.user.userinfo.userinfo_id"
+              :username="$store.state.user.userinfo.userinfo_id.username"
               avatarurl="/img/eva.jpg"
               class="nav-item">
         <nav-link to="/blog/user/1">
@@ -107,7 +108,7 @@
           <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
         </nav-link>
         <hr class="mb-1 mt-1">
-        <a href="javascript:void(0)" @click="logout">
+        <a href="javascript:void(0)" @click="logout" class="dropdown-item">
           <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
         </a>
         
@@ -191,13 +192,12 @@ export default {
       let cls = this.bodyclass + ' fontsize'+size;
       document.querySelector('body').setAttribute('class',cls);
     },
-test(){console.log(this.loginstatus,this.$store.state.user)},
     logout(){
       account.logout().then(res=>{
-        if(res.data.data==true){
+        if(res.data.status==true){
           this.$store.state.user.userinfo = {};
-          }
-        console.log(this.$store.state.user)
+        }
+        console.log(res)
       })
     }
   },

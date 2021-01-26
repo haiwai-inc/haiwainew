@@ -106,7 +106,8 @@ export default {
         account.google_sign_in(id_token).then(res=>{
           if(!res.error){
             this.$store.state.user.userinfo = res.data.data;
-            this.$router.push('/')
+            this.$router.push('/');
+            console.log(res.data.data)
           }
           gapi.auth2.getAuthInstance().disconnect();
         });
