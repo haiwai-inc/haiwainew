@@ -30,21 +30,6 @@ class account_user_login extends Model{
 	
 	//文学城登录
 	public function wxc_login($login_data,$login_token){
-	    //查看是否注册
-	    $obj_account_user=load("account_user");
-	    $check_account_user=$obj_account_user->getOne("*",['email'=>$login_data]);
-	    if(!empty($check_account_user)){
-	        //检测用户信息
-	        $rs_status=$this->check_user($check_account_user);
-	        if(!$rs_status['status']){
-	            return $rs_status;
-	        }
-	    }else{
-	        $rs_status['status']=false;
-	        $rs_status['error']="此帐号未绑定文学城";
-	        return $rs_status;
-	    }
-	    
 	    //查看是否绑定
 	    $obj_account_user_auth=load("account_user_auth");
 	    $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
@@ -53,6 +38,20 @@ class account_user_login extends Model{
 	        if(md5($login_token)!=$rs_account_user_auth['login_token']){
 	            $rs_status['status']=false;
 	            $rs_status['error']="登录密码错误";
+	            return $rs_status;
+	        }
+	    }else{
+	        $rs_status['status']=false;
+	        $rs_status['error']="此帐号未绑定文学城";
+	        return $rs_status;
+	    }
+	    
+	    //检测用户信息
+	    $obj_account_user=load("account_user");
+	    $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_user_auth['userID']]);
+	    if(!empty($check_account_user)){
+	        $rs_status=$this->check_user($check_account_user);
+	        if(!$rs_status['status']){
 	            return $rs_status;
 	        }
 	    }else{
