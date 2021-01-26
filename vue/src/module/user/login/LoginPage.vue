@@ -30,6 +30,10 @@
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
             <facebook-logo></facebook-logo>  facebook 账号登录
           </n-button>
+
+          <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
+            <line-logo></line-logo>  Line 账号登录
+          </n-button>
           
           <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
@@ -117,6 +121,9 @@ export default {
             console.log(response);
             account.facebook_sign_in(response.authResponse.accessToken);
         }, {scope: 'email'});
+      },
+      lineLogin(){
+        window.location.href = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655609154&redirect_uri=http%3A%2F%2Flocal.haiwai.com%3A8080%2Flogin&state=12345abcde&scope=openid%20email"
       }
   }
 };
