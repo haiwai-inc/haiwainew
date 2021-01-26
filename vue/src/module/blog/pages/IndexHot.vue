@@ -8,7 +8,7 @@
         <div class="col-sm-8 col-12">
           <main-category-bar 
           v-bind:activeId="currentTagId" 
-          v-on:getTagId="gotTagId" 
+          v-on:get-tagid="gotTagId" 
           v-bind:data="maincategory"></main-category-bar>
           <div
           v-infinite-scroll="loadArticle"
