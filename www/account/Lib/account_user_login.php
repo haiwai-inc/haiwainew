@@ -114,12 +114,12 @@ class account_user_login extends Model{
                     'update_type'=>"register",
                     'update_ip'=>$ip,
                 ];
-	            $userID=$obj_account_user->insert($fields);
+	            $check_account_user['id']=$obj_account_user->insert($fields);
 	        }
 	        
 	        //绑定google
 	        if(empty($rs_account_user_auth)){
-	            $obj_account_user_auth->insert(['userID'=>$userID,'login_data'=>$login_data,'login_token'=>$login_token,'login_source'=>"google"]);     
+	            $obj_account_user_auth->insert(['userID'=>$check_account_user['id'],'login_data'=>$login_data,'login_token'=>$login_token,'login_source'=>"google"]);     
 	        }
 	        
 	        //设置登录cookie
