@@ -31,7 +31,7 @@ class passport extends Api {
             $rs_account_user=$_SESSION;
         }
         
-        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user]);
+        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user])[0];
         return $rs_account_user;
     }
     
