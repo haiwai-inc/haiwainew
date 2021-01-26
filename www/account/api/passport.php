@@ -160,6 +160,27 @@ class passport extends Api {
     }
     
     /**
+     * 用户登录页
+     * 用户 发送 认证码
+     * @param integer $email|用户邮箱
+     */
+    public function user_send_verification($email){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne("*",['email'=>$email]);
+        if(empty($check_account_user))  {$this->error="此email的用户不存在，请重新注册";$this->status=false;return false;}
+        if($check_account_user['status']==0)  {$this->error="此用户已被关闭";$this->status=false;return false;}
+        if($check_account_user['verified']==1)  {$this->error="此用户已经通过认证";$this->status=false;return false;}
+        
+        $obj_account_user_email=load("account_user_email");
+        $token=md5($check_account_user['username'].$check_account_user['password']);
+        $obj_memcache = func_initMemcached('cache01');
+        $obj_memcache->set($token,$check_account_user['id'], 600);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['token'=>$token,'email'=>$check_account_user['email']])]);
+        
+        return "认证链接已发送至邮箱: ".$email;
+    }
+    
+    /**
      * 用户注册页 个人设置页
      * 用户 邮箱 格式
      * @param integer $email|邮箱
