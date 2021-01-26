@@ -335,7 +335,7 @@ import "./emoji/config.js";
 import "./audio/summernote-audio.css";
 import "./audio/summernote-audio";
 // import "./emoji/tam-emoji.min.js";
-import "bootstrap";
+// import "bootstrap";
 import lang from "./language";
 
 
