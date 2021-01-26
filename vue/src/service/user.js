@@ -6,7 +6,7 @@ import API from "./api"
 class User extends API{
     userinfo = {};
     init = this.getUserStatus().then(res=>{
-        this.userinfo= res.data.data
+        this.userinfo= res.data.data;
     });
     
     /**

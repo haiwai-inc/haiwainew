@@ -80,7 +80,8 @@
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
-              username="用户名"
+              :data="$store.state.user.userinfo.userinfo_id"
+              :username="$store.state.user.userinfo.userinfo_id.username"
               avatarurl="/img/eva.jpg"
               class="nav-item">
         <nav-link to="/blog/user/1">
@@ -191,13 +192,12 @@ export default {
       let cls = this.bodyclass + ' fontsize'+size;
       document.querySelector('body').setAttribute('class',cls);
     },
-test(){console.log(this.loginstatus,this.$store.state.user)},
     logout(){
       account.logout().then(res=>{
-        if(res.data.data==true){
+        if(res.data.status==true){
           this.$store.state.user.userinfo = {};
-          }
-        console.log(this.$store.state.user)
+        }
+        console.log(res)
       })
     }
   },

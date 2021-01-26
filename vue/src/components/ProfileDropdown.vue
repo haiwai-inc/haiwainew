@@ -18,13 +18,14 @@
         :class="{ 'no-caret': hideArrow }"
         data-toggle="dropdown"
       >
-        <img
-          v-lazy="avatarurl"
-          alt="Circle Image"
-          class="rounded-circle avatar"
-        />
+          <img v-if="data.avatar"
+            v-lazy="data.avatar"
+            alt="Circle Image"
+            class="rounded-circle avatar"
+          />
+          <span><div v-if="!data.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:28px;width:28px;text-align:center"><b>{{data.first_letter}}</b></div></span>
+          <span class="no-icon">{{ data.username }}</span>
         
-        <span class="no-icon">{{ username }}</span>
       </a>
     </slot>
     <ul
@@ -46,6 +47,7 @@ export default {
       type: String,
       default: 'down'
     },
+    data:Object,
     username: String,
     avatarurl: String,
     position: String,
