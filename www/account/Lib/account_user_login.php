@@ -59,6 +59,7 @@ class account_user_login extends Model{
 	    //$rs_client=$client->verifyIdToken($login_token);
 	    $rs_client=["sub"=>110169484474386276334,"aud"=>"1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com","email"=>"sida9567_google@gmail.com"];//==========
 	    if(!empty($rs_client)) {
+	        $login_token=md5($rs_client['sub'].$rs_client['aud']);
 	        $login_data=$rs_client['email'];
 	        
 	        //查看是否注册
@@ -76,7 +77,6 @@ class account_user_login extends Model{
 	        $obj_account_user_auth=load("account_user_auth");
 	        $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"google"]);
 	        if(!empty($rs_account_user_auth)){
-	            $login_token=md5($rs_client['sub'].$rs_client['aud']);
 	            if($rs_account_user_auth['login_token']!=$login_token){
 	                $rs_status['status']=false;
 	                $rs_status['error']="google认证错误";
