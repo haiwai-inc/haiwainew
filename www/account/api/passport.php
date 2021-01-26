@@ -26,6 +26,7 @@ class passport extends Api {
             if(empty($rs_account_user)){
                 $this->error='User not logged in';
                 $this->status=false;
+                return false;
             }
         }else{
             $rs_account_user=$_SESSION;
