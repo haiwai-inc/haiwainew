@@ -53,7 +53,6 @@ import {
 
 import account from "../service/account";
 
-console.log(account)
 export default {
   name: 'login-page',
   components: {
@@ -98,10 +97,14 @@ export default {
           this.$emit('onchange',v)
       },
       onGoogleSignIn (user) {
-        const profile = user.getBasicProfile()
+        const profile = user.getBasicProfile();
         var id_token = user.getAuthResponse().id_token;
         account.google_sign_in(id_token).then(res=>{
-          console.log(res.data.data)
+          if(!res.error){
+            this.$store.state.user.userinfo = res.data.data;
+            this.$router.push('/')
+          }
+          console.log(this.$store.state.user,res.data);
         });
       },
       onGoogleFailure(error) {

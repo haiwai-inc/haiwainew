@@ -76,7 +76,9 @@
           <p class="d-lg-none d-xl-none">消息</p>
         </a> 
       </li>
+      <div style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">登录/注册</router-link></div>
       <profile-drop-down
+        v-if="$store.state.user.userinfo.id"
               tag="li"
               username="用户名"
               avatarurl="/img/eva.jpg"
@@ -105,9 +107,9 @@
           <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
         </nav-link>
         <hr class="mb-1 mt-1">
-        <nav-link to="/login">
+        <a href="javascript:void(0)" @click="logout">
           <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
-        </nav-link>
+        </a>
         
       </profile-drop-down>
       <div class="divider"></div>
@@ -133,6 +135,7 @@ import { IconPen } from '@/components/Icons'
 import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupInput } from '@/components';
 import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
+import account from '../module/user/service/account';
 
 export default {
   name: 'main-navbar',
@@ -187,6 +190,15 @@ export default {
       console.log(this.bodyclass);
       let cls = this.bodyclass + ' fontsize'+size;
       document.querySelector('body').setAttribute('class',cls);
+    },
+test(){console.log(this.loginstatus,this.$store.state.user)},
+    logout(){
+      account.logout().then(res=>{
+        if(res.data.data==true){
+          this.$store.state.user.userinfo = {};
+          }
+        console.log(this.$store.state.user)
+      })
     }
   },
   created: function () {

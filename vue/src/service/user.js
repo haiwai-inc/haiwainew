@@ -4,12 +4,9 @@ import API from "./api"
  * Temp user class
  */
 class User extends API{
-    username = "testUser"
-    avatar = ""
-    printUsername(){
-        console.log(this.username)
-    }
-
+    userinfo = {};
+    init = this.getUserStatus().then(res=>{this.userinfo= res.data.data});
+    
     /**
      * Login function for example
      * @param {*} username 

@@ -7,6 +7,10 @@ class Account extends API{
         return await this.sendget("account/passport/login_status/");
     }
 
+    async logout(){
+        return await this.sendget("account/passport/user_logout/");
+    }
+
     async follower_add(followerID){
         return await this.sendget("account/user/follower_add/?followerID="+followerID);
     }
@@ -14,6 +18,21 @@ class Account extends API{
     async follower_delete(followerID){
         return await this.sendget("account/user/follower_delete/?followerID="+followerID);
     }
+
+    async google_sign_in(token){
+        return await this.sendget("account/passport/user_login_google/?login_token="+token);
+    }
+
+    signal(message){
+        console.log(message)
+    }
+
+    async facebook_sign_in(token){
+        return await this.sendget("search/user/facebookLogin/?token="+token);
+    }
+
+
+
 
     async sendget(url){
         try{
@@ -37,19 +56,6 @@ class Account extends API{
         }
     }
   
-    async google_sign_in(token){
-        return await this.sendget("account/passport/user_login_google/?login_token="+token);
-    }
-
-    signal(message){
-        console.log(message)
-    }
-
-    async facebook_sign_in(token){
-        return await this.sendget("search/user/facebookLogin/?token="+token);
-    }
-
-
 }
 
 export default new Account();
