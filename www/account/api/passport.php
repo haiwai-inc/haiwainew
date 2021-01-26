@@ -17,7 +17,7 @@ class passport extends Api {
     public function login_status($userID=0) {
         if(empty($_SESSION['UserID']) || !empty($userID)){
             $obj_account_user=load("account_user");
-            $rs_account_user=$obj_account_user->getOne(['id','auth_group','username','description','background','avatar'],['id'=>$userID]);
+            $rs_account_user=$obj_account_user->getOne(['id','auth_group'],['id'=>$userID]);
             
             $_SESSION=$rs_account_user;
             $_SESSION['UserID']=$rs_account_user['id'];
@@ -31,6 +31,7 @@ class passport extends Api {
             $rs_account_user=$_SESSION;
         }
         
+        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user]);
         return $rs_account_user;
     }
     
@@ -42,7 +43,6 @@ class passport extends Api {
         session_unset();
         unset($_COOKIE['wxc_login']);
         setcookie('wxc_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
-        setcookie();
         return true;
     }
     
@@ -135,7 +135,7 @@ class passport extends Api {
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
         $obj_memcache->set($token,true, 600);
-        $obj_account_user_email->insert(['function'=>"register",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
         
         //登录
         $this->user_login($email,$password,"haiwai");

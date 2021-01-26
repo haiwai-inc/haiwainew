@@ -159,10 +159,6 @@ class account_user_login extends Model{
 	    $rs_user_session['UserID']=$rs_account_user['id'];
 	    $rs_user_session['UserLevel']=$rs_account_user['auth_group'];
 	    $rs_user_session['id']=$rs_account_user['id'];
-	    $rs_user_session['username']=$rs_account_user['username'];
-	    $rs_user_session['description']=$rs_account_user['description'];
-	    $rs_user_session['background']=$rs_account_user['background'];
-	    $rs_user_session['avatar']=$rs_account_user['avatar'];
 	    $_SESSION=$rs_user_session;
 	    return $rs_user_session;
 	}
