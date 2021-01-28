@@ -196,7 +196,7 @@ class account_user_login extends Model{
 	        return ["status"=>false,"error"=>"此用户已经被关闭"];
 	    }
 	    if(empty($check_account_user['verified'])){
-	        return ["status"=>false,"error"=>"此用户还未认证||{$check_account_user['id']}"];
+	        return ["status"=>false,"error"=>"此用户还未认证|{$check_account_user['id']}"];
 	    }
 	    
 	    return ["status"=>true];
