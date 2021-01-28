@@ -93,13 +93,8 @@ class passport extends Api {
         $email=urldecode($email);
         $password=urldecode($password);
         
-        $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email]);
-        if(!empty($check_account_user)){
-            $error['email']="此用户已经被注册";
-        }
-        
         //验证邮箱
+        $obj_account_user=load("account_user");
         $check_email=$obj_account_user->check_email($email);
         if(empty($check_email['status'])){
             $error['email']=$check_email['error'];
