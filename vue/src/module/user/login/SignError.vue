@@ -1,7 +1,7 @@
 <template>
       <div class="mx-auto content">
-        您的注册确认连接已经过期，请点击下方按钮重新获取确认邮件。
-        <div style="padding-left:10px">
+        您的注册确认信已经过期，请点击下方按钮重新获取确认邮件。
+        <div style="padding-left:10px" class="mt-4">
           <el-alert
             :title="this.res.data"
             type="success"

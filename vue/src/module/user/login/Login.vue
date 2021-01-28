@@ -33,16 +33,18 @@ export default {
     LoginPage,
     SignupPage,
     LeftBar,
-    SignupError
+    SignupError,
   },
   mounted(){
-    
     let err = this.$route.query.error;
     let id = this.$route.query.id;
     if(err){
       this.showPage=this.$route.query.error;
+      if(this.showPage!='verified'){this.showPage='login'}
       this.signErr.error = err;
       this.signErr.id = id;
+    }else{
+      this.showPage="login"
     }
   },
   data() {
