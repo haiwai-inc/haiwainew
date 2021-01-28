@@ -95,7 +95,7 @@ class passport extends Api {
         
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email]);
-        if(!empty($check_account_user)){$this->error="此用户已经被注册";$this->status=false;return false;}
+        if(!empty($check_account_user)){$this->error=["email"=>"此用户已经被注册"];$this->status=false;return false;}
         
         //验证邮箱
         $check_email=$obj_account_user->check_email($email);
@@ -163,6 +163,11 @@ class passport extends Api {
      * 用户登录页
      * 用户 发送 认证码
      * @param integer $email|用户邮箱
+     * 
+     * 1. 登录判断是否认证
+     * 2. 认证时间是否过期
+     * 3. 点击按钮重新发送
+     * 
      */
     public function user_send_verification($email){
         $obj_account_user=load("account_user");
@@ -174,7 +179,7 @@ class passport extends Api {
         $obj_account_user_email=load("account_user_email");
         $token=md5($check_account_user['username'].$check_account_user['password']);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set($token,$check_account_user['id'], 600);
+        $obj_memcache->set($token,$check_account_user[''], 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['token'=>$token,'email'=>$check_account_user['email']])]);
         
         return "认证链接已发送至邮箱: ".$email;
