@@ -148,16 +148,16 @@ export default {
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.loginForm.submitDisable = true
-            console.log(formName);
-          
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-      }
+          if (valid) {
+            this.loginForm.submitDisable = true
+              console.log(formName);
+            
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
   }
 };
 </script>

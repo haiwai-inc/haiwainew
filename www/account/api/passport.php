@@ -95,18 +95,20 @@ class passport extends Api {
         
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email]);
-        if(!empty($check_account_user)){$this->error="此用户已经被注册";$this->status=false;return false;}
+        if(!empty($check_account_user)){
+            $error[]="此用户已经被注册";
+        }
         
         //验证邮箱
         $check_email=$obj_account_user->check_email($email);
         if(empty($check_email['status'])){
-            $error['email']=$check_email['error'];
+            $error[]=$check_email['error'];
         }
         
         //验证密码
         $check_password=$obj_account_user->check_password($password);
         if(empty($check_password['status'])){
-            $error['password']=$check_password['error'];
+            $error[]=$check_password['error'];
         }
         
         //报错
@@ -126,17 +128,17 @@ class passport extends Api {
             'login_date'=>$time,
             'create_date'=>$time,
             'update_date'=>$time,
-            'update_type'=>"register",
+            'update_type'=>"register_haiwai",
             'update_ip'=>$ip
         ];
         
-        $obj_account_user->insert($fields);
+        $userID=$obj_account_user->insert($fields);
         
         //发送确认邮件
         $obj_account_user_email=load("account_user_email");
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set($token,true, 600);
+        $obj_memcache->set($token,$userID, 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
         
         //登录
@@ -152,9 +154,37 @@ class passport extends Api {
     public function user_register_verified($token){
         $obj_memcache = func_initMemcached('cache01');
         $check_memcache=$obj_memcache->get($token);
-        if(empty($check_memcache))  {$this->error="认证错误，请重新注册";$this->status=false;return false;}
+        if(empty($check_memcache))  {$this->error="认证错误，请重新发送验证码";$this->status=false;return false;}
         
+        $obj_account_user=load("account_user");
+        $obj_account_user->update(['verified'=>1,'update_type'=>"verified"],['id'=>$check_memcache]);
         return "恭喜您成功注册海外博客";
+    }
+    
+    /**
+     * 用户登录页
+     * 用户 发送 认证码
+     * @param integer $email|用户邮箱
+     * 
+     * 1. 登录判断是否认证
+     * 2. 认证时间是否过期
+     * 3. 点击按钮重新发送
+     * 
+     */
+    public function user_send_verification($email){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne("*",['email'=>$email]);
+        if(empty($check_account_user))  {$this->error="此email的用户不存在，请重新注册";$this->status=false;return false;}
+        if($check_account_user['status']==0)  {$this->error="此用户已被关闭";$this->status=false;return false;}
+        if($check_account_user['verified']==1)  {$this->error="此用户已经通过认证";$this->status=false;return false;}
+        
+        $obj_account_user_email=load("account_user_email");
+        $token=md5($check_account_user['username'].$check_account_user['password']);
+        $obj_memcache = func_initMemcached('cache01');
+        $obj_memcache->set($token,$check_account_user[''], 600);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['token'=>$token,'email'=>$check_account_user['email']])]);
+        
+        return "认证链接已发送至邮箱: ".$email;
     }
     
     /**

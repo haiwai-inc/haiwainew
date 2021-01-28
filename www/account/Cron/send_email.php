@@ -13,12 +13,11 @@ class send_email{
 				$lastid=$v['id'];
 				$function=$v['function'];
 				$success=$obj_account_user_email->$function($v['name'],$v['email'],unserialize($v['data']));
-				$obj_account_user_email->update(['success'=>$success,'visible'=>1],['id'=>$v['id']]);
+				$obj_account_user_email->update(['success'=>$success,'visible'=>0],['id'=>$v['id']]);
 				
 				echo "{$v['id']}\n";
 			}
 		}
-	    
 	    
 	    /*
 	    $obj_account_user=load("account_user");
@@ -26,7 +25,7 @@ class send_email{
 	    
 	    $obj_account_user_auth=load("account_user_auth");
 	    foreach($rs_account_user as $v){
-	        $obj_account_user_auth->update(["login_data"=>$v['id']."sida9567@gmail.com"],['userID'=>$v['id']]);
+	        $obj_account_user_auth->update(["login_data"=>$v['username']],['userID'=>$v['id']]);
 	    }
 	    */
 	}

@@ -148,8 +148,8 @@ class account_user extends Model{
 	        $rs['error'] = "密码为空";
 	        return $rs;
 	    }
-	    if (strlen($password) < 8) {
-	        $rs['error'] = "密码必须有8个字符";
+	    if (strlen($password) < 6 || strlen($password)>24) {
+	        $rs['error'] = "密码必为6到24个字符";
 	        return $rs;
 	    }
 	    /*
