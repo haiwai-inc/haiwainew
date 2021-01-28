@@ -50,8 +50,8 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录 海外
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  邮箱
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
@@ -62,8 +62,8 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录 文学城
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  用户名
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login_wxc($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
@@ -74,7 +74,7 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录 google
-     * @param integer $login_token|登录凭证
+     * @param integer $login_token|登录凭证 凭据
      * @response /account/api_response/user_login_google.txt
      */
     public function user_login_google($login_token=null){
