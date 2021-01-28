@@ -56,6 +56,8 @@ class passport extends Api {
     public function user_login($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
@@ -68,6 +70,8 @@ class passport extends Api {
     public function user_login_wxc($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
@@ -80,6 +84,8 @@ class passport extends Api {
     public function user_login_google($login_token=null){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->google_login($login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
