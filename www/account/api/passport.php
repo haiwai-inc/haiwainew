@@ -156,6 +156,12 @@ class passport extends Api {
         
         $obj_account_user=load("account_user");
         $obj_account_user->update(['verified'=>1,'update_type'=>"verified"],['id'=>$check_memcache]);
+        $rs_account_user=$obj_account_user->getOne("*",['id'=>$check_memcache]);
+        
+        //登录
+        $obj_account_user_login=load("account_user_login");
+        $obj_account_user_login->set_user_session($rs_account_user);
+        
         go("/profile");
     }
     
