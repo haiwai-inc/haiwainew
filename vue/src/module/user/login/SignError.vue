@@ -53,9 +53,8 @@ export default {
     submit() {
       account.sendverifymail(this.data.id).then(res=>{
         console.log(res);
-        if(!res.data.status){
-          this.res = res.data
-        }
+        this.res = res.data
+        
       })
     },
   }
