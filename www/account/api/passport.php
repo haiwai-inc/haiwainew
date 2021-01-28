@@ -134,7 +134,7 @@ class passport extends Api {
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
         $obj_memcache->set($token,$userID, 600);
-        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'id'=>$userID])]);
         
         //登录
         $this->user_login($email,$password,"haiwai");
@@ -143,32 +143,30 @@ class passport extends Api {
     
     /**
      * 用户确认页
-     * 用户 注册
+     * 用户 注册 确认
      * @param integer $token|确认注册码
+     * @param integer $id|用户id
      */
-    public function user_register_verified($token){
+    public function user_register_verified($token,$id){
         $obj_memcache = func_initMemcached('cache01');
         $check_memcache=$obj_memcache->get($token);
-        if(empty($check_memcache))  {$this->error="认证错误，请重新发送验证码";$this->status=false;return false;}
+        if(empty($check_memcache)) {
+            go("/login?error=verified&id={$id}");
+        }
         
         $obj_account_user=load("account_user");
         $obj_account_user->update(['verified'=>1,'update_type'=>"verified"],['id'=>$check_memcache]);
-        return "恭喜您成功注册海外博客";
+        go("/profile");
     }
     
     /**
      * 用户登录页
      * 用户 发送 认证码
-     * @param integer $email|用户邮箱
-     * 
-     * 1. 登录判断是否认证
-     * 2. 认证时间是否过期
-     * 3. 点击按钮重新发送
-     * 
+     * @param integer $id|用户id
      */
-    public function user_send_verification($email){
+    public function user_send_verification($id){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne("*",['email'=>$email]);
+        $check_account_user=$obj_account_user->getOne("*",['id'=>$id]);
         if(empty($check_account_user))  {$this->error="此email的用户不存在，请重新注册";$this->status=false;return false;}
         if($check_account_user['status']==0)  {$this->error="此用户已被关闭";$this->status=false;return false;}
         if($check_account_user['verified']==1)  {$this->error="此用户已经通过认证";$this->status=false;return false;}
@@ -176,10 +174,10 @@ class passport extends Api {
         $obj_account_user_email=load("account_user_email");
         $token=md5($check_account_user['username'].$check_account_user['password']);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set($token,$check_account_user[''], 600);
+        $obj_memcache->set($token,$check_account_user['id'], 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['token'=>$token,'email'=>$check_account_user['email']])]);
         
-        return "认证链接已发送至邮箱: ".$email;
+        return "认证链接已发送至邮箱: ".$check_account_user['email'];
     }
     
     /**
