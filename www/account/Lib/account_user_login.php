@@ -110,7 +110,7 @@ class account_user_login extends Model{
                     'login_date'=>$time,
                     'create_date'=>$time,
                     'update_date'=>$time,
-                    'update_type'=>"register",
+                    'update_type'=>"register_google",
                     'update_ip'=>$ip,
                 ];
 	            $check_account_user['id']=$obj_account_user->insert($fields);
@@ -196,7 +196,7 @@ class account_user_login extends Model{
 	        return ["status"=>false,"error"=>"此用户已经被关闭"];
 	    }
 	    if(empty($check_account_user['verified'])){
-	        return ["status"=>false,"error"=>"此用户还未认证"];
+	        return ["status"=>false,"error"=>"此用户还未认证|{$check_account_user['id']}"];
 	    }
 	    
 	    return ["status"=>true];

@@ -50,36 +50,42 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录 海外
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  邮箱
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
     /**
      * 用户登录页
      * 用户 登录 文学城
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  用户名
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login_wxc($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
     /**
      * 用户登录页
      * 用户 登录 google
-     * @param integer $login_token|登录凭证
+     * @param integer $login_token|登录凭证 凭据
      * @response /account/api_response/user_login_google.txt
      */
     public function user_login_google($login_token=null){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->google_login($login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
@@ -93,11 +99,8 @@ class passport extends Api {
         $email=urldecode($email);
         $password=urldecode($password);
         
-        $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne("*",['status'=>1,'email'=>$email]);
-        if(!empty($check_account_user)){$this->error="此用户已经被注册";$this->status=false;return false;}
-        
         //验证邮箱
+        $obj_account_user=load("account_user");
         $check_email=$obj_account_user->check_email($email);
         if(empty($check_email['status'])){
             $error['email']=$check_email['error'];
@@ -126,18 +129,18 @@ class passport extends Api {
             'login_date'=>$time,
             'create_date'=>$time,
             'update_date'=>$time,
-            'update_type'=>"register",
+            'update_type'=>"register_haiwai",
             'update_ip'=>$ip
         ];
         
-        $obj_account_user->insert($fields);
+        $userID=$obj_account_user->insert($fields);
         
         //发送确认邮件
         $obj_account_user_email=load("account_user_email");
         $token=md5($fields['username'].$fields['password']);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set($token,true, 600);
-        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'email'=>$fields['email']])]);
+        $obj_memcache->set($token,$userID, 600);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'id'=>$userID])]);
         
         //登录
         $this->user_login($email,$password,"haiwai");
@@ -146,15 +149,47 @@ class passport extends Api {
     
     /**
      * 用户确认页
-     * 用户 注册
+     * 用户 注册 确认
      * @param integer $token|确认注册码
+     * @param integer $id|用户id
      */
-    public function user_register_verified($token){
+    public function user_register_verified($token,$id){
         $obj_memcache = func_initMemcached('cache01');
         $check_memcache=$obj_memcache->get($token);
-        if(empty($check_memcache))  {$this->error="认证错误，请重新注册";$this->status=false;return false;}
+        if(empty($check_memcache)) {
+            go("/login?error=verified&id={$id}");
+        }
         
-        return "恭喜您成功注册海外博客";
+        $obj_account_user=load("account_user");
+        $obj_account_user->update(['verified'=>1,'update_type'=>"verified"],['id'=>$check_memcache]);
+        $rs_account_user=$obj_account_user->getOne("*",['id'=>$check_memcache]);
+        
+        //登录
+        $obj_account_user_login=load("account_user_login");
+        $obj_account_user_login->set_user_session($rs_account_user);
+        
+        go("/profile");
+    }
+    
+    /**
+     * 用户登录页
+     * 用户 发送 认证码
+     * @param integer $id|用户id
+     */
+    public function user_send_verification($id){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne("*",['id'=>$id]);
+        if(empty($check_account_user))  {$this->error="此用户不存在，请重新注册";$this->status=false;return false;}
+        if($check_account_user['status']==0)  {$this->error="此用户已被关闭";$this->status=false;return false;}
+        if($check_account_user['verified']==1)  {$this->error="此用户已经通过认证";$this->status=false;return false;}
+        
+        $obj_account_user_email=load("account_user_email");
+        $token=md5($check_account_user['username'].$check_account_user['password']);
+        $obj_memcache = func_initMemcached('cache01');
+        $obj_memcache->set($token,$check_account_user['id'], 600);
+        $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['id'=>$id,'token'=>$token,'email'=>$check_account_user['email']])]);
+        
+        return "认证链接已发送至邮箱: ".$check_account_user['email'];
     }
     
     /**

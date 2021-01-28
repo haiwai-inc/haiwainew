@@ -8,7 +8,7 @@ import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueLazyload from 'vue-lazyload';
 import infiniteScroll from "vue-infinite-scroll";
-import {Message,Alert} from 'element-ui';
+import {Message,Alert,Input, Checkbox, CheckboxGroup, Form, FormItem} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // import "bootstrap/dist/js/bootstrap"
 
@@ -29,6 +29,11 @@ export default {
     });
     Vue.use(infiniteScroll); 
     Vue.use(Alert);
+    Vue.use(Input);
+    Vue.use(Checkbox);
+    Vue.use(CheckboxGroup);
+    Vue.use(Form);
+    Vue.use(FormItem);
     Vue.prototype.$message = Message;
   }
 };

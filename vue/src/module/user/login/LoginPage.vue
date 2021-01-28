@@ -1,6 +1,27 @@
 <template>
       <div class="mx-auto content">
-        <fg-input
+        <el-form :model="loginForm" ref="loginForm" label-width="10px">
+          <el-form-item
+            prop="email"
+            label=""
+            :rules="[
+              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+            ]"
+          >
+            <el-input v-model="loginForm.email"  placeholder="邮箱"></el-input>
+          </el-form-item>
+          <el-form-item 
+            label="" 
+            prop="password"
+            :rules="[
+              { required: true, message: '请输入密码', trigger: 'blur' },
+            ]"
+          >
+            <el-input type="password" placeholder="密码" v-model="loginForm.password" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- <fg-input
           addon-left-icon="now-ui-icons users_single-02"
           placeholder="邮箱"
         >
@@ -9,17 +30,17 @@
           addon-left-icon="now-ui-icons objects_key-25"
           placeholder="密码"
         >
-        </fg-input>
+        </fg-input> -->
         <div class="d-flex justify-content-between">
           <button type="button" class="btn btn-link btn-primary">忘记密码</button>
           <span class="noaccount">
             还没有账号？
-            <button type="button" class="btn btn-link btn-primary" @click="isShowLogin(false)">前往注册</button>
+            <button type="button" class="btn btn-link btn-primary" @click="isShowLogin('signin')">前往注册</button>
           </span>
         </div>
         <div>
           <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> -->
-          <n-button type="primary" round class="w-100" size="lg">登录</n-button>
+          <n-button type="primary" round class="w-100" size="lg" @click="submitForm('loginForm')" :disabled="loginForm.submitDisable">登录</n-button>
           <p class="text-center checkbox my-2">或</p>
           <n-button type="default" round simple class="w-100 mb-3">
             <wxc-logo-green></wxc-logo-green>  <span style="color:#468045">文学城</span> 账号登录
@@ -78,7 +99,13 @@ export default {
         checked: true,
         disabledUnchecked: false,
         disabledChecked: true
-      }
+      },
+      loginForm:{
+        email:'',
+        password:'',
+        submitDisable:false
+      },
+      
     };
   },
   mounted() {
@@ -157,7 +184,19 @@ export default {
             })
           }
         })
-      }
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loginForm.submitDisable = true
+              console.log(formName);
+            
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
   }
 };
 </script>

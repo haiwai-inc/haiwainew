@@ -6,25 +6,39 @@ class Account extends API{
     async login_status(){
         return await this.sendget("account/passport/login_status/");
     }
-
-    async logout(){
-        return await this.sendget("account/passport/user_logout/");
+    
+    async signup(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_register/?email=" + email + "&password=" + password);
+    };
+    
+    async checkemail(email){
+        return await this.sendget('account/passport/user_email_check/?email='+email)
     }
 
-    async follower_add(followerID){
-        return await this.sendget("account/user/follower_add/?followerID="+followerID);
+    async checkpassword(password){
+        return await this.sendget("account/passport/user_password_check/?password="+password)
     }
 
-    async follower_delete(followerID){
-        return await this.sendget("account/user/follower_delete/?followerID="+followerID);
+    async sendverifymail(id){
+        return await this.sendget("account/passport/user_send_verification/?id="+id)
+    }
+    
+    async login(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_login/?email=" + email + "&password=" + password);
+    };
+
+    async wxc_sign_in(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_login_wxc?email="+email+"&password="+password)
     }
 
     async google_sign_in(token){
         return await this.sendget("account/passport/user_login_google/?login_token="+token);
-    }
-
-    signal(message){
-        console.log(message)
     }
 
     async facebook_sign_in(token){
@@ -38,6 +52,18 @@ class Account extends API{
     async apple_sign_in(token){
         return await this.sendget("search/user/appleLogin/?token="+token);
     }
+    async logout(){
+        return await this.sendget("account/passport/user_logout/");
+    }
+
+    async follower_add(followerID){
+        return await this.sendget("account/user/follower_add/?followerID="+followerID);
+    }
+
+    async follower_delete(followerID){
+        return await this.sendget("account/user/follower_delete/?followerID="+followerID);
+    }
+
 
 
 

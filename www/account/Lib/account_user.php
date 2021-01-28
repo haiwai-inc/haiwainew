@@ -130,13 +130,20 @@ class account_user extends Model{
 	function check_email($email){
 	    $rs = ['status' => false, 'init' => false];
 	    if (empty($email)) {
-	        $rs['error'] = "邮箱为空";
+	        $rs['error']="邮箱为空";
 	        return $rs;
 	    }
 	    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-	        $rs['error'] = "邮箱格式错误";
+	        $rs['error']="邮箱格式错误";
 	        return $rs;
 	    }
+	    
+	    $check_account_user=$this->getOne(['id'],['status'=>1,'email'=>$email]);
+	    if(!empty($check_account_user)){
+	        $rs['error']="此用户已经被注册";
+	        return $rs;
+	    }
+	    
 	    $rs['status'] = true;
 	    return $rs;
 	}
@@ -148,8 +155,8 @@ class account_user extends Model{
 	        $rs['error'] = "密码为空";
 	        return $rs;
 	    }
-	    if (strlen($password) < 8) {
-	        $rs['error'] = "密码必须有8个字符";
+	    if (strlen($password) < 6 || strlen($password)>24) {
+	        $rs['error'] = "密码必为6到24个字符";
 	        return $rs;
 	    }
 	    /*
