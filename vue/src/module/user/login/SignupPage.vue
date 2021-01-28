@@ -4,10 +4,6 @@
           <el-form-item
             prop="email"
             label=""
-            :rules="[
-              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-            ]"
           >
             <el-input v-model="signupForm.email"  placeholder="邮箱"></el-input>
           </el-form-item>
@@ -25,14 +21,20 @@
         </el-form>
         <div style="padding-left:10px">
           <el-alert
-            :title="signErr.msg"
+            :title="signErr.email"
             type="error"
             center
-            v-if="signErr.state">
+            v-if="signErr.email">
+          </el-alert>
+          <el-alert
+            :title="signErr.password"
+            type="error"
+            center
+            v-if="signErr.password">
           </el-alert>
           <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')">注册</n-button>
           <p class="text-center checkbox my-2">或</p>
-          <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin(true)">
+          <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin('login')">
             去登录
           </n-button>
         </div>
@@ -54,25 +56,37 @@ export default {
     [FormGroupInput.name]: FormGroupInput,
   },
   data() {
-    var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.signupForm.checkPassword !== '') {
-            this.$refs.signupForm.validateField('checkPassword');
+    var validateMail =(rule,value,callback)=>{
+      if(value===''){
+        callback(new Error('请输入邮箱地址'));
+      }else{
+        account.checkemail(value).then(res=>{
+          if(!res.data.status){
+            callback(new Error(res.data.error))
           }
           callback();
+        })
+      }
+    }
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.signupForm.checkPassword !== '') {
+          this.$refs.signupForm.validateField('checkPassword');
         }
-      };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.signupForm.password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.signupForm.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       checkboxes: {
         unchecked: false,
@@ -87,6 +101,10 @@ export default {
         policy:[]
       },
       rules: {
+        email:[
+          { required: true, validator:validateMail, trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
         password: [
           { required: true, validator: validatePass, trigger: 'blur' },
           { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' },
@@ -98,12 +116,21 @@ export default {
           { type:'array',required: true, message: '需要阅读并同意用户协议', trigger: 'change' }
         ],
       },
-      signErr:{state:false,msg:''},
+      signErr:{email:'',password:''},
     };
   },
   methods:{
     isShowLogin(v){
         this.$emit('onchange',v)
+    },
+    initForm(){
+      this.signupForm={
+        email:'',
+        password:'',
+        checkPassword:'',
+        policy:[]
+      }
+      this.signErr={email:'',password:''}
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -111,17 +138,10 @@ export default {
           account.signup(this.signupForm).then(res=>{
             console.log(res);
             if(res.data.status){
-              this.signErr.state=false;
-              this.signupForm={
-                email:'',
-                password:'',
-                checkPassword:'',
-                policy:[]
-              }
+              this.initForm();
               this.$router.go(-1);
             }else{
-              this.signErr.state=true;
-              this.signErr.msg = res.data.error;
+              this.signErr = res.data.error;
             }
           })
         } else {

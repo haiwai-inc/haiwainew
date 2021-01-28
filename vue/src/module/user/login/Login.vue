@@ -1,17 +1,22 @@
 <template>
   <div class="row">
     <div class="col-sm-4 login-left">
-      <left-bar>{{showLogin?'登录':'注册'}}</left-bar>
+      <left-bar>{{showPage==='login'?'登录':'注册'}}</left-bar>
     </div>
     <div class="col-sm-8 col-12">
         <login-page 
-          v-if="showLogin"
+          v-if="showPage==='login'"
           @onchange="isShowLogin"
         ></login-page>
         <signup-page 
-          v-if="!showLogin"
+          v-if="showPage==='signin'"
           @onchange="isShowLogin"
         ></signup-page>
+        <signup-error
+          v-if="showPage==='verified'"
+          :data="signErr"
+          @onchange="isShowLogin"
+        ></signup-error>
     </div>
   </div>
 </template>
@@ -19,6 +24,7 @@
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import LeftBar from './LeftBar';
+import SignupError from './SignError';
 
 export default {
   name: 'login-index',
@@ -26,16 +32,31 @@ export default {
   components: {
     LoginPage,
     SignupPage,
-    LeftBar
+    LeftBar,
+    SignupError
+  },
+  mounted(){
+    
+    let err = this.$route.query.error;
+    let id = this.$route.query.id;
+    if(err){
+      this.showPage=this.$route.query.error;
+      this.signErr.error = err;
+      this.signErr.id = id;
+    }
   },
   data() {
     return {
-      showLogin:true,
+      showPage:'login',
+      signErr:{
+        error:'',
+        id:''
+      }
     };
   },
   methods:{
     isShowLogin(v){
-      this.showLogin = v
+      this.showPage = v
     }
   }
 };

@@ -35,7 +35,7 @@
           <button type="button" class="btn btn-link btn-primary">忘记密码</button>
           <span class="noaccount">
             还没有账号？
-            <button type="button" class="btn btn-link btn-primary" @click="isShowLogin(false)">前往注册</button>
+            <button type="button" class="btn btn-link btn-primary" @click="isShowLogin('signin')">前往注册</button>
           </span>
         </div>
         <div>
