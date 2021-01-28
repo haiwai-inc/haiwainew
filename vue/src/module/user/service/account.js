@@ -12,11 +12,19 @@ class Account extends API{
         let password = form.password;
         return await this.sendget("account/passport/user_register/?email=" + email + "&password=" + password);
     };
+    
+    async checkemail(email){
+        return await this.sendget('account/passport/user_email_check/?email='+email)
+    }
 
     async checkpassword(password){
         return await this.sendget("account/passport/user_password_check/?password="+password)
     }
 
+    async sendverifymail(id){
+        return await this.sendget("account/passport/user_send_verification/?id="+id)
+    }
+    
     async login(form){
         let email = form.email;
         let password = form.password;
