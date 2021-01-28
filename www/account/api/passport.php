@@ -167,7 +167,7 @@ class passport extends Api {
     public function user_send_verification($id){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['id'=>$id]);
-        if(empty($check_account_user))  {$this->error="此email的用户不存在，请重新注册";$this->status=false;return false;}
+        if(empty($check_account_user))  {$this->error="此用户不存在，请重新注册";$this->status=false;return false;}
         if($check_account_user['status']==0)  {$this->error="此用户已被关闭";$this->status=false;return false;}
         if($check_account_user['verified']==1)  {$this->error="此用户已经通过认证";$this->status=false;return false;}
         
