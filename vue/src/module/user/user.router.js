@@ -20,11 +20,12 @@ export default [
         name: 'api_example',
         components: { default: resolve => require (['./API-example.vue'],resolve), header: MainNavbar },
     },
+    // {
+    //     path: '/my',
+    //     name: 'userindex',
+    //     components: { default: resolve => require (['./UserIndex.vue'],resolve), header: MainNavbar },
+    // },
     {
-        path: '/my',
-        name: 'userindex',
-        components: { default: resolve => require (['./UserIndex.vue'],resolve), header: MainNavbar },
-    },{
         path:'/notices',
         name:'notices',
         components:{default: resolve => require (['./notices/Notices.vue'],resolve), header: MainNavbar}

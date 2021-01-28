@@ -8,6 +8,28 @@ class User extends API{
     init = this.getUserStatus().then(res=>{
         this.userinfo= res.data.data;
     });
+
+    /**
+     * Login function for example
+     * @param {*} email 
+     * @param {*} password 
+     */
+    async signup(form){
+        let email = form.email;
+        let password = form.password;
+        try{
+            // let rs = await this.post("login", {
+            //     username: username,
+            //     password: password
+            // });
+            let res = await this.get("account/passport/user_register/?email=" + email + "&password=" + password);
+            return res;
+        }
+        catch(e){
+            // console.log(e);
+            return false;
+        }
+    }
     
     /**
      * Login function for example

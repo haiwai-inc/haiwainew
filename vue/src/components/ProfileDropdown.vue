@@ -23,7 +23,7 @@
             alt="Circle Image"
             class="rounded-circle avatar"
           />
-          <span><div v-if="!data.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:28px;width:28px;text-align:center"><b>{{data.first_letter}}</b></div></span>
+          <span><div v-if="!data.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:30px;width:30px;text-align:center"><b>{{data.first_letter}}</b></div></span>
           <span class="no-icon">{{ data.username }}</span>
         
       </a>

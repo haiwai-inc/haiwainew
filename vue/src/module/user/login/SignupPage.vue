@@ -1,24 +1,36 @@
 <template>
       <div class="mx-auto content">
-        <fg-input
-          addon-left-icon="now-ui-icons users_single-02"
-          placeholder="邮箱"
-        >
-        </fg-input>
-        <fg-input
-          addon-left-icon="now-ui-icons objects_key-25"
-          placeholder="密码"
-        >
-        </fg-input>
-        <fg-input
-          addon-left-icon="now-ui-icons objects_key-25"
-          placeholder="确认密码"
-        >
-        </fg-input>
-        
-        <div>
-          <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">我已阅读并同意 <a href=#>海外博客-用户协议</a></span></n-checkbox>
-          <n-button type="primary" round class="w-100 mt-5" size="lg">注册</n-button>
+        <el-form :model="signupForm" :rules="rules" ref="signupForm" label-width="10px">
+          <el-form-item
+            prop="email"
+            label=""
+            :rules="[
+              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+            ]"
+          >
+            <el-input v-model="signupForm.email"  placeholder="邮箱"></el-input>
+          </el-form-item>
+          <el-form-item label="" prop="password">
+            <el-input type="password" placeholder="密码" v-model="signupForm.password" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="" prop="checkPassword">
+            <el-input type="password" placeholder="确认密码" v-model="signupForm.checkPassword" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="policy">
+            <el-checkbox-group v-model="signupForm.policy">
+              <el-checkbox label="" name="policy">我已阅读并同意 <a href=#>海外博客-用户协议</a></el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+        <div style="padding-left:10px">
+          <el-alert
+            :title="signErr.msg"
+            type="error"
+            center
+            v-if="signErr.state">
+          </el-alert>
+          <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')">注册</n-button>
           <p class="text-center checkbox my-2">或</p>
           <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin(true)">
             去登录
@@ -32,28 +44,92 @@ import {
   Checkbox,
   FormGroupInput,
 } from '@/components';
+import account from "../service/account";
+
 export default {
   name: 'signup-page',
-  bodyClass: 'signup-page',
   components: {
     [Button.name]: Button,
     [Checkbox.name]: Checkbox,
     [FormGroupInput.name]: FormGroupInput,
   },
   data() {
+    var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.signupForm.checkPassword !== '') {
+            this.$refs.signupForm.validateField('checkPassword');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.signupForm.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
     return {
       checkboxes: {
         unchecked: false,
         checked: true,
         disabledUnchecked: false,
         disabledChecked: true
-      }
+      },
+      signupForm:{
+        email:'',
+        password:'',
+        checkPassword:'',
+        policy:[]
+      },
+      rules: {
+        password: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' },
+        ],
+        checkPassword: [
+          { required: true, validator: validatePass2, trigger: 'blur' }
+        ],
+        policy: [
+          { type:'array',required: true, message: '需要阅读并同意用户协议', trigger: 'change' }
+        ],
+      },
+      signErr:{state:false,msg:''},
     };
   },
   methods:{
-      isShowLogin(v){
-          this.$emit('onchange',v)
-      }
+    isShowLogin(v){
+        this.$emit('onchange',v)
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          account.signup(this.signupForm).then(res=>{
+            console.log(res);
+            if(res.data.status){
+              this.signErr.state=false;
+              this.signupForm={
+                email:'',
+                password:'',
+                checkPassword:'',
+                policy:[]
+              }
+              this.$router.go(-1);
+            }else{
+              this.signErr.state=true;
+              this.signErr.msg = res.data.error;
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
   }
 };
 </script>

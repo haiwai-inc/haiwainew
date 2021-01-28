@@ -6,6 +6,36 @@ class Account extends API{
     async login_status(){
         return await this.sendget("account/passport/login_status/");
     }
+    
+    async signup(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_register/?email=" + email + "&password=" + password);
+    };
+
+    async checkpassword(password){
+        return await this.sendget("account/passport/user_password_check/?password="+password)
+    }
+
+    async login(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_login/?email=" + email + "&password=" + password);
+    };
+
+    async wxc_sign_in(form){
+        let email = form.email;
+        let password = form.password;
+        return await this.sendget("account/passport/user_login_wxc?email="+email+"&password="+password)
+    }
+
+    async google_sign_in(token){
+        return await this.sendget("account/passport/user_login_google/?login_token="+token);
+    }
+
+    async facebook_sign_in(token){
+        return await this.sendget("search/user/facebookLogin/?token="+token);
+    }
 
     async logout(){
         return await this.sendget("account/passport/user_logout/");
@@ -17,18 +47,6 @@ class Account extends API{
 
     async follower_delete(followerID){
         return await this.sendget("account/user/follower_delete/?followerID="+followerID);
-    }
-
-    async google_sign_in(token){
-        return await this.sendget("account/passport/user_login_google/?login_token="+token);
-    }
-
-    signal(message){
-        console.log(message)
-    }
-
-    async facebook_sign_in(token){
-        return await this.sendget("search/user/facebookLogin/?token="+token);
     }
 
 

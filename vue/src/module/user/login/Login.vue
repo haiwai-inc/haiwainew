@@ -44,6 +44,9 @@ export default {
 html, body, #app, .wrapper, .login-index .row{
   height:100%;
 }
+.el-input input{
+  border-radius: 20px;
+}
 .login-index .content{
   width:350px;
   padding: 100px 0 50px 0;
