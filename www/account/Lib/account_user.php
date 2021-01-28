@@ -130,13 +130,20 @@ class account_user extends Model{
 	function check_email($email){
 	    $rs = ['status' => false, 'init' => false];
 	    if (empty($email)) {
-	        $rs['error'] = "邮箱为空";
+	        $rs['error']="邮箱为空";
 	        return $rs;
 	    }
 	    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-	        $rs['error'] = "邮箱格式错误";
+	        $rs['error']="邮箱格式错误";
 	        return $rs;
 	    }
+	    
+	    $check_account_user=$this->getOne(['id'],['status'=>1,'email'=>$email]);
+	    if(!empty($check_account_user)){
+	        $rs['error']="此用户已经被注册";
+	        return $rs;
+	    }
+	    
 	    $rs['status'] = true;
 	    return $rs;
 	}
