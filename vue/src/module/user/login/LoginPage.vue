@@ -34,6 +34,10 @@
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
             <line-logo></line-logo>  Line 账号登录
           </n-button>
+          <n-button type="default" round simple class="w-100 mb-3" v-on:click="appleLogin()">
+            <line-logo></line-logo>  Apple 账号登录
+          </n-button>
+          <!-- <div id="appleid-signin"></div> -->
           
           <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
@@ -88,13 +92,15 @@ export default {
         'onfailure': this.onGoogleFailure,
       });
     AppleID.auth.init({
-                clientId : '[CLIENT_ID]',
-                scope : '[SCOPES]',
-                redirectURI : '[REDIRECT_URI]',
-                state : '[STATE]',
-                nonce : '[NONCE]',
-                usePopup : true //or false defaults to false
+                clientId : 'serviceid.haiwai.blog',
+                scope : 'email',
+                redirectURI : 'http://local.haiwai.com:8080/login',
+                state:"abc",
+                usePopup : true,
+                // response_mode: "query" //or false defaults to false
             });
+    
+    this.lineSignin();
   },
   methods:{
       isShowLogin(v){
@@ -124,7 +130,33 @@ export default {
         }, {scope: 'email'});
       },
       lineLogin(){
-        window.location.href = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655609154&redirect_uri=http%3A%2F%2Flocal.haiwai.com%3A8080%2Flogin&state=12345abcde&scope=openid%20email"
+        window.location.href = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1655609154&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogin&state=1&scope=profile%20openid%20email"
+      },
+      lineSignin(){
+        let code = this.$route.query.code;
+        let state = this.$route.query.state;
+        if(code !== undefined){
+          account.line_sign_in(code).then(res=>{
+          //   if(!res.error){
+          //   this.$store.state.user.userinfo = res.data.data;
+          //   this.$router.push('/');
+          //   console.log(res.data.data)
+          // }
+          });
+        }
+      },
+      appleLogin(){
+        AppleID.auth.signIn().then(result=>{
+          console.log(result);
+          if(result.error !== undefined){
+
+          }
+          else {
+            account.apple_sign_in(result.authorization.id_token).then(data=>{
+                
+            })
+          }
+        })
       }
   }
 };

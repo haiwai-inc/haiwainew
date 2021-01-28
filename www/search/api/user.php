@@ -40,7 +40,7 @@ class user extends Api
      */
     public function facebookLogin($token){
         $fb = new Facebook\Facebook([
-            'app_id' => '793976421331830',
+            'app_id' => FACEBOOK_CLIENT_ID,
             'app_secret' => 'ac4725b1caad7a7335dbba706667ecf5',
             'default_graph_version' => 'v2.10',
             ]);
@@ -62,5 +62,31 @@ class user extends Api
           debug::d($user);
           echo 'Name: ' . $user['name'];
           return $user;
+    }
+
+    /**
+     * Login By Line
+     *
+     * @param string $token
+     * @response 搜索结果
+     *
+     * @response 用户未登录，返回错误信息
+     */
+    public function lineLogin($token){
+        $user_obj = load("search_user_login");
+        return $user_obj->check_user($token);
+    }
+
+     /**
+     * Login By Apple
+     *
+     * @param string $token
+     * @response 搜索结果
+     *
+     * @response 用户未登录，返回错误信息
+     */
+    public function appleLogin($token){
+        $user_obj = load("search_user_login");
+        return $user_obj->decrypt_token($token);
     }
 }
