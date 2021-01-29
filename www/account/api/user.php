@@ -20,9 +20,19 @@ class user extends Api {
     
     /**
      * 用户设置页
-     * 用户 修改
+     * 用户 修改 帐号
+     * @param integer $profile|￥data
      */
-    public function user_update(){
+    public function user_update_profile($profile){
+        
+    }
+    
+    /**
+     * 用户设置页
+     * 用户 修改 头像
+     * 
+     */
+    public function user_update_avatar(){
         
     }
 
