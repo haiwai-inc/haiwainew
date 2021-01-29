@@ -1,0 +1,11 @@
+邮箱未认证错误返回： 
+	此用户已经注册但还未通过邮箱认证|{$id}
+	前台跳转发送认证链接页
+	前台点击调用接口： http://beta.haiwai.com/api/v1/account/passport/user_send_verification/?id=
+
+错误数据返回为字符串：
+(
+    [data] => 
+    [error] => 此用户已经注册但还未通过邮箱认证|2
+    [status] => 
+)

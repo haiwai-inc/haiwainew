@@ -45,6 +45,13 @@ class Account extends API{
         return await this.sendget("search/user/facebookLogin/?token="+token);
     }
 
+    async line_sign_in(token){
+        return await this.sendget("search/user/lineLogin/?token="+token);
+    }
+
+    async apple_sign_in(token){
+        return await this.sendget("search/user/appleLogin/?token="+token);
+    }
     async logout(){
         return await this.sendget("account/passport/user_logout/");
     }

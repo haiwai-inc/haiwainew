@@ -50,36 +50,43 @@ class passport extends Api {
     /**
      * 用户登录页
      * 用户 登录 海外
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  邮箱
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
     /**
      * 用户登录页
      * 用户 登录 文学城
-     * @param integer $login_data|登录信息
-     * @param integer $login_token|登录凭证
+     * @param integer $login_data|登录信息  用户名
+     * @param integer $login_token|登录凭证 密码
      */
     public function user_login_wxc($login_data,$login_token){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
     /**
      * 用户登录页
      * 用户 登录 google
-     * @param integer $login_token|登录凭证
+     * @param integer $login_token|登录凭证 凭据
      * @response /account/api_response/user_login_google.txt
+     * 
      */
     public function user_login_google($login_token=null){
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->google_login($login_token);
+        if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
+        
         return $rs_user_login;
     }
     
@@ -131,7 +138,8 @@ class passport extends Api {
         
         //发送确认邮件
         $obj_account_user_email=load("account_user_email");
-        $token=md5($fields['username'].$fields['password']);
+        $time=times::gettime();
+        $token=md5($fields['username'].$fields['password']."send_confirmation_email".$time);
         $obj_memcache = func_initMemcached('cache01');
         $obj_memcache->set($token,$userID, 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'id'=>$userID])]);
@@ -208,6 +216,32 @@ class passport extends Api {
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->check_password($password);
         if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
+        
+        return true;
+    }
+    
+    /**
+     * 用户修改密码页 
+     * 用户 密码 重置
+     * @param string $password|密码
+     * @param string $token|密钥
+     */
+    public function user_password_reset($password,$token){
+        $obj_account_user=load("account_user");
+        $rs_account_user=$obj_account_user->check_password($password);
+        if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
+        
+        //查看密钥
+        $obj_memcache = func_initMemcached('cache01');
+        $rs_memcache=$obj_memcache->get($token);
+        if(empty($rs_memcache))   {$this->error="此链接已经失效";$this->status=false;return false;}
+        
+        $obj_account_user->update(['password'=>md5($password)],["id"=>$rs_memcache]);
+        
+        //登录
+        $obj_account_user_login=load("account_user_login");
+        $rs_account_user=$obj_account_user->getOne("*",["id"=>$rs_memcache]);
+        $obj_account_user_login->set_user_session($rs_account_user);
         
         return true;
     }
