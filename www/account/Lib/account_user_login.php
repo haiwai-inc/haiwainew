@@ -195,8 +195,18 @@ class account_user_login extends Model{
 	    if(empty($check_account_user['status'])){
 	        return ["status"=>false,"error"=>"此用户已经被关闭"];
 	    }
+	    
 	    if(empty($check_account_user['verified'])){
-	        return ["status"=>false,"error"=>"此用户还未认证|{$check_account_user['id']}"];
+	        return ["status"=>false,"error"=>"此用户未通过邮箱认证|{$check_account_user['id']}"];
+	    }
+	    
+	    if(empty($check_account_user['verified']) && !empty($check_account_user['password'])){
+	        //走修改密码流程
+	        $time=times::gettime();
+	        $token=md5($check_account_user['email'].$check_account_user['password']."reset_password".$time);
+	        $obj_memcache = func_initMemcached('cache01');
+	        $obj_memcache->set($token,$check_account_user['id'], 600);
+	        return ["status"=>false,"error"=>"此用户已经注册但还未通过邮箱认证|{$token}"];
 	    }
 	    
 	    return ["status"=>true];

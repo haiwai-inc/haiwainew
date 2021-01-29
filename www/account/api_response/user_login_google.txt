@@ -1,3 +1,21 @@
+未认证错误返回： 
+	此用户已经注册但还未通过邮箱认证|{$token}
+	前台跳转修改密码页
+	输入新密码后前台调用接口：http://beta.haiwai.com/api/v1/account/passport/user_password_reset/?password=&token=
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 1. 用户点击Google登录按钮，弹出登录框
 2. 登录成功后，前端程序可取得用户id_token
     1. 前端代码参考：[https://developers.google.com/identity/sign-in/web/sign-in](https://developers.google.com/identity/sign-in/web/sign-in)
@@ -28,7 +46,19 @@
     }
     
 "google/apiclient": "^2.8"
+
+inc.comm.php
 define("GOOGLE_CLIENT_ID", "738001523038-apg1u438em52ln34obfua5m8ck9mefii.apps.googleusercontent.com");
+
+
+
+
+
+
+
+
+
+
 
 
 
