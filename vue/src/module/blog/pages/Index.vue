@@ -54,8 +54,8 @@ export default {
     loadArticle(){
       this.loading.article=true;
       blog.recommend_article(this.lastID.article).then(res=>{
-        if(res.data.status){
-          let arr = res.data.data;
+        if(res.status){
+          let arr = res.data;
           this.noMore = arr.length<30 ? true : false;
           this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
           this.articlelists = this.articlelists.concat(arr) ;
@@ -67,8 +67,8 @@ export default {
   },
   created () {
     blog.recommand_blogger().then(res=>{
-      if(res.data.status){
-        this.res_bloggerList=res.data.data.data;
+      if(res.status){
+        this.res_bloggerList=res.data.data;
         this.bloggerList=this.res_bloggerList;
         this.loading.blogger=false;
       }

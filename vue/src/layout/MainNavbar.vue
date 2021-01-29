@@ -194,7 +194,7 @@ export default {
     },
     logout(){
       account.logout().then(res=>{
-        if(res.data.status==true){
+        if(res.status==true){
           this.$store.state.user.userinfo = {};
         }
         console.log(res)

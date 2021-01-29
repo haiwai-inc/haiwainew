@@ -97,21 +97,21 @@ export default {
   },
   mounted: function () {
     account.login_status().then(res=>{ //判断是否登录 - 开发环境
-      if(res.data.data==undefined){
+      if(res.data==undefined){
         this.loginuserID = -1
       }else{
-        this.loginuserID = res.data.data.UserID ;
+        this.loginuserID = res.data.UserID ;
       }
     });
   },
   methods:{
     follower_add(id){
       if(this.loginuserID!=-1){
-        account.follower_add(id).then(res=>{console.log(res.data.data)
-          if(res.data.data == true) {
+        account.follower_add(id).then(res=>{console.log(res.data)
+          if(res.data == true) {
             data.userinfo_userID.is_follower = 1;
           }else{
-            this.$message.error(res.data.error);
+            this.$message.error(res.error);
           }
         });
       }
@@ -119,10 +119,10 @@ export default {
     follower_delete(id){
       if(this.loginuserID!=-1){
         account.follower_delete(id).then(res=>{
-          if(res.data.data == true) {
+          if(res.data == true) {
             data.userinfo_userID.is_follower = 0;
           }else{
-            this.$message.error(res.data.error);
+            this.$message.error(res.error);
           }
         });
       }

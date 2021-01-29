@@ -10,7 +10,7 @@ class API {
                 url: this.apiPrefix+url, 
               })
                 .then(response => {
-                    resolve(response)       
+                    resolve(response.data)       
                 })
                 .catch(error => reject(error));
         });
@@ -24,7 +24,7 @@ class API {
                 data:data
               })
                 .then(response => {
-                    resolve(response)      
+                    resolve(response.data)
                 })
                 .catch(error => reject(error));
         });

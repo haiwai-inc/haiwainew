@@ -6,7 +6,7 @@ import API from "./api"
 class User extends API{
     userinfo = {};
     init = this.getUserStatus().then(res=>{
-        this.userinfo= res.data.data;
+        this.userinfo= res.data;
     });
 
     /**
@@ -57,7 +57,7 @@ class User extends API{
     async getUserInfo(userID){
         try{
             let res = await this.get("account/passport/login_status/?userID="+userID);
-            this.avatar = res.data.avatar
+            this.avatar = res.avatar
             return res
         }
         catch(e){
@@ -89,7 +89,7 @@ class User extends API{
     async sendQqh(userID,touserID,msgbody){
         try{
             let res = await this.get("account/user/qqh_add/?userID="+userID+"&touserID="+touserID+"&msgbody="+msgbody);
-            this.avatar = res.data.avatar
+            this.avatar = res.avatar
             return res
         }
         catch(e){

@@ -1,22 +1,15 @@
 <template>
       <div class="mx-auto content">
-        <el-form :model="loginForm" ref="loginForm" label-width="10px">
+        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="10px">
           <el-form-item
             prop="email"
             label=""
-            :rules="[
-              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-            ]"
           >
             <el-input v-model="loginForm.email"  placeholder="邮箱"></el-input>
           </el-form-item>
           <el-form-item 
             label="" 
             prop="password"
-            :rules="[
-              { required: true, message: '请输入密码', trigger: 'blur' },
-            ]"
           >
             <el-input type="password" placeholder="密码" v-model="loginForm.password" autocomplete="off"></el-input>
           </el-form-item>
@@ -85,6 +78,25 @@ export default {
     FacebookLogo
   },
   data() {
+    var validateMail =(rule,value,callback)=>{
+      if(value===''){
+        callback(new Error('请输入邮箱地址'));
+      }else{
+        account.checkemail(value).then(res=>{
+          if(res.status){
+            callback(new Error('此邮箱并未在本网站注册'))
+          }
+          callback();
+        })
+      }
+    }
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        callback();
+      }
+    };
     return {
       checkboxes: {
         unchecked: false,
@@ -97,7 +109,17 @@ export default {
         password:'',
         submitDisable:false
       },
-      
+      rules: {
+        email:[
+          { required: true, validator:validateMail, trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        password: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' },
+        ],
+      },
+      loginErr:{}
     };
   },
   mounted() {
@@ -127,10 +149,12 @@ export default {
         const profile = user.getBasicProfile();
         var id_token = user.getAuthResponse().id_token;
         account.google_sign_in(id_token).then(res=>{
-          if(!res.error){
-            this.$store.state.user.userinfo = res.data.data;
+          if(res.status){
+            this.$store.state.user.userinfo = res.data;
             this.$router.push('/');
-            console.log(res.data.data)
+            console.log(res)
+          }else{
+
           }
           gapi.auth2.getAuthInstance().disconnect();
         });
@@ -149,15 +173,32 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.loginForm.submitDisable = true
-              console.log(formName);
-            
+            this.loginForm.submitDisable = true;
+              account.login(this.loginForm).then(res=>{
+                console.log(res);
+                if(res.status){
+                  this.$router.push('/')
+                }else{
+                  this.loginErrFormat(res.error);
+                  this.loginForm.submitDisable = false;
+                }
+              })
           } else {
             console.log('error submit!!');
+            this.loginForm.submitDisable = false;
             return false;
           }
         });
       },
+      loginErrFormat(err){
+        if(err.indexOf('|')!=-1){
+          let arr = err.split('|');
+          this.$emit('onloginerr',arr)
+          console.log(arr)
+        }else{
+          this.loginErr.msg = err
+        }
+      }
   }
 };
 </script>

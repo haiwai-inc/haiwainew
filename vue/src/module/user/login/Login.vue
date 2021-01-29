@@ -7,6 +7,7 @@
         <login-page 
           v-if="showPage==='login'"
           @onchange="isShowLogin"
+          @onloginerr="showNoverify"
         ></login-page>
         <signup-page 
           v-if="showPage==='signin'"
@@ -59,6 +60,12 @@ export default {
   methods:{
     isShowLogin(v){
       this.showPage = v
+    },
+    showNoverify(e){
+      this.signErr.error=e[0];
+      this.signErr.id=e[1];
+      this.showPage='verified';
+      console.log(this.signErr)
     }
   }
 };

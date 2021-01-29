@@ -173,7 +173,7 @@ export default {
     // logedin () {
     //   let status;
     //   account.login_status().then(res=>{ //判断是否登录
-    //     if(res.data.data==undefined){
+    //     if(res.data==undefined){
     //       status = false;
     //     }else{
     //       status = true ;

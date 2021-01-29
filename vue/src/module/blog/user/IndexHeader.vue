@@ -105,7 +105,7 @@ export default {
     },
     mounted:function(){
         blog.blogger_info(this.$route.params.id).then(res=>{
-            this.data = res.data.data;
+            this.data = res.data;
             this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
             console.log(this.data);
         })
@@ -148,10 +148,10 @@ export default {
         async send(userID,touserID,msgbody) {
           let user = this.$store.state.user;
           let res = await user.sendQqh(userID,touserID,msgbody);
-          this.modals.modalData=res.data
+          this.modals.modalData=res
             setTimeout(()=>{
                 this.modals.modalData={};
-                this.modals.sendQqhModal=res.data.status?false:true;
+                this.modals.sendQqhModal=res.status?false:true;
             },2000)
         //   console.log(res);
         }

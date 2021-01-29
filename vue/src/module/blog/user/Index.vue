@@ -63,7 +63,7 @@ export default {
   created () {
     this.loadArticle(this.currentTabId);
     blog.category_list(this.userID).then(res=>{
-        this.collectionList=res.data.data;
+        this.collectionList=res.data;
         console.log(res);
     })
   },
@@ -92,8 +92,8 @@ export default {
         };
       },
       getList(res){
-            if(res.data.status){
-                let arr = res.data.data;
+            if(res.status){
+                let arr = res.data;
                 this.noMore = arr.length<30 ? true : false;
                 this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
                 this.articlelists = this.articlelists.concat(arr) ;
