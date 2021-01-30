@@ -32,9 +32,9 @@ class Account extends API{
     };
 
     async wxc_sign_in(form){
-        let email = form.email;
+        let username = form.username;
         let password = form.password;
-        return await this.sendget("account/passport/user_login_wxc?email="+email+"&password="+password)
+        return await this.sendget("account/passport/user_login_wxc/?login_data="+username+"&login_token="+password)
     }
 
     async google_sign_in(token){

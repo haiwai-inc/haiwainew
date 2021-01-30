@@ -50,8 +50,21 @@
             <div v-if="menuId===1">
                <h6 class="border-bottom pb-3">账号设置</h6>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
-                  <avatar :data="authorInfor" :imgHeight="100"></avatar>
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary">修改我的头像</button></div>
+                  <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
+                  <img style="width:100px;height:100px;border-radius:50%" :src="imgDataUrl">
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">修改我的头像</button></div>
+                  <avatar-upload field="img"
+                     @crop-success="cropSuccess"
+                     @crop-upload-success="cropUploadSuccess"
+                     @crop-upload-fail="cropUploadFail"
+                     v-model="show"
+                     :width="300"
+                     :height="300"
+                     url="/upload"
+                     :params="params"
+                     :headers="headers"
+                     img-format="png"></avatar-upload>
+                  
                </div>
                <div>
                   <p class="pt-3"><b>笔名</b></p>
@@ -107,15 +120,17 @@
 <script>
 import MainMenu from "../blog/pages/components/Main/MainMenu.vue";
 import {IconAccountSet,IconBlogSet,IconBlackList,IconDelete} from '@/components/Icons';
-import Avatar from '../blog/pages/components/Main/Avatar';
+// import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
 } from '@/components';
+import avatarUpload from 'vue-image-crop-upload';
 
 export default {
   name: 'profile',
   components: {
-    Avatar,
+     'avatar-upload': avatarUpload,
+   //  Avatar,
     MainMenu,
     [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete
   },
@@ -131,8 +146,54 @@ export default {
         firstLetter:'用',
         description:'简介简介简介简介',
         isFollowed:true,
-      }
+      },
+      show: false,
+      params: {
+         token: '123456798',
+         name: 'avatar'
+      },
+      headers: {
+         smail: '*_~'
+      },
+      imgDataUrl: '/img/julie.jpg' // the datebase64 url of created image
     }
+  },
+  methods:{
+     toggleShow() {
+            this.show = !this.show;
+      },
+      /**
+       * crop success
+       *
+       * [param] imgDataUrl
+       * [param] field
+       */
+      cropSuccess(imgDataUrl, field){
+            console.log('-------- crop success --------');
+            this.imgDataUrl = imgDataUrl;
+      },
+      /**
+       * upload success
+       *
+       * [param] jsonData   服务器返回数据，已进行json转码
+       * [param] field
+       */
+      cropUploadSuccess(jsonData, field){
+            console.log('-------- upload success --------');
+            console.log(jsonData);
+            console.log('field: ' + field);
+      },
+      /**
+       * upload fail
+       *
+       * [param] status    server api return error status, like 500
+       * [param] field
+       */
+      cropUploadFail(status, field){
+            console.log('-------- upload fail --------');
+            console.log(status);
+            console.log('field: ' + field);
+      }
   }
 };
 </script>

@@ -32,10 +32,10 @@
           </span>
         </div>
         <div>
-          <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> -->
-          <n-button type="primary" round class="w-100" size="lg" @click="submitForm('loginForm')" :disabled="loginForm.submitDisable">登录</n-button>
+          <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> :disabled="loginForm.submitDisable"-->
+          <n-button type="primary" round class="w-100" size="lg" @click="submitForm('loginForm')" >登录</n-button>
           <p class="text-center checkbox my-2">或</p>
-          <n-button type="default" round simple class="w-100 mb-3">
+          <n-button type="default" round simple class="w-100 mb-3"  @click="dialogFormVisible = true">
             <wxc-logo-green></wxc-logo-green>  <span style="color:#468045">文学城</span> 账号登录
           </n-button>
           
@@ -46,10 +46,10 @@
           </n-button>
 
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
-            <line-logo></line-logo>  Line 账号登录
+              Line 账号登录
           </n-button>
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="appleLogin()">
-            <line-logo></line-logo>  Apple 账号登录
+              Apple 账号登录
           </n-button>
           <!-- <div id="appleid-signin"></div> -->
           
@@ -57,9 +57,27 @@
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
           </n-button>  -->
         </div>
-
+<el-dialog title="文学城用户登录" width="350px" :visible.sync="dialogFormVisible">
+  <el-form :model="wxcForm" :rules="wxcrules" ref="wxcForm" label-width="10px">
+    <el-form-item
+      prop="username"
+      label=""
+    >
+      <el-input v-model="wxcForm.username"  placeholder="文学城用户名"></el-input>
+    </el-form-item>
+    <el-form-item 
+      label="" 
+      prop="password"
+    >
+      <el-input type="password" placeholder="文学城密码" v-model="wxcForm.password" autocomplete="off"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <n-button link @click="dialogFormVisible = false">取 消</n-button>
+    <n-button type="primary" round  @click="submitForm('wxcForm')">用文学城账号登录</n-button>
+  </div>
+</el-dialog>
       </div>
-      
 </template>
 <script>
 import {
@@ -72,7 +90,7 @@ import {
   WxcLogoGreen,
   FacebookLogo
 } from '@/components/Icons';
-
+import {Dialog} from "element-ui"
 import account from "../service/account";
 
 export default {
@@ -81,7 +99,7 @@ export default {
     [Button.name]: Button,
     [Checkbox.name]: Checkbox,
     [FormGroupInput.name]: FormGroupInput,
-    //WxcLogoWhite,
+    [Dialog.name]:Dialog,
     WxcLogoGreen,
     FacebookLogo
   },
@@ -102,6 +120,24 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'));
       } else {
+        callback();
+      }
+    }
+    var validateWxcPass = (rule, value, callback) => {
+      var patrn=/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if(!patrn.exec(value)){
+          callback(new Error('至少包含一个数字和一个字母'))
+        }
+        callback();
+      }
+    }
+    var validateName =(rule,value,callback)=>{
+      if(value===''){
+        callback(new Error('请输入用户名'));
+      }else{
         callback();
       }
     };
@@ -125,6 +161,21 @@ export default {
         password: [
           { required: true, validator: validatePass, trigger: 'blur' },
           { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' },
+        ],
+      },
+      dialogFormVisible: false,
+      wxcForm:{
+        username:'',
+        password:'',
+        submitDisable:false
+      },
+      wxcrules: {
+        username:[
+          { required: true, validator: validateName, trigger: 'blur' },
+        ],
+        password: [
+          { required: true, validator: validateWxcPass, trigger: 'blur' },
+          { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
       loginErr:{}
@@ -212,7 +263,8 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.loginForm.submitDisable = true;
+            if(formName==='loginForm'){
+              this.loginForm.submitDisable = true;
               account.login(this.loginForm).then(res=>{
                 console.log(res);
                 if(res.status){
@@ -222,9 +274,23 @@ export default {
                   this.loginForm.submitDisable = false;
                 }
               })
+            }
+            if(formName==='wxcForm'){
+              this.wxcForm.submitDisable = true;
+              account.wxc_sign_in(this.wxcForm).then(res=>{
+                console.log(res);
+                if(res.status){
+                  this.$router.push('/')
+                }else{
+                  this.loginErrFormat(res.error);
+                  this.wxcForm.submitDisable = false;
+                }
+              })
+            }
           } else {
             console.log('error submit!!');
             this.loginForm.submitDisable = false;
+            this.wxcForm.submitDisable = false;
             return false;
           }
         });
@@ -236,6 +302,7 @@ export default {
           console.log(arr)
         }else{
           this.loginErr.msg = err
+          console.log(err)
         }
       }
   }
