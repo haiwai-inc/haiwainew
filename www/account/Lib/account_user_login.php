@@ -209,6 +209,7 @@ class account_user_login extends Model{
 	        return ["status"=>false,"error"=>"此用户未通过邮箱认证|{$check_account_user['id']}"];
 	    }
 	    
+	    /*
 	    if(empty($check_account_user['verified']) && !empty($check_account_user['password'])){
 	        //走修改密码流程
 	        $time=times::gettime();
@@ -217,6 +218,7 @@ class account_user_login extends Model{
 	        $obj_memcache->set($token,$check_account_user['id'], 600);
 	        return ["status"=>false,"error"=>"此用户已经注册但还未通过邮箱认证|{$token}"];
 	    }
+	    */
 	    
 	    return ["status"=>true];
 	}
