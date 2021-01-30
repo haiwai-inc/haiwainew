@@ -32,6 +32,8 @@
           </span>
         </div>
         <div>
+        <div style="color:#f56c6c;text-align:center" v-if="loginErr.status">{{loginErr.msg}}</div>
+          
           <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> :disabled="loginForm.submitDisable"-->
           <n-button type="primary" round class="w-100" size="lg" @click="submitForm('loginForm')" >登录</n-button>
           <p class="text-center checkbox my-2">或</p>
@@ -178,7 +180,7 @@ export default {
           { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
-      loginErr:{}
+      loginErr:{status:false,msg:''}
     };
   },
   mounted() {
@@ -215,8 +217,8 @@ export default {
             this.$router.push('/');
             console.log(res)
           }else{
-
           }
+          this.loginErrFormat(res);
           gapi.auth2.getAuthInstance().disconnect();
         });
       },
@@ -271,9 +273,9 @@ export default {
                   this.$store.state.user.userinfo = res.data;
                   this.$router.push('/')
                 }else{
-                  this.loginErrFormat(res.error);
                   this.loginForm.submitDisable = false;
                 }
+                this.loginErrFormat(res);
               })
             }
             if(formName==='wxcForm'){
@@ -284,9 +286,9 @@ export default {
                   this.$store.state.user.userinfo = res.data;
                   this.$router.push('/')
                 }else{
-                  this.loginErrFormat(res.error);
                   this.wxcForm.submitDisable = false;
                 }
+                this.loginErrFormat(res);
               })
             }
           } else {
@@ -298,13 +300,19 @@ export default {
         });
       },
       loginErrFormat(err){
-        if(err.indexOf('|')!=-1){
-          let arr = err.split('|');
-          this.$emit('onloginerr',arr)
-          console.log(arr)
+        if(err.status){
+          this.loginErr.msg = ''
+          this.loginErr.status=false;
         }else{
-          this.loginErr.msg = err
-          console.log(err)
+          if(err.error.indexOf('|')!=-1){
+            let arr = err.error.split('|');
+            this.$emit('onloginerr',arr)
+            console.log(arr)
+          }else{
+            this.loginErr.msg = err.error
+            this.loginErr.status=true;
+            console.log(err)
+          }
         }
       }
   }

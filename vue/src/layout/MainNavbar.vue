@@ -197,7 +197,6 @@ export default {
         if(res.status==true){
           this.$store.state.user.userinfo = {};
         }
-        console.log(res)
       })
     }
   },
