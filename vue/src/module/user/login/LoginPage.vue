@@ -268,6 +268,7 @@ export default {
               account.login(this.loginForm).then(res=>{
                 console.log(res);
                 if(res.status){
+                  this.$store.state.user.userinfo = res.data;
                   this.$router.push('/')
                 }else{
                   this.loginErrFormat(res.error);
@@ -280,6 +281,7 @@ export default {
               account.wxc_sign_in(this.wxcForm).then(res=>{
                 console.log(res);
                 if(res.status){
+                  this.$store.state.user.userinfo = res.data;
                   this.$router.push('/')
                 }else{
                   this.loginErrFormat(res.error);
