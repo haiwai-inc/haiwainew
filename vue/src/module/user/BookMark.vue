@@ -1,88 +1,46 @@
 <template>
-  <div class="container-md">
-    我的收藏
-    <article-list-item 
-      v-for="item in articlelists"
-      v-bind:key="item.articleID"
-      v-bind:data="item"
-      type="0">
-    </article-list-item> 
+  <div class="container">
+        <div>
+         <main-menu></main-menu>
+        </div>
+    <h6 class="font-weight-normal pb-3 ml-2"> 我的收藏</h6>
+
+   <!-- 用户没有收藏任何文章时候默认 -->
+   <div class="text-center mt-5">
+      <h5>您的文件夹是空的, 您还没有收藏任何文章</h5>
+      <p>当您收藏了文章, 它就会出现在这里</p>
+    </div>
+   <!-- 用户收藏文章后 -->
+    <div class="row">
+        <div class="col-sm-12 col-12">
+          <div>
+            <article-list-item 
+              v-for="item in articlelists"
+              v-bind:key="item.id"
+              v-bind:data="item"
+              type="0">
+            </article-list-item>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 <script>
-import ArticleListItem from '../blog/pages/components/Main/ArticleListItem.vue'
+import MainMenu from '../blog/pages/components/Main/MainMenu';
+import ArticleListItem from '../blog/pages/components/Main/ArticleListItem.vue';
+
 export default {
   name: 'bookmark',
   components: {
-    ArticleListItem
+    MainMenu,
+    ArticleListItem,
   },
-  data(){
+
+  data() {
     return {
-      articlelists: [
-        {
-          articleID:'345678',
-          articleUrl:'',
-          title:'这里是标题....',
-          description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介...',
-          author:'这里是作者',
-          authorID:'123456789',
-          isHot:true,
-          read:'3456',
-          commont:'12',
-          likes:'23',
-          image:'/img/bg3.jpg',
-        },{
-          articleID:'34567',
-          articleUrl:'',
-          title:'这里是标题....',
-          description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-          author:'这里是作者',
-          authorID:'123456',
-          isHot:false,
-          read:'3456',
-          commont:'12',
-          likes:'23',
-          image:'/img/bg4.jpg',
-        },{
-          articleID:'3456',
-          articleUrl:'',
-          title:'这里是标题....',
-          description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-          author:'这里是作者',
-          authorID:'12345',
-          isHot:true,
-          read:'3456',
-          commont:'12',
-          likes:'23',
-          image:'/img/bg1.jpg',
-        },{
-          articleID:'345',
-          articleUrl:'',
-          title:'这里是标题....',
-          description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-          author:'这里是作者',
-          authorID:'123456789',
-          isHot:false,
-          read:'3456',
-          commont:'12',
-          likes:'23',
-          image:'',
-        },{
-          articleID:'3456789',
-          articleUrl:'',
-          title:'这里是标题....',
-          description:'这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介',
-          author:'这里是作者',
-          authorID:'123456789',
-          isHot:true,
-          read:'3456',
-          commont:'12',
-          likes:'23',
-          image:'',
-        }
-      ],
-    }
-  }
+        user:this.$store.state.user
+    };
+  },
 };
 </script>
 <style></style>
