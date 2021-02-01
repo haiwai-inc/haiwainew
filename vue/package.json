@@ -22,6 +22,7 @@
     "nouislider": "^14.6.0",
     "popper.js": "^1.16.1",
     "summernote": "^0.8.18",
+    "vue-ele-upload-image": "^2.0.12",
     "vue-image-crop-upload": "^2.5.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-lazy-load": "^0.0.7",
