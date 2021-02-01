@@ -64,6 +64,26 @@
                      :params="params"
                      :headers="headers"
                      img-format="png"></avatar-upload>
+
+                     <ele-upload-image
+                     crop
+    action="/api/v1/"
+    v-model="image"
+    :responseFn="handleResponse"
+  ></ele-upload-image>
+  <!-- <el-upload
+  class="upload-demo"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :on-preview="handlePreview"
+  :on-remove="handleRemove"
+  :before-remove="beforeRemove"
+  multiple
+  :limit="3"
+  :on-exceed="handleExceed"
+  :file-list="fileList">
+  <el-button size="small" type="primary">Click to upload</el-button>
+  <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
+</el-upload> -->
                   
                </div>
                <div>
@@ -125,6 +145,8 @@ import {
   FormGroupInput,
 } from '@/components';
 import avatarUpload from 'vue-image-crop-upload';
+import EleUpload from "element-ui";
+import EleUploadImage from "vue-ele-upload-image";
 
 export default {
   name: 'profile',
@@ -132,7 +154,9 @@ export default {
      'avatar-upload': avatarUpload,
    //  Avatar,
     MainMenu,
-    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete,
+   //  'el-upload':EleUpload
+    EleUploadImage
   },
 
   data(){
@@ -155,7 +179,8 @@ export default {
       headers: {
          smail: '*_~'
       },
-      imgDataUrl: '/img/julie.jpg' // the datebase64 url of created image
+      imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
+      image:"/img/julie.jpg"
     }
   },
   methods:{
@@ -193,7 +218,13 @@ export default {
             console.log('-------- upload fail --------');
             console.log(status);
             console.log('field: ' + field);
+      },
+      handleResponse(response, file, fileList) {
+        // 根据响应结果, 设置 URL
+        return "https://xxx.xxx.com/image/" + response.id;
       }
+
+
   }
 };
 </script>
