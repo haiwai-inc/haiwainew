@@ -24,7 +24,8 @@ class user extends Api {
      */
     public function user_profile(){
         $obj_account_user=load("account_user");
-        $rs_account_user=$obj_account_user->getOne(['id','email','username','description'],['id'=>$_SESSION['id']]);
+        $rs_account_user=$obj_account_user->getOne(['id','email','username','description','avatar'],['id'=>$_SESSION['id']]);
+        
         return $rs_account_user;
     }
     
@@ -34,7 +35,7 @@ class user extends Api {
      * @param integer $username|笔名
      * @param integer $description|个人简介
      */
-    public function user_profile_update($username=null,$description=null){
+    public function user_profile_update($username,$description=""){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['username'=>$username]);
         if(!empty($check_account_user)) {$this->error="此笔名已经被占用";$this->status=false;return false;}
@@ -49,10 +50,24 @@ class user extends Api {
     
     /**
      * 用户设置页
+     * 用户 密码 修改
+     * @param integer $password|密码
+     */
+    public function user_password_update($password){
+        $obj_account_user=load("account_user");
+        $rs_account_user=$obj_account_user->check_password($password);
+        if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
+        
+        $rs_account_user=$obj_account_user->update(['password'=>md5($password)],['id'=>$_SESSION['id']]);
+        return $rs_account_user;
+    }
+    
+    /**
+     * 用户设置页
      * 用户 修改 头像
      * 
      */
-    public function user_update_avatar(){
+    public function user_avatar_update(){
         
     }
 
