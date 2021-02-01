@@ -20,11 +20,31 @@ class user extends Api {
     
     /**
      * 用户设置页
-     * 用户 修改 帐号
-     * @param integer $data|$data=['username'=>"sida",""]
+     * 用户 帐号
      */
-    public function user_update_profile($data){
+    public function user_profile(){
+        $obj_account_user=load("account_user");
+        $rs_account_user=$obj_account_user->getOne(['id','email','username','description'],['id'=>$_SESSION['id']]);
+        return $rs_account_user;
+    }
+    
+    /**
+     * 用户设置页
+     * 用户 帐号 修改
+     * @param integer $username|笔名
+     * @param integer $description|个人简介
+     */
+    public function user_profile_update($username=null,$description=null){
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne("*",['username'=>$username]);
+        if(!empty($check_account_user)) {$this->error="此笔名已经被占用";$this->status=false;return false;}
         
+        $fields=[
+            "username"=>empty($username)?"":$username,
+            "description"=>empty($description)?"":$description,
+        ];
+        $obj_account_user->update($fields,['id'=>$_SESSION['id']]);
+        return true;
     }
     
     /**
@@ -524,7 +544,6 @@ class user extends Api {
         $rs_account_notification=$obj_account_notification->getAll("*",$fields,"notification_".$tbn);
         return $rs_account_notification;
     }
-    
     
     public function init_sse(){
         
