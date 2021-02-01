@@ -24,17 +24,17 @@ class Account extends API{
     async sendverifymail(id){
         return await this.sendget("account/passport/user_send_verification/?id="+id)
     }
-    
+
     async login(form){
         let email = form.email;
         let password = form.password;
-        return await this.sendget("account/passport/user_login/?email=" + email + "&password=" + password);
+        return await this.sendget("account/passport/user_login/?login_data=" + email + "&login_token=" + password);
     };
 
     async wxc_sign_in(form){
-        let email = form.email;
+        let username = form.username;
         let password = form.password;
-        return await this.sendget("account/passport/user_login_wxc?email="+email+"&password="+password)
+        return await this.sendget("account/passport/user_login_wxc/?login_data="+username+"&login_token="+password)
     }
 
     async google_sign_in(token){

@@ -53,16 +53,16 @@ export default {
   },
   created () {
     blog.hot_tag().then(res=>{
-      if(res.data.status){
-        this.maincategory=res.data.data.data;
+      if(res.status){
+        this.maincategory=res.data.data;
       }
       // console.log(this.maincategory);
     }).catch(err=>{
       console.log(err);
     }),
     blog.recommand_blogger().then(res=>{
-      if(res.data.status){
-        this.res_bloggerList=res.data.data.data;
+      if(res.status){
+        this.res_bloggerList=res.data.data;
         this.bloggerList=this.res_bloggerList;
         this.loading.blogger=false;
       }
@@ -79,8 +79,8 @@ export default {
     loadArticle(){
       this.loading.article=true;
       blog.hot_article_list(this.currentTagId,this.lastID.article).then(res=>{
-        if(res.data.status){
-          let arr = res.data.data;
+        if(res.status){
+          let arr = res.data;
           this.noMore = arr.length<30 ? true : false;
           this.lastID.article = arr.length===30 ? arr[arr.length-1].countinfo_postID.count_read : this.lastID.article;
           this.articlelists = this.articlelists.concat(arr) ;

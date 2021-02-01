@@ -32,7 +32,7 @@
             center
             v-if="signErr.password">
           </el-alert>
-          <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')">注册</n-button>
+          <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')" :disabled="signupForm.submitDisable">注册</n-button>
           <p class="text-center checkbox my-2">或</p>
           <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin('login')">
             去登录
@@ -61,8 +61,8 @@ export default {
         callback(new Error('请输入邮箱地址'));
       }else{
         account.checkemail(value).then(res=>{
-          if(!res.data.status){
-            callback(new Error(res.data.error))
+          if(!res.status){
+            callback(new Error(res.error))
           }
           callback();
         })
@@ -98,7 +98,8 @@ export default {
         email:'',
         password:'',
         checkPassword:'',
-        policy:[]
+        policy:[],
+        submitDisable:false
       },
       rules: {
         email:[
@@ -135,17 +136,20 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.signupForm.submitDisable = true;
           account.signup(this.signupForm).then(res=>{
             console.log(res);
-            if(res.data.status){
+            if(res.status){
               this.initForm();
               this.$router.go(-1);
             }else{
-              this.signErr = res.data.error;
+              this.signErr = res.error;
+              this.signupForm.submitDisable = true;
             }
           })
         } else {
           console.log('error submit!!');
+          this.signupForm.submitDisable = false;
           return false;
         }
       });

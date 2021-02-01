@@ -138,9 +138,9 @@ class account_user extends Model{
 	        return $rs;
 	    }
 	    
-	    $check_account_user=$this->getOne(['id'],['status'=>1,'email'=>$email]);
+	    $check_account_user=$this->getOne(['id'],['email'=>$email]);
 	    if(!empty($check_account_user)){
-	        $rs['error']="此用户已经被注册";
+	        $rs['error']="此邮箱已经被注册";
 	        return $rs;
 	    }
 	    

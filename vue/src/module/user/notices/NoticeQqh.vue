@@ -152,14 +152,14 @@ export default {
     async getUserInfo(){//获取登录用户信息
       let user = this.$store.state.user;
       let res = await user.getUserStatus();
-      this.loginUser = res.data.data;
+      this.loginUser = res.data;
       console.log(this.loginUser);
     },
 
     async qqh_list() {
       let user = this.$store.state.user;
       let res = await user.qqh_list();
-      this.qqhList=res.data.data;
+      this.qqhList=res.data;
       this.qqhList.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
         let aTime = a.last_messageinfo.dateline;
         let bTime = b.last_messageinfo.dateline;
@@ -178,8 +178,8 @@ export default {
       }
       let user = this.$store.state.user;
       let res = await user.qqh_view(list[idx].id);
-      this.qqhView=res.data;
-      this.qqhView.data=res.data.data.reverse();//对话倒序排列
+      this.qqhView=res;
+      this.qqhView.data=res.data.reverse();//对话倒序排列
     },
 
     showQqhView(idx){

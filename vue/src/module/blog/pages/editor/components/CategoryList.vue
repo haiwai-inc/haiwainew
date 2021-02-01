@@ -79,7 +79,7 @@ export default {
     mounted() {
       blog.category_list(3).then(res=>{
           console.log(res);
-          this.wenjiList = res.data.data;
+          this.wenjiList = res.data;
           this.wenjiActiveId = this.wenjiList[0].id
       })
     },
@@ -87,7 +87,7 @@ export default {
       getCategories(id){
         blog.category_list(id).then(res=>{
           console.log(res);
-          this.wenjiList = res.data.data;
+          this.wenjiList = res.data;
         })
       },
     },

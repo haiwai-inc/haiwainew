@@ -47,7 +47,7 @@ export default {
           let user = this.$store.state.user;
           let res = await user.getUserInfo(1);
           let account = this.$store.state.account.account;
-          account.signal(res.data.data.avatar);
+          account.signal(res.data.avatar);
       }
   }      
 };

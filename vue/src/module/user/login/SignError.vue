@@ -1,6 +1,6 @@
 <template>
       <div class="mx-auto content">
-        您的注册确认信已经过期，请点击下方按钮重新获取确认邮件。
+        您还未通过邮件确认或注册确认信已经过期，请点击下方按钮重新获取确认邮件。
         <div style="padding-left:10px" class="mt-4">
           <el-alert
             :title="this.res.data"
@@ -14,7 +14,7 @@
             center
             v-if="this.res.error">
           </el-alert>
-          <n-button type="primary" round class="w-100" size="lg" @click="submit()">重新发送确认信</n-button>
+          <n-button type="primary" round class="w-100" size="lg" :disabled="butDisable" @click="submit()">重新发送确认信</n-button>
           <!-- <p class="text-center checkbox my-2">或</p>
           <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin('login')">
             去登录
@@ -42,7 +42,8 @@ export default {
   },
   data() {
     return {
-      res:{}
+      res:{status:false},
+      butDisable:false
     }
   },
   methods:{
@@ -51,10 +52,11 @@ export default {
     },
     
     submit() {
+      this.butDisable=true
       account.sendverifymail(this.data.id).then(res=>{
         console.log(res);
-        this.res = res.data
-        
+        this.res = res;
+        this.butDisable = res.status
       })
     },
   }

@@ -24,8 +24,11 @@ class account_user_login extends Model{
 	    $this->set_user_cookie($check_account_user);
 	    
 	    //设置session
-	    $rs_user_session=$this->set_user_session($rs_account_user);
-	    return $rs_user_session;
+	    $rs_user_session=$this->set_user_session($check_account_user);
+	    
+	    $rs_status['status']=true;
+	    $rs_status['data']=$rs_user_session;
+	    return $rs_status;
 	}
 	
 	//文学城登录
@@ -65,7 +68,10 @@ class account_user_login extends Model{
 	    
 	    //设置session
 	    $rs_user_session=$this->set_user_session($check_account_user);
-	    return $rs_user_session;
+	    
+	    $rs_status['status']=true;
+	    $rs_status['data']=$rs_user_session;
+	    return $rs_status;
 	}
 	
 	//google 注册/登录
@@ -127,7 +133,10 @@ class account_user_login extends Model{
 	        
 	        //设置session
 	        $rs_user_session=$this->set_user_session($rs_account_user);
-	        return $rs_user_session;
+	        
+	        $rs_status['status']=true;
+	        $rs_status['data']=$rs_user_session;
+	        return $rs_status;
 	    }else{
 	        //非法登录
 	        $rs_status['status']=false;
@@ -195,9 +204,21 @@ class account_user_login extends Model{
 	    if(empty($check_account_user['status'])){
 	        return ["status"=>false,"error"=>"此用户已经被关闭"];
 	    }
+	    
 	    if(empty($check_account_user['verified'])){
-	        return ["status"=>false,"error"=>"此用户还未认证|{$check_account_user['id']}"];
+	        return ["status"=>false,"error"=>"此用户未通过邮箱认证|{$check_account_user['id']}"];
 	    }
+	    
+	    /*
+	    if(empty($check_account_user['verified']) && !empty($check_account_user['password'])){
+	        //走修改密码流程
+	        $time=times::gettime();
+	        $token=md5($check_account_user['email'].$check_account_user['password']."reset_password".$time);
+	        $obj_memcache = func_initMemcached('cache01');
+	        $obj_memcache->set($token,$check_account_user['id'], 600);
+	        return ["status"=>false,"error"=>"此用户已经注册但还未通过邮箱认证|{$token}"];
+	    }
+	    */
 	    
 	    return ["status"=>true];
 	}

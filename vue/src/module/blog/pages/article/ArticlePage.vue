@@ -195,10 +195,10 @@ export default {
   mounted: function () {
     this.article_view();
     account.login_status().then(res=>{ //判断是否登录
-      if(res.data.data==undefined){
+      if(res.data==undefined){
         this.loginuserID = -1
       }else{
-        this.loginuserID = res.data.data.UserID ;
+        this.loginuserID = res.data.UserID ;
       }
     });
   },
@@ -213,9 +213,9 @@ export default {
       this.showcomment = false;
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
-        this.articleDetail = res.data;
-        let descrip = res.data.data.postInfo_postID.msgbody
-        this.shareItem.title = res.data.data.postInfo_postID.title;
+        this.articleDetail = res;
+        let descrip = res.data.postInfo_postID.msgbody
+        this.shareItem.title = res.data.postInfo_postID.title;
         this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
         this.showpage = true;
         console.log(this.shareItem.description);
@@ -247,13 +247,13 @@ export default {
       this.loading.comment = true;
       this.noMore = false;
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
-        let r = res.data.data;
+        let r = res.data;
         this.comment = this.comment.concat(r);
         this.lastID = this.comment[r.length-1].postID;
         if(r.length<20){
           this.noMore = true;
         }
-        this.showcomment=res.data.status?true:false;
+        this.showcomment=res.status?true:false;
         this.loading.comment = false;
         console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
       })
@@ -264,7 +264,7 @@ export default {
         this.comment.forEach(obj=>{
           if (obj.postID==id){
             let idx = this.comment.indexOf(obj);
-            this.comment.splice(idx,1,res.data.data) 
+            this.comment.splice(idx,1,res.data) 
           }
         })
       })
@@ -280,7 +280,7 @@ export default {
     buzz_add(item){
       blog.buzz_add(item.postID).then(res=>{
         console.log(res);
-        if(res.data.data=="已赞"){
+        if(res.data=="已赞"){
           this.articleDetail.data.postInfo_postID.is_buzz=1
         }
       })
@@ -288,7 +288,7 @@ export default {
     buzz_delete(item){
       blog.buzz_delete(item.postID).then(res=>{
         console.log(res)
-        if(res.data.data=="已取消赞"){
+        if(res.data=="已取消赞"){
           this.articleDetail.data.postInfo_postID.is_buzz=0
         }
       })
