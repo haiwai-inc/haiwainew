@@ -15,8 +15,7 @@ const files = require.context('../module', true, /\.router.js$/);
 files.keys().forEach(key => {
   routes.push(...files(key).default);
 });
-
-export default new Router({
+let router = new Router({
   linkExactActiveClass: 'active',
   mode: 'history' ,
   routes: routes ,
@@ -26,5 +25,7 @@ export default new Router({
     } else {
       return { x: 0, y: 0 };
     }
-  }
+  },
 });
+
+export default router;
