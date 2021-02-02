@@ -1,4 +1,6 @@
 import MainNavbar from '../../layout/MainNavbar.vue';
+
+
 export default [
     {
         path: '/login',
@@ -9,6 +11,11 @@ export default [
         path: '/profile',
         name: 'profile',
         components: { default: resolve => require (['./Profile.vue'],resolve), header: MainNavbar },
+        // beforeEnter: (to, from, next) => {
+        //     // console.log(auth)
+        //     // console.log($router.app.$options.store.state)
+        //     // ...
+        // }
     },
     {
         path: '/bookmark',

@@ -7,8 +7,8 @@ import Vuex from 'vuex';
 import User from './service/user';
 import Search from './module/search/search.service.js';
 import jquery from 'jquery'
-import VueSocialSharing from 'vue-social-sharing'
-
+import VueSocialSharing from 'vue-social-sharing';
+import vuexRouterInterceptor from './plugins/vuex-router-interceptor';
 
 Vue.config.productionTip = false;
 
@@ -28,11 +28,12 @@ const store = new Vuex.Store({
     increment (state) {
       state.count++
     }
-  }
+  },
+  // plugins:[vuexRouterInterceptor()]
 })
 
 new Vue({
+  store: store,
   router,
   render: h => h(App),
-  store: store,
 }).$mount('#app');
