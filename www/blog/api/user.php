@@ -18,6 +18,7 @@ class user extends Api {
     public function blogger_profile(){
         $obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$obj_blog_blogger->getOne(['id','name','description','background'],['id'=>$_SESSION['id']]);
+        $rs_blog_blogger['first_letter']=substr(strings::subString($item['name'],1), 0, -3);
         
         return $rs_blog_blogger;
     }
