@@ -65,11 +65,14 @@
                      :params="params"
                      :headers="headers"
                      img-format="png"></avatar-upload> -->
+<br>
 
-<croppa v-model="myCroppa"></croppa>
+                  
+               </div>
+               <div>
+                  <croppa v-model="myCroppa"></croppa>
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="uploadImage">确认修改</button></div>
   
-                  
                </div>
                <div>
                   <p class="pt-3"><b>笔名</b></p>
