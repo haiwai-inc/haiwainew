@@ -10,7 +10,6 @@ import VueSocialSharing from 'vue-social-sharing'
 import { Loading, Upload, Image, Dialog } from 'element-ui';
 // import {ElementUI} from 'element-ui'
 import Croppa from 'vue-croppa';
-import VueSocialSharing from 'vue-social-sharing';
 import vuexRouterInterceptor from './plugins/vuex-router-interceptor';
 
 Vue.use(Croppa);
