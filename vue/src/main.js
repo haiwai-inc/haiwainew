@@ -10,6 +10,9 @@ import VueSocialSharing from 'vue-social-sharing'
 import EleUploadImage from "vue-ele-upload-image";
 import { Loading, Upload, Image, Dialog } from 'element-ui';
 // import {ElementUI} from 'element-ui'
+import Croppa from 'vue-croppa';
+
+Vue.use(Croppa);
 
 Vue.config.productionTip = false;
 

@@ -53,7 +53,7 @@
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
                   <img style="width:100px;height:100px;border-radius:50%" :src="imgDataUrl">
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">修改我的头像</button></div>
-                  <avatar-upload field="img"
+                  <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
                      @crop-upload-success="cropUploadSuccess"
                      @crop-upload-fail="cropUploadFail"
@@ -63,27 +63,11 @@
                      url="/upload"
                      :params="params"
                      :headers="headers"
-                     img-format="png"></avatar-upload>
+                     img-format="png"></avatar-upload> -->
 
-                     <ele-upload-image
-                     crop
-    action="/api/v1/"
-    v-model="image"
-    :responseFn="handleResponse"
-  ></ele-upload-image>
-  <!-- <el-upload
-  class="upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :before-remove="beforeRemove"
-  multiple
-  :limit="3"
-  :on-exceed="handleExceed"
-  :file-list="fileList">
-  <el-button size="small" type="primary">Click to upload</el-button>
-  <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
-</el-upload> -->
+<croppa v-model="myCroppa"></croppa>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="uploadImage">确认修改</button></div>
+  
                   
                </div>
                <div>
@@ -140,6 +124,7 @@
 <script>
 import MainMenu from "../blog/pages/components/Main/MainMenu.vue";
 import {IconAccountSet,IconBlogSet,IconBlackList,IconDelete} from '@/components/Icons';
+import Croppa from 'vue-croppa';
 // import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
@@ -151,12 +136,13 @@ import EleUploadImage from "vue-ele-upload-image";
 export default {
   name: 'profile',
   components: {
-     'avatar-upload': avatarUpload,
+   //   'avatar-upload': avatarUpload,
    //  Avatar,
     MainMenu,
     [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete,
    //  'el-upload':EleUpload
-    EleUploadImage
+   //  EleUploadImage,
+   //  Croppa 
   },
 
   data(){
@@ -165,7 +151,7 @@ export default {
       authorInfor : {
         avatarUrl:'/img/julie.jpg',
         isHot:true,
-        authorHomepage:'',
+        authorHomepage:'', 
         name:'用户名',
         firstLetter:'用',
         description:'简介简介简介简介',
@@ -180,7 +166,8 @@ export default {
          smail: '*_~'
       },
       imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
-      image:"/img/julie.jpg"
+      image:"/img/julie.jpg",
+      myCroppa:{}
     }
   },
   methods:{
@@ -222,6 +209,18 @@ export default {
       handleResponse(response, file, fileList) {
         // 根据响应结果, 设置 URL
         return "https://xxx.xxx.com/image/" + response.id;
+      },
+
+      uploadImage(){
+         console.log(this.myCroppa);
+         this.myCroppa.generateBlob(
+        blob => {
+           console.log(blob);
+          // write code to upload the cropped image file (a file is a blob)
+        },
+        'image/jpeg',
+        0.8
+      );
       }
 
 
