@@ -12,26 +12,41 @@ class user extends Api {
     }
     
     /**
-     * “我的”博主信息页
+     * 博客设置页
      * 博主 信息
      */
-    public function blogger_info(){
+    public function blogger_profile(){
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','name','description','background'],['id'=>$_SESSION['id']]);
+        $rs_blog_blogger['first_letter']=substr(strings::subString($rs_blog_blogger['name'],1), 0, -3);
         
+        return $rs_blog_blogger;
     }
     
     /**
      * 博主设置页
-     * 博主 修改
+     * 博主 信息 修改
+     * @param integer $name|博主名
+     * @param integer $description|博主简介
      */
-    public function blogger_update(){
+    public function blogger_profile_update($name,$description=NULL){
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['name'=>$name]);
+        if(!empty($check_blog_blogger)) {$this->error="此博主名已经被占用";$this->status=false;return false;}
         
+        $fields=[
+            "name"=>empty($name)?"":$name,
+            "description"=>empty($description)?"":$description,
+        ];
+        $check_blog_blogger->update($fields,['id'=>$_SESSION['id']]);
+        return true;
     }
     
     /**
      * 博主设置页
-     * 博主 名字 拍重
+     * 博主 背景 修改
      */
-    public function blogger_name_check(){
+    public function blogger_background_update(){
         
     }
     

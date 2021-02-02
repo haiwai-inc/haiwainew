@@ -51,7 +51,8 @@
                <h6 class="border-bottom pb-3">账号设置</h6>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
-                  <img style="width:100px;height:100px;border-radius:50%" :src="imgDataUrl">
+                  <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
+                  <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">修改我的头像</button></div>
                   <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
@@ -74,11 +75,12 @@
                   <p class="pt-3"><b>笔名</b></p>
                   <fg-input
                      placeholder="笔名"
-                     >
+                     v-model="authorInfor.username">
                   </fg-input>
                   <p class="pt-3"><b>个人简介</b></p>
                   <fg-input
                      placeholder="个人简介"
+                     v-model="authorInfor.description"
                      >
                   </fg-input>
                   <p class="pt-3"><b>登录账号</b> : <span>fwe998</span></p>
@@ -130,8 +132,8 @@ import {
   FormGroupInput,
 } from '@/components';
 import avatarUpload from 'vue-image-crop-upload';
-import EleUpload from "element-ui";
 import EleUploadImage from "vue-ele-upload-image";
+import account from './service/account';
 
 export default {
   name: 'profile',
@@ -144,19 +146,20 @@ export default {
    //  EleUploadImage,
    //  Croppa 
   },
-
+   created(){
+      account.get_user_profile().then(res=>{
+         if(res.status){
+            this.authorInfor = res.data
+         }else{
+            
+         }
+      })
+      console.log(this.$store.state.user.userinfo.userinfo_id);
+   },
   data(){
     return{
       menuId:1,
-      authorInfor : {
-        avatarUrl:'/img/julie.jpg',
-        isHot:true,
-        authorHomepage:'', 
-        name:'用户名',
-        firstLetter:'用',
-        description:'简介简介简介简介',
-        isFollowed:true,
-      },
+      authorInfor : this.$store.state.user.userinfo.userinfo_id,
       show: false,
       params: {
          token: '123456798',

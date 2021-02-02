@@ -208,12 +208,16 @@ export default {
       isShowLogin(v){
           this.$emit('onchange',v)
       },
+      setLoginState(res){
+        this.$store.state.user.userinfo = res.data;
+        localStorage.setItem('loginState', res.state);
+      },
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile();
         var id_token = user.getAuthResponse().id_token;
         account.google_sign_in(id_token).then(res=>{
           if(res.status){
-            this.$store.state.user.userinfo = res.data;
+            this.setLoginState(res);
             this.$router.push('/');
             console.log(res)
           }else{
@@ -242,7 +246,7 @@ export default {
         if(code !== undefined){
           account.line_sign_in(code).then(res=>{
           //   if(!res.error){
-          //   this.$store.state.user.userinfo = res.data.data;
+          //   this.setLoginState(res);
           //   this.$router.push('/');
           //   console.log(res.data.data)
           // }
@@ -270,7 +274,7 @@ export default {
               account.login(this.loginForm).then(res=>{
                 console.log(res);
                 if(res.status){
-                  this.$store.state.user.userinfo = res.data;
+                  this.setLoginState(res);
                   this.$router.push('/')
                 }else{
                   this.loginForm.submitDisable = false;
@@ -283,7 +287,7 @@ export default {
               account.wxc_sign_in(this.wxcForm).then(res=>{
                 console.log(res);
                 if(res.status){
-                  this.$store.state.user.userinfo = res.data;
+                  this.setLoginState(res);
                   this.$router.push('/')
                 }else{
                   this.wxcForm.submitDisable = false;

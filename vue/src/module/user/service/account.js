@@ -2,7 +2,7 @@ import API from '../../../service/api'
 
 class Account extends API{
 
-
+// login/singup api
     async login_status(){
         return await this.sendget("account/passport/login_status/");
     }
@@ -56,6 +56,12 @@ class Account extends API{
         return await this.sendget("account/passport/user_logout/");
     }
 
+// user profile api
+    async get_user_profile(){
+        return await this.sendget("account/user/user_profile/");
+    }
+
+// user functions api
     async follower_add(followerID){
         return await this.sendget("account/user/follower_add/?followerID="+followerID);
     }
@@ -64,9 +70,7 @@ class Account extends API{
         return await this.sendget("account/user/follower_delete/?followerID="+followerID);
     }
 
-
-
-
+// base function 
     async sendget(url){
         try{
             let rs = await this.get(url);
