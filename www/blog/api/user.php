@@ -29,7 +29,7 @@ class user extends Api {
      * @param integer $name|博主名
      * @param integer $description|博主简介
      */
-    public function blogger_profile_update($name,$description=null){
+    public function blogger_profile_update($name,$description=NULL){
         $obj_blog_blogger=load("blog_blogger");
         $check_blog_blogger=$obj_blog_blogger->getOne("*",['name'=>$name]);
         if(!empty($check_blog_blogger)) {$this->error="此博主名已经被占用";$this->status=false;return false;}

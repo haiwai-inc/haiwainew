@@ -283,6 +283,16 @@ class page extends Api {
     
     /**
      * 文章详情页 
+     * 文章 前一篇 后一篇
+     * @param integer $id | 主贴postID
+     */
+    public function article_previous_next($id){
+        $obj_article_indexing=load("article_indexing");
+        //$check_article_indexing=
+    }
+    
+    /**
+     * 文章详情页 
      * 文章 评论
      * @param integer $id | 主贴postID
      * @param integer $lastID | 评论最后一个postID
