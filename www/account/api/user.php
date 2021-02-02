@@ -25,7 +25,7 @@ class user extends Api {
     public function user_profile(){
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','email','username','description','avatar'],['id'=>$_SESSION['id']]);
-        $rs_account_user['first_letter']=substr(strings::subString($item['username'],1), 0, -3);
+        $rs_account_user['first_letter']=substr(strings::subString($rs_account_user['username'],1), 0, -3);
         
         return $rs_account_user;
     }
