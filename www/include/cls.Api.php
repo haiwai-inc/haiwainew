@@ -697,15 +697,28 @@ class Api{
 		
 		$value = $this->classCache->public_method->$method;
 		
+		if(!empty($value->param)){
+		    $value->default=[];
+		    foreach($value->param as $v){
+		        foreach($v as $kk=>$vv){
+		            if($kk=="defaultValue"){
+		                $value->default[$v->name]=true;
+		            }
+		        }
+		    }
+		}
+		
 		if(!empty($value->request)){
 			$param=[];
-			if(isset($value->request->get))
-				foreach($value->request->get as $val)$param[]=$val->name;
+			if(isset($value->request->get)){
+			    foreach($value->request->get as $val)$param[]=$val->name;
+			}
 				
-				if(isset($value->request->post))
-					foreach($value->request->post as $val)$param[]=$val->name;
-					
-					$value->paramStr = implode(", ", $param);
+			if(isset($value->request->post)){
+			    foreach($value->request->post as $val)$param[]=$val->name;
+			}
+				
+			$value->paramStr = implode(", ", $param);
 		}
 		
 		$this->__displayDoc("/include/template/docview.html",$value);

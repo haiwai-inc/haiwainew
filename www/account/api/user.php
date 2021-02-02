@@ -36,7 +36,7 @@ class user extends Api {
      * @param integer $username|笔名
      * @param integer $description|个人简介
      */
-    public function user_profile_update($username,$description=null){
+    public function user_profile_update($username,$description=NULL){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['username'=>$username]);
         if(!empty($check_account_user)) {$this->error="此笔名已经被占用";$this->status=false;return false;}
