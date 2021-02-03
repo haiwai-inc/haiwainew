@@ -134,49 +134,51 @@ class search_article_noindex extends Search
 	}
 
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
-		if(!empty($rs)){
-	        foreach($rs as $v){
-	            if(empty($v)){
-	                continue;
-	            }
-	            $tmp_rs_id[]=$v[$hashID];
-	            if(!empty($v['postID'])){
-	                $tmp_rs_postID[]=$v['postID'];
-	            }
+	    if(empty($rs)){
+	        return $rs;
+	    }
+	    
+        foreach($rs as $v){
+            if(empty($v)){
+                continue;
+            }
+            $tmp_rs_id[]=$v[$hashID];
+            if(!empty($v['postID'])){
+                $tmp_rs_postID[]=$v['postID'];
+            }
+		}
+		if(empty($tmp_rs_id)){
+		    return $rs;
+		}
+		
+		//如果登录
+		if(!empty($_SESSION['id'])){
+		    if(!empty($tmp_rs_postID)){
+		        //加入书签
+		        $obj_account_bookmark=load("account_bookmark");
+		        $rs_account_bookmark=$obj_account_bookmark->getAll("*",['userID'=>$_SESSION['id'],'OR'=>["postID"=>$tmp_rs_postID]]);
+		        if(!empty($rs_account_bookmark)){
+		            foreach($rs_account_bookmark as $v){
+		                $hash_account_bookmark[$v['postID']]=$v;
+		            }
+		        }
+		    }
+		}
+		
+		$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
+        foreach($rs as $k=>$v){
+			if(empty($hash_posts[$v[$hashID]])){
+				unset($rs[$k]);
+				continue;
 			}
-			if(empty($tmp_rs_id)){
-			    return $rs;
-			}
-			
-			//如果登录
-			if(!empty($_SESSION['id'])){
-			    if(!empty($tmp_rs_postID)){
-			        //加入书签
-			        $obj_account_bookmark=load("account_bookmark");
-			        $rs_account_bookmark=$obj_account_bookmark->getAll("*",['userID'=>$_SESSION['id'],'OR'=>["postID"=>$tmp_rs_postID]]);
-			        if(!empty($rs_account_bookmark)){
-			            foreach($rs_account_bookmark as $v){
-			                $hash_account_bookmark[$v['postID']]=$v;
-			            }
-			        }
-			    }
-			}
-			
-			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
-	        foreach($rs as $k=>$v){
-				if(empty($hash_posts[$v[$hashID]])){
-					unset($rs[$k]);
-					continue;
-				}
-	            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
-	            
-	            //是否加入书签
-	            $rs[$k]["postInfo_{$hashID}"]['is_bookmark']=empty($hash_account_bookmark[$v['postID']])?0:1;
-	            
-	            //是否点赞
-	            $rs[$k]["postInfo_{$hashID}"]['is_buzz']=(!empty($_SESSION['id']) && in_array($_SESSION['id'],$hash_posts[$v[$hashID]]['buzz']))?1:0;
-	        }
-	    } 
+            $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
+            
+            //是否加入书签
+            $rs[$k]["postInfo_{$hashID}"]['is_bookmark']=empty($hash_account_bookmark[$v['postID']])?0:1;
+            
+            //是否点赞
+            $rs[$k]["postInfo_{$hashID}"]['is_buzz']=(!empty($_SESSION['id']) && in_array($_SESSION['id'],$hash_posts[$v[$hashID]]['buzz']))?1:0;
+        }
 	    
 	    return $rs;
 	}
