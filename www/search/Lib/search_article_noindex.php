@@ -144,6 +144,9 @@ class search_article_noindex extends Search
 	                $tmp_rs_postID[]=$v['postID'];
 	            }
 			}
+			if(empty($tmp_rs_id)){
+			    return $rs;
+			}
 			
 			//如果登录
 			if(!empty($_SESSION['id'])){
@@ -157,10 +160,6 @@ class search_article_noindex extends Search
 			            }
 			        }
 			    }
-			}
-			
-			if(empty($tmp_rs_id)){
-			    return $rs;
 			}
 			
 			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
