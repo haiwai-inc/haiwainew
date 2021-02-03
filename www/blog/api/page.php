@@ -415,8 +415,27 @@ class page extends Api {
     }
     
     /**
+     * 文章详情页
+     * 文章 最新推荐
+     */
+    public function article_view_recent($id){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'treelevel'=>0,'postID'=>$id]);
+        if(empty($check_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //作者最新文章
+        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
+        
+        return $rs_article_indexing;
+    }
+    
+    /**
      * 文章详情页 
-     * 文章 相关
+     * 文章 相关推荐
      */
     public function article_view_related($id){
         
