@@ -61,6 +61,10 @@ class Account extends API{
         return await this.sendget("account/user/user_profile/");
     }
 
+    async user_password_update(password){
+        return await this.sendget("account/user/user_password_update/?password="+password)
+    }
+
 // user functions api
     async follower_add(followerID){
         return await this.sendget("account/user/follower_add/?followerID="+followerID);
