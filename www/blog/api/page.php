@@ -301,12 +301,12 @@ class page extends Api {
         
         //文集信息
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
+        $rs_blog_category=$obj_blog_category->getOne(['id','name'],['id'=>$rs_article_indexing['categoryID']]);
         if(empty($rs_blog_category)){
-            return $rs;
-        }else{
-            $rs['category']=$rs_blog_category;
+            $rs_blog_category=['id'=>0,'name'=>"随笔"];
         }
+        
+        $rs['category']=$rs_blog_category;
         
         //上一篇
         $obj_article_indexing=load("article_indexing");
@@ -318,7 +318,7 @@ class page extends Api {
         $fields['postID,>']=$rs_article_indexing['postID'];
         $fields['order']=['postID'=>'ASC'];
         $rs_article['next']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
-       
+        
         //上下文信息
         $obj_article_noindex=load("search_article_noindex");
         $rs_article=$obj_article_noindex->get_postInfo($rs_article,'postID',true);
