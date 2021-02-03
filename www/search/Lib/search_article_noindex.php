@@ -136,6 +136,9 @@ class search_article_noindex extends Search
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
 		if(!empty($rs)){
 	        foreach($rs as $v){
+	            if(empty($v)){
+	                continue;
+	            }
 	            $tmp_rs_id[]=$v[$hashID];
 	            if(!empty($v['postID'])){
 	                $tmp_rs_postID[]=$v['postID'];
