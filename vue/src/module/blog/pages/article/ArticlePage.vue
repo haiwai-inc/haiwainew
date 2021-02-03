@@ -105,7 +105,7 @@
          <!-- r1 -->
             <div class="box my-3">
               <span class="blogger-box">
-                <!-- <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item> -->
+                <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item>
               </span>
                <!-- 左边相同样式 -->
                <span v-for="(item,index) in recommend.authorArticle" :key="index">
@@ -117,9 +117,9 @@
                <div class="title  d-flex justify-content-between">
                   <h5>文集-芳草渡 (56) </h5>
                </div>
-               <span v-for="(item,index) in recommend.collections" :key="index" >
+               <!-- <span v-for="(item,index) in recommend.collections" :key="index" >
                  <recommend-list-item type="small" :data="item"></recommend-list-item>
-               </span>
+               </span> -->
                
 
                <div class="justify-content-right border-top d-flex text-right ">
@@ -136,12 +136,12 @@
                </div>
             </div>
           <!-- r3 -->
-            <div class="box my-3">
+            <div class="box my-3" v-if="recommend.collections.length>0">
                <div class="title  d-flex justify-content-between">
                   <h5>相关推荐</h5>
                   <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
                </div>
-               <span v-for="(item,index) in recommend.authorArticle" :key="index">
+               <span v-for="(item,index) in recommend.collections" :key="index">
                  <recommend-list-item :data="item"></recommend-list-item>
                </span>
             </div>
@@ -152,7 +152,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
@@ -201,8 +200,28 @@ export default {
         this.shareItem.title = res.data.postInfo_postID.title;
         this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
         this.showpage = true;
-        console.log(this.shareItem.description);
+        this.getRecommend(res,0);
+        this.getNewArticle(res,0);
         this.getComment();
+      })
+    },
+    getRecommend(res,lastID){
+      var arr = res.data.postInfo_postID.tags;
+      var tag = arr.length>0?arr.toString():''
+      blog.hot_article_list(tag,lastID).then(res=>{
+        console.log(res);
+        if(res.status){
+          this.recommend.collections = res.data
+        }
+      })
+    },
+    getNewArticle(res,lastID){
+      var bloggerID = res.data.userID;
+      blog.article_list_recent(bloggerID,lastID).then(res=>{
+        console.log(res);
+        if(res.status){
+          this.recommend.authorArticle = res.data
+        }
       })
     },
     article_reply_add(){
@@ -339,39 +358,8 @@ export default {
 
       ],
       recommend:{
-        authorArticle:[
-          {
-            articleUrl:'/blog/p/12345',
-            articleID:12345,
-            articleTitle:'老妈的摄影作品 - 麻雀也是肉',
-            read:1234,
-            date:'2020.08.07',
-            image:'/img/bg8.jpg'
-          },
-          {
-            articleUrl:'/blog/p/12345',
-            articleID:12345,
-            articleTitle:'老妈的摄影作品 - 苍蝇也是肉',
-            read:1234,
-            date:'2020.08.07',
-            image:''
-          },
-          {
-            articleUrl:'/blog/p/12345',
-            articleID:12345,
-            articleTitle:'老妈的摄影作品 - 蝙蝠不是鸟',
-            read:1234,
-            date:'2020.08.07',
-            image:'/img/bg8.jpg'
-          },
-        ],
-        collections:[
-          {
-            articleUrl:'/blog/p/12345',
-            articleID:12345,
-            articleTitle:'老妈的摄影作品 - 蝙蝠不是鸟',
-          }
-        ]
+        authorArticle:[],
+        collections:[]
       }
     };
   },

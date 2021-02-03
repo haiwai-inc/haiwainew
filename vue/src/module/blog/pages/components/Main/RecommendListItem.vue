@@ -1,16 +1,17 @@
 <template>
-    <div class="recommend-list row no-gutters" id="author" >
-      <div class="align-self-center right pr-2" :class="{'col-10':data.image!=='','col-12':data.image===''||type!=='default'}">
+    <div class="recommend-list row no-gutters" id="author" @click="go(data.postID)">
+      <!-- {{data.postInfo_postID.s_pic}} -->
+      <div class="align-self-center right pr-2" :class="{'col-10':data.postInfo_postID.s_pic!=='','col-12':data.postInfo_postID.s_pic==''||type!=='default'}">
         <div class="d-flex align-self-center">
-            <div class="name">{{data.articleTitle}}</div>
+            <div class="name">{{data.postInfo_postID.title}}</div>
         </div>
         <div class="d-flex justify-content-between my-2" v-if="type==='default'">
-            <div class="descrip">阅读 . {{data.read}}</div>
-            <div class="descrip">{{data.date}}</div>
+            <div class="descrip">阅读 . {{data.postInfo_postID.count_read}}</div>
+            <div class="descrip">{{data.postInfo_postID.edit_date}}</div>
         </div>
       </div>
-      <div class="col-2" v-if="data.image!=='' && type=='default'" >
-        <img alt="" v-bind:src="data.image"  class="rounded">
+      <div class="col-2" v-if="data.postInfo_postID.s_pic!=='' && type=='default'" >
+        <img alt="" v-bind:src="data.postInfo_postID.s_pic"  class="rounded">
       </div>
     </div>
 </template>
@@ -23,21 +24,22 @@ export default {
       default: 'default',
       description: 'Alert type'
     },
-    data:{
-      articleUrl:String,
-      articleTitle:String,
-      articleID:Number,
-      read:Number,
-      date:String,
-      image:String
+    data:Object
+  },
+  methods:{
+    go(id){
+      let url = '/blog/p/'+id
+      this.$router.push(url);
+      this.$router.go(url);
     }
-  }  
+  }
 };
 
 </script>
 <style>
 
 .recommend-list{
+  cursor: pointer;
   padding: 12px 18px;
   border-top:1px solid #ddd;
 }
