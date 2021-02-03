@@ -25,6 +25,7 @@ class user extends Api {
     public function user_profile(){
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','email','username','description','avatar'],['id'=>$_SESSION['id']]);
+        $rs_account_user['first_letter']=substr(strings::subString($rs_account_user['username'],1), 0, -3);
         
         return $rs_account_user;
     }
@@ -35,7 +36,7 @@ class user extends Api {
      * @param integer $username|笔名
      * @param integer $description|个人简介
      */
-    public function user_profile_update($username,$description=""){
+    public function user_profile_update($username,$description=NULL){
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne("*",['username'=>$username]);
         if(!empty($check_account_user)) {$this->error="此笔名已经被占用";$this->status=false;return false;}

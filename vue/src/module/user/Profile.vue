@@ -54,7 +54,7 @@
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
                   <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">修改我的头像</button></div>
-                  <avatar-upload field="img"
+                  <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
                      @crop-upload-success="cropUploadSuccess"
                      @crop-upload-fail="cropUploadFail"
@@ -64,7 +64,15 @@
                      url="/upload"
                      :params="params"
                      :headers="headers"
-                     img-format="png"></avatar-upload>
+                     img-format="png"></avatar-upload> -->
+<br>
+
+                  
+               </div>
+               <div>
+                  <croppa v-model="myCroppa"></croppa>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="uploadImage">确认修改</button></div>
+  
                </div>
                <div>
                   <p class="pt-3"><b>笔名</b></p>
@@ -131,20 +139,25 @@
 <script>
 import MainMenu from "../blog/pages/components/Main/MainMenu.vue";
 import {IconAccountSet,IconBlogSet,IconBlackList,IconDelete} from '@/components/Icons';
+import Croppa from 'vue-croppa';
 // import Avatar from '../blog/pages/components/Main/Avatar';
 import {
   FormGroupInput,
 } from '@/components';
 import avatarUpload from 'vue-image-crop-upload';
+import EleUploadImage from "vue-ele-upload-image";
 import account from './service/account';
 
 export default {
   name: 'profile',
   components: {
-     'avatar-upload': avatarUpload,
+   //   'avatar-upload': avatarUpload,
    //  Avatar,
     MainMenu,
-    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete
+    [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete,
+   //  'el-upload':EleUpload
+   //  EleUploadImage,
+   //  Croppa 
   },
    created(){
       account.get_user_profile().then(res=>{
@@ -187,7 +200,7 @@ export default {
       headers: {
          smail: '*_~'
       },
-      imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image
+      
       signupForm:{
         password:'',
         checkPassword:'',
@@ -201,7 +214,10 @@ export default {
         checkPassword: [
           { required: true, validator: validatePass2, trigger: 'blur' }
         ],
-      }
+      },
+      imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
+      image:"/img/julie.jpg",
+      myCroppa:{}
     }
   },
   methods:{
@@ -265,7 +281,25 @@ export default {
             console.log('-------- upload fail --------');
             console.log(status);
             console.log('field: ' + field);
+      },
+      handleResponse(response, file, fileList) {
+        // 根据响应结果, 设置 URL
+        return "https://xxx.xxx.com/image/" + response.id;
+      },
+
+      uploadImage(){
+         console.log(this.myCroppa);
+         this.myCroppa.generateBlob(
+        blob => {
+           console.log(blob);
+          // write code to upload the cropped image file (a file is a blob)
+        },
+        'image/jpeg',
+        0.8
+      );
       }
+
+
   }
 };
 </script>

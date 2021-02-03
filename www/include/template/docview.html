@@ -41,7 +41,13 @@
                 <p>{%$val->description|default:'Null'%}</p>
             </td>
             <td>{%$val->type%}</td>
-            <td>{%$val->default|default:'<i>Required</i>'%}</td>
+            <td>
+            	{%if !empty($docs->default[$val->name]) %}
+            		NULL
+            	{%else%}
+            		{%$val->default|default:'<i>Required</i>'%}
+            	{%/if%}
+            </td>
         </tr>
         {%/foreach%}
 	</tbody>
