@@ -303,7 +303,7 @@ class page extends Api {
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','name'],['id'=>$rs_article_indexing['categoryID']]);
         if(empty($rs_blog_category)){
-            $rs_blog_category=['id'=>0,'name'=>"随笔"];
+            return $rs;
         }
         
         $rs['category']=$rs_blog_category;
