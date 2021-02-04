@@ -118,6 +118,9 @@ class page extends Api {
         if(!empty($tagID)){
             $obj_article_index=load("search_article_index");
             $rs_article_index=$obj_article_index->search_tags([$tagID],$lastID);
+            
+            debug::d($rs_article_index);
+            exit;
         }else{
             $fields=[
                 'limit'=>30,
@@ -154,7 +157,7 @@ class page extends Api {
         if(empty($bloggerID))   {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID','create_date'],['status'=>1]);
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_article_indexing=load("article_indexing");
