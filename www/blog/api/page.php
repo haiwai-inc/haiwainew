@@ -110,7 +110,7 @@ class page extends Api {
      * @param integer $tagID | 标签ID
      * @param integer $lastID | 最后一个postID
      */
-    public function hot_article_list($tagID=0,$lastID=0){
+    public function article_list_tag($tagID=0,$lastID=0){
         $obj_article_indexing=load("article_indexing");
         $obj_article_noindex=load("search_article_noindex");
         
