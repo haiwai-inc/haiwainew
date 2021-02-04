@@ -147,6 +147,7 @@ class search_article_index extends Search
 			$articles[]= [
 				'postID'=>$v['postID'],
 				'userID'=>$v['userID'],
+			    'create_date'=>$v['create_date'],
 				"postInfo_postID" => $v
 			];
 		}

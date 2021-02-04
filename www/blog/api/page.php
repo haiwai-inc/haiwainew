@@ -166,7 +166,7 @@ class page extends Api {
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -278,6 +278,9 @@ class page extends Api {
         //添加文章计数信息
         $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing)[0];
         
+        //添加上下文章
+        $rs_article_indexing['article_previous_next']=$this->article_previous_next($id);
+        
         return $rs_article_indexing;
     }
     
@@ -287,8 +290,43 @@ class page extends Api {
      * @param integer $id | 主贴postID
      */
     public function article_previous_next($id){
+        $rs=["category"=>[],"previous"=>[],"next"=>[]];
+        
+        //原帖信息
         $obj_article_indexing=load("article_indexing");
-        //$check_article_indexing=
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$id]);
+        if(empty($rs_article_indexing)){
+            return $rs;
+        }
+        
+        //文集信息
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getOne(['id','name'],['id'=>$rs_article_indexing['categoryID']]);
+        if(empty($rs_blog_category)){
+            return $rs;
+        }
+        
+        $rs['category']=$rs_blog_category;
+        
+        //上一篇
+        $obj_article_indexing=load("article_indexing");
+        $fields['postID,<']=$rs_article_indexing['postID'];
+        $fields['order']=['postID'=>'DESC'];
+        $rs_article['previous']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,<'=>$rs_article_indexing['postID'],"order"=>['postID'=>'DESC']]);
+        
+        //下一篇
+        $fields['postID,>']=$rs_article_indexing['postID'];
+        $fields['order']=['postID'=>'ASC'];
+        $rs_article['next']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
+        
+        //上下文信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article=$obj_article_noindex->get_postInfo($rs_article,'postID',true);
+        
+        $rs['previous']=empty($rs_article['previous'])?[]:$rs_article['previous'];
+        $rs['next']=empty($rs_article['next'])?[]:$rs_article['next'];
+        
+        return $rs;
     }
     
     /**
@@ -377,8 +415,27 @@ class page extends Api {
     }
     
     /**
+     * 文章详情页
+     * 文章 最新推荐
+     */
+    public function article_view_recent($id){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'treelevel'=>0,'postID'=>$id]);
+        if(empty($check_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //作者最新文章
+        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
+        
+        return $rs_article_indexing;
+    }
+    
+    /**
      * 文章详情页 
-     * 文章 相关
+     * 文章 相关推荐
      */
     public function article_view_related($id){
         

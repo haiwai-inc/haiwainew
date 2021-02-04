@@ -47,7 +47,7 @@
                </div>
                <button class="btn btn-round btn-primary">保存</button>
             </div>
-            <div v-if="menuId===1">
+            <div v-if="menuId===1 && authorInfor">
                <h6 class="border-bottom pb-3">账号设置</h6>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
@@ -99,14 +99,24 @@
                   </fg-input>
                   <p class="pt-3"><b>个人简介</b></p>
                   <fg-input
-                     placeholder="个人简介"
+                     placeholder="写点什么介绍你自己吧"
                      v-model="authorInfor.description"
                      >
                   </fg-input>
-                  <p class="pt-3"><b>登录账号</b> : <span>fwe998</span></p>
+                  <p class="pt-3"><b>登录账号</b> : <span>{{authorInfor.email}}</span></p>
                   <hr class="mb-4">
                   <p class="pt-3"><b>修改密码</b></p>
-                  <fg-input
+                  <el-form :model="signupForm" :rules="rules" ref="signupForm" label-width="10px">
+          
+                     <el-form-item label="" prop="password">
+                        <el-input type="password" placeholder="密码" v-model="signupForm.password" autocomplete="off"></el-input>
+                     </el-form-item>
+                     <el-form-item label="" prop="checkPassword">
+                        <el-input type="password" placeholder="确认密码" v-model="signupForm.checkPassword" autocomplete="off"></el-input>
+                     </el-form-item>
+                     
+                  </el-form>
+                  <!-- <fg-input
                      addon-left-icon="now-ui-icons objects_key-25"
                      placeholder="密码"
                      >
@@ -115,9 +125,9 @@
                      addon-left-icon="now-ui-icons objects_key-25"
                      placeholder="确认密码"
                      >
-                  </fg-input>
+                  </fg-input> -->
                </div>
-               <button class="btn btn-round btn-primary">保存</button>
+               <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">修改密码</button>
             </div>
             <div v-if="menuId===2">
                <h6 class="border-bottom pb-3">黑名单</h6>
@@ -173,16 +183,35 @@ export default {
       account.get_user_profile().then(res=>{
          if(res.status){
             this.authorInfor = res.data
+            console.log(this.authorInfor)
          }else{
-            
+
          }
       })
-      console.log(this.$store.state.user.userinfo.userinfo_id);
    },
   data(){
+     var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.signupForm.checkPassword !== '') {
+          this.$refs.signupForm.validateField('checkPassword');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.signupForm.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return{
       menuId:1,
-      authorInfor : this.$store.state.user.userinfo.userinfo_id,
+      authorInfor : null,
       show: false,
       params: {
          token: '123456798',
@@ -190,6 +219,21 @@ export default {
       },
       headers: {
          smail: '*_~'
+      },
+      
+      signupForm:{
+        password:'',
+        checkPassword:'',
+        submitDisable:false
+      },
+      rules: {
+        password: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' },
+        ],
+        checkPassword: [
+          { required: true, validator: validatePass2, trigger: 'blur' }
+        ],
       },
       imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
       image:false,
@@ -200,6 +244,32 @@ export default {
   methods:{
      toggleShow() {
             this.show = !this.show;
+      },
+      initForm(){
+         this.signupForm={
+            password:'',
+            checkPassword:'',
+         }
+      },
+      submitForm(formName) {
+         this.$refs[formName].validate((valid) => {
+         if (valid) {
+            this.signupForm.submitDisable = true;
+            account.user_password_update(this.signupForm).then(res=>{
+               console.log(res);
+               if(res.status){
+               this.initForm();
+               }else{
+               this.signErr = res.error;
+               this.signupForm.submitDisable = true;
+               }
+            })
+         } else {
+            console.log('error submit!!');
+            this.signupForm.submitDisable = false;
+            return false;
+         }
+         });
       },
       /**
        * crop success
