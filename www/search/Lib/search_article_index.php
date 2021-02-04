@@ -86,16 +86,13 @@ class search_article_index extends Search
 					"type":"integer"
 				},
 				  "create_date": {
-					"type": "date",
-					"format": "yyyy-MM-dd HH:mm:ss"
+					"type": "integer"
 				  },
 				  "edit_date": {
-					"type": "date",
-					"format": "yyyy-MM-dd HH:mm:ss"
+					"type": "integer"
 				  },
 				  "buzz_date": {
-					"type": "date",
-					"format": "yyyy-MM-dd HH:mm:ss"
+					"type": "integer"
 				  },
 				  "visible": { 
 					"type": "integer"
@@ -131,8 +128,14 @@ class search_article_index extends Search
 
 		$query["sort"]=[$this->object($order)];
 		if(!empty($last_score)){
-			$query["search_after"] = [$last_score];
+			if(is_array($last_score)){
+				$query["search_after"] = $last_score;
+			}
+			else{
+				$query["search_after"] = [$last_score];
+			}
 		}
+
 		$rs = $this->search($query,null,null);
 		$rs = json_decode(json_encode($rs), true);
 		$article_index_obj = load("article_indexing");

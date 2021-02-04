@@ -94,7 +94,7 @@ class page extends Api{
             $tag_list[] = intval($tag);
         }
         $article_index_obj = load("search_article_index");
-        $articles = $article_index_obj->search_tags($tag_list, $last_id);
+        $articles = $article_index_obj->search_tags($tag_list, $last_id, array("postID"=>array("order"=>"desc")));
 
         $tool_obj = load("search_tool");
         return $tool_obj->fetch_article_info($articles);

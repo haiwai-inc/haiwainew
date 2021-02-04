@@ -69,10 +69,27 @@
 
                   
                </div>
-               <div>
-                  <croppa v-model="myCroppa"></croppa>
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="uploadImage">确认修改</button></div>
-  
+               <div v-show = "show" v-if="show"> 
+                  
+                  <input
+      ref="input"
+      type="file"
+      name="image"
+      accept="image/*"
+      @change="setImage"
+    />
+                  <VueCropper v-show="imgSrc" ref="cropper"  :src="imgSrc" alt="Source Image" preview=".preview" aspectRatio="1"></VueCropper>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="saveImage">确认修改</button></div>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">取消</button></div>
+                <div class="preview" />
+        <div class="cropped-image">
+          <img
+            v-if="croppedImage"
+            :src="croppedImage"
+            alt="Cropped Image"
+          />
+          <div v-else class="crop-placeholder" />
+        </div>
                </div>
                <div>
                   <p class="pt-3"><b>笔名</b></p>
@@ -137,6 +154,8 @@ import {
 import avatarUpload from 'vue-image-crop-upload';
 import EleUploadImage from "vue-ele-upload-image";
 import account from './service/account';
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
 
 export default {
   name: 'profile',
@@ -145,6 +164,7 @@ export default {
    //  Avatar,
     MainMenu,
     [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete,
+    VueCropper, 
    //  'el-upload':EleUpload
    //  EleUploadImage,
    //  Croppa 
@@ -172,7 +192,8 @@ export default {
          smail: '*_~'
       },
       imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
-      image:"/img/julie.jpg",
+      image:false,
+      imgSrc:false,
       myCroppa:{}
     }
   },
@@ -227,7 +248,46 @@ export default {
         'image/jpeg',
         0.8
       );
+      },
+      setImage(e) {
+      const file = e.target.files[0];
+      if (file.type.indexOf('image/') === -1) {
+        alert('Please select an image file');
+        return;
       }
+      if (typeof FileReader === 'function') {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.imgSrc = event.target.result; 
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper.replace(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Sorry, FileReader API not supported');
+      }
+    },
+    saveImage() {
+      const userId = this.$route.params.user_id
+      this.cropedImage = this.$refs.cropper.getCroppedCanvas().toDataURL()
+      account.upload_avatar({avatar:this.cropedImage}).then(rs=>{
+
+         }).catch(err=>{
+
+         });
+      this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
+        const formData = new FormData()
+        formData.append('avatar', blob, 'name.jpeg')
+         
+      //   axios
+      //     .post('/api/user/' + userId + '/profile-photo', formData)
+      //     .then((response) => {
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error)
+      //     })
+      }, this.mime_type)
+    },
 
 
   }

@@ -89,4 +89,15 @@ class user extends Api
         $user_obj = load("search_user_login");
         return $user_obj->decrypt_token($token);
     }
+
+    /**
+     * @param string $avatar
+     * @post avatar
+     */
+    public function update_avatar($avatar){
+        // debug::d($avatar);
+        $pic_obj = load("article_pic");
+        $url = $pic_obj -> save_avatar($avatar);
+        return $url;
+    }
 }
