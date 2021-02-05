@@ -4,6 +4,18 @@
       <left-bar>{{showPage==='login'?'登录':'注册'}}</left-bar>
     </div>
     <div class="col-sm-8 col-12">
+    <!-- login tab -->
+      <div class="px-3">
+        <ul class="tab-group list-unstyled">
+              <li class="tab active">
+                <a href="#">注册</a>
+              </li>
+              <li class="tab">
+                <a href="#">登录</a>
+              </li>
+        </ul>
+      </div>
+    <!-- login tab -->
         <login-page 
           v-if="showPage==='login'"
           @onchange="isShowLogin"
@@ -94,5 +106,23 @@ html, body, #app, .wrapper, .login-index .row{
       width:350px;
       padding: 0;
     }
+}
+/* login tab */
+.login-index .tab-group .active a {
+        color: #39b8eb;
+        border-bottom: .2rem solid #39b8eb;
+}
+.login-index .tab-group li a {
+        padding: 15px;
+        color: #a0b3b0;
+        font-size: 20px;
+        float: left;
+        width: 50%;
+        text-align: center;
+        margin: 0 0 40px 0;
+}
+.login-index .tab-group  a:hover{
+        text-decoration:none;
+        color: #39b8eb
 }
 </style>

@@ -106,39 +106,38 @@ class page extends Api {
     
     /**
      * 二级页面 
-     * 热榜 文章 列表
+     * 热榜 文章
      * @param integer $tagID | 标签ID
-     * @param integer $lastID | 最后一个postID
      */
-    public function hot_article_list($tagID=0,$lastID=0){
+    public function hot_article($tagID=0){
         $obj_article_indexing=load("article_indexing");
         $obj_article_noindex=load("search_article_noindex");
         
+        $obj_memcache = func_initMemcached('cache01');
+        $rs_memcache=$obj_memcache->get("blog_hot_article");
+        
+        $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
+        
+        return $rs[$tagID];
+    }
+    
+    /**
+     * 文章详情页侧栏
+     * 文章 列表 标签
+     * @param integer $tagID | 标签ID,标签ID,标签ID
+     * @param integer $lastID | postID
+     */
+    public function article_list_tag($tagID,$lastID=0){
         //ES搜索tag
-        if(!empty($tagID)){
-            $obj_article_index=load("search_article_index");
-            $rs_article_index=$obj_article_index->search_tags([$tagID],$lastID);
-        }else{
-            $fields=[
-                'limit'=>30,
-                'visible'=>1,
-                'order'=>['count_read'=>'DESC']
-            ];
-            if(!empty($lastID)){
-                $fields['count_read,<']=$lastID;
-            }
-            
-            $rs_article_index=$obj_article_indexing->getAll(['postID','userID'],$fields);
-            
-            //ES补全postID信息
-            $rs_article_index=$obj_article_noindex->get_postInfo($rs_article_index);
-        }
+        $obj_article_index=load("search_article_index");
+        $rs_article_index=$obj_article_index->search_tags([$tagID],$lastID,["postID"=>array("order"=>"desc")]);
         
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_index=$obj_account_user->get_basic_userinfo($rs_article_index,"userID");
         
         //添加文章计数信息
+        $obj_article_indexing=load("article_indexing");
         $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
         
         return $rs_article_index;
@@ -166,7 +165,7 @@ class page extends Api {
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");

@@ -74,6 +74,10 @@ class Account extends API{
         return await this.sendget("account/user/follower_delete/?followerID="+followerID);
     }
 
+    async upload_avatar(avatar){
+        return await this.sendpost("search/user/update_avatar/", avatar)
+    }
+
 // base function 
     async sendget(url){
         try{

@@ -1,5 +1,5 @@
 <template>
-      <div class="mx-auto content">
+    <div class="mx-auto content">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="10px">
           <el-form-item
             prop="email"
