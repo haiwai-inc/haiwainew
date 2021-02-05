@@ -117,6 +117,7 @@ class page extends Api {
         //ES搜索tag
         if(!empty($tagID)){
             $obj_article_index=load("search_article_index");
+            //TODO lastID 应该是最后一篇文章的阅读数，count_read
             $rs_article_index=$obj_article_index->search_tags([$tagID],$lastID);
         }else{
             $fields=[
