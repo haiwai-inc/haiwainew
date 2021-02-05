@@ -53,33 +53,70 @@ class user extends Api {
     /**
      * 博客主页 编辑器页 
      * 文集 添加
+     * @param integer $name|文集名
      */
-    public function category_add(){
+    public function category_add($name){
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        
+        $obj_blog_category->insert(['bloggerID'=>$_SESSION['id'],'name'=>$name]);
+        return true;
     }
     
     /**
      * 编辑器页 
      * 文集 修改
+     * @param integer $name|文集名
+     * @param integer $id|文集id
      */
-    public function category_update(){
+    public function category_update($name,$id){
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne("*",['id,!='=>$id,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        
+        $obj_blog_category->update(['name'=>$name],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
+        return true;
     }
     
     /**
      * 编辑器页 
      * 文集 删除
+     * @param integer $id|文集id
      */
-    public function category_delete(){
+    public function category_delete($id){
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
+        $obj_blog_category=load("blog_category");
+        $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
+        return true;
     }
     
     /**
      * 编辑器页
      * 文集 名字 拍重
+     * @param integer $name|文集名
      */
-    public function category_name_check(){
+    public function category_name_check($name){
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        
+        return true;
     }
     
     /**
