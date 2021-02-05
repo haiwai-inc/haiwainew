@@ -179,7 +179,6 @@ class search_article_noindex extends Search
             //是否点赞
             $rs[$k]["postInfo_{$hashID}"]['is_buzz']=(!empty($_SESSION['id']) && in_array($_SESSION['id'],$hash_posts[$v[$hashID]]['buzz']))?1:0;
         }
-	    
 	    return $rs;
 	}
 

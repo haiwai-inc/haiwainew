@@ -117,7 +117,15 @@ class search_article_index extends Search
 	}
 	
 
-	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc"))){
+	/**
+	 * 根据标签ID搜索文章
+	 * @param array $tags | array of tag ids
+	 * @param array/float $last_score | array of last articles' values or single value for paging, consistent with order
+	 * @param array $order | how the result is sorted
+	 * @param int $limit | number of results per search
+	 * 
+	 */
+	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc")), $limit = 30){
 		$query["should"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
@@ -137,7 +145,7 @@ class search_article_index extends Search
 			}
 		}
 
-		$rs = $this->search($query,null,null);
+		$rs = $this->search($query,null,null, $limit);
 		$rs = json_decode(json_encode($rs), true);
 		$article_index_obj = load("article_indexing");
 		$rs = $article_index_obj -> format_string($rs);
