@@ -112,7 +112,8 @@ class search_article_index extends Search
 	}
 
 	private function get_time_string($timestamp){
-		return gmdate("Y-m-d h:m:s", $timestamp);
+		// return gmdate("Y-m-d h:m:s", $timestamp);
+		return $timestamp;
 	}
 	
 
