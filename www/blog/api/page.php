@@ -106,7 +106,7 @@ class page extends Api {
     
     /**
      * 二级页面 
-     * 热榜 文章 列表
+     * 文章 列表 标签
      * @param integer $tagID | 标签ID
      * @param integer $lastID | 最后一个postID
      */
