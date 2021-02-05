@@ -107,7 +107,7 @@ export default {
   methods:{
     follower_add(id){
       if(this.loginuserID!=-1){
-        account.follower_add(id).then(res=>{console.log(res.data)
+        account.follower_add(id).then(res=>{console.log(res.data,this.data)
           if(res.data == true) {
             data.userinfo_userID.is_follower = 1;
           }else{

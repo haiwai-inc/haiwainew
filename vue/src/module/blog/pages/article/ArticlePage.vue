@@ -109,11 +109,25 @@
               </span>
                <!-- 左边相同样式 -->
                <span v-for="(item,index) in recommend.authorArticle" :key="index">
-                 <recommend-list-item :data="item"></recommend-list-item>
+                 <recommend-list-item :data="item" v-if="index<5"></recommend-list-item>
                </span>
+               <div class="justify-content-right border-top d-flex text-right ">
+                 <router-link  :to="'/blog/user/'+articleDetail.data.userID">
+                  <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
+                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <title>more</title>
+                        <g id="more" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                           <path d="M11.5740443,6.24199451 L11.5740443,20.2419945 M5,12 L11.5,6 L18,12" id="Arrow" stroke="#6D7278" stroke-width="2" transform="translate(11.500000, 13.120997) rotate(46.000000) translate(-11.500000, -13.120997) "></path>
+                           <rect id="Rectangle" stroke="#6D7278" stroke-width="2" x="3" y="3" width="18" height="18" rx="1"></rect>
+                        </g>
+                     </svg>
+                     更多
+                  </button>
+                 </router-link>
+               </div>
             </div>
           <!-- r2 -->
-            <div class="box">
+            <div class="box" v-if="false">
                <div class="title  d-flex justify-content-between">
                   <h5>文集-芳草渡 (56) </h5>
                </div>
@@ -136,19 +150,22 @@
                </div>
             </div>
           <!-- r3 -->
-            <div class="box my-3" v-if="recommend.collections.length>0">
+            <div class="box my-3" v-if="recommend.articles.length>0">
                <div class="title  d-flex justify-content-between">
                   <h5>相关推荐</h5>
-                  <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
+                  <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
                </div>
-               <span v-for="(item,index) in recommend.collections" :key="index">
-                 <recommend-list-item :data="item"></recommend-list-item>
+               <span v-for="(item,index) in recommend.articles" :key="index">
+                 <recommend-list-item :data="item" v-if="index<10"></recommend-list-item>
                </span>
             </div>
           <!-- r3 end-->
         </div>
       </div>
     </div>
+    <!-- <el-dialog :visible.sync="showLogin" width="395px"> -->
+      <login-dialog ref="dialog"></login-dialog>
+    <!-- </el-dialog> -->
   </div>
 </template>
 <script>
@@ -162,6 +179,8 @@ import PreviousNextBar from './PreviousNextBar';
 import blog from '../../blog.service';
 import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
+import LoginDialog from '../../../user/login/LoginDialog.vue';
+
 export default {
   name: 'article-page',
   components: {
@@ -171,7 +190,8 @@ export default {
     Comment,
     PreviousNextBar,
     [Button.name]: Button,
-    [Popover.name]:Popover
+    [Popover.name]:Popover,
+    LoginDialog
   },
   mounted: function () {
     this.article_view();
@@ -182,6 +202,7 @@ export default {
         this.loginuserID = res.data.UserID ;
       }
     });
+    console.log(this.$store.state.user)
   },
   computed:{
     disabled () {
@@ -189,6 +210,15 @@ export default {
     }
   },
   methods:{
+    isLogin(){
+      // return this.$store.state.user.userinfo?true:false
+      if(!this.$store.state.user.userinfo){
+        this.showLogin = true;
+      }else{
+        return true
+      }
+    },
+
     article_view(){
       this.showpage = false;
       this.showcomment = false;
@@ -200,18 +230,24 @@ export default {
         this.shareItem.title = res.data.postInfo_postID.title;
         this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
         this.showpage = true;
-        this.getRecommend(res,0);
+        this.initRecommendProp(res);
         this.getNewArticle(res,0);
         this.getComment();
       })
     },
-    getRecommend(res,lastID){
+    initRecommendProp(res){
       var arr = res.data.postInfo_postID.tags;
-      var tag = arr.length>0?arr.toString():''
-      blog.hot_article_list(tag,lastID).then(res=>{
+      this.recommend.props.tags = arr.length>0?arr.toString():''
+      this.recommend.props.lastID = 0;
+      this.getRecommend()
+    },
+    getRecommend(){
+      blog.hot_article_list(this.recommend.props.tags,this.recommend.props.lastID).then(res=>{
         console.log(res);
         if(res.status){
-          this.recommend.collections = res.data
+          let arr = res.data
+          this.recommend.articles = arr;
+          this.recommend.props.lastID = arr.length>10?arr[9].postID:arr.length!=0?arr[arr.length-1].postid:0;
         }
       })
     },
@@ -225,17 +261,19 @@ export default {
       })
     },
     article_reply_add(){
-      let obj = {
-        article_data:{msgbody:this.replymsgbody,
-        postID:this.articleDetail.data.postID,
-        typeID:1}
+      if(this.$refs.dialog.isLogin()){ //权限判断
+        let obj = {
+          article_data:{msgbody:this.replymsgbody,
+          postID:this.articleDetail.data.postID,
+          typeID:1}
+        }
+        this.replybtndisable = true;
+        blog.article_reply_add(obj).then(res=>{
+          this.replybtndisable = false;
+          this.getFirst20();
+          this.replymsgbody="";
+        })
       }
-      this.replybtndisable = true;
-      blog.article_reply_add(obj).then(res=>{
-        this.replybtndisable = false;
-        this.getFirst20();
-        this.replymsgbody="";
-      })
     },
     checkstatus(){
       this.replybtndisable = this.replymsgbody?false:true;
@@ -273,10 +311,12 @@ export default {
     },
     // 喜欢
     like(){
-      if( this.articleDetail.data.postInfo_postID.is_buzz==0){
-        this.buzz_add(this.articleDetail.data);
-      }else{
-        this.buzz_delete(this.articleDetail.data);
+      if(this.$refs.dialog.isLogin()){ //权限判断
+        if( this.articleDetail.data.postInfo_postID.is_buzz==0){
+          this.buzz_add(this.articleDetail.data);
+        }else{
+          this.buzz_delete(this.articleDetail.data);
+        }
       }
     },
     buzz_add(item){
@@ -297,7 +337,9 @@ export default {
     },
     // 收藏
     bookmark(){
-      this.articleDetail.data.postInfo_postID.is_bookmark?this.bookmark_delete(this.articleDetail.data):this.bookmark_add(this.articleDetail.data)
+      if(this.$refs.dialog.isLogin()){ //权限判断
+        this.articleDetail.data.postInfo_postID.is_bookmark?this.bookmark_delete(this.articleDetail.data):this.bookmark_add(this.articleDetail.data)
+      }
     },
     bookmark_add(item){
       blog.bookmark_add(item.postID).then(res=>{
@@ -312,11 +354,12 @@ export default {
       })
     },
     test(){
-      console.log("gogo")
+      console.log('ok')
     }
   },
   data() {
     return {
+      showLogin:false,
       icons:icons,
       loginuserID:-1,
       showcomment:false,
@@ -359,7 +402,11 @@ export default {
       ],
       recommend:{
         authorArticle:[],
-        collections:[]
+        articles:[],
+        props:{
+          lastID:0,
+          tags:''
+        }
       }
     };
   },

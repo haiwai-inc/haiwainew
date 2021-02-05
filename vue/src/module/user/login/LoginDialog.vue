@@ -1,14 +1,11 @@
 <template>
-  <div class="row">
-    <div class="col-sm-4 login-left">
-      <left-bar>{{showPage==='login'?'登录':'注册'}}</left-bar>
-    </div>
-    <div class="col-sm-8 col-12">
+  <div style="width:350px">
+    <el-dialog :visible.sync="showLogin" width="395px">
         <login-page 
           v-if="showPage==='login'"
           @onchange="isShowLogin"
           @onloginerr="showNoverify"
-          :redirect="'/'"
+          @closedialog="showLogin=false"
         ></login-page>
         <signup-page 
           v-if="showPage==='signin'"
@@ -19,22 +16,23 @@
           :data="signErr"
           @onchange="isShowLogin"
         ></signup-error>
-    </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
-import LeftBar from './LeftBar';
 import SignupError from './SignError';
 
 export default {
-  name: 'login-index',
-  bodyClass: 'login-index',
+  name: 'login-dialog',
+  props:{
+    // show_dialog:{type:Boolean,default:false}
+    // show_dialog:Boolean
+  },
   components: {
     LoginPage,
     SignupPage,
-    LeftBar,
     SignupError,
   },
   mounted(){
@@ -55,7 +53,8 @@ export default {
       signErr:{
         error:'',
         id:''
-      }
+      },
+      showLogin:false
     };
   },
   methods:{
@@ -67,14 +66,20 @@ export default {
       this.signErr.id=e[1];
       this.showPage='verified';
       console.log(this.signErr)
-    }
+    },
+    isLogin(){
+      // return this.$store.state.user.userinfo?true:false
+      if(!this.$store.state.user.userinfo){
+        this.showLogin = true;
+      }else{
+        return true
+      }
+    },
   }
 };
 </script>
 <style>
-html, body, #app, .wrapper, .login-index .row{
-  height:100%;
-}
+
 .el-input input{
   border-radius: 20px;
 }

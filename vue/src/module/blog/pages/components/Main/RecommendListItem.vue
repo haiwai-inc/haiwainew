@@ -6,8 +6,8 @@
             <div class="name">{{data.postInfo_postID.title}}</div>
         </div>
         <div class="d-flex justify-content-between my-2" v-if="type==='default'">
-            <div class="descrip">阅读 . {{data.postInfo_postID.count_read}}</div>
-            <div class="descrip">{{data.postInfo_postID.edit_date}}</div>
+            <div class="descrip">阅读 . {{data.countinfo_postID.count_read}}</div>
+            <div class="descrip">{{data.create_date*1000 | formatDate}}</div>
         </div>
       </div>
       <div class="col-2" v-if="data.postInfo_postID.s_pic!=='' && type=='default'" >
@@ -16,6 +16,7 @@
     </div>
 </template>
 <script>
+import {formatDate} from '@/directives/formatDate.js';
 export default {
   name: 'recommend-list-item',
   props: {
@@ -31,6 +32,12 @@ export default {
       let url = '/blog/p/'+id
       this.$router.push(url);
       this.$router.go(url);
+    }
+  },
+  filters: {
+    formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
     }
   }
 };

@@ -30,7 +30,7 @@ class Blog extends API{
    * 返回热榜博文列表
    */
   async hot_article_list(tagID,lastid){
-    return await this.sendget("blog/page/hot_article_list/?tagID="+tagID+"&lastID="+lastid);
+    return await this.sendget("blog/page/article_list_tag/?tagID="+tagID+"&lastID="+lastid);
   }
 
   /**

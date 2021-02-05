@@ -97,6 +97,9 @@ import account from "../service/account";
 
 export default {
   name: 'login-page',
+  props:{
+    redirect:{type:String,default:""}
+  },
   components: {
     [Button.name]: Button,
     [Checkbox.name]: Checkbox,
@@ -194,13 +197,13 @@ export default {
         'onfailure': this.onGoogleFailure,
       });
     AppleID.auth.init({
-                clientId : 'serviceid.haiwai.blog',
-                scope : 'email',
-                redirectURI : 'http://local.haiwai.com:8080/login',
-                state:"abc",
-                usePopup : true,
-                // response_mode: "query" //or false defaults to false
-            });
+        clientId : 'serviceid.haiwai.blog',
+        scope : 'email',
+        redirectURI : 'http://local.haiwai.com:8080/login',
+        state:"abc",
+        usePopup : true,
+        // response_mode: "query" //or false defaults to false
+    });
     
     this.lineSignin();
   },
@@ -210,7 +213,12 @@ export default {
       },
       setLoginState(res){
         this.$store.state.user.userinfo = res.data;
-        localStorage.setItem('loginState', res.state);
+        if(this.redirect!==''){
+          this.$router.push(this.redirect);
+        }else{
+          this.$emit('closedialog')
+        }
+        // localStorage.setItem('loginState', res.state);
       },
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile();
@@ -218,7 +226,6 @@ export default {
         account.google_sign_in(id_token).then(res=>{
           if(res.status){
             this.setLoginState(res);
-            this.$router.push('/');
             console.log(res)
           }else{
           }
@@ -275,7 +282,6 @@ export default {
                 console.log(res);
                 if(res.status){
                   this.setLoginState(res);
-                  this.$router.push('/')
                 }else{
                   this.loginForm.submitDisable = false;
                 }
@@ -288,7 +294,6 @@ export default {
                 console.log(res);
                 if(res.status){
                   this.setLoginState(res);
-                  this.$router.push('/')
                 }else{
                   this.wxcForm.submitDisable = false;
                 }
