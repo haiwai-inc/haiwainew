@@ -6,7 +6,7 @@
     <div class="col-sm-8 col-12">
     <!-- login tab -->
       <div class="px-3">
-        <ul class="tab-group">
+        <ul class="tab-group list-unstyled">
               <li class="tab active">
                 <a href="#">注册</a>
               </li>
@@ -107,11 +107,6 @@ html, body, #app, .wrapper, .login-index .row{
     }
 }
 /* login tab */
-.login-index .tab-group {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 30px 0;
-}
 .login-index .tab-group .active a {
         color: #39b8eb;
         border-bottom: .2rem solid #39b8eb;
@@ -124,5 +119,9 @@ html, body, #app, .wrapper, .login-index .row{
         width: 50%;
         text-align: center;
         margin: 0 0 40px 0;
+}
+.login-index .tab-group  a:hover{
+        text-decoration:none;
+        color: #39b8eb
 }
 </style>
