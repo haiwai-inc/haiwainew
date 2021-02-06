@@ -96,13 +96,16 @@ export default {
     IconV
   },
   mounted: function () {
-    account.login_status().then(res=>{ //判断是否登录 - 开发环境
-      if(res.data==undefined){
-        this.loginuserID = -1
-      }else{
-        this.loginuserID = res.data.UserID ;
-      }
-    });
+    let userinfor = this.$store.state.user.userinfo
+    this.loginuserID = userinfor?userinfor.userID:-1;
+    // this.islogin();
+    // account.login_status().then(res=>{ //判断是否登录 - 开发环境
+    //   if(res.data==undefined){
+    //     this.loginuserID = -1
+    //   }else{
+    //     this.loginuserID = res.data.UserID ;
+    //   }
+    // });
   },
   methods:{
     follower_add(id){
@@ -114,6 +117,8 @@ export default {
             this.$message.error(res.error);
           }
         });
+      }else{
+        this.$emit('opendialog')
       }
     },
     follower_delete(id){

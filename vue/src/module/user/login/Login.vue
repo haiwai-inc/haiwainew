@@ -5,16 +5,16 @@
     </div>
     <div class="col-sm-8 col-12">
     <!-- login tab -->
-      <div class="px-3">
+      <!-- <div class="px-3">
         <ul class="tab-group list-unstyled">
-              <li class="tab active">
-                <a href="#">注册</a>
-              </li>
               <li class="tab">
                 <a href="#">登录</a>
               </li>
+              <li class="tab active">
+                <a href="#">注册</a>
+              </li>
         </ul>
-      </div>
+      </div> -->
     <!-- login tab -->
         <login-page 
           v-if="showPage==='login'"

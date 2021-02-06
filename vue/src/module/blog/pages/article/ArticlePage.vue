@@ -11,7 +11,7 @@
             <h4>{{articleDetail.data.postInfo_postID.title}}</h4>
             <div class="d-flex justify-content-between">
               <span class="blogger-box">
-                <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item>
+                <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
             
             <span class="media-icons">
@@ -91,9 +91,9 @@
               v-for="item in comment"
               :key="item.postID"
               :data="item"
-              :loginuserID="loginuserID"
               :author="articleDetail.data.userID"
-              v-on:regetcomment="rewrite"
+              @regetcomment="rewrite"
+              @opendialog="$refs.dialog.isLogin()"
               ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
@@ -105,7 +105,7 @@
          <!-- r1 -->
             <div class="box my-3">
               <span class="blogger-box">
-                <bloger-list-item :data="articleDetail.data" type="small"></bloger-list-item>
+                <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
                <!-- 左边相同样式 -->
                <span v-for="(item,index) in recommend.authorArticle" :key="index">
@@ -195,14 +195,7 @@ export default {
   },
   mounted: function () {
     this.article_view();
-    account.login_status().then(res=>{ //判断是否登录
-      if(res.data==undefined){
-        this.loginuserID = -1
-      }else{
-        this.loginuserID = res.data.UserID ;
-      }
-    });
-    console.log(this.$store.state.user)
+    
   },
   computed:{
     disabled () {
@@ -210,21 +203,11 @@ export default {
     }
   },
   methods:{
-    isLogin(){
-      // return this.$store.state.user.userinfo?true:false
-      if(!this.$store.state.user.userinfo){
-        this.showLogin = true;
-      }else{
-        return true
-      }
-    },
-
     article_view(){
       this.showpage = false;
       this.showcomment = false;
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
-        console.log(res);
         this.articleDetail = res;
         let descrip = res.data.postInfo_postID.msgbody
         this.shareItem.title = res.data.postInfo_postID.title;
@@ -233,7 +216,7 @@ export default {
         this.initRecommendProp(res);
         this.getNewArticle(res,0);
         this.getComment();
-      })
+      });
     },
     initRecommendProp(res){
       var arr = res.data.postInfo_postID.tags;

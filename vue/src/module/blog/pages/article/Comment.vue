@@ -143,7 +143,6 @@ export default {
   props:{
       data:{},
       author:Number,
-      loginuserID:Number
   },
   components: {
       Avatar,
@@ -155,7 +154,8 @@ export default {
       [Popover.name]:Popover
   },
   mounted: function () {
-    
+    let userinfor = this.$store.state.user.userinfo
+    this.loginuserID = userinfor?userinfor.userID:-1;
     // console.log(this.data)
   },
   computed:{
@@ -183,11 +183,13 @@ export default {
     // },
     // 点赞、取消点赞
     like(item){
+      
       this.currentItem = item ;
       if(this.loginuserID!=-1){
         item.postInfo_postID.is_buzz==0?this.buzz_add(item):this.buzz_delete(item);
       }else{
-        this.modals.login = true ;
+        // this.modals.login = true ;
+        this.$emit('opendialog')
       }
         console.log(this.currentItem);
       
@@ -207,14 +209,13 @@ export default {
     // 回复
     reply(item){
       this.currentItem = item ;
-      if(item.treelevel==2){
-        this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
-      }else{
-        this.replymsgbody = "";
-      }
-      console.log(this.currentItem)
-      // this.modals.reply = true;
-      // this.replyusername = item.userinfo_userID.username;
+      
+        if(item.treelevel==2){
+          this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
+        }else{
+          this.replymsgbody = "";
+        }
+      
     },
     article_reply_add(){
       let obj = {
@@ -223,12 +224,16 @@ export default {
         typeID:1}
       }
       this.replybtndisable = true;
-      blog.article_reply_add(obj).then(res=>{
-        this.replybtndisable = false;
-        this.regetComment();
-        this.replymsgbody="";
-        this.modals.reply = false;
-      })
+      if(this.loginuserID!=-1){
+        blog.article_reply_add(obj).then(res=>{
+          this.replybtndisable = false;
+          this.regetComment();
+          this.replymsgbody="";
+          this.modals.reply = false;
+        })
+      }else{
+        this.$emit('opendialog')
+      }
     },
     // 删除回复
     article_reply_delete(id){
@@ -254,6 +259,7 @@ export default {
   },
   data(){
     return {
+      loginuserID:-1,
       replyshowstatus:'显示',
       replymsgbody:'',
       replyusername:'',
