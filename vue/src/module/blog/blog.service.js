@@ -152,6 +152,39 @@ class Blog extends API{
   }
 
   /**
+   * 
+   * @param String  $name:文集名称 
+   */
+  async category_add(name){
+    return await this.sendget("/blog/user/category_add/?name="+name)
+  }
+
+  /**
+   * 
+   * @param String $name:文集名称
+   * @param Number id ：文集id
+   */
+  async category_update(name,id){
+    return await this.sendget("/blog/user/category_update/?name="+name)
+  }
+
+  /**
+   * 
+   * @param Number $id :文集id
+   */
+  async category_delete(id){
+    return await this.sendget("/blog/user/category_delete/?id="+id)
+  }
+
+  /**
+   * 
+   * @param String $name:文集名称 
+   */
+  async category_name_check(name){
+    return await this.sendget("/blog/user/category_name_check/?name="+name)
+  }
+
+  /**
    * 返回文集列表
    * @param number $bloggerID 
    */

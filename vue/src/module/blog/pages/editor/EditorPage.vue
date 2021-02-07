@@ -344,7 +344,7 @@ import lang from "./language";
 import blog from "../../blog.service";
 
 export default {
-  name: "profile",
+  name:"editor-page",
   components: {
     CategoryList,
     CategoryArticleList,

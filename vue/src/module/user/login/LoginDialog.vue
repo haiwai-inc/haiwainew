@@ -6,6 +6,7 @@
           @onchange="isShowLogin"
           @onloginerr="showNoverify"
           @closedialog="showLogin=false"
+          :redirect="redirect"
         ></login-page>
         <signup-page 
           v-if="showPage==='signin'"
@@ -29,6 +30,7 @@ export default {
   props:{
     // show_dialog:{type:Boolean,default:false}
     // show_dialog:Boolean
+    redirect:{type:String,default:""}
   },
   components: {
     LoginPage,

@@ -35,11 +35,22 @@
 
     <!-- Add Wenji Modal -->
     <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">
-        请编辑新文集名称
+      <h4 slot="header" class="title title-up" style="padding-top:5px" @click="test()">
+        请输入新文集名称
       </h4>
+      <el-form :model="catForm" ref="dynamicValidateForm" label-width="0px">
+        <el-form-item
+          prop="name"
+          label=""
+          :rules="[
+            { required: true, message: '请输入新文集名称', trigger: 'blur' },
+          ]"
+        >
+          <el-input v-model="catForm.name"></el-input>
+        </el-form-item>
+      </el-form>
       <p>
-        <fg-input placeholder="文集名"></fg-input>
+        <!-- <fg-input placeholder="文集名" v-model="categories.name"></fg-input> -->
       </p>
       <template slot="footer">
         <n-button
@@ -50,7 +61,7 @@
         >
           取消
         </n-button>
-        <n-button type="primary" round simple>保存</n-button>
+        <n-button type="primary" round simple @click="categoryAdd()">保存</n-button>
       </template>
     </modal>
 
@@ -77,22 +88,15 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
-      blog.category_list(3).then(res=>{
-          console.log(res);
-          this.wenjiList = res.data;
-          this.wenjiActiveId = this.wenjiList[0].id
+      blog.category_list(this.$store.state.user.userinfo.UserID).then(res=>{
+        console.log(res);
+        this.wenjiList = res.data;
+        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
       })
-    },
-    methods:{
-      getCategories(id){
-        blog.category_list(id).then(res=>{
-          console.log(res);
-          this.wenjiList = res.data;
-        })
-      },
     },
     data(){
         return{
+          userID:this.$store.state.user.userinfo.UserID,
           iconmore3v: HaiwaiIcons.iconmore3v,
           icon_plus:HaiwaiIcons.icon_plus,
           icon_edit:HaiwaiIcons.icon_edit,
@@ -104,6 +108,13 @@ export default {
             publish: false,
             schedule: false,
           },
+          categories:{
+            name:'',
+            list:''
+          },
+          catForm:{
+            name:''
+          }
         }
     },
     methods:{
@@ -111,8 +122,20 @@ export default {
         this.wenjiActiveId = wid;
         // this.articleActiveId = aid;
       },
-      test(e){
-        console.log(e)
+      categoryAdd(){
+        blog.category_add(this.catForm.name).then(res=>{
+          // console.log(res);
+          if(res.status)this.getCategories(this.userID);
+        })
+      },
+      getCategories(id){
+        blog.category_list(id).then(res=>{
+          console.log(res);
+          if(res.status)this.wenjiList = res.data;
+        })
+      },
+      test(){
+        console.log(this.$store.state.user.userinfo)
       }
     }
 }

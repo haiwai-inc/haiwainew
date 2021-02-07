@@ -85,10 +85,10 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
-      blog.category_list(3).then(res=>{
-          console.log(res);
-          this.wenjiList = res.data;
-          this.wenjiActiveId = this.wenjiList[0].id
+      blog.category_list(this.$store.state.user.userinfo.userID).then(res=>{
+        console.log(res);
+        this.wenjiList = res.data;
+        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
       })
     },
     methods:{

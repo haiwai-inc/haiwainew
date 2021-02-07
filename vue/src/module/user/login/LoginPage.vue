@@ -215,8 +215,10 @@ export default {
         this.$store.state.user.userinfo = res.data;
         if(this.redirect!==''){
           this.$router.push(this.redirect);
+          console.log(this.redirect)
         }else{
           this.$emit('closedialog')
+          console.log(this.redirect)
         }
         // localStorage.setItem('loginState', res.state);
       },

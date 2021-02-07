@@ -119,7 +119,7 @@
         type="primary" 
         round 
         simple 
-        @click="$router.push('/blog/write')"
+        @click="$refs.dialog.isLogin()"
         class="editbtn">
           <icon-pen class="editicon"></icon-pen>写博客
         </n-button>
@@ -128,7 +128,9 @@
     <template slot="after-menu">
       
     </template>
+    <login-dialog ref="dialog" :redirect="'/blog/write'"></login-dialog>
   </navbar>
+  
 </template>
 
 <script>
@@ -137,6 +139,7 @@ import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupIn
 import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
 import account from '../module/user/service/account';
+import LoginDialog from '../module/user/login/LoginDialog';
 
 export default {
   name: 'main-navbar',
@@ -155,6 +158,7 @@ export default {
     [Button.name]: Button,
     // [Autocomplete.name]: Autocomplete,
     IconPen,
+    LoginDialog
   },
   data(){
     return {
