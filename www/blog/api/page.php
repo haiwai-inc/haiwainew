@@ -469,14 +469,13 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $fields=[
             'bloggerID'=>$rs_blog_category['bloggerID'],
-            'visible'=>1,
             'categoryID'=>$id,
             'treelevel'=>0,
         ];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date','visible'],$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");
