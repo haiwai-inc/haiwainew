@@ -32,6 +32,7 @@ class user extends Api {
             "treelevel"=>0,
             "create_date"=>$time,
             "edit_date"=>$time,
+            "visible"=>empty($article_data['visible'])?1:-1,
         ];
         $obj_article_indexing->insert($fields_indexing);
         $post_tbn=substr('0'.$_SESSION['id'],-1);
