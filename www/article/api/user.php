@@ -154,6 +154,7 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
+     * @response /article/api_response/article_draft_add.txt
      */
     public function article_draft_add($article_data,$module_data){
         //添加文章 tag
@@ -194,6 +195,7 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
+     * @response /article/api_response/article_draft_update.txt
      */
     public function article_draft_update($article_data,$module_data){
         //添加文章 tag
