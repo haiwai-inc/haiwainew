@@ -76,6 +76,12 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
         
+        //删除草稿
+        if(!empty($article_data['draftID'])){
+            $obj_article_draft=load("article_draft");
+            $obj_article_draft->remove(['id'=>$article_data['draftID']]);
+        }
+        
         return true;
     }
     
@@ -156,7 +162,7 @@ class user extends Api {
      * @post article_data,module_data
      * @response /article/api_response/article_draft_add.txt
      */
-    public function article_draft_add($article_data,$module_data){
+    public function article_draft_add($article_data="",$module_data=""){
         //添加文章 tag
         if(!empty($article_data['tagname'])){
             $obj_article_tag=load("article_tag");
@@ -222,16 +228,18 @@ class user extends Api {
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
         ];
-        $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['postID']]);
+        $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
         return true;
     }
     
     /**
      * 编辑器页
      * 文章 草稿 删除
+     * @param obj $id | 草稿的id
     */
     public function article_draft_delete($id){
-        
+        $obj_article_draft=load("article_draft");
+        $obj_article_draft->remove(['id'=>$id]);
     }
     
     /**

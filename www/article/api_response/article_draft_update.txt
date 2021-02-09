@@ -7,7 +7,7 @@ $article_data=[
         "测试用户1",
         "测试用户3"
     ],
-    "postID"=>144816,
+    "draftID"=>144816,
     "typeID"=>1,
 ];
 $module_data=[
