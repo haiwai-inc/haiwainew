@@ -11,7 +11,7 @@ class user extends Api {
      * 编辑器页 
      * 文章 添加
      * @param obj $article_data | 文章的数据
-     * @param obj $module_data | 博客的数据
+     * @param obj $module_data | 组件的数据
      * @post article_data,module_data
      * @response /article/api_response/article_add.txt
      */
@@ -32,7 +32,6 @@ class user extends Api {
             "treelevel"=>0,
             "create_date"=>$time,
             "edit_date"=>$time,
-            "visible"=>empty($article_data['visible'])?1:-1,
         ];
         $obj_article_indexing->insert($fields_indexing);
         $post_tbn=substr('0'.$_SESSION['id'],-1);
@@ -84,7 +83,7 @@ class user extends Api {
      * 编辑器页
      * 文章 修改
      * @param obj $article_data | 文章的数据
-     * @param obj $module_data | 博客的数据
+     * @param obj $module_data | 组件的数据
      * @post article_data,module_data
      * @response /article/api_response/article_update.txt
      */
@@ -147,6 +146,90 @@ class user extends Api {
         $obj_article_noindex->fetch_and_insert([$rs_article_post['postID']]);
         
         return true;
+    }
+    
+    /**
+     * 编辑器页
+     * 文章 草稿 添加
+     * @param obj $article_data | 文章的数据
+     * @param obj $module_data | 组件的数据
+     * @post article_data,module_data
+     */
+    public function article_draft_add($article_data="",$module_data=""){
+        //添加文章 tag
+        if(!empty($article_data['tagname'])){
+            $obj_article_tag=load("article_tag");
+            foreach($article_data['tagname'] as $v){
+                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
+                if(empty($check_article_tag)){
+                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
+                }else{
+                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
+                }
+                $tagID[]=$check_article_tag['id'];
+            }
+            $tagID=implode(",",$tagID);
+        }
+        
+        $obj_article_draft=load("article_draft");
+        $time=times::getTime();
+        $fields=[
+            "typeID"=>empty($article_data['typeID'])?"":$article_data['typeID'],
+            "userID"=>$_SESSION['id'],
+            "bloggerID"=>$module_data['bloggerID'],
+            "categoryID"=>$module_data['categoryID'],
+            "tagID"=>empty($tagID)?"":$tagID,
+            "create_date"=>$time,
+            "edit_date"=>$time,
+            "title"=>empty($article_data['title'])?"":$article_data['title'],
+            "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+        ];
+        $obj_article_draft->insert($fields);
+        return true;
+    }
+    
+    /**
+     * 编辑器页
+     * 文章 草稿 修改
+     * @param obj $article_data | 文章的数据
+     * @param obj $module_data | 组件的数据
+     * @post article_data,module_data
+     */
+    public function article_draft_update($article_data="",$module_data=""){
+        //添加文章 tag
+        if(!empty($article_data['tagname'])){
+            $obj_article_tag=load("article_tag");
+            foreach($article_data['tagname'] as $v){
+                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
+                if(empty($check_article_tag)){
+                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
+                }else{
+                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
+                }
+                $tagID[]=$check_article_tag['id'];
+            }
+            $tagID=implode(",",$tagID);
+        }
+        
+        $obj_article_draft=load("article_draft");
+        $time=times::getTime();
+        $fields=[
+            "categoryID"=>$module_data['categoryID'],
+            "tagID"=>empty($tagID)?"":$tagID,
+            "edit_date"=>$time,
+            "title"=>empty($article_data['title'])?"":$article_data['title'],
+            "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+        ];
+        $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['postID']]);
+        return true;
+    }
+    
+    /**
+     * 编辑器页
+     * 文章 草稿 删除
+    */
+    public function article_draft_delete($id){
+        
     }
     
     /**
