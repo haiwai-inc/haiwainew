@@ -155,7 +155,7 @@ class user extends Api {
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
      */
-    public function article_draft_add($article_data="",$module_data=""){
+    public function article_draft_add($article_data,$module_data){
         //添加文章 tag
         if(!empty($article_data['tagname'])){
             $obj_article_tag=load("article_tag");
@@ -176,8 +176,8 @@ class user extends Api {
         $fields=[
             "typeID"=>empty($article_data['typeID'])?"":$article_data['typeID'],
             "userID"=>$_SESSION['id'],
-            "bloggerID"=>$module_data['bloggerID'],
-            "categoryID"=>$module_data['categoryID'],
+            "bloggerID"=>empty($module_data['bloggerID'])?0:$module_data['bloggerID'],
+            "categoryID"=>empty($module_data['categoryID'])?0:$module_data['categoryID'],
             "tagID"=>empty($tagID)?"":$tagID,
             "create_date"=>$time,
             "edit_date"=>$time,
@@ -195,7 +195,7 @@ class user extends Api {
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
      */
-    public function article_draft_update($article_data="",$module_data=""){
+    public function article_draft_update($article_data,$module_data){
         //添加文章 tag
         if(!empty($article_data['tagname'])){
             $obj_article_tag=load("article_tag");
@@ -214,7 +214,7 @@ class user extends Api {
         $obj_article_draft=load("article_draft");
         $time=times::getTime();
         $fields=[
-            "categoryID"=>$module_data['categoryID'],
+            "categoryID"=>empty($module_data['categoryID'])?0:$module_data['categoryID'],
             "tagID"=>empty($tagID)?"":$tagID,
             "edit_date"=>$time,
             "title"=>empty($article_data['title'])?"":$article_data['title'],
