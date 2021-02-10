@@ -176,9 +176,102 @@ class user extends Api {
         return $rs_article_indexing;
     }
     
+    /**
+     * 编辑器页
+     * 文章 列表
+     * @param integer $id | 文集ID
+     * @param String $lastID|普通文章postID,草稿文章id
+     */
+    public function article_list($id,$lastID=""){
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>$id]);
+        if(empty($rs_blog_category)) {$this->error="此文集不存在";$this->status=false;return false;}
+        
+        //分页
+        if(!empty($lastID)){
+            $lastID=explode(",",$lastID);
+            $article_lastID=$lastID[0];
+            $draft_lastID=$lastID[1];
+        }
+        
+        //文章
+        $obj_article_indexing=load("article_indexing");
+        $fields=[
+            'bloggerID'=>$rs_blog_category['bloggerID'],
+            'categoryID'=>$id,
+            'treelevel'=>0,
+            "order"=>['id'=>"DESC"],
+            "limit"=>30
+        ];
+        if(!empty($article_lastID)){
+            $fields['id,<']=$article_lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date','visible'],$fields);
+        
+        //移除草稿重合
+        $obj_article_draft=load("article_draft");
+        $rs_article_indexing=$obj_article_draft->remove_article_indexing($rs_article_indexing);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加ES信息
+        $obj_search_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_search_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //草稿
+        $fields=[
+            'bloggerID'=>$rs_blog_category['bloggerID'],
+            'categoryID'=>$id,
+            "order"=>['id'=>"DESC"],
+            "limit"=>30
+        ];
+        if(!empty($draft_lastID)){
+            $fields['id,<']=$draft_lastID;
+        }
+        $rs_article_draft=$obj_article_draft->getAll("*",$fields);
+        
+        //添加用户信息
+        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID");
+        
+        //格式化草稿
+        $rs_article_draft=$obj_article_draft->format_draft($rs_article_draft);
+        
+        //合并
+        $rs_article_list=array_merge($rs_article_indexing,$rs_article_draft);
+        
+        usort($rs_article_list, function($a, $b) {
+            return $b['create_date'] <=> $a['create_date'];
+        });
+        $rs_article_list = array_slice($rs_article_list, 0, 30);
+        return $rs_article_list;
+    }
     
+    /**
+     * 二级页面
+     * 关注 文章 列表
+     * @param integer $followerID | 关注人的ID
+     */
+    public function group_list(){
+        
+    }
+        
+    /**
+     * 群博管理页面
+     * 群博 添加
+     */
+    public function group_add(){
+        
+    }
     
-    
+    /**
+     * 群博管理页面
+     * 群博 删除
+     */
+    public function group_delete(){
+        
+    }
     
     
     

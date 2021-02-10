@@ -463,15 +463,15 @@ class page extends Api {
      */
     public function category_article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>1]);
+        $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>$id]);
         if(empty($rs_blog_category)) {$this->error="此文集不存在";$this->status=false;return false;}
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
             'bloggerID'=>$rs_blog_category['bloggerID'],
-            'visible'=>1,
             'categoryID'=>$id,
             'treelevel'=>0,
+            "order"=>['id'=>"DESC"],
         ];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;

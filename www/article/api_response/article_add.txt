@@ -8,6 +8,7 @@ $article_data=[
         "测试用户2"
     ],
     "typeID"=>1,
+    "draftID"=>1,
 ];
 $module_data=[
     "add"=>true,

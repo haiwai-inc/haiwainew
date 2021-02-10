@@ -1,18 +1,16 @@
 请求的参数结构如下：
 
 $article_data=[
-    'title'=>"用户3主贴标题修改",
-    'msgbody'=>"用户3主贴内容修改",
+    'title'=>"用户3主贴标题",
+    'msgbody'=>"用户3主贴内容",
     'tagname'=>[
         "测试用户1",
-        "测试用户3"
+        "测试用户2"
     ],
-    "postID"=>144816,
     "typeID"=>1,
-    "draftID"=>1,
 ];
 $module_data=[
-    "edit"=>true,
+    "add"=>true,
     "bloggerID"=>3,
     "categoryID"=>1,
 ];
