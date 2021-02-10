@@ -43,28 +43,8 @@ class user extends Api {
         $obj_article_post->insert($fields_post,"post_{$post_tbn}");
         
         //添加文章 tag
-        if(!empty($article_data['tagname'])){
-            $obj_article_tag=load("article_tag");
-            $obj_article_post_tag=load("article_post_tag");
-            
-            $post_tag_tbn=substr('0'.$article_data['postID'],-1);
-            foreach($article_data['tagname'] as $v){
-                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
-                if(empty($check_article_tag)){
-                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
-                }else{
-                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
-                }
-                
-                $post_tagID=$obj_article_post_tag->get_id();
-                $fields_post_tag=[
-                    "id"=>$post_tagID,
-                    "postID"=>$article_data['postID'],
-                    "tagID"=>$check_article_tag['id'],
-                ];
-                $obj_article_post_tag->insert($fields_post_tag,"post_tag_".$post_tag_tbn);
-            }
-        }
+        $obj_article_tag=load("article_tag");
+        $obj_article_tag->article_tag_add($article_data);
         
         //转文章为博客类型
         if($article_data['typeID']==1){
@@ -116,30 +96,9 @@ class user extends Api {
         ];
         $obj_article_post->update($fields_post,['id'=>$rs_article_post['postID']],"post_{$post_tbn}");
         
-        //修改文章 tag
-        if(!empty($article_data['tagname'])){
-            $obj_article_tag=load("article_tag");
-            $obj_article_post_tag=load("article_post_tag");
-            
-            $post_tag_tbn=substr('0'.$article_data['postID'],-1);
-            $obj_article_post_tag->remove(['postID'=>$rs_article_post['postID']],"post_tag_".$post_tag_tbn);
-            foreach($article_data['tagname'] as $v){
-                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
-                if(empty($check_article_tag)){
-                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
-                }else{
-                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
-                }
-                
-                $post_tagID=$obj_article_post_tag->get_id();
-                $fields_post_tag=[
-                    "id"=>$post_tagID,
-                    "postID"=>$article_data['postID'],
-                    "tagID"=>$check_article_tag['id'],
-                ];
-                $obj_article_post_tag->insert($fields_post_tag,"post_tag_".$post_tag_tbn);
-            }
-        }
+        //添加文章 tag
+        $obj_article_tag=load("article_tag");
+        $obj_article_tag->article_tag_add($article_data);
         
         //修改博客类型文章
         if($article_data['typeID']==1){
@@ -150,6 +109,49 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$rs_article_post['postID']]);
+        
+        //删除草稿
+        if(!empty($article_data['draftID'])){
+            $obj_article_draft=load("article_draft");
+            $obj_article_draft->remove(['id'=>$article_data['draftID']]);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 编辑器页
+     * 文章 草稿 添加
+     * @param integer $id | 编辑帖子id
+     */
+    public function article_draft_add_by_postID($id){
+        $obj_article_indexing=load("article_indexing");
+        
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','categoryID','userID','bloggerID','create_date','edit_date','typeID'],['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        
+        $obj_article_draft=load("article_draft");
+        $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
+        if(!empty($check_article_draft)) {$this->error="此草稿已经存在";$this->status=false;return false;}
+        
+        $tagID=implode(",",$rs_article_indexing['postInfo_postID']['tags']);
+        $fields=[
+            "postID"=>$rs_article_indexing['postID'],
+            "typeID"=>empty($rs_article_indexing['typeID'])?"":$rs_article_indexing['typeID'],
+            "userID"=>$rs_article_indexing['userID'],
+            "bloggerID"=>empty($rs_article_indexing['bloggerID'])?0:$rs_article_indexing['bloggerID'],
+            "categoryID"=>empty($rs_article_indexing['categoryID'])?0:$rs_article_indexing['categoryID'],
+            "tagID"=>empty($tagID)?"":$tagID,
+            "create_date"=>$rs_article_indexing['create_date'],
+            "edit_date"=>$rs_article_indexing['edit_date'],
+            "title"=>empty($rs_article_indexing['postInfo_postID']['title'])?"":$rs_article_indexing['postInfo_postID']['title'],
+            "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
+        ];
+        $obj_article_draft->insert($fields);
         
         return true;
     }
@@ -163,20 +165,9 @@ class user extends Api {
      * @response /article/api_response/article_draft_add.txt
      */
     public function article_draft_add($article_data="",$module_data=""){
-        //添加文章 tag
-        if(!empty($article_data['tagname'])){
-            $obj_article_tag=load("article_tag");
-            foreach($article_data['tagname'] as $v){
-                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
-                if(empty($check_article_tag)){
-                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
-                }else{
-                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
-                }
-                $tagID[]=$check_article_tag['id'];
-            }
-            $tagID=implode(",",$tagID);
-        }
+        //添加草稿 tag
+        $obj_article_tag=load("article_tag");
+        $tagID=$obj_article_tag->draft_tag_add($article_data);
         
         $obj_article_draft=load("article_draft");
         $time=times::getTime();
@@ -204,20 +195,9 @@ class user extends Api {
      * @response /article/api_response/article_draft_update.txt
      */
     public function article_draft_update($article_data,$module_data){
-        //添加文章 tag
-        if(!empty($article_data['tagname'])){
-            $obj_article_tag=load("article_tag");
-            foreach($article_data['tagname'] as $v){
-                $check_article_tag=$obj_article_tag->getOne("*",['name'=>$v]);
-                if(empty($check_article_tag)){
-                    $check_article_tag['id']=$obj_article_tag->insert(['name'=>$v]);
-                }else{
-                    $obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
-                }
-                $tagID[]=$check_article_tag['id'];
-            }
-            $tagID=implode(",",$tagID);
-        }
+        //添加草稿 tag
+        $obj_article_tag=load("article_tag");
+        $tagID=$obj_article_tag->draft_tag_add($article_data);
         
         $obj_article_draft=load("article_draft");
         $time=times::getTime();
@@ -240,6 +220,8 @@ class user extends Api {
     public function article_draft_delete($id){
         $obj_article_draft=load("article_draft");
         $obj_article_draft->remove(['id'=>$id]);
+        
+        return true;
     }
     
     /**
@@ -367,10 +349,17 @@ class user extends Api {
     /**
      * 编辑器页 
      * 文章 删除
-     * @param integer $bloggerID
+     * @param integer $postID | 文章的postID
      */
-    public function article_delete($bloggerID){
+    public function article_delete($postID){
+        $obj_article_indexing=load("article_indexing");
+        $time=times::gettime();
+        $obj_article_indexing->update(['visible'=>0,"edit_date"=>$time],['postID'=>$postID]);
         
+        //清除ES
+        
+        
+        return true;
     }
     
     /**

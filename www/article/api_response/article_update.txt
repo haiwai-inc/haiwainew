@@ -9,6 +9,7 @@ $article_data=[
     ],
     "postID"=>144816,
     "typeID"=>1,
+    "draftID"=>1,
 ];
 $module_data=[
     "edit"=>true,

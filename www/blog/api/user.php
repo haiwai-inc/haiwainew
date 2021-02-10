@@ -206,7 +206,11 @@ class user extends Api {
         if(!empty($article_lastID)){
             $fields['id,<']=$article_lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date','visible'],$fields);
+        
+        //移除草稿重合
+        $obj_article_draft=load("article_draft");
+        $rs_article_indexing=$obj_article_draft->remove_article_indexing($rs_article_indexing);
         
         //添加用户信息
         $obj_account_user=load("account_user");
@@ -217,11 +221,9 @@ class user extends Api {
         $rs_article_indexing=$obj_search_article_noindex->get_postInfo($rs_article_indexing);
         
         //草稿
-        $obj_article_draft=load("article_draft");
         $fields=[
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
-            'treelevel'=>0,
             "order"=>['id'=>"DESC"],
             "limit"=>30
         ];
@@ -238,6 +240,7 @@ class user extends Api {
         
         //合并
         $rs_article_list=array_merge($rs_article_indexing,$rs_article_draft);
+        
         usort($rs_article_list, function($a, $b) {
             return $b['create_date'] <=> $a['create_date'];
         });
