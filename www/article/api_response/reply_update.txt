@@ -1,0 +1,7 @@
+请求的参数结构如下：
+
+$article_data=[
+     'msgbody'=>"用户6回复回复内容",
+     'postID'=>144819,
+     "typeID"=>1,
+ ];

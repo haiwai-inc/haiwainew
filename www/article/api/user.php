@@ -162,7 +162,7 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
-     * @response /article/api_response/article_draft_add.txt
+     * @response /article/api_response/draft_add.txt
      */
     public function draft_add($article_data="",$module_data=""){
         //添加草稿 tag
@@ -192,7 +192,7 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
-     * @response /article/api_response/article_draft_update.txt
+     * @response /article/api_response/draft_update.txt
      */
     public function draft_update($article_data,$module_data){
         //添加草稿 tag
@@ -229,9 +229,9 @@ class user extends Api {
      * 文章 回复 添加
      * @param obj $article_data | 文章的数据
      * @post article_data
-     * @response /article/api_response/article_reply.txt
+     * @response /article/api_response/reply_add.txt
      */
-    public function article_reply_add($article_data){
+    public function reply_add($article_data){
          //检查主贴
          $obj_article_indexing=load("article_indexing");
          $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
@@ -271,9 +271,9 @@ class user extends Api {
      * 文章 回复 修改
      * @param obj $article_data | 文章的数据
      * @post article_data
-     * @response /article/api_response/article_reply.txt
+     * @response /article/api_response/reply_update.txt
      */
-    public function article_reply_update($article_data){
+    public function reply_update($article_data){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
@@ -298,7 +298,7 @@ class user extends Api {
      * 文章 回复 删除
      * @param int $id | 回复的postID
      */
-    public function article_reply_delete($id){
+    public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$id]);
@@ -357,7 +357,7 @@ class user extends Api {
      * 文章 发布 
      * @param integer $postID | 文章的postID
      */
-    public function draft_add_by_draftID($postID){
+    public function article_add_by_draftID($postID){
         
     }
     
