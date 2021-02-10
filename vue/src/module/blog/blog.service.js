@@ -55,14 +55,6 @@ class Blog extends API{
   }
 
   /**
-   * 返回博主文集列表
-   * @param number bloggerID
-   */
-  async category_list(bloggerID){
-    return await this.sendget("blog/page/category_list/?bloggerID="+bloggerID);
-  }
-
-  /**
    * 返回博主信息
    * @param number bloggerID
    */
@@ -165,7 +157,7 @@ class Blog extends API{
    * @param Number id ：文集id
    */
   async category_update(name,id){
-    return await this.sendget("/blog/user/category_update/?name="+name)
+    return await this.sendget("/blog/user/category_update/?name="+name+"&id="+id)
   }
 
   /**
@@ -197,8 +189,17 @@ class Blog extends API{
    * @param number $id 
    * @param number $lastID
    */
-  async category_list(id,lastID){
+  async category_article_list(id,lastID){
     return await this.sendget("blog/page/category_article_list/?id="+id+"&lastID="+lastID)
+  }
+  
+  /**
+   * 新建博客文章
+   * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
+   * @param {add:true,bloggerID:#,categoryID:#} module_data 
+   */
+  async article_add(data){
+    return await this.sendpost('article/user/article_add/',data)
   }
 
   /**

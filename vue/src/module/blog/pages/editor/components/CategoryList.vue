@@ -19,15 +19,42 @@
               :haiwaiIcon="iconmore3v"
               haiwaiClass="haiwaiicon"
               style="padding:0;"
-              @change="test"
               tag="div"
             >
-              <a class="dropdown-item" href="#" @click="modals.addwenji = true"
-                ><span v-html="icon_edit"></span>修改文集名称</a
+              <el-popover 
+              placement="bottom-start"
+              width="350" 
+              @show="setName(item)"
+              :ref="`popover-`+item.id"
+              trigger="click">
+                <el-form :model="catForm" :rules="WJrules" ref="catupForm" label-width="0px">
+                  <el-form-item
+                    prop="name"
+                    label=""
+                  >
+                    <el-input v-model="catForm.name"></el-input>
+                  </el-form-item>
+                </el-form>
+                <n-button 
+                  type="primary"
+                  round 
+                  simple
+                  :disabled="btnDisable"
+                  @click="category_update(item)"
+                    >修改</n-button
+                  >
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit"></span>修改文集名称</a>
+              </el-popover>
+              <el-popconfirm
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                :title="'确定删除文集 '+item.name+' 吗？'"
+                :hide-icon="true"
+                @confirm="category_delete(item)"
               >
-              <a class="dropdown-item" href="#"
-                ><span v-html="icon_delete"></span>删除文集</a
-              >
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete"></span>删除文集</a>
+              </el-popconfirm>
             </drop-down>
 
           </li>
@@ -35,16 +62,13 @@
 
     <!-- Add Wenji Modal -->
     <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px" @click="test()">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">
         请输入新文集名称
       </h4>
-      <el-form :model="catForm" ref="dynamicValidateForm" label-width="0px">
+      <el-form :model="catForm" :rules="WJrules" ref="catForm" label-width="0px">
         <el-form-item
           prop="name"
           label=""
-          :rules="[
-            { required: true, message: '请输入新文集名称', trigger: 'blur' },
-          ]"
         >
           <el-input v-model="catForm.name"></el-input>
         </el-form-item>
@@ -61,7 +85,7 @@
         >
           取消
         </n-button>
-        <n-button type="primary" round simple @click="categoryAdd()">保存</n-button>
+        <n-button type="primary" round simple @click="categoryAdd()" :disabled="btnDisable">保存</n-button>
       </template>
     </modal>
 
@@ -87,14 +111,18 @@ export default {
       // [Popconfirm.name]:Popconfirm,
       // [Popover.name]:Popover
     },
-    mounted() {
-      blog.category_list(this.$store.state.user.userinfo.UserID).then(res=>{
-        console.log(res);
-        this.wenjiList = res.data;
-        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
-      })
-    },
     data(){
+      var validateWJName =(rule,value,callback)=>{
+        if(value===''){
+          callback(new Error('请输入用户名'));
+        }else{console.log(this.checkName(value))
+          if(this.checkName(value)){
+            callback(new Error('此文集名已存在，换个其它的吧'));
+          }else{
+            callback();
+          }
+        }
+      };
         return{
           userID:this.$store.state.user.userinfo.UserID,
           iconmore3v: HaiwaiIcons.iconmore3v,
@@ -113,29 +141,86 @@ export default {
             list:''
           },
           catForm:{
-            name:''
-          }
+            name:'',
+          },
+          WJrules:{
+            name:[
+              { required: true, validator: validateWJName, trigger: 'blur' },
+            ],
+          },
+          btnDisable:false
         }
+    },
+    mounted() {
+      blog.category_list(this.userID).then(res=>{
+        this.wenjiList = res.data;
+        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
+        this.changeMenu(this.wenjiActiveId);
+      })
     },
     methods:{
       changeMenu(wid) {
         this.wenjiActiveId = wid;
+        this.$emit('setwjid',wid);
         // this.articleActiveId = aid;
       },
       categoryAdd(){
-        blog.category_add(this.catForm.name).then(res=>{
-          // console.log(res);
-          if(res.status)this.getCategories(this.userID);
+        this.$refs['catForm'].validate((valid) => {
+          if (valid) {
+            this.btnDisable = true;
+            blog.category_add(this.catForm.name).then(res=>{
+              console.log(res);
+              if(res.status){
+                this.getCategories(this.userID);
+              }
+            })
+          }
+        })
+      },
+      setName(item){
+        this.catForm.name = item.name;
+        console.log(this.catForm.name)
+      },
+      category_update(item){
+        this.$refs['catForm'].validate((valid) => {
+          if (valid) {
+            this.btnDisable = true;
+            blog.category_update(this.catForm.name,item.id).then(res=>{
+              if(res.status){
+                this.getCategories(this.userID);
+                this.$refs[`popover-` + item.id].doClose()
+              }
+            })
+            }
+        })
+      },
+      category_delete(item){
+        blog.category_delete(item.id).then(res=>{
+          if(res.status){
+            this.getCategories(this.userID);
+          }
         })
       },
       getCategories(id){
         blog.category_list(id).then(res=>{
           console.log(res);
           if(res.status)this.wenjiList = res.data;
+          this.btnDisable = false;
+          this.catForm.name = '';
         })
       },
+      checkName(value){
+        let i=0
+        this.wenjiList.forEach(item=>{
+          if(item.name==value){
+            i++
+          }
+        });
+        return i>0?true:false;
+      },
       test(){
-        console.log(this.$store.state.user.userinfo)
+        // console.log(this.$store.state.user.userinfo);
+        // this.getCategories(this.userID);
       }
     }
 }

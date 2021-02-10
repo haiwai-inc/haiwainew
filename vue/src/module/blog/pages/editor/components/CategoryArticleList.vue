@@ -7,6 +7,7 @@
             simple
             @click="addArticle()"
             class="editbtn"
+            :disabled="btnDis.add"
             >
              <span v-html="icon_plus" style="fill:#39b8eb"></span>
              <span>新建文章</span>
@@ -14,30 +15,73 @@
         </div>
         <ul>
           <li
-            class="wenjiItem d-flex justify-content-between align-items-center"
-            v-for="(item, index) in wenjiList"
+            v-for="(item, index) in articleList"
             :key="index"
-            :class="{ active: wenjiActiveId == item.id }"
+            class="aritcleItem d-flex justify-content-between align-items-center"
+            :class="{
+              active: item.postID == articleActiveId,
+              ispublished: item.isPublished,
+            }"
           >
-            <span class="flex-fill" @click="changeMenu(item.id)">
-              {{ item.name }} ({{ item.count_article }})
-            </span>
+            <div
+              class="flex-fill"
+              @click="changeMenu(item.postID)"
+            >
+              <icon-draft class="icon"></icon-draft>
+              {{ item.postInfo_postID.title }}
+              <div>
+                <!-- <small>字数：{{ item.wordCount }}</small> -->
+              </div>
+            </div>
             <drop-down
               class="nav-item dropdown"
               :haiwaiIcon="iconmore3v"
               haiwaiClass="haiwaiicon"
               style="padding:0;"
-              @change="test"
-              tag="div"
             >
-              <a class="dropdown-item" href="#" @click="modals.addwenji = true"
-                ><span v-html="icon_edit"></span>修改文集名称</a
-              >
               <a class="dropdown-item" href="#"
-                ><span v-html="icon_delete"></span>删除文集</a
+                ><icon-publish class="icon"></icon-publish>直接发布</a
+              >
+              <a
+                class="dropdown-item pl-4"
+                href="#"
+                @click="modals.schedule = true"
+              >
+                <icon-schedule class="icon"></icon-schedule>定时发布
+              </a>
+              <a class="dropdown-item pl-4" href="#"
+                ><icon-top class="icon"></icon-top>置顶文章</a
+              >
+              <div class="submenu-item dropleft">
+                <a
+                  class="dropdown-item dropdown-toggle pl-3"
+                  href="#"
+                  id="move"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <icon-folder class="icon"></icon-folder>移动文章
+                </a>
+                <div class="dropdown-menu" aria-labelledby="move">
+                  <a class="dropdown-item" href="#">文集1</a>
+                  <a class="dropdown-item" href="#">文集2</a>
+                </div>
+              </div>
+              <a class="dropdown-item pl-4" href="#"
+                ><icon-private class="icon"></icon-private>设为私密</a
+              >
+              <a class="dropdown-item pl-4" href="#"
+                ><icon-forbid class="icon"></icon-forbid>禁止评论</a
+              >
+              <a class="dropdown-item pl-4" href="#"
+                ><icon-forbid class="icon"></icon-forbid>禁止转载</a
+              >
+              <a class="dropdown-item pl-4" href="#"
+                ><icon-delete class="icon"></icon-delete>删除文章</a
               >
             </drop-down>
-
           </li>
         </ul>
 
@@ -70,14 +114,39 @@
 import { Button, DropDown, Modal, FormGroupInput  } from "@/components";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../../blog.service";
+import {
+  // IconPlus,
+  IconDelete,
+  IconDraft,
+  // IconEdit,
+  IconForbid,
+  IconFolder,
+  IconPrivate,
+  IconTop,
+  IconSchedule,
+  // IconX,
+  IconPublish,
+} from "@/components/Icons";
 
 export default {
     name: 'category-article-list',
+    props:{
+      wjid:Number
+    },
     components: {
       [Button.name]: Button,
       DropDown,
       Modal,
       [FormGroupInput.name]: FormGroupInput,
+      IconDelete,
+    IconDraft,
+    // IconEdit,
+    IconForbid,
+    IconFolder,
+    IconPrivate,
+    IconPublish,
+    IconSchedule,
+    IconTop,
       // [Dropdown.name]:Dropdown,
       // [DropdownMenu.name]:DropdownMenu,
       // [DropdownItem.name]:DropdownItem
@@ -85,42 +154,66 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
-      blog.category_list(this.$store.state.user.userinfo.userID).then(res=>{
-        console.log(res);
-        this.wenjiList = res.data;
-        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
+      blog.category_article_list(this.wjid,0).then(res=>{
+        console.log(res,this.wjid);
+        this.articleList = res.data;
+        this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
       })
-    },
-    methods:{
-      getCategories(id){
-        blog.category_list(id).then(res=>{
-          console.log(res);
-          this.wenjiList = res.data;
-        })
-      },
     },
     data(){
         return{
+          userID:this.$store.state.user.userinfo.UserID,
           iconmore3v: HaiwaiIcons.iconmore3v,
           icon_plus:HaiwaiIcons.icon_plus,
           icon_edit:HaiwaiIcons.icon_edit,
           icon_delete:HaiwaiIcons.icon_delete,
           wenjiActiveId: 100,
           wenjiList: [],
+          articleActiveId:0,
+          articleList:[],
           modals: {
             addwenji: false,
             publish: false,
             schedule: false,
           },
+          btnDis:{
+            add:false
+          }
         }
     },
     methods:{
       changeMenu(wid) {
-        this.wenjiActiveId = wid;
-        // this.articleActiveId = aid;
+        this.articleActiveId = wid;
       },
       addArticle(){
-
+        let data={
+          article_data:{
+            title:'新建博文标题',
+            msgbody:'',
+            tagname:[],
+            typeID:1
+          },
+          module_data:{
+            add:true,
+            bloggerID:this.userID,
+            categoryID:this.wjid
+          }
+        };
+        this.btnDis.add = true;
+        blog.article_add(data).then(res=>{
+          console.log(res);
+          if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      getArticleList(){
+        blog.category_article_list(this.wjid,0).then(res=>{
+        console.log(res);
+        this.articleList = res.data;
+        this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
+        this.btnDis.add = false;
+      })
       },
       test(e){
         console.log(e)
