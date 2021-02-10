@@ -183,6 +183,7 @@ class user extends Api {
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
         ];
         $obj_article_draft->insert($fields);
+        
         return true;
     }
     
@@ -291,6 +292,8 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        
+        return true;
     }
     
     /**
@@ -310,6 +313,8 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        
+        return true;
     }
     
     /**
@@ -349,6 +354,7 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
+        
         return true;
     }
     
