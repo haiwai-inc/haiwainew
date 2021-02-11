@@ -150,6 +150,7 @@ class user extends Api {
             "edit_date"=>$rs_article_indexing['edit_date'],
             "title"=>empty($rs_article_indexing['postInfo_postID']['title'])?"":$rs_article_indexing['postInfo_postID']['title'],
             "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
+            "visible"=>-2
         ];
         $obj_article_draft->insert($fields);
         
@@ -181,6 +182,7 @@ class user extends Api {
             "edit_date"=>$time,
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+            "visible"=>-1
         ];
         $obj_article_draft->insert($fields);
         
