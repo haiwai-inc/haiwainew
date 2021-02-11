@@ -10,7 +10,6 @@ class article_draft extends Model{
 	            $rs_article_draft[$k]['postInfo_postID']['title']=$v['id'];
 	            $rs_article_draft[$k]['postInfo_postID']['msgbody']=$v['id'];
 	            $rs_article_draft[$k]['postInfo_postID']['tags']=empty($v['tagID'])?[]:explode(",",$v['tagID']);
-	            $rs_article_draft[$k]['visible']=-1;
 	        }
 	    }
 	    
