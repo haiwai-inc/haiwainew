@@ -11,7 +11,7 @@ class user extends Api {
         $this->userAuthz($bloggerID);
     }
     
-    /**
+    /**`
      * 博客设置页
      * 博主 信息
      */

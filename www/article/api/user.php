@@ -124,7 +124,7 @@ class user extends Api {
      * 文章 草稿 添加
      * @param integer $id | 编辑帖子id
      */
-    public function article_draft_add_by_postID($id){
+    public function draft_add_by_postID($id){
         $obj_article_indexing=load("article_indexing");
         
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','categoryID','userID','bloggerID','create_date','edit_date','typeID'],['visible'=>1,'postID'=>$id]);
@@ -150,6 +150,7 @@ class user extends Api {
             "edit_date"=>$rs_article_indexing['edit_date'],
             "title"=>empty($rs_article_indexing['postInfo_postID']['title'])?"":$rs_article_indexing['postInfo_postID']['title'],
             "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
+            "visible"=>-2
         ];
         $obj_article_draft->insert($fields);
         
@@ -162,9 +163,9 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
-     * @response /article/api_response/article_draft_add.txt
+     * @response /article/api_response/draft_add.txt
      */
-    public function article_draft_add($article_data="",$module_data=""){
+    public function draft_add($article_data="",$module_data=""){
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
         $tagID=$obj_article_tag->draft_tag_add($article_data);
@@ -181,8 +182,10 @@ class user extends Api {
             "edit_date"=>$time,
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+            "visible"=>-1
         ];
         $obj_article_draft->insert($fields);
+        
         return true;
     }
     
@@ -192,9 +195,9 @@ class user extends Api {
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
      * @post article_data,module_data
-     * @response /article/api_response/article_draft_update.txt
+     * @response /article/api_response/draft_update.txt
      */
-    public function article_draft_update($article_data,$module_data){
+    public function draft_update($article_data,$module_data){
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
         $tagID=$obj_article_tag->draft_tag_add($article_data);
@@ -217,7 +220,7 @@ class user extends Api {
      * 文章 草稿 删除
      * @param obj $id | 草稿的id
     */
-    public function article_draft_delete($id){
+    public function draft_delete($id){
         $obj_article_draft=load("article_draft");
         $obj_article_draft->remove(['id'=>$id]);
         
@@ -229,9 +232,9 @@ class user extends Api {
      * 文章 回复 添加
      * @param obj $article_data | 文章的数据
      * @post article_data
-     * @response /article/api_response/article_reply.txt
+     * @response /article/api_response/reply_add.txt
      */
-    public function article_reply_add($article_data){
+    public function reply_add($article_data){
          //检查主贴
          $obj_article_indexing=load("article_indexing");
          $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
@@ -271,9 +274,9 @@ class user extends Api {
      * 文章 回复 修改
      * @param obj $article_data | 文章的数据
      * @post article_data
-     * @response /article/api_response/article_reply.txt
+     * @response /article/api_response/reply_update.txt
      */
-    public function article_reply_update($article_data){
+    public function reply_update($article_data){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
@@ -291,6 +294,8 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        
+        return true;
     }
     
     /**
@@ -298,7 +303,7 @@ class user extends Api {
      * 文章 回复 删除
      * @param int $id | 回复的postID
      */
-    public function article_reply_delete($id){
+    public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$id]);
@@ -310,6 +315,8 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        
+        return true;
     }
     
     /**
@@ -338,16 +345,6 @@ class user extends Api {
     
     /**
      * 编辑器页 
-     * 文章 保存 自动
-     * @param integer $bloggerID
-     * @param object $data
-     */
-    public function article_save_auto($bloggerID,$data){
-        
-    }
-    
-    /**
-     * 编辑器页 
      * 文章 删除
      * @param integer $postID | 文章的postID
      */
@@ -356,8 +353,9 @@ class user extends Api {
         $time=times::gettime();
         $obj_article_indexing->update(['visible'=>0,"edit_date"=>$time],['postID'=>$postID]);
         
-        //清除ES
-        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
         
         return true;
     }
@@ -365,14 +363,16 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 发布 
+     * @param integer $postID | 文章的postID
      */
-    public function article_publish(){
+    public function article_add_by_draftID($postID){
         
     }
     
     /**
      * 编辑器页
      * 文章 发布 定时
+     * @param integer $postID | 文章的postID
      */
     public function article_publish_time(){
         
@@ -381,40 +381,45 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 置顶
+     * @param integer $postID | 文章的postID
      */
-    public function article_sticky(){
+    public function article_sticky($postID){
         
     }
     
     /**
      * 编辑器页
-     * 文章 移动
+     * 文章 移动 文集
+     * @param integer $postID | 文章的postID
      */
-    public function article_shift(){
+    public function article_shift_category($postID){
         
     }
     
     /**
      * 编辑器页
      * 文章 私密
+     * @param integer $postID | 文章的postID
      */
-    public function article_private(){
+    public function article_private($postID){
         
     }
     
     /**
      * 编辑器页
      * 文章 禁止 评论
+     * @param integer $postID | 文章的postID
      */
-    public function article_forbit_comment(){
+    public function article_forbit_comment($postID){
         
     }
     
     /**
      * 编辑器页
      * 文章 禁止 转载
+     * @param integer $postID | 文章的postID
      */
-    public function article_forbit_share(){
+    public function article_forbit_share($postID){
         
     }
     
