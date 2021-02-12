@@ -57,7 +57,7 @@ class User extends API{
     async getUserInfo(userID){
         try{
             let res = await this.get("account/passport/login_status/?userID="+userID);
-            this.avatar = res.avatar
+            this.userinfo= res.data;
             return res
         }
         catch(e){

@@ -325,16 +325,6 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
-    // IconPlus,
-    // IconDelete,
-    // IconDraft,
-    // IconEdit,
-    // IconForbid,
-    // IconFolder,
-    // IconPrivate,
-    // IconPublish,
-    // IconSchedule,
-    // IconTop,
     IconX,
   },
 
@@ -501,7 +491,9 @@ export default {
     }
   },
 
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.user.getUserStatus();
+  },
 
   created() {
     this.fetchData();
@@ -645,6 +637,11 @@ color: #495057;
 outline: 0;
 }
 .publisher .dropdown .icon {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+.dropdown-item .icon svg{
   margin-right: 5px;
   width: 20px;
   height: 20px;

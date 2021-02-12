@@ -74,6 +74,7 @@ export default {
       if(!this.$store.state.user.userinfo){
         this.showLogin = true;
       }else{
+        this.$router.push(this.redirect)
         return true
       }
     },
