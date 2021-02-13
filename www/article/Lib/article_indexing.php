@@ -118,9 +118,14 @@ class article_indexing extends Model
 	public function format_string($rs, $keys = ["msgbody"], $max_character = 1000){
 		foreach($rs as $k=>$v){
 			foreach($keys as $key){
+			    if(empty($v[$key])){
+			        continue;
+			    }
+			    
 				$v[$key] = strip_tags($v[$key]);
-				if(!empty($max_character))
-					$v[$key] = strings::subString($v[$key], $max_character);
+				if(!empty($max_character)){
+				    $v[$key] = strings::subString($v[$key], $max_character);
+				}
 			}
 			$rs[$k] = $v;
 		}

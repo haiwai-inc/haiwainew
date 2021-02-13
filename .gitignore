@@ -8,6 +8,7 @@ Thumbs.db
 /vue/dist/*
 /vue/package-lock.json
 /vue/vue.config.js
+/package-lock.json
 
 # composer vendor dir
 /vendor
