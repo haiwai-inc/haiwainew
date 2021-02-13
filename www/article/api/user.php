@@ -347,11 +347,12 @@ class user extends Api {
      * 编辑器页 
      * 文章 删除
      * @param integer $postID | 文章的postID
+     * @param integer $visible | 1开 0关
      */
-    public function article_delete($postID){
+    public function article_delete($postID,$visible){
         $obj_article_indexing=load("article_indexing");
         $time=times::gettime();
-        $obj_article_indexing->update(['visible'=>0,"edit_date"=>$time],['postID'=>$postID]);
+        $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
@@ -363,64 +364,154 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 发布 
-     * @param integer $postID | 文章的postID
+     * @param integer $draftID | 文章的draftID
      */
-    public function article_add_by_draftID($postID){
+    public function article_add_by_draftID($draftID){
+        $obj_article_draft=load("article_draft");
+        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        if(empty($rs_article_draft)) {$this->error="发布的文章不存在";$this->status=false;return false;}
         
+        //获取标签名字 "1,2" -> ["标签1","标签2"]
+        $obj_article_tag=load("article_tag");
+        $tagname=$obj_article_tag->get_article_tag_name($rs_article_draft);
+        $article_data=[
+            'title'=>$rs_article_draft['title'],
+            'msgbody'=>$rs_article_draft['msgbody'],
+            'tagname'=>$tagname,
+            "typeID"=>$rs_article_draft['typeID'],
+            "draftID"=>$rs_article_draft['id'],
+        ];
+        $module_data=[
+            "add"=>true,
+            "bloggerID"=>$rs_article_draft['bloggerID'],
+            "categoryID"=>$rs_article_draft['categoryID'],
+        ];
+        
+        //添加文章
+        $this->article_add($article_data,$module_data);
+        return true;
     }
     
     /**
      * 编辑器页
-     * 文章 发布 定时
-     * @param integer $postID | 文章的postID
+     * 文章 定时 添加
+     * @param integer $draftID | 文章的draftID
+     * @param integer $is_timer | 1开 0关
+     * @param integer $time | 延时 3600秒
      */
-    public function article_publish_time(){
+    public function article_timer($draftID,$is_timer,$time){
+        $obj_article_draft=load("article_draft");
+        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        if(empty($rs_article_draft)) {$this->error="发布的文章不存在";$this->status=false;return false;}
         
+        $obj_article_timer=load("article_timer");
+        $publish_date=times::gettime()+$time;
+        $obj_article_draft->update(['publish_date'=>$publish_date,'is_timer'=>!empty($is_timer)?1:0],['id'=>$draftID]);
+        return true;
     }
     
     /**
      * 编辑器页
-     * 文章 置顶
+     * 文章 置顶 添加
      * @param integer $postID | 文章的postID
+     * @param integer $is_sticky | 1开 0关
      */
-    public function article_sticky($postID){
+    public function article_sticky($postID,$is_sticky){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="置顶的文章不存在";$this->status=false;return false;}
         
+        $obj_article_indexing->update(['is_sticky'=>!empty($is_sticky)?1:0],['id'=>$check_article_indexing['id']]);
+        return true;
     }
     
     /**
      * 编辑器页
      * 文章 移动 文集
      * @param integer $postID | 文章的postID
+     * @param integer $categoryID | 文集的id
      */
-    public function article_shift_category($postID){
+    public function article_shift_category($postID,$categoryID){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="移动的文章不存在";$this->status=false;return false;}
         
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne(["id","count_article"],['id'=>$categoryID]);
+        if(empty($check_article_indexing)) {$this->error="移动的文集不存在";$this->status=false;return false;}
+        
+        $obj_article_indexing->update(['categoryID'=>$categoryID],['postID'=>$postID]);
+        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1]);
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
+        
+        return true;
+    }
+    
+    /**
+     * 编辑器页
+     * 草稿 移动 文集
+     * @param integer $draftID | 草稿的id
+     * @param integer $categoryID | 文集的id
+     */
+    public function draft_shift_category($draftID,$categoryID){
+        $obj_article_draft=load("article_draft");
+        $check_article_draft=$obj_article_draft->getOne(['id'],['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        if(empty($check_article_draft)) {$this->error="移动的草稿不存在";$this->status=false;return false;}
+        
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne(["id"],['id'=>$categoryID]);
+        if(empty($check_article_indexing)) {$this->error="移动的文集不存在";$this->status=false;return false;}
+        
+        $obj_article_draft->update(['categoryID'=>$categoryID],['id'=>$draftID]);
+        return true;
     }
     
     /**
      * 编辑器页
      * 文章 私密
      * @param integer $postID | 文章的postID
+     * @param integer $is_publish | 1开 0关
      */
-    public function article_private($postID){
+    public function article_publish($postID,$is_share){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="设置私密文章不存在";$this->status=false;return false;}
         
+        $obj_article_indexing->update(['is_publish'=>!empty($is_publish)?1:0],['id'=>$check_article_indexing['id']]);
+        return true;
     }
     
     /**
      * 编辑器页
      * 文章 禁止 评论
      * @param integer $postID | 文章的postID
+     * @param integer $is_comment | 1开 0关
      */
-    public function article_forbit_comment($postID){
+    public function article_comment($postID,$is_comment){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="禁止评论的文章不存在";$this->status=false;return false;}
         
+        $obj_article_indexing->update(['is_comment'=>!empty($is_comment)?1:0],['id'=>$check_article_indexing['id']]);
+        return true;
     }
     
     /**
      * 编辑器页
      * 文章 禁止 转载
      * @param integer $postID | 文章的postID
+     * @param integer $is_share | 1开 0关
      */
-    public function article_forbit_share($postID){
+    public function article_share($postID,$is_publish){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="禁止转载的文章不存在";$this->status=false;return false;}
         
+        $obj_article_indexing->update(['is_share'=>!empty($is_share)?1:0],['id'=>$check_article_indexing['id']]);
+        return true;
     }
     
     
@@ -430,19 +521,6 @@ class user extends Api {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //   /vue/vue.config.js
     
     
     

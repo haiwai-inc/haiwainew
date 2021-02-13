@@ -200,13 +200,13 @@ class user extends Api {
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
-            "order"=>['id'=>"DESC"],
+            "order"=>['is_sticky'=>'DESC','id'=>"DESC"],
             "limit"=>30
         ];
         if(!empty($article_lastID)){
             $fields['id,<']=$article_lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date','visible'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll('*',$fields);
         
         //移除草稿重合
         $obj_article_draft=load("article_draft");
@@ -240,11 +240,30 @@ class user extends Api {
         
         //合并
         $rs_article_list=array_merge($rs_article_indexing,$rs_article_draft);
+        if(!empty($rs_article_list)){
+            //拆分sticky
+            $rs_article_sticky=[];
+            foreach($rs_article_list as $k=>$v){
+                if(!empty($v['is_sticky'])){
+                    unset($rs_article_list[$k]);
+                    $rs_article_sticky[]=$v;
+                }
+            }
+            //排序
+            if(!empty($rs_article_sticky)){
+                usort($rs_article_sticky, function($a, $b) {
+                    return $b['create_date'] <=> $a['create_date'];
+                });
+            }
+            if(!empty($rs_article_list)){
+                usort($rs_article_list, function($a, $b) {
+                    return $b['create_date'] <=> $a['create_date'];
+                });
+            }
+            $rs_article_list=array_merge($rs_article_sticky,$rs_article_list);
+            $rs_article_list = array_slice($rs_article_list, 0, 30);
+        }
         
-        usort($rs_article_list, function($a, $b) {
-            return $b['create_date'] <=> $a['create_date'];
-        });
-        $rs_article_list = array_slice($rs_article_list, 0, 30);
         return $rs_article_list;
     }
     

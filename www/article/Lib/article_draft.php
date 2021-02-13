@@ -6,6 +6,7 @@ class article_draft extends Model{
 	function format_draft($rs_article_draft){
 	    if(!empty($rs_article_draft)){
 	        foreach($rs_article_draft as $k=>$v){
+	            $rs_article_draft[$k]['is_sticky']=0;
 	            $rs_article_draft[$k]['postInfo_postID']['id']=$v['id'];
 	            $rs_article_draft[$k]['postInfo_postID']['title']=$v['title'];
 	            $rs_article_draft[$k]['postInfo_postID']['msgbody']=$v['msgbody'];
