@@ -20,17 +20,18 @@
             class="aritcleItem d-flex justify-content-between align-items-center"
             :class="{
               active: item.postID == articleActiveId,
-              ispublished: item.isPublished,
+              ispublished: item.visible==1,
             }"
           >
             <div
               class="flex-fill"
               @click="changeMenu(item.postID)"
             >
-              <icon-draft class="icon"></icon-draft>
+              <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
+              <icon-published class="icon" v-if="item.visible==1"></icon-published>
               {{ item.postInfo_postID.title }}
               <div>
-                <!-- <small>字数：{{ item.wordCount }}</small> -->
+                <small v-if="item.visible==-2">已发布文章，再编辑中...</small>
               </div>
             </div>
             <drop-down
@@ -136,6 +137,7 @@ import {
   IconSchedule,
   // IconX,
   IconPublish,
+  IconPublished
 } from "@/components/Icons";
 
 export default {
@@ -160,8 +162,9 @@ export default {
       IconFolder,
       IconPrivate,
       IconPublish,
+      IconPublished,
       IconSchedule,
-      IconTop,
+      IconTop
       // [Dropdown.name]:Dropdown,
       // [DropdownMenu.name]:DropdownMenu,
       // [DropdownItem.name]:DropdownItem
@@ -246,6 +249,9 @@ export default {
         this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
         this.btnDis.add = false;
       })
+      },
+      setActiveID(item){
+        if(item.visible=1){}
       },
       test(e){
         console.log(e)
