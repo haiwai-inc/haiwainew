@@ -15,7 +15,7 @@
         </div>
         <ul>
           <li
-            v-for="(item, index) in articleList"
+            v-for="(item, index) in articleList.filter(obj=>obj.visible!=0)"
             :key="index"
             class="aritcleItem d-flex justify-content-between align-items-center"
             :class="{
@@ -78,9 +78,19 @@
               <a class="dropdown-item pl-4" href="#"
                 ><icon-forbid class="icon"></icon-forbid>禁止转载</a
               >
-              <a class="dropdown-item pl-4" href="#"
+              <!-- <a class="dropdown-item pl-4" href="javascript:void(0)" @click="delArticle(item)"
                 ><icon-delete class="icon"></icon-delete>删除文章</a
+              > -->
+              <el-popconfirm
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                :title="'确定删除这篇文章吗？'"
+                :hide-icon="true"
+                @confirm="delArticle(item)"
               >
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>删除文章</a>
+              </el-popconfirm>
             </drop-down>
           </li>
         </ul>
@@ -116,7 +126,7 @@ import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../../blog.service";
 import {
   // IconPlus,
-  IconDelete,
+  // IconDelete,
   IconDraft,
   // IconEdit,
   IconForbid,
@@ -133,20 +143,25 @@ export default {
     props:{
       wjid:Number
     },
+    watch:{
+      wjid:function(v){
+        this.getArticleList(v);
+      }
+    },
     components: {
       [Button.name]: Button,
       DropDown,
       Modal,
       [FormGroupInput.name]: FormGroupInput,
-      IconDelete,
-    IconDraft,
-    // IconEdit,
-    IconForbid,
-    IconFolder,
-    IconPrivate,
-    IconPublish,
-    IconSchedule,
-    IconTop,
+      
+      IconDraft,
+      // IconEdit,
+      IconForbid,
+      IconFolder,
+      IconPrivate,
+      IconPublish,
+      IconSchedule,
+      IconTop,
       // [Dropdown.name]:Dropdown,
       // [DropdownMenu.name]:DropdownMenu,
       // [DropdownItem.name]:DropdownItem
@@ -200,12 +215,29 @@ export default {
           }
         };
         this.btnDis.add = true;
-        blog.article_add(data).then(res=>{
+        blog.draft_add(data).then(res=>{
           console.log(res);
           if(res.status){
             this.getArticleList();
           }
         })
+      },
+      delArticle(item){
+        if(item.visible==1 || item.visible==-2){
+        console.log(item.visible);
+          blog.article_delete(item.postID).then(res=>{
+            if(res.status){
+              this.getArticleList();
+            }
+          })
+        }
+        if(item.visible==-1){
+          blog.draft_delete(item.id).then(res=>{
+            if(res.status){
+              this.getArticleList()
+            }
+          })
+        }
       },
       getArticleList(){
         blog.category_article_list(this.wjid,0).then(res=>{

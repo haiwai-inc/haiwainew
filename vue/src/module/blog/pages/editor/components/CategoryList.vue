@@ -43,7 +43,7 @@
                   @click="category_update(item)"
                     >修改</n-button
                   >
-                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit"></span>修改文集名称</a>
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>修改文集名称</a>
               </el-popover>
               <el-popconfirm
                 placement="top-end"
@@ -53,7 +53,7 @@
                 :hide-icon="true"
                 @confirm="category_delete(item)"
               >
-                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete"></span>删除文集</a>
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>删除文集</a>
               </el-popconfirm>
             </drop-down>
 

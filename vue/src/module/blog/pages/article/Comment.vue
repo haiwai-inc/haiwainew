@@ -22,7 +22,7 @@
                   round 
                   simple
                   :disabled="replybtndisable"
-                  @click="article_reply_add()"
+                  @click="reply_add()"
                     >回复</n-button
                   >
                   <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>回复</span></a>
@@ -65,7 +65,7 @@
                             round 
                             simple
                             :disabled="replybtndisable"
-                            @click="article_reply_add()"
+                            @click="reply_add()"
                               >回复</n-button
                             >
                           <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
@@ -107,7 +107,7 @@
         round 
         simple
         :disabled="replybtndisable"
-        @click="article_reply_add()"
+        @click="reply_add()"
           >回复</n-button
         >
       </template>
@@ -216,7 +216,7 @@ export default {
         }
       
     },
-    article_reply_add(){
+    reply_add(){
       let obj = {
         article_data:{msgbody:this.replymsgbody,
         postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
@@ -224,7 +224,7 @@ export default {
       }
       this.replybtndisable = true;
       if(this.loginuserID!=-1){
-        blog.article_reply_add(obj).then(res=>{
+        blog.reply_add(obj).then(res=>{
           this.replybtndisable = false;
           this.regetComment();
           this.replymsgbody="";
