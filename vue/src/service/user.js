@@ -81,6 +81,30 @@ class User extends API{
     }
 
     /**
+     * 获取黑名单
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async blacklist_list(lastID){
+        return await this.sendget("account/user/blacklist_list/?lastID="+lastID)
+    }
+
+    /**
+     * 添加黑名单
+     * @param {要拉黑的用户id} blockID 
+     */
+    async blacklist_add(blockID){
+        return await this.sendget("account/user/blacklist_add/?blockID="+blockID)
+    }
+
+    /**
+     * 从黑名单中移除
+     * @param {要移除的用户id} blockID 
+     */
+    async blacklist_delete(blockID){
+        return await this.sendget("account/user/blacklist_delete/?blockID="+blockID)
+    }
+
+    /**
      * 获取我的收藏
      * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
      */

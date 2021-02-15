@@ -16,7 +16,7 @@
           <div>
             <article-list-item 
               v-for="item in articlelists"
-              v-bind:key="item.id"
+              v-bind:key="item.postID"
               v-bind:data="item"
               type="0">
             </article-list-item>

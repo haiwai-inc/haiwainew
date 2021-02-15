@@ -132,14 +132,14 @@
             <div v-if="menuId===2">
                <h6 class="border-bottom pb-3">黑名单</h6>
                <div class="box my-3">
-                  <div class=" blacklist align-self-center col-12 no-gutters">
+                  <div v-for="(item,index) in blackList" :key="index" class=" blacklist align-self-center col-12 no-gutters">
                      <div class="d-flex align-self-center">
                         <div class="small-name">
-                           <a href="" class="text-black">慎始敬终</a>
+                           <router-link :to="'blog/user/'+item.blockID" class="text-black">{{item.userinfo_blockID.username}}</router-link>
                         </div>
                         <div class="ml-auto" style="width: 175px;">
                            <a class="m-0  btn btn-link text-default w-100">
-                              <div class="d-flex text-gray  justify-content-end align-items-end">
+                              <div @click="blackListRemove(item)" class="d-flex text-gray  justify-content-end align-items-end">
                                  <icon-delete></icon-delete>
                                  从黑名单中移除
                               </div>
@@ -187,7 +187,8 @@ export default {
          }else{
 
          }
-      })
+      });
+   this.getBlackList(0);
    },
   data(){
      var validatePass = (rule, value, callback) => {
@@ -220,7 +221,7 @@ export default {
       headers: {
          smail: '*_~'
       },
-      
+      blackList:[],
       signupForm:{
         password:'',
         checkPassword:'',
@@ -242,7 +243,7 @@ export default {
     }
   },
   methods:{
-     toggleShow() {
+      toggleShow() {
             this.show = !this.show;
       },
       initForm(){
@@ -358,7 +359,18 @@ export default {
       //     })
       }, this.mime_type)
     },
-
+      async getBlackList(lastID){
+         let v = await this.$store.state.user.blacklist_list(lastID);
+         if(v.status){
+            this.blackList = v.data;console.log(v.data)
+         }
+      },
+      blackListRemove(item){
+         this.$store.state.user.blacklist_delete(item.blockID).then(res=>{
+            console.log(res);
+            this.getBlackList(0);
+         })
+      }
 
   }
 };
