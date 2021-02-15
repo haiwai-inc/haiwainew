@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h6
+        <h6 @click="getfollower"
         class="pb-2 font-weight-normal"
         >{{follows.title}}</h6>
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item"></bloger-list-item>
@@ -12,6 +12,12 @@ export default {
   name: 'notice-follow',
   components: {
     BlogerListItem
+  },
+  methods:{
+    async getfollower(){
+      let v= await this.$store.state.user.my_follower_list(0)
+      console.log(v)
+    }
   },
   data(){
       return{

@@ -35,12 +35,24 @@ export default {
     MainMenu,
     ArticleListItem,
   },
-
+  mounted:function(){
+    this.getBookmark(0);
+  },
   data() {
     return {
-        user:this.$store.state.user
+        user:this.$store.state.user,
+        articlelists:[]
     };
   },
+  methods:{
+    async getBookmark(lastID){
+      let v = await this.user.bookmark_list(lastID)
+      if(v.status){
+        this.articlelists = v.data;
+        console.log(v.data)
+      }
+    }
+  }
 };
 </script>
 <style></style>

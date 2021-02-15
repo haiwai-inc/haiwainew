@@ -1,6 +1,6 @@
 <template>
     <div>  
-        <h6 class="font-weight-normal pb-3">
+        <h6 class="font-weight-normal pb-3" @click="getcomments">
           我收到的评论
         </h6>
         <div v-for="(item,index) in comments" :key="index">
@@ -18,6 +18,12 @@ export default {
   name: 'notice-comment',
   components: {
     Comment
+  },
+  methods:{
+      async getcomments(){
+          let v = await this.$store.state.user.my_comment_list(0)
+          console.log(v)
+      }
   },
   data(){
       return{

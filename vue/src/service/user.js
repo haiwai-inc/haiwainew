@@ -81,6 +81,38 @@ class User extends API{
     }
 
     /**
+     * 获取我的收藏
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async bookmark_list(lastID){
+        return await this.sendget("account/user/bookmark_list/?lastID="+lastID)
+    }
+
+    /**
+     * 获取我收到的评论
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async my_comment_list(lastID){
+        return await this.sendget("account/user/my_comment_list/?lastID="+lastID)
+    }
+
+    /**
+     * 获取我的粉丝列表
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async my_follower_list(lastID){
+        return await this.sendget("account/user/my_follower_list/?lastID="+lastID)
+    }
+
+    /**
+     * 获取我的粉丝列表
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async my_buzz_article_list(lastID){
+        return await this.sendget("account/user/my_buzz_article_list/?lastID="+lastID)
+    }
+
+    /**
      * send qqh 
      * @param userID
      * @param touserID
@@ -131,6 +163,29 @@ class User extends API{
             return res;
         }
         catch(e){
+            return false;
+        }
+    }
+
+
+    async sendget(url){
+        try{
+            let rs = await this.get(url);
+            return rs;
+        }
+        catch(e){
+            console.log(e)
+            return false;
+        }
+    }
+
+    async sendpost(url,data){
+        try{
+            let rs = await this.post(url,data);
+            return rs;
+        }
+        catch(e){
+            console.log(e)
             return false;
         }
     }
