@@ -237,6 +237,15 @@ class Blog extends API{
   }
 
   /**
+   * 
+   * @param {文章编号} postID
+   * @param {1开 0关} is_sticky 
+   */
+  async article_sticky(postID,is_sticky){
+    return await this.sendget("article/user/article_sticky/?postID="+postID+"&is_sticky="+is_sticky)
+  }
+
+  /**
    * 上传图片
    * @param FormData data 
    * @return url

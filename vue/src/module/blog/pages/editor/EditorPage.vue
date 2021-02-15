@@ -41,78 +41,6 @@
     <div class="col-md-3 menu2 d-none d-sm-block">
       <category-article-list :wjid="wenjiActiveId"></category-article-list>
       
-      <!-- <ul>
-        <li
-          v-for="(item, index) in articleList"
-          :key="index"
-          class="aritcleItem d-flex justify-content-between align-items-center"
-          :class="{
-            active: item.articleId == articleActiveId,
-            ispublished: item.isPublished,
-          }"
-        >
-          <div
-            class="flex-fill"
-            @click="changeMenu(wenjiActiveId, item.articleId)"
-          >
-            <icon-draft class="icon"></icon-draft>
-            {{ item.title }}
-            <div>
-              <small>字数：{{ item.wordCount }}</small>
-            </div>
-          </div>
-          <drop-down
-            class="nav-item dropdown"
-            :haiwaiIcon="iconmore3v"
-            haiwaiClass="haiwaiicon"
-            style="padding:0;"
-            aria-expanded = "true"
-          >
-            <a class="dropdown-item" href="#"
-              ><icon-publish class="icon"></icon-publish>直接发布</a
-            >
-            <a
-              class="dropdown-item pl-4"
-              href="#"
-              @click="modals.schedule = true"
-            >
-              <icon-schedule class="icon"></icon-schedule>定时发布
-            </a>
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-top class="icon"></icon-top>置顶文章</a
-            >
-            <div class="submenu-item dropleft">
-              <a
-                class="dropdown-item dropdown-toggle pl-3"
-                href="#"
-                id="move"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <icon-folder class="icon"></icon-folder>移动文章
-              </a>
-              <div class="dropdown-menu" aria-labelledby="move">
-                <a class="dropdown-item" href="#">文集1</a>
-                <a class="dropdown-item" href="#">文集2</a>
-              </div>
-            </div>
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-private class="icon"></icon-private>设为私密</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-forbid class="icon"></icon-forbid>禁止评论</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-forbid class="icon"></icon-forbid>禁止转载</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-delete class="icon"></icon-delete>删除文章</a
-            >
-          </drop-down>
-        </li>
-      </ul> -->
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <div ref="saving">
@@ -275,22 +203,11 @@ import Editor from '@tinymce/tinymce-vue'
 import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
-
 import { Button, Modal, FormGroupInput } from "@/components";
 import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
 import {
   HaiwaiLogoWhite,
-  // IconPlus,
-  // IconDelete,
-  // IconDraft,
-  // IconEdit,
-  // IconForbid,
-  // IconFolder,
-  // IconPrivate,
-  // IconTop,
-  // IconSchedule,
   IconX,
-  // IconPublish,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import "jquery/dist/jquery"; 
@@ -313,9 +230,6 @@ import "./audio/summernote-audio";
 // import "bootstrap";
 import lang from "./language";
 // import './zh_CN'
-
-
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from "../../blog.service";
 

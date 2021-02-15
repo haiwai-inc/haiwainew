@@ -13,7 +13,7 @@
              <span>新建文章</span>
             </n-button>
         </div>
-        <ul>
+        <ul v-if="articleList.length!=0">
           <li
             v-for="(item, index) in articleList.filter(obj=>obj.visible!=0)"
             :key="index"
@@ -50,8 +50,11 @@
               >
                 <icon-schedule class="icon"></icon-schedule>定时发布
               </a>
-              <a class="dropdown-item pl-4" href="#"
+              <a v-if="!item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,1)"
                 ><icon-top class="icon"></icon-top>置顶文章</a
+              >
+              <a v-if="item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
+                ><icon-top class="icon"></icon-top>取消置顶</a
               >
               <div class="submenu-item dropleft">
                 <a
@@ -147,7 +150,8 @@ export default {
     },
     watch:{
       wjid:function(v){
-        this.getArticleList(v);
+        this.getArticleList();
+        console.log(v)
       }
     },
     components: {
@@ -172,11 +176,12 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
-      blog.category_article_list(this.wjid,0).then(res=>{
-        console.log(res,this.wjid);
-        this.articleList = res.data;
-        this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
-      })
+      this.getArticleList()
+      // blog.category_article_list(this.wjid,0).then(res=>{
+      //   console.log(res,this.wjid);
+      //   this.articleList = res.data;
+      //   this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
+      // })
     },
     data(){
         return{
@@ -244,14 +249,21 @@ export default {
       },
       getArticleList(){
         blog.category_article_list(this.wjid,0).then(res=>{
-        console.log(res);
-        this.articleList = res.data;
-        this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
-        this.btnDis.add = false;
-      })
+          console.log(res);
+          this.articleList = res.data;
+          this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
+          this.btnDis.add = false;
+        })
       },
       setActiveID(item){
         if(item.visible=1){}
+      },
+      articleSticky(item,type){
+        blog.article_sticky(item.postID,type).then(res=>{console.log(res)
+          if(res.status){
+            this.getArticleList();
+          }
+        })
       },
       test(e){
         console.log(e)
