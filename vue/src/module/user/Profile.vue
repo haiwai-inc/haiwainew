@@ -28,7 +28,7 @@
             <div v-if="menuId===0">
                <h6 class="border-bottom pb-3">博客设置</h6>
                <div class="blog-user-index">
-                  <div class="user-bg" style="background-image: url(/img/bg11.jpg);">
+                  <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
                      <div class="user-bgup"></div>
                   </div>
                </div>
@@ -37,15 +37,17 @@
                   <p class="pt-3"><b>博客名</b></p>
                   <fg-input
                      placeholder="博客名"
+                     v-model="blogProfile.name"
                      >
                   </fg-input>
                   <p class="pt-3"><b>博客简介</b></p>
                   <fg-input
                      placeholder="博客简介"
+                     v-model="blogProfile.description"
                      >
                   </fg-input>
                </div>
-               <button class="btn btn-round btn-primary">保存</button>
+               <button class="btn btn-round btn-primary" @click="saveBlockProfile">保存</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
                <h6 class="border-bottom pb-3">账号设置</h6>
@@ -54,13 +56,13 @@
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
                   <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
                   <input
-      ref="picInput"
-      type="file"
-      name="image"
-      accept="image/*"
-      @change="setImage"
-      style="display:none"
-    />
+                     ref="picInput"
+                     type="file"
+                     name="image"
+                     accept="image/*"
+                     @change="setImage"
+                     style="display:none"
+                  />
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">修改我的头像</button></div>
                   <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
@@ -191,7 +193,8 @@ export default {
 
          }
       });
-   this.getBlackList(0);
+      this.getBlogProfile();
+      this.getBlackList(0);
    },
   data(){
      var validatePass = (rule, value, callback) => {
@@ -225,6 +228,7 @@ export default {
          smail: '*_~'
       },
       blackList:[],
+      blogProfile:{},
       signupForm:{
         password:'',
         checkPassword:'',
@@ -359,6 +363,9 @@ export default {
 
          });
     },
+    clickInput(){
+       this.$refs.picInput.click();
+    },
       async getBlackList(lastID){
          let v = await this.$store.state.user.blacklist_list(lastID);
          if(v.status){
@@ -371,23 +378,34 @@ export default {
             this.getBlackList(0);
          })
       },
-    clickInput(){
-       this.$refs.picInput.click();
-    }
-
+      async getBlogProfile(){
+         let v = await this.$store.state.user.blogger_profile();
+         if(v.status){
+            this.blogProfile=v.data;
+            console.log(v.data)
+         }
+      },
+      saveBlockProfile(){
+         this.$store.state.user.blogger_profile_update(this.blogProfile.name,this.blogProfile.description).then(res=>{
+            console.log(res)
+            if(res.status){
+               this.getBlogProfile();
+            }
+         })
+      }
 
   }
 };
 </script>
 
+
+
+
+<style>
 .blacklist {
         padding: 12px 18px;
         border-top: 1px solid #ddd;
 }
-
-
-<style>
-
 .collection-box {
         background-color: #f0f8ff;
         border-radius: 16px;

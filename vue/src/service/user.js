@@ -81,6 +81,22 @@ class User extends API{
     }
 
     /**
+     * 获取博客设置项
+     *  
+     */
+    async blogger_profile(){
+        return await this.sendget("blog/user/blogger_profile/")
+    }
+    
+    /**
+     * 更新博客设置项
+     *  
+     */
+    async blogger_profile_update(name,description){
+        return await this.sendget("blog/user/blogger_profile_update/?name=" + name + "&description=" + description)
+    }
+    
+    /**
      * 获取黑名单
      * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
      */
