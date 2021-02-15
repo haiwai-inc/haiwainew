@@ -16,7 +16,7 @@ if(!empty($_GET['docs'])){
     echo "<h2>所有模组接口</h2>";
     $dirs=array_filter(glob('*'), 'is_dir');
     if(!empty($dirs)){
-        $frame_pool=['admin','cache','cache_dist','upload','data','include','vendor'];
+        $frame_pool=['admin','cache','cache_dist','upload','data','include','vendor','img'];
         foreach($dirs as $k=>$v){
             if(!in_array($v,$frame_pool)){
                 echo "<h3>{$v}</h3>";
