@@ -35,7 +35,7 @@ class user extends Api {
             "name"=>empty($name)?"":$name,
             "description"=>empty($description)?"":$description,
         ];
-        $obj_blog_blogger->update($fields,['id'=>$_SESSION['id']]);
+        $obj_blog_blogger->update($fields,['userID'=>$_SESSION['id']]);
         return true;
     }
     
