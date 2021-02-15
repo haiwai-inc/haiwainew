@@ -5,13 +5,10 @@ class user extends Api {
     
     public function __construct() {
         parent::__construct();
-        
-        //认证博主
-        $bloggerID="1";
-        $this->userAuthz($bloggerID);
+        $this->sess = true;
     }
     
-    /**`
+    /**
      * 博客设置页
      * 博主 信息
      */
@@ -26,7 +23,7 @@ class user extends Api {
     /**
      * 博主设置页
      * 博主 信息 修改
-     * @param integer $name|博主名
+     * @param string $name|博主名
      * @param integer $description|博主简介
      */
     public function blogger_profile_update($name,$description=NULL){
@@ -38,7 +35,7 @@ class user extends Api {
             "name"=>empty($name)?"":$name,
             "description"=>empty($description)?"":$description,
         ];
-        $check_blog_blogger->update($fields,['id'=>$_SESSION['id']]);
+        $obj_blog_blogger->update($fields,['userID'=>$_SESSION['id']]);
         return true;
     }
     
