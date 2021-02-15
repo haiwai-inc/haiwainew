@@ -79,7 +79,7 @@
               round 
               simple 
               :disabled="replybtndisable" 
-              @click="article_reply_add">发表评论</n-button>
+              @click="reply_add">发表评论</n-button>
             <h4 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h4>
             
           </div>
@@ -243,7 +243,7 @@ export default {
         }
       })
     },
-    article_reply_add(){
+    reply_add(){
       if(this.$refs.dialog.isLogin()){ //权限判断
         let obj = {
           article_data:{msgbody:this.replymsgbody,
@@ -251,7 +251,7 @@ export default {
           typeID:1}
         }
         this.replybtndisable = true;
-        blog.article_reply_add(obj).then(res=>{
+        blog.reply_add(obj).then(res=>{
           this.replybtndisable = false;
           this.getFirst20();
           this.replymsgbody="";

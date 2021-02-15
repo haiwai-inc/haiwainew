@@ -25,10 +25,10 @@
           <notice-follow></notice-follow>
         </span>
         <span v-if="activeId === 3">
-          <h6 class="pb-3 font-weight-normal">我收到的喜欢</h6>
+          <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的喜欢</h6>
           <article-list-item
             v-for="item in articlelists"
-            v-bind:key="item.articleID"
+            v-bind:key="item.postID"
             v-bind:data="item"
             type="0"
           >
@@ -62,7 +62,8 @@ import NoticeQqh from "./NoticeQqh";
 export default {
   name: "notices",
   mounted:function(){
-    this.getUnreadCount();
+    // this.getUnreadCount();
+    this.getlike()
   },
   data() {
     return {
@@ -197,6 +198,13 @@ export default {
       this.activeId = id;
       console.log(this);
     },
+    async getlike(){
+      let v = await this.$store.state.user.my_buzz_article_list(0);
+      if(v.status){
+        this.articlelists = v.data
+      }
+      console.log(this.articlelists)
+    }
   },
 };
 </script>

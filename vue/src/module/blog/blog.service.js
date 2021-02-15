@@ -55,14 +55,6 @@ class Blog extends API{
   }
 
   /**
-   * 返回博主文集列表
-   * @param number bloggerID
-   */
-  async category_list(bloggerID){
-    return await this.sendget("blog/page/category_list/?bloggerID="+bloggerID);
-  }
-
-  /**
    * 返回博主信息
    * @param number bloggerID
    */
@@ -106,8 +98,8 @@ class Blog extends API{
    * 发表/回复评论
    * @param obj article_data | post 对象{'msgbody'=>"回复内容",'postID'=>144819,"typeID"=>1,}
    */
-  async article_reply_add(obj){
-    return await this.sendpost("article/user/article_reply_add/",obj)
+  async reply_add(obj){
+    return await this.sendpost("article/user/reply_add/",obj)
   }
 
   /**
@@ -165,7 +157,7 @@ class Blog extends API{
    * @param Number id ：文集id
    */
   async category_update(name,id){
-    return await this.sendget("/blog/user/category_update/?name="+name)
+    return await this.sendget("/blog/user/category_update/?name="+name+"&id="+id)
   }
 
   /**
@@ -197,8 +189,42 @@ class Blog extends API{
    * @param number $id 
    * @param number $lastID
    */
-  async category_list(id,lastID){
-    return await this.sendget("blog/page/category_article_list/?id="+id+"&lastID="+lastID)
+  async category_article_list(id,lastID){
+    return await this.sendget("blog/user/article_list/?id="+id+"&lastID="+lastID)
+  }
+
+  /**
+   * 新建博客文章
+   * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
+   * @param {add:true,bloggerID:#,categoryID:#} module_data 
+   */
+  async article_add(data){
+    return await this.sendpost('article/user/article_add/',data)
+  }
+
+  /**
+   * 删除文集中的已发布文章
+   * @param {文章的postID} postID 
+   */
+  async article_delete(postID){
+    return await this.sendget('article/user/article_delete/?postID='+postID)
+  }
+
+  /**
+   * 新建文集中的草稿
+   * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
+   * @param {add:true,bloggerID:#,categoryID:#} module_data 
+   */
+  async draft_add(data){
+    return await this.sendpost('article/user/draft_add/?id=',data)
+  }
+
+  /**
+   * 删除文集中的草稿
+   * @param {草稿的id} id 
+   */
+  async draft_delete(id){
+    return await this.sendget('article/user/draft_delete/?id='+id)
   }
 
   /**

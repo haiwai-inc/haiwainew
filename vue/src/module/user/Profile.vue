@@ -5,20 +5,20 @@
     </div>
       <div class="row">
          <div class="col-sm-4 left-top-nav">
-            <div class="left-nav-item d-flex justify-content-between">
-               <div class="name"  @click="menuId=0" >
+            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between">
+               <div class="name" >
                   <icon-blog-set></icon-blog-set>
                   博客设置
                </div>
             </div>
-            <div class="left-nav-item d-flex justify-content-between">
-               <div class="name" @click="menuId=1">
+            <div @click="menuId=1" class="left-nav-item d-flex justify-content-between">
+               <div class="name">
                   <icon-account-set></icon-account-set>
                   账号设置
                </div>
             </div>
-            <div class="left-nav-item d-flex justify-content-between">
-               <div class="name" @click="menuId=2">
+            <div @click="menuId=2" class="left-nav-item d-flex justify-content-between">
+               <div class="name">
                   <icon-black-list></icon-black-list>
                   黑名单
                </div>

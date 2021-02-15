@@ -34,46 +34,14 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <category-list></category-list>
-        <!-- <button class="btn btn-link m-3" @click="modals.addwenji = true">
-          <icon-plus></icon-plus
-          ><span style="font-size:1rem;color:#14171A">新建文集</span>
-        </button>
-        <ul>
-          <li
-            class="wenjiItem d-flex justify-content-between align-items-center"
-            v-for="(item, index) in wenjiList"
-            :key="index"
-            :class="{ active: wenjiActiveId == item.id }"
-          >
-            <span
-              class="flex-fill"
-              @click="changeMenu(item.id, articleActiveId)"
-            >
-              {{ item.name }} ({{ item.count }})</span
-            >
-
-            <drop-down
-              class="nav-item dropdown"
-              :haiwaiIcon="iconmore3v"
-              haiwaiClass="haiwaiicon"
-              style="padding:0;"
-            >
-              <a class="dropdown-item" href="#" @click="modals.addwenji = true"
-                ><icon-edit class="icon"></icon-edit>修改文集名称</a
-              >
-              <a class="dropdown-item" href="#"
-                ><icon-delete class="icon"></icon-delete>删除文集</a
-              >
-            </drop-down>
-          </li>
-        </ul> -->
+        <category-list @setwjid="setWJid"></category-list>
+        
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list></category-article-list>
+      <category-article-list :wjid="wenjiActiveId"></category-article-list>
       
-      <ul>
+      <!-- <ul>
         <li
           v-for="(item, index) in articleList"
           :key="index"
@@ -144,7 +112,7 @@
             >
           </drop-down>
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <div ref="saving">
@@ -308,21 +276,21 @@ import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
 
-import { Button, DropDown, Modal, FormGroupInput } from "@/components";
+import { Button, Modal, FormGroupInput } from "@/components";
 import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
 import {
   HaiwaiLogoWhite,
   // IconPlus,
-  IconDelete,
-  IconDraft,
+  // IconDelete,
+  // IconDraft,
   // IconEdit,
-  IconForbid,
-  IconFolder,
-  IconPrivate,
-  IconTop,
-  IconSchedule,
+  // IconForbid,
+  // IconFolder,
+  // IconPrivate,
+  // IconTop,
+  // IconSchedule,
   IconX,
-  IconPublish,
+  // IconPublish,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import "jquery/dist/jquery"; 
@@ -342,7 +310,7 @@ import "./emoji/config.js";
 import "./audio/summernote-audio.css";
 import "./audio/summernote-audio";
 // import "./emoji/tam-emoji.min.js";
-import "bootstrap/dist/js/bootstrap.bundle";
+// import "bootstrap";
 import lang from "./language";
 // import './zh_CN'
 
@@ -357,7 +325,7 @@ export default {
     CategoryList,
     CategoryArticleList,
     [Button.name]: Button,
-    DropDown,
+    // DropDown,
     Modal,
     [FormGroupInput.name]: FormGroupInput,
     [DatePicker.name]: DatePicker,
@@ -365,16 +333,6 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
-    // IconPlus,
-    IconDelete,
-    IconDraft,
-    // IconEdit,
-    IconForbid,
-    IconFolder,
-    IconPrivate,
-    IconPublish,
-    IconSchedule,
-    IconTop,
     IconX,
     'editor': Editor,
 
@@ -394,7 +352,7 @@ export default {
         // this.article = await blog.getArticle(blogid);
         this.article = (
           await blog.article_view(postid)
-        ).data.data.postInfo_postID;
+        ).data.postInfo_postID;
         console.log(this.article);
         this.setEditorContent(this.article.msgbody)
         // $("#summernote").summernote("code", this.article.msgbody);
@@ -544,10 +502,16 @@ export default {
       ).catch(error=>{
 
       });
+    },
+    setWJid(e){
+      this.wenjiActiveId = e;
+      console.log(this.wenjiActiveId)
     }
   },
 
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.user.getUserStatus();
+  },
 
   created() {
     this.fetchData();
@@ -555,25 +519,25 @@ export default {
   mounted() {
     // this.initEditor();
     var source = new EventSource("/sse.php", { withCredentials: true });
-  source.onopen = function (event) {
-    console.log(event);
-  };
-  source.onclose = function (event){
-    console.log(event);
-  }
-  source.onerror = function (event) {
-    console.log(event);
-  // handle error event
-};
-  source.onmessage = function (message){
-    console.log(message)
-  }
+    source.onopen = function (event) {
+      console.log(event);
+    };
+    source.onclose = function (event){
+      console.log(event);
+    }
+    source.onerror = function (event) {
+      console.log(event);
+    // handle error event
+    };
+    source.onmessage = function (message){
+      console.log(message)
+    }
   },
 
   data() {
     return {
       iconmore3v: HaiwaiIcons.iconmore3v,
-      wenjiActiveId: 100,
+      wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
       modals: {
@@ -591,23 +555,7 @@ export default {
         },
       },
       timepicker: new Date(2016, 9, 10, 18, 40),
-      wenjiList: [
-        {
-          id: 100,
-          name: "日记本",
-          count: 12,
-        },
-        {
-          id: 980,
-          name: "飞鸟集",
-          count: 12,
-        },
-        {
-          id: 990,
-          name: "飞猪集",
-          count: 120,
-        },
-      ],
+      
       articleList: [
         {
           articleId: 12345,
@@ -729,6 +677,11 @@ color: #495057;
 outline: 0;
 }
 .publisher .dropdown .icon {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+.dropdown-item .icon svg{
   margin-right: 5px;
   width: 20px;
   height: 20px;

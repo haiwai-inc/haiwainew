@@ -22,7 +22,7 @@
                   round 
                   simple
                   :disabled="replybtndisable"
-                  @click="article_reply_add()"
+                  @click="reply_add()"
                     >回复</n-button
                   >
                   <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>回复</span></a>
@@ -55,21 +55,21 @@
                         <span @click="like(r)"><icon-like-outline :style="{fill:r.postInfo_postID.is_buzz==1?'#39b8eb':'gray',height:'18px',cursor:'pointer'}"></icon-like-outline></span>{{r.countinfo_postID.count_buzz}}
                         <icon-message :style="{fill:'gray',height:'18px'}" class="ml-4"></icon-message>
                         <el-popover 
-                placement="bottom-start"
-                width="375" 
-                @show="reply(r)"
-                trigger="click">
-                  <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
-                  <n-button 
-        type="primary"
-        round 
-        simple
-        :disabled="replybtndisable"
-        @click="article_reply_add()"
-          >回复</n-button
-        >
-                  <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
-                </el-popover>
+                        placement="bottom-start"
+                        width="375" 
+                        @show="reply(r)"
+                        trigger="click">
+                          <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                          <n-button 
+                            type="primary"
+                            round 
+                            simple
+                            :disabled="replybtndisable"
+                            @click="reply_add()"
+                              >回复</n-button
+                            >
+                          <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
+                        </el-popover>
                         
                         <el-popconfirm v-if="r.userID==loginuserID"
                           placement="top-end"
@@ -107,7 +107,7 @@
         round 
         simple
         :disabled="replybtndisable"
-        @click="article_reply_add()"
+        @click="reply_add()"
           >回复</n-button
         >
       </template>
@@ -136,7 +136,7 @@ import { Modal, Button } from '@/components';
 import Avatar from '../components/Main/Avatar';
 import {formatDate} from '@/directives/formatDate.js';
 import blog from '../../blog.service';
-import {Popconfirm,Popover} from 'element-ui';
+import {Popover} from 'element-ui';
 
 export default {
   name: 'comment',
@@ -150,7 +150,6 @@ export default {
       IconMessage,
       Modal,
       [Button.name]: Button,
-      [Popconfirm.name]:Popconfirm,
       [Popover.name]:Popover
   },
   mounted: function () {
@@ -217,7 +216,7 @@ export default {
         }
       
     },
-    article_reply_add(){
+    reply_add(){
       let obj = {
         article_data:{msgbody:this.replymsgbody,
         postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
@@ -225,7 +224,7 @@ export default {
       }
       this.replybtndisable = true;
       if(this.loginuserID!=-1){
-        blog.article_reply_add(obj).then(res=>{
+        blog.reply_add(obj).then(res=>{
           this.replybtndisable = false;
           this.regetComment();
           this.replymsgbody="";
