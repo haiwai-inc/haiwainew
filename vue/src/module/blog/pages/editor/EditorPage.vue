@@ -66,6 +66,7 @@
             :haiwaiIcon="iconmore3v"
             haiwaiClass="haiwaiicon"
             style="padding:0;"
+            aria-expanded = "true"
           >
             <a class="dropdown-item" href="#"
               ><icon-publish class="icon"></icon-publish>直接发布</a
@@ -142,7 +143,12 @@
         @blur="onEditorBlur"
         @input="onEditorInput"
         @destroy="onEditorDestroy"></ckeditor> -->
-      <div id="summernote"></div>
+      <!-- <div id="summernote"></div> -->
+      <editor
+       api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
+       :init="editorConfig"
+     />
+     
       <div ref="saveBox">
         <n-button
           v-if="true"
@@ -265,6 +271,7 @@
   </div>
 </template>
 <script>
+import Editor from '@tinymce/tinymce-vue'
 import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
@@ -305,6 +312,7 @@ import "./audio/summernote-audio";
 // import "./emoji/tam-emoji.min.js";
 // import "bootstrap";
 import lang from "./language";
+// import './zh_CN'
 
 
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -326,6 +334,8 @@ export default {
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
     IconX,
+    'editor': Editor,
+
   },
 
   methods: {
@@ -485,6 +495,14 @@ export default {
     editor_language() {
       $.extend($.summernote.lang, lang);
     },
+    uploadImage2(blobInfo, success, failure, progress){
+      blog.uploadImage(blobInfo.base64()).then(rs=>{
+        success(rs.data);
+      }
+      ).catch(error=>{
+
+      });
+    },
     setWJid(e){
       this.wenjiActiveId = e;
       console.log(this.wenjiActiveId)
@@ -499,7 +517,7 @@ export default {
     this.fetchData();
   },
   mounted() {
-    this.initEditor();
+    // this.initEditor();
     var source = new EventSource("/sse.php", { withCredentials: true });
     source.onopen = function (event) {
       console.log(event);
@@ -561,6 +579,28 @@ export default {
 
       loading: false,
       article: {},
+      editorConfig:{
+         height: 500,
+         menubar: false,
+         plugins: [
+           'advlist autolink lists link image charmap print preview anchor',
+           'searchreplace visualblocks code fullscreen',
+           'insertdatetime media table paste code help wordcount'
+         ],
+         toolbar:
+           'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | image media|\
+           bullist numlist outdent indent | removeformat | help',
+          branding: false,
+          language: 'zh_CN',
+          image_uploadtab: true,
+          images_upload_handler: this.uploadImage2,
+          media_live_embeds: false,
+          media_alt_source: false,
+          media_dimensions: false,
+          media_filter_html: false,
+          media_poster: false
+       }
     };
   },
 };

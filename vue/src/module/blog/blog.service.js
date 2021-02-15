@@ -273,6 +273,35 @@ class Blog extends API{
       return await this.sendget("blog/dashboard/delete/?id="+blogid)
   }
 
+  /**
+   * 上传文件
+   * @param string file | base64 of the file
+   * @param string type | 文件类型
+   */
+  async uploadFile(file, type){
+    let data = {
+      file:file
+    }
+    return await this.sendpost("search/user/upload_file/?type="+type, data)
+  }
+
+  /**
+   * 上传图片
+   * @param string data | base64 of the file
+   */
+  async uploadImage(data){
+    return await this.uploadFile(data, "pic");
+  }
+
+  /**
+   * 上传多媒体
+   * @param {string} data | base64 of the file
+   */
+  async uploadMedia(data){
+    return await this.uploadFile(data, "media");
+  }
+
+
   async sendget(url){
       try{
           let rs = await this.get(url);

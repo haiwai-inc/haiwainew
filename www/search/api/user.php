@@ -97,7 +97,22 @@ class user extends Api
     public function update_avatar($avatar){
         // debug::d($avatar);
         $pic_obj = load("article_pic");
-        $url = $pic_obj -> save_avatar($avatar);
+        $url = $pic_obj -> save_picture($avatar);
+
+        //update user profile
+         
+
+        return $url;
+    }
+
+    /**
+     * @param string $type
+     * @param string $file
+     * @post file
+     */
+    public function upload_file($type, $file){
+        $pic_obj = load("article_pic");
+        $url = $pic_obj -> save_picture($file);
         return $url;
     }
 }

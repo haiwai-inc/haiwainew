@@ -1,18 +1,17 @@
 <?php
 class article_pic{
     public function save_file($file){
-        // $encodedData = str_replace(' ','+',$file);
-        // $decodedData = base64_decode($encodedData);
-        // echo(var_dump($decodedData));
-        // echo(file_get_contents($file));
-        // echo(DOCUROOT);
-        // file_put_contents(DOCUROOT."/data/test.jpg", $decodedData);
-        // file_put_contents(DOCUROOT."/data/test1.jpg", $file);
+        if(substr($file, 0, 4) === "data"){
+            $file = file_get_contents($file);
+        }
+        else {
+            $file = base64_decode($file);
+        }
         $random_num = $this->random_string(15);
         while(file_exists(DOCUROOT."/upload/$random_num.jpg")){
             $random_num = $this->random_string(15);
         }
-        file_put_contents(DOCUROOT."/upload/$random_num.jpg", file_get_contents($file));
+        file_put_contents(DOCUROOT."/upload/$random_num.jpg", $file);
         return $random_num;
     }
 
@@ -20,10 +19,13 @@ class article_pic{
         return "/upload/$random_num.jpg";
     }
 
-    public function save_avatar($file){
+    public function save_picture($file){
         $file_number = $this->save_file($file);
         return $this->getFileURL($file_number);
     }
+
+
+    
 
 
     function random_string($length) {

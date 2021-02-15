@@ -11,6 +11,7 @@
     "@ckeditor/ckeditor5-build-classic": "^23.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.2",
     "@popperjs/core": "^2.6.0",
+    "@tinymce/tinymce-vue": "^3.2.8",
     "babel-eslint": "^10.1.0",
     "bootstrap": "^4.5.3",
     "bootswatch": "^4.5.3",
