@@ -53,7 +53,15 @@
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
                   <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">修改我的头像</button></div>
+                  <input
+      ref="picInput"
+      type="file"
+      name="image"
+      accept="image/*"
+      @change="setImage"
+      style="display:none"
+    />
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">修改我的头像</button></div>
                   <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
                      @crop-upload-success="cropUploadSuccess"
@@ -71,25 +79,19 @@
                </div>
                <div v-show = "show" v-if="show"> 
                   
-                  <input
-      ref="input"
-      type="file"
-      name="image"
-      accept="image/*"
-      @change="setImage"
-    />
-                  <VueCropper v-show="imgSrc" ref="cropper"  :src="imgSrc" alt="Source Image" preview=".preview" aspectRatio="1"></VueCropper>
+                  
+                  <VueCropper v-if="imgSrc" ref="cropper"  :src="imgSrc" alt="Source Image" preview=".preview" :aspectRatio="1"></VueCropper>
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="saveImage">确认修改</button></div>
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">取消</button></div>
                 <div class="preview" />
-        <div class="cropped-image">
+        <!-- <div class="cropped-image">
           <img
             v-if="croppedImage"
             :src="croppedImage"
             alt="Cropped Image"
           />
           <div v-else class="crop-placeholder" />
-        </div>
+        </div> -->
                </div>
                <div>
                   <p class="pt-3"><b>笔名</b></p>
@@ -166,6 +168,7 @@ import EleUploadImage from "vue-ele-upload-image";
 import account from './service/account';
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+ import Editor from '@tinymce/tinymce-vue'
 
 export default {
   name: 'profile',
@@ -320,6 +323,7 @@ export default {
       );
       },
       setImage(e) {
+         this.toggleShow();
       const file = e.target.files[0];
       if (file.type.indexOf('image/') === -1) {
         alert('Please select an image file');
@@ -336,28 +340,27 @@ export default {
       } else {
         alert('Sorry, FileReader API not supported');
       }
+         this.$refs.picInput.value = "";
     },
     saveImage() {
       const userId = this.$route.params.user_id
       this.cropedImage = this.$refs.cropper.getCroppedCanvas().toDataURL()
       account.upload_avatar({avatar:this.cropedImage}).then(rs=>{
+         if(rs.status){
+            this.authorInfor.avatar = rs.data;
+            this.toggleShow();
+         }
+         else {
 
+         }
+            
          }).catch(err=>{
 
          });
-      this.$refs.cropper.getCroppedCanvas().toBlob((blob) => {
-        const formData = new FormData()
-        formData.append('avatar', blob, 'name.jpeg')
-         
-      //   axios
-      //     .post('/api/user/' + userId + '/profile-photo', formData)
-      //     .then((response) => {
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error)
-      //     })
-      }, this.mime_type)
     },
+    clickInput(){
+       this.$refs.picInput.click();
+    }
 
 
   }
