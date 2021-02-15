@@ -55,6 +55,7 @@ export default {
     blog.hot_tag().then(res=>{
       if(res.status){
         this.maincategory=res.data.data;
+        console.log(this.maincategory);
       }
       // console.log(this.maincategory);
     }).catch(err=>{
