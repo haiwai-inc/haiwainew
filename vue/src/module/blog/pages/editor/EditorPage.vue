@@ -34,12 +34,11 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <category-list @setwjid="setWJid"></category-list>
-        
+        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId"></category-list>
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list :wjid="wenjiActiveId"></category-article-list>
+      <category-article-list :wjid="wenjiActiveId" :cats="wenjiList"></category-article-list>
       
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
@@ -58,19 +57,7 @@
       </div>
 
       <!-- 编辑器 -->
-      <!-- <ckeditor 
-        :editor="editor"
-        :config="editorConfig"
-        :disabled="editorDisabled"
-
-        tag-name="textarea"
-        v-model="article.content"
-        
-        @ready="onEditorReady"
-        @focus="onEditorFocus"
-        @blur="onEditorBlur"
-        @input="onEditorInput"
-        @destroy="onEditorDestroy"></ckeditor> -->
+      
       <!-- <div id="summernote"></div> -->
       <editor
        api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
@@ -249,7 +236,6 @@ export default {
     HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
-
   },
 
   methods: {
@@ -445,12 +431,19 @@ export default {
     };
     source.onmessage = function (message){
       console.log(message)
-    }
+    };
+    blog.category_list(this.userID).then(res=>{
+      this.wenjiList = res.data;
+      this.wenjiActiveId = this.wenjiList[0].id
+      console.log(this.wenjiList,this.wenjiActiveId)
+    })
   },
 
   data() {
     return {
+      userID:this.$store.state.user.userinfo.UserID,
       iconmore3v: HaiwaiIcons.iconmore3v,
+      wenjiList:[],
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",

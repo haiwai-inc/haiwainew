@@ -69,8 +69,7 @@
                   <icon-folder class="icon"></icon-folder>移动文章
                 </a>
                 <div class="dropdown-menu" aria-labelledby="move">
-                  <a class="dropdown-item" href="#">文集1</a>
-                  <a class="dropdown-item" href="#">文集2</a>
+                  <a class="dropdown-item" href="javascript:void(0)" v-for="(o,index) in cats.filter(e=>e.id!==wjid)" :key="index" @click="shiftCategory(item.postID,o.id)">{{o.name}}</a>
                 </div>
               </div>
               <a class="dropdown-item pl-4" href="#"
@@ -146,7 +145,8 @@ import {
 export default {
     name: 'category-article-list',
     props:{
-      wjid:Number
+      wjid:Number,
+      cats:Object
     },
     watch:{
       wjid:function(v){
@@ -258,9 +258,18 @@ export default {
       setActiveID(item){
         if(item.visible=1){}
       },
+      // 文章置顶、取消置顶
       articleSticky(item,type){
         blog.article_sticky(item.postID,type).then(res=>{console.log(res)
           if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      // 移动文章
+      shiftCategory(postID,catID){
+        blog.article_shift_category(postID,catID).then(res=>{
+          if(res.status){console.log(postID,catID)
             this.getArticleList();
           }
         })

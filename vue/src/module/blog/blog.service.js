@@ -237,12 +237,21 @@ class Blog extends API{
   }
 
   /**
-   * 
+   * 文章置顶
    * @param {文章编号} postID
    * @param {1开 0关} is_sticky 
    */
   async article_sticky(postID,is_sticky){
     return await this.sendget("article/user/article_sticky/?postID="+postID+"&is_sticky="+is_sticky)
+  }
+
+  /**
+   * 文章移动到某文集
+   * @param {文章编号} postID
+   * @param {移动到的文集编号} categoryID 
+   */
+  async article_shift_category(postID,categoryID){
+    return await this.sendget("article/user/article_shift_category/?postID="+postID+"&categoryID="+categoryID)
   }
 
   /**

@@ -7,7 +7,7 @@
         <ul>
           <li
             class="wenjiItem d-flex justify-content-between align-items-center"
-            v-for="(item, index) in wenjiList"
+            v-for="(item, index) in wl"
             :key="index"
             :class="{ active: wenjiActiveId == item.id }"
           >
@@ -100,6 +100,10 @@ import blog from "../../../blog.service";
 
 export default {
     name: 'category-list',
+    props:{
+      wl:Array,
+      wjid:Number
+    },
     components: {
       [Button.name]: Button,
       DropDown,
@@ -123,40 +127,39 @@ export default {
           }
         }
       };
-        return{
-          userID:this.$store.state.user.userinfo.UserID,
-          iconmore3v: HaiwaiIcons.iconmore3v,
-          icon_plus:HaiwaiIcons.icon_plus,
-          icon_edit:HaiwaiIcons.icon_edit,
-          icon_delete:HaiwaiIcons.icon_delete,
-          wenjiActiveId: 100,
-          wenjiList: [],
-          modals: {
-            addwenji: false,
-            publish: false,
-            schedule: false,
-          },
-          categories:{
-            name:'',
-            list:''
-          },
-          catForm:{
-            name:'',
-          },
-          WJrules:{
-            name:[
-              { required: true, validator: validateWJName, trigger: 'blur' },
-            ],
-          },
-          btnDisable:false
-        }
+      return{
+        userID:this.$store.state.user.userinfo.UserID,
+        iconmore3v: HaiwaiIcons.iconmore3v,
+        icon_plus:HaiwaiIcons.icon_plus,
+        icon_edit:HaiwaiIcons.icon_edit,
+        icon_delete:HaiwaiIcons.icon_delete,
+        wenjiActiveId: this.wjid,
+        modals: {
+          addwenji: false,
+          publish: false,
+          schedule: false,
+        },
+        categories:{
+          name:'',
+          list:''
+        },
+        catForm:{
+          name:'',
+        },
+        WJrules:{
+          name:[
+            { required: true, validator: validateWJName, trigger: 'blur' },
+          ],
+        },
+        btnDisable:false
+      }
     },
     mounted() {
-      blog.category_list(this.userID).then(res=>{
-        this.wenjiList = res.data;
-        this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
-        this.changeMenu(this.wenjiActiveId);
-      })
+      // blog.category_list(this.userID).then(res=>{
+      //   this.wenjiList = res.data;
+      //   this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
+      //   this.changeMenu(this.wenjiActiveId);
+      // })
     },
     methods:{
       changeMenu(wid) {
