@@ -199,24 +199,11 @@ import {
 import HaiwaiIcons from "@/components/Icons/Icons";
 import "jquery/dist/jquery"; 
 import $ from "jquery";
-import jQuery from "jquery";
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/css/bootstrap-reboot.css';
-// import 'bootstrap/dist/css/bootstrap-grid.css';
-// import 'summernote/dist/summernote.min.css';
-import "summernote/dist/summernote-bs4.css";
-// import "bootswatch/dist/flatly/bootstrap.css";
-import "summernote/dist/summernote-bs4.js";
+
 import "./emoji/emoji.css";
 import "./emoji/config.js";
-// import "./emoji/summernote-ext-emoji-ajax.css";
-// import "./emoji/summernote-ext-emoji-ajax.js";
-import "./audio/summernote-audio.css";
-import "./audio/summernote-audio";
-// import "./emoji/tam-emoji.min.js";
-// import "bootstrap";
+
 import lang from "./language";
-// import './zh_CN'
 
 import blog from "../../blog.service";
 
