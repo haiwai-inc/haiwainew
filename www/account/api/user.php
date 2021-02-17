@@ -180,7 +180,18 @@ class user extends Api {
             $fields['id,<']=$lastID;
         }
         $rs_account_bookmark=$obj_account_bookmark->getAll("*",$fields);
-        $rs_account_bookmark=$obj_article_post->get_basic_userinfo($rs_account_bookmark,"postID");
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_account_bookmark=$obj_account_user->get_basic_userinfo($rs_account_bookmark,"userID");
+        
+        //添加ES信息
+        $obj_search_article_noindex=load("search_article_noindex");
+        $rs_account_bookmark=$obj_search_article_noindex->get_postInfo($rs_account_bookmark);
+        
+        //添加文章计数信息
+        $obj_article_indexing=load("article_indexing");
+        $rs_account_bookmark=$obj_article_indexing->get_article_count($rs_account_bookmark);
         
         return $rs_account_bookmark;
     }
