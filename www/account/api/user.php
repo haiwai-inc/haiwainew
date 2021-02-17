@@ -499,9 +499,17 @@ class user extends Api {
             return [];
         }
         
-        //ES补全postID信息
-        $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加ES信息
+        $obj_search_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_search_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
         return $rs_article_indexing;
     }
     
