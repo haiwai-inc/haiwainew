@@ -480,7 +480,7 @@ class user extends Api {
         $obj_article_indexing=load("article_indexing");
         $rs_account_notification=$obj_article_indexing->get_article_info_by_comment($rs_account_notification);
         
-        return $rs;
+        return $rs_account_notification;
     }
     
     /**
