@@ -34,85 +34,12 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <category-list @setwjid="setWJid"></category-list>
-        
+        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId"></category-list>
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list :wjid="wenjiActiveId"></category-article-list>
+      <category-article-list :wjid="wenjiActiveId" :cats="wenjiList"></category-article-list>
       
-      <!-- <ul>
-        <li
-          v-for="(item, index) in articleList"
-          :key="index"
-          class="aritcleItem d-flex justify-content-between align-items-center"
-          :class="{
-            active: item.articleId == articleActiveId,
-            ispublished: item.isPublished,
-          }"
-        >
-          <div
-            class="flex-fill"
-            @click="changeMenu(wenjiActiveId, item.articleId)"
-          >
-            <icon-draft class="icon"></icon-draft>
-            {{ item.title }}
-            <div>
-              <small>字数：{{ item.wordCount }}</small>
-            </div>
-          </div>
-          <drop-down
-            class="nav-item dropdown"
-            :haiwaiIcon="iconmore3v"
-            haiwaiClass="haiwaiicon"
-            style="padding:0;"
-            aria-expanded = "true"
-          >
-            <a class="dropdown-item" href="#"
-              ><icon-publish class="icon"></icon-publish>直接发布</a
-            >
-            <a
-              class="dropdown-item pl-4"
-              href="#"
-              @click="modals.schedule = true"
-            >
-              <icon-schedule class="icon"></icon-schedule>定时发布
-            </a>
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-top class="icon"></icon-top>置顶文章</a
-            >
-            <div class="submenu-item dropleft">
-              <a
-                class="dropdown-item dropdown-toggle pl-3"
-                href="#"
-                id="move"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <icon-folder class="icon"></icon-folder>移动文章
-              </a>
-              <div class="dropdown-menu" aria-labelledby="move">
-                <a class="dropdown-item" href="#">文集1</a>
-                <a class="dropdown-item" href="#">文集2</a>
-              </div>
-            </div>
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-private class="icon"></icon-private>设为私密</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-forbid class="icon"></icon-forbid>禁止评论</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-forbid class="icon"></icon-forbid>禁止转载</a
-            >
-            <a class="dropdown-item pl-4" href="#"
-              ><icon-delete class="icon"></icon-delete>删除文章</a
-            >
-          </drop-down>
-        </li>
-      </ul> -->
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <div ref="saving">
@@ -130,19 +57,7 @@
       </div>
 
       <!-- 编辑器 -->
-      <!-- <ckeditor 
-        :editor="editor"
-        :config="editorConfig"
-        :disabled="editorDisabled"
-
-        tag-name="textarea"
-        v-model="article.content"
-        
-        @ready="onEditorReady"
-        @focus="onEditorFocus"
-        @blur="onEditorBlur"
-        @input="onEditorInput"
-        @destroy="onEditorDestroy"></ckeditor> -->
+      
       <!-- <div id="summernote"></div> -->
       <editor
        api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
@@ -274,47 +189,20 @@ import Editor from '@tinymce/tinymce-vue'
 import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
-
 import { Button, Modal, FormGroupInput } from "@/components";
 import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
 import {
   HaiwaiLogoWhite,
-  // IconPlus,
-  // IconDelete,
-  // IconDraft,
-  // IconEdit,
-  // IconForbid,
-  // IconFolder,
-  // IconPrivate,
-  // IconTop,
-  // IconSchedule,
   IconX,
-  // IconPublish,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import "jquery/dist/jquery"; 
 import $ from "jquery";
-import jQuery from "jquery";
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/css/bootstrap-reboot.css';
-// import 'bootstrap/dist/css/bootstrap-grid.css';
-// import 'summernote/dist/summernote.min.css';
-import "summernote/dist/summernote-bs4.css";
-// import "bootswatch/dist/flatly/bootstrap.css";
-import "summernote/dist/summernote-bs4.js";
+
 import "./emoji/emoji.css";
 import "./emoji/config.js";
-// import "./emoji/summernote-ext-emoji-ajax.css";
-// import "./emoji/summernote-ext-emoji-ajax.js";
-import "./audio/summernote-audio.css";
-import "./audio/summernote-audio";
-// import "./emoji/tam-emoji.min.js";
-// import "bootstrap";
+
 import lang from "./language";
-// import './zh_CN'
-
-
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import blog from "../../blog.service";
 
@@ -339,7 +227,6 @@ export default {
     HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
-
   },
 
   methods: {
@@ -535,12 +422,19 @@ export default {
     };
     source.onmessage = function (message){
       console.log(message)
-    }
+    };
+    blog.category_list(this.userID).then(res=>{
+      this.wenjiList = res.data;
+      this.wenjiActiveId = this.wenjiList[0].id
+      console.log(this.wenjiList,this.wenjiActiveId)
+    })
   },
 
   data() {
     return {
+      userID:this.$store.state.user.userinfo.UserID,
       iconmore3v: HaiwaiIcons.iconmore3v,
+      wenjiList:[],
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
