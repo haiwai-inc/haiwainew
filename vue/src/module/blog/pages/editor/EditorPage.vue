@@ -63,7 +63,6 @@
        api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
        :init="editorConfig"
      />
-     
       <div ref="saveBox">
         <n-button
           v-if="true"
@@ -197,14 +196,6 @@ import {
   IconX,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
-import "jquery/dist/jquery"; 
-import $ from "jquery";
-
-// import "./emoji/emoji.css";
-// import "./emoji/config.js";
-
-import lang from "./language";
-
 import blog from "../../blog.service";
 
 export default {
@@ -473,17 +464,19 @@ export default {
 
       loading: false,
       article: {},
+
+      //TinyMCE
       editorConfig:{
          height: 500,
          menubar: false,
          plugins: [
            'advlist autolink lists link image charmap print preview anchor',
-           'searchreplace visualblocks code fullscreen',
+           'searchreplace visualblocks code fullscreen emoticons',
            'insertdatetime media table paste code help wordcount'
          ],
          toolbar:
            'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | image media|\
+           alignleft aligncenter alignright alignjustify | image media file emoticons|\
            bullist numlist outdent indent | removeformat | help',
           branding: false,
           language: 'zh_CN',
@@ -492,8 +485,12 @@ export default {
           media_live_embeds: false,
           media_alt_source: false,
           media_dimensions: false,
-          media_filter_html: false,
-          media_poster: false
+          media_filter_html: true,
+          media_poster: false,
+          file_browser_callback_types: 'file image media',
+          audio_template_callback: function(data) {
+   return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
+ }
        }
     };
   },

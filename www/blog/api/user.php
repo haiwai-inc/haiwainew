@@ -118,9 +118,9 @@ class user extends Api {
     
     /**
      * 小铃铛页
-     * 关注 "关注我的"
+     * 我关注的人 
      */
-    public function follower_list_mine(){
+    public function my_followering_list(){
         
     }
     
