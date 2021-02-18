@@ -196,20 +196,7 @@ import {
   IconX,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
-import "jquery/dist/jquery"; 
-import $ from "jquery";
-
-import "./emoji/emoji.css";
-import "./emoji/config.js";
-
-import lang from "./language";
-
 import blog from "../../blog.service";
-
- import Trumbowyg from 'vue-trumbowyg';
-  
-  // Import editor css
-  import 'trumbowyg/dist/ui/trumbowyg.css';
 
 export default {
   name:"editor-page",
