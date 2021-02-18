@@ -127,6 +127,22 @@ class User extends API{
     async bookmark_list(lastID){
         return await this.sendget("account/user/bookmark_list/?lastID="+lastID)
     }
+    
+    /**
+     * 收藏、加书签
+     * @param postID $postID
+     */ 
+    async bookmark_add(postID){
+      return await this.sendget("account/user/bookmark_add/?postID="+postID)
+    }
+  
+    /**
+     * 取消收藏、取消书签
+     * @param postID $postID
+     */ 
+    async bookmark_delete(postID){
+      return await this.sendget("account/user/bookmark_delete/?postID="+postID)
+    }
 
     /**
      * 获取我收到的评论

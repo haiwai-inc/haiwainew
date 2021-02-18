@@ -200,8 +200,8 @@ import HaiwaiIcons from "@/components/Icons/Icons";
 import "jquery/dist/jquery"; 
 import $ from "jquery";
 
-import "./emoji/emoji.css";
-import "./emoji/config.js";
+// import "./emoji/emoji.css";
+// import "./emoji/config.js";
 
 import lang from "./language";
 
