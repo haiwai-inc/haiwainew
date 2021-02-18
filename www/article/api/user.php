@@ -159,6 +159,15 @@ class user extends Api {
     
     /**
      * 编辑器页
+     * 文章 草稿 显示
+     * @param integer $id | 草稿id
+     */
+    public function draft_view($id){
+        
+    }
+    
+    /**
+     * 编辑器页
      * 文章 草稿 添加
      * @param obj $article_data | 文章的数据
      * @param obj $module_data | 组件的数据
