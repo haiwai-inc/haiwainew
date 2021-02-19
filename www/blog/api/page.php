@@ -255,7 +255,7 @@ class page extends Api {
     }
     
     /**
-     * 文章详情页 编辑器页
+     * 文章详情页
      * 文章 详情
      * @param integer $id | 主贴postID
      */
