@@ -124,7 +124,7 @@ class user extends Api {
      * 文章 草稿 添加
      * @param integer $id | 编辑帖子id
      */
-    public function draft_add_by_postID($id){
+    public function article_to_draft_by_postID($id){
         $obj_article_indexing=load("article_indexing");
         
         $rs_article_indexing=$obj_article_indexing->getOne(['postID','categoryID','userID','bloggerID','create_date','edit_date','typeID'],['visible'=>1,'postID'=>$id]);
@@ -375,7 +375,7 @@ class user extends Api {
      * 文章 发布 
      * @param integer $draftID | 文章的draftID
      */
-    public function article_add_by_draftID($draftID){
+    public function draft_to_article_by_draftID($draftID){
         $obj_article_draft=load("article_draft");
         $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$draftID]);
         if(empty($rs_article_draft)) {$this->error="发布的文章不存在";$this->status=false;return false;}
