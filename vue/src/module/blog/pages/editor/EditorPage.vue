@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list :wjid="wenjiActiveId" :cats="wenjiList"></category-article-list>
+      <category-article-list @setarticleid="setArtid" :wjid="wenjiActiveId" :cats="wenjiList"></category-article-list>
       
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
@@ -51,7 +51,7 @@
         <input
           class="editorTitle"
           type="text"
-          v-model="article.title"
+          v-model="curentArticle.postInfo_postID.title"
           placeholder="新建博文标题"
         />
       </div>
@@ -62,6 +62,7 @@
       <editor
        api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
        :init="editorConfig"
+       v-model="curentArticle.postInfo_postID.msgbody"
      />
       <div ref="saveBox">
         <n-button
@@ -69,7 +70,7 @@
           type="primary"
           round
           simple
-          @click.native="modals.publish = true"
+          @click.native="modals.publish=true"
           class="editbtn"
         >
           发布文章
@@ -95,26 +96,6 @@
         </n-button> -->
     </div>
 
-    <!-- Add Wenji Modal -->
-    <!-- <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">
-        请编辑新文集名称
-      </h4>
-      <p>
-        <fg-input placeholder="文集名"></fg-input>
-      </p>
-      <template slot="footer">
-        <n-button
-          class="mr-3"
-          type="default"
-          link
-          @click.native="modals.addwenji = false"
-        >
-          取消
-        </n-button>
-        <n-button type="primary" round simple>保存</n-button>
-      </template>
-    </modal> -->
 
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
@@ -237,93 +218,6 @@ export default {
       }
     },
 
-    setEditorContent(content){
-      $("#summernote").summernote("code", content);
-    },
-    getEditorContent(){
-      return $("#summernote").summernote("code");
-    },
-
-    save() {
-      console.log(this.getEditorContent())
-      this.article.msgbody = $("#summernote").summernote("code");
-      blog.update(1, this.article);
-    },
-
-    uploadImage(files) {
-      console.log("HHAHHA")
-      let data = new FormData();
-      data.append("file", files);
-      blog.uploadImage(data).then(
-        (rs) => {
-          console.log(rs);
-          if (rs["error"]) {
-            alert("上传图片失败");
-          } else {
-            console.log(rs["data"]["data"]);
-            $("#summernote").summernote(
-              "insertImage",
-              "http://japan.people.com.cn/NMediaFile/2018/0921/MAIN201809211240000389013678253.jpg",
-              "filename"
-            );
-          }
-
-          // editor.insertImage($editable, url);
-        },
-        (err) => {}
-      );
-      // $.ajax({
-      //   data: data,
-      //   type: "POST",
-      //   url: "Your URL POST (php)",
-      //   cache: false,
-      //   contentType: false,
-      //   processData: false,
-      //   success: function(url) {
-      //     editor.insertImage(welEditable, url);
-      //   }});
-    },
-
-    initEditor() {
-      // await import ("summernote/lang/summernote-zh-CN.js")
-      this.editor_language();
-      let height = this.$refs.editorContainer.clientHeight;
-      // console.log(height);
-      // height -=
-      //   this.$refs.saving.clientHeight +
-      //   this.$refs.titleBox.clientHeight +
-      //   this.$refs.saveBox.clientHeight;
-      // console.log(this.uploadImage)
-      $("#summernote").summernote({
-        lang: "zh-CN",
-        height: height*0.6,
-        toolbar: [
-          ["font", ["bold", 'italic', "underline", "strikethrough"]],
-          ["style", ["style"]],
-          ["para", ["paragraph"]],
-          ["insert", ["link", "picture", "video", "audio", "emoji"]],
-          ["font",["fontsize"]],
-          ["color", ["forecolor", "backcolor"]],
-          ["table", ["table"]],
-          ["para", ["ul", "ol"]],
-          ["font", ["clear"]],
-          ["view", ["fullscreen", "codeview", "help"]],
-        ],
-        callbacks: {
-          onImageUpload: this.uploadImage,
-          onAudioUpload: this.uploadAudio
-        },
-      });
-    },
-
-    uploadAudio(files) {
-      // console.log(files)
-      $("#summernote").summernote(
-        "audio.insertAudio",
-        "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-        "filename"
-      );
-    },
     //for editor
     toggleEditorDisabled() {
       this.editorDisabled = !this.editorDisabled;
@@ -347,15 +241,7 @@ export default {
     destroyApp() {
       app.$destroy();
     },
-    addWenji() {
-      var newwenji = {
-        id: 1000,
-        name: "新建的文集",
-        count: 0,
-      };
-      this.wenjiList.push(newwenji);
-      this.changeMenu(newwenji.id, this.articleActiveId);
-    },
+    
     addArticle() {
       var newarticle = {
         articleId: 9089,
@@ -383,12 +269,34 @@ export default {
     },
     setWJid(e){
       this.wenjiActiveId = e;
-      console.log(this.wenjiActiveId)
+    },
+    setArtid(e){
+      this.articleActiveId = e.id;
+      this.getContent(e);
+    },
+    getContent(e){
+      if(e.visible==1){
+        blog.article_view(e.postID).then(res=>{
+          this.curentArticle=res.data;
+          console.log(this.curentArticle)
+        });
+      }else{
+        // blog.draft_view(e.id).then(res=>{
+        //   this.curentArticle=res.data;
+        //   console.log(this.curentArticle)
+        // })
+        this.curentArticle={postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}}
+      }
     }
   },
 
   beforeCreate() {
-    this.$store.state.user.getUserStatus();
+    this.$store.state.user.getUserStatus().then(r=>{
+      blog.category_list(r.data.UserID).then(res=>{
+        this.wenjiList = res.data;
+        this.wenjiActiveId = this.wenjiList[0].id;
+      });
+    });
   },
 
   created() {
@@ -410,11 +318,6 @@ export default {
     source.onmessage = function (message){
       console.log(message)
     };
-    blog.category_list(this.userID).then(res=>{
-      this.wenjiList = res.data;
-      this.wenjiActiveId = this.wenjiList[0].id
-      console.log(this.wenjiList,this.wenjiActiveId)
-    })
   },
 
   data() {
@@ -425,6 +328,7 @@ export default {
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
+      curentArticle:{postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}},
       modals: {
         addwenji: false,
         publish: false,
@@ -440,7 +344,7 @@ export default {
         },
       },
       timepicker: new Date(2016, 9, 10, 18, 40),
-      
+      msgbody:'asd',
       articleList: [
         {
           articleId: 12345,
@@ -559,13 +463,13 @@ html,
   font-weight: 700;
 }
 .publisher .editorTitle{
-font-size: 30px;
-padding: 10px;
-border: 0;
+  font-size: 30px;
+  padding: 10px;
+  border: 0;
 }
 .publisher input.editorTitle:focus{
-color: #495057;
-outline: 0;
+  color: #495057;
+  outline: 0;
 }
 .publisher .dropdown .icon {
   margin-right: 5px;
@@ -607,25 +511,25 @@ outline: 0;
 }
 
 .publisher h1, h2, h3, h4, h5, h6 {
-        text-transform: uppercase;
-        letter-spacing: 3px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
 }
 
 .publisher h1, .h1 {
-        font-size: 2rem;
+  font-size: 2rem;
 }
 .publisher  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        line-height: 1.2;
-        color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1a1a1a;
 }
 .publisher .note-btn-group .note-btn{
   background-color: transparent;
   color: #55595c
 }
 .publisher a {
-        color: #1a1a1a
+  color: #1a1a1a
  }       
 
 .note-toolbar, .card-header{

@@ -30,7 +30,7 @@ class Blog extends API{
    * 返回热榜博文列表
    */
   async hot_article_list(tagID,lastid){
-    return await this.sendget("blog/page/article_list_tag/?tagID="+tagID+"&lastID="+lastid);
+    return await this.sendget("blog/page/hot_article/?tagID="+tagID);
   }
 
   /**
@@ -76,6 +76,14 @@ class Blog extends API{
    */
   async article_view(id){
     return await this.sendget("blog/page/article_view/?id="+id)
+  }
+
+  /**
+   * 返回草稿内容
+   * @param number id 
+   */
+  async draft_view(id){
+    return await this.sendget("article/user/draft_view/?id="+id)
   }
 
   /**

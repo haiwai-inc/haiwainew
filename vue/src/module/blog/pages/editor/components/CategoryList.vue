@@ -9,7 +9,7 @@
             class="wenjiItem d-flex justify-content-between align-items-center"
             v-for="(item, index) in wl"
             :key="index"
-            :class="{ active: wenjiActiveId == item.id }"
+            :class="{ active: wenjiActiveId==item.id }"
           >
             <span class="flex-fill" @click="changeMenu(item.id)">
               {{ item.name }} ({{ item.count_article }})
@@ -104,6 +104,11 @@ export default {
       wl:Array,
       wjid:Number
     },
+    watch:{
+      wjid:function(v){
+        this.changeMenu(this.wjid);console.log(v)
+      }
+    },
     components: {
       [Button.name]: Button,
       DropDown,
@@ -119,12 +124,12 @@ export default {
       var validateWJName =(rule,value,callback)=>{
         if(value===''){
           callback(new Error('请输入用户名'));
-        }else{console.log(this.checkName(value))
-          if(this.checkName(value)){
-            callback(new Error('此文集名已存在，换个其它的吧'));
-          }else{
-            callback();
-          }
+        }else{console.log(wl)
+          // if(this.checkName(value)){
+          //   callback(new Error('此文集名已存在，换个其它的吧'));
+          // }else{
+          //   callback();
+          // }
         }
       };
       return{
@@ -155,11 +160,7 @@ export default {
       }
     },
     mounted() {
-      // blog.category_list(this.userID).then(res=>{
-      //   this.wenjiList = res.data;
-      //   this.wenjiActiveId = res.data.length>0?this.wenjiList[0].id:0;
-      //   this.changeMenu(this.wenjiActiveId);
-      // })
+      
     },
     methods:{
       changeMenu(wid) {
@@ -168,8 +169,8 @@ export default {
         // this.articleActiveId = aid;
       },
       categoryAdd(){
-        this.$refs['catForm'].validate((valid) => {
-          if (valid) {
+        this.$refs['catForm'].validate((valid) => {console.log(valid)
+          if (valid) {console.log(valid);
             this.btnDisable = true;
             blog.category_add(this.catForm.name).then(res=>{
               console.log(res);
@@ -207,14 +208,14 @@ export default {
       getCategories(id){
         blog.category_list(id).then(res=>{
           console.log(res);
-          if(res.status)this.wenjiList = res.data;
+          if(res.status)wl = res.data;
           this.btnDisable = false;
           this.catForm.name = '';
         })
       },
       checkName(value){
         let i=0
-        this.wenjiList.forEach(item=>{
+        wl.forEach(item=>{
           if(item.name==value){
             i++
           }

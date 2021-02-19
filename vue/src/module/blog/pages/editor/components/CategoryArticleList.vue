@@ -15,17 +15,14 @@
         </div>
         <ul v-if="articleList.length!=0">
           <li
-            v-for="(item, index) in articleList.filter(obj=>obj.visible!=0)"
+            v-for="(item, index) in articleList"
             :key="index"
             class="aritcleItem d-flex justify-content-between align-items-center"
-            :class="{
-              active: item.postID == articleActiveId,
-              ispublished: item.visible==1,
-            }"
+            :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
+            @click="changeMenu(item)"
           >
             <div
               class="flex-fill"
-              @click="changeMenu(item.postID)"
             >
               <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
               <icon-published class="icon" v-if="item.visible==1"></icon-published>
@@ -122,8 +119,7 @@
     </div>
 </template>
 <script>
-// import {Popconfirm,Popover} from 'element-ui';
-// import { Dropdown,DropdownMenu,DropdownItem, } from 'element-ui';
+
 import { Button, DropDown, Modal, FormGroupInput  } from "@/components";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../../blog.service";
@@ -146,12 +142,11 @@ export default {
     name: 'category-article-list',
     props:{
       wjid:Number,
-      cats:Object
+      cats:Array
     },
     watch:{
       wjid:function(v){
-        this.getArticleList();
-        console.log(v)
+        this.getArticleList();console.log(v)
       }
     },
     components: {
@@ -176,12 +171,6 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
-      this.getArticleList()
-      // blog.category_article_list(this.wjid,0).then(res=>{
-      //   console.log(res,this.wjid);
-      //   this.articleList = res.data;
-      //   this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
-      // })
     },
     data(){
         return{
@@ -205,8 +194,9 @@ export default {
         }
     },
     methods:{
-      changeMenu(wid) {
-        this.articleActiveId = wid;
+      changeMenu(e) {
+        this.articleActiveId = e.id;
+        this.$emit('setarticleid',e)
       },
       addArticle(){
         let data={
@@ -250,8 +240,9 @@ export default {
       getArticleList(){
         blog.category_article_list(this.wjid,0).then(res=>{
           console.log(res);
-          this.articleList = res.data;
-          this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
+          this.articleList = res.data.filter(obj=>obj.visible!=0);
+          // this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
+          this.changeMenu(this.articleList[0]);
           this.btnDis.add = false;
         })
       },
