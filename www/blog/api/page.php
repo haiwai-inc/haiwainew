@@ -117,8 +117,7 @@ class page extends Api {
         $rs_memcache=$obj_memcache->get("blog_hot_article");
         
         $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
-        
-        return $rs[$tagID];
+        return $rs;
     }
     
     /**
