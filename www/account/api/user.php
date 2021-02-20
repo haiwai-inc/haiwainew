@@ -409,26 +409,26 @@ class user extends Api {
     /**
      * "很多"页面
      * 关注 添加
-     * @param integer followerID | 添加关注人ID
+     * @param integer $userID | 添加关注人ID
      */
-    public function follower_add($followerID){
+    public function follower_add($userID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$userID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己关注自己！";$this->status=false;return false;}
         
         $obj_account_follower=load("account_follower");
-        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
+        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$userID]);
         if(!empty($check_account_follower)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
         
         //添加关注列表
-        $id=$obj_account_follower->insert(['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
+        $id=$obj_account_follower->insert(['userID'=>$_SESSION['id'],'followerID'=>$userID]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $tbn=substr('0'.$followerID,-1);
+        $tbn=substr('0'.$userID,-1);
         $msgbody="{$_SESSION['username']} 关注了您";
-        $obj_account_notification->insert(['userID'=>$followerID,'type'=>"follower",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);  
+        $obj_account_notification->insert(['userID'=>$userID,'type'=>"follower",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);  
         return true;
     }
     

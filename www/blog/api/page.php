@@ -117,8 +117,7 @@ class page extends Api {
         $rs_memcache=$obj_memcache->get("blog_hot_article");
         
         $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
-        
-        return $rs[$tagID];
+        return $rs;
     }
     
     /**
@@ -256,7 +255,7 @@ class page extends Api {
     }
     
     /**
-     * 文章详情页 编辑器页
+     * 文章详情页
      * 文章 详情
      * @param integer $id | 主贴postID
      */

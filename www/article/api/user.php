@@ -8,6 +8,28 @@ class user extends Api {
     }
     
     /**
+     * 编辑器页
+     * 文章 查看
+     * @param integer $id | 主贴postID
+     */
+    public function article_view($id){
+        $obj_article_indexing=load("article_indexing");
+        
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID")[0];
+        
+        return $rs_article_indexing;
+    }
+    
+    /**
      * 编辑器页 
      * 文章 添加
      * @param obj $article_data | 文章的数据
@@ -18,7 +40,7 @@ class user extends Api {
     public function article_add($article_data,$module_data){
         //验证用户发帖信息
         $obj_article_indexing=load("article_indexing");
-        if(!$obj_article_indexing->article_add_validation($article_data+$module_data))   {$this->error="发帖验证未通过";$this->status=false;return false;}
+        if(!$obj_article_indexing->article_add_validation(array_merge($article_data+$module_data)))   {$this->error="发帖验证未通过";$this->status=false;return false;}
         
         //添加文章 post
         $obj_article_post=load("article_post");
@@ -163,7 +185,18 @@ class user extends Api {
      * @param integer $id | 草稿id
      */
     public function draft_view($id){
+        $obj_article_draft=load("article_draft");
+        $check_article_draft=$obj_article_draft->getOne("*",['id'=>$id]);
+        if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
         
+        //格式化草稿结构
+        $rs_article_draft=$obj_article_draft->format_draft([$check_article_draft]);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
+        
+        return $rs_article_draft;
     }
     
     /**
@@ -246,7 +279,7 @@ class user extends Api {
     public function reply_add($article_data){
          //检查主贴
          $obj_article_indexing=load("article_indexing");
-         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel'],['postID'=>$article_data['postID']]);
+         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
          if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
          
          //添加回复 post
@@ -269,11 +302,17 @@ class user extends Api {
              "title"=>"回复 {$check_article_indexing['postID']}",
              "msgbody"=>$article_data['msgbody'],
          ];
-         $obj_article_post->insert($fields_post,"post_{$post_tbn}");
+         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
          //同步ES索引
          $obj_article_noindex=load("search_article_noindex");
          $obj_article_noindex->fetch_and_insert([$postID]);
+         
+         //添加消息列表
+         $obj_account_notification=load("account_notification");
+         $tbn=substr('0'.$check_article_indexing['userID'],-1);
+         $msgbody="{$_SESSION['username']} 评论了您的文章";
+         $obj_account_notification->insert(['userID'=>$check_article_indexing['userID'],'type'=>"reply",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);
          
          return true;
     }
