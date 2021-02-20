@@ -195,8 +195,10 @@ export default {
     },
     methods:{
       changeMenu(e) {
-        this.articleActiveId = e.id;
-        this.$emit('setarticleid',e)
+        if(e){console.log(e)
+          this.articleActiveId = e.visible!=1?e.id:e.postID;
+          this.$emit('setarticleid',e)
+        }
       },
       addArticle(){
         let data={

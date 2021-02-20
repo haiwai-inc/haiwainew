@@ -75,7 +75,7 @@ class Blog extends API{
    * @param number id 
    */
   async article_view(id){
-    return await this.sendget("blog/page/article_view/?id="+id)
+    return await this.sendget("article/user/article_view/?id="+id)
   }
 
   /**
@@ -224,7 +224,7 @@ class Blog extends API{
    * @param {add:true,bloggerID:#,categoryID:#} module_data 
    */
   async draft_add(data){
-    return await this.sendpost('article/user/draft_add/?id=',data)
+    return await this.sendpost('article/user/draft_add/',data)
   }
 
   /**

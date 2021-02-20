@@ -7,7 +7,7 @@
         <ul>
           <li
             class="wenjiItem d-flex justify-content-between align-items-center"
-            v-for="(item, index) in wl"
+            v-for="(item, index) in wenjiList"
             :key="index"
             :class="{ active: wenjiActiveId==item.id }"
           >
@@ -106,7 +106,10 @@ export default {
     },
     watch:{
       wjid:function(v){
-        this.changeMenu(this.wjid);console.log(v)
+        this.changeMenu(this.wjid);
+      },
+      wl:function(){console.log(this.wl)
+        this.wenjiList=this.wl
       }
     },
     components: {
@@ -124,12 +127,12 @@ export default {
       var validateWJName =(rule,value,callback)=>{
         if(value===''){
           callback(new Error('请输入用户名'));
-        }else{console.log(wl)
-          // if(this.checkName(value)){
-          //   callback(new Error('此文集名已存在，换个其它的吧'));
-          // }else{
-          //   callback();
-          // }
+        }else{
+          if(this.checkName(value)){
+            callback(new Error('此文集名已存在，换个其它的吧'));
+          }else{
+            callback();
+          }
         }
       };
       return{
@@ -139,6 +142,7 @@ export default {
         icon_edit:HaiwaiIcons.icon_edit,
         icon_delete:HaiwaiIcons.icon_delete,
         wenjiActiveId: this.wjid,
+        wenjiList:this.wl,
         modals: {
           addwenji: false,
           publish: false,
@@ -192,7 +196,7 @@ export default {
             blog.category_update(this.catForm.name,item.id).then(res=>{
               if(res.status){
                 this.getCategories(this.userID);
-                this.$refs[`popover-` + item.id].doClose()
+                this.modals.addwenji=false;
               }
             })
             }
@@ -208,14 +212,16 @@ export default {
       getCategories(id){
         blog.category_list(id).then(res=>{
           console.log(res);
-          if(res.status)wl = res.data;
+          if(res.status){
+            this.wenjiList = res.data;
+          }
           this.btnDisable = false;
           this.catForm.name = '';
         })
       },
       checkName(value){
         let i=0
-        wl.forEach(item=>{
+        this.wenjiList.forEach(item=>{
           if(item.name==value){
             i++
           }

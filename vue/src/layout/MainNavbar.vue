@@ -82,9 +82,9 @@
               tag="li"
               :data="$store.state.user.userinfo.userinfo_id"
               :username="$store.state.user.userinfo.userinfo_id.username"
-              avatarurl="/img/eva.jpg"
+              :avatarurl="$store.state.user.userinfo.userinfo_id.avatar"
               class="nav-item">
-        <nav-link to="/blog/user/1">
+        <nav-link :to="'/blog/user/'+$store.state.user.userinfo.id">
           <i class="now-ui-icons users_single-02"></i> 我的主页
         </nav-link>
         <nav-link to="/bookmark">

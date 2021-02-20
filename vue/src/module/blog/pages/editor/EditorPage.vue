@@ -38,7 +38,12 @@
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list @setarticleid="setArtid" :wjid="wenjiActiveId" :cats="wenjiList"></category-article-list>
+      <category-article-list 
+      @setarticleid="setArtid" 
+      :wjid="wenjiActiveId" 
+      :cats="wenjiList"
+      ref="articlelist"
+      ></category-article-list>
       
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
@@ -47,7 +52,7 @@
           >自动保存中... 已保存</span
         >
       </div>
-      <div class="d-flex justify-content-between py-2" ref="titleBox">
+      <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
         <input
           class="editorTitle"
           type="text"
@@ -114,7 +119,7 @@
         >
           取消
         </n-button>
-        <n-button type="primary" round simple>
+        <n-button type="primary" round simple @click="publish()" :disabled="btnDis.publish">
           发布
         </n-button>
       </template>
@@ -199,9 +204,10 @@ export default {
 
   methods: {
     test() {
-      console.log("hello edit vue");
-      console.log(blog);
-      blog.message();
+      console.log(this.$refs);
+      
+      // console.log(blog);
+      // blog.message();
     },
 
     async fetchData() {
@@ -242,23 +248,21 @@ export default {
       app.$destroy();
     },
     
-    addArticle() {
-      var newarticle = {
-        articleId: 9089,
-        title: "新建的文章",
-        wordCount: 0,
-        isPublished: false,
-      };
-      this.articleList.unshift(newarticle);
-      this.changeMenu(this.wenjiActiveId, newarticle.articleId);
-    },
+    // addArticle() {
+    //   var newarticle = {
+    //     articleId: 9089,
+    //     title: "新建的文章",
+    //     wordCount: 0,
+    //     isPublished: false,
+    //   };
+    //   this.articleList.unshift(newarticle);
+    //   this.changeMenu(this.wenjiActiveId, newarticle.articleId);
+    // },
     changeMenu(wid, aid) {
       this.wenjiActiveId = wid;
       this.articleActiveId = aid;
     },
-    editor_language() {
-      $.extend($.summernote.lang, lang);
-    },
+    
     uploadImage2(blobInfo, success, failure, progress){
       blog.uploadImage(blobInfo.base64()).then(rs=>{
         success(rs.data);
@@ -278,16 +282,60 @@ export default {
       if(e.visible==1){
         blog.article_view(e.postID).then(res=>{
           this.curentArticle=res.data;
+          // this.autoSave();
           console.log(this.curentArticle)
         });
       }else{
-        // blog.draft_view(e.id).then(res=>{
-        //   this.curentArticle=res.data;
-        //   console.log(this.curentArticle)
-        // })
-        this.curentArticle={postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}}
+        blog.draft_view(e.id).then(res=>{
+          this.curentArticle=res.data;
+          console.log(this.curentArticle)
+        })
+        // this.curentArticle={postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}}
       }
-    }
+    },
+    publish(){
+      let data={
+          article_data:{
+            title:this.curentArticle.postInfo_postID.title,
+            msgbody:this.curentArticle.postInfo_postID.msgbody,
+            tagname:[],
+            typeID:1,
+            draftID:this.curentArticle.id
+          },
+          module_data:{
+            add:true,
+            bloggerID:this.userID,
+            categoryID:this.wenjiActiveId
+          }
+        };
+        console.log(data);
+        this.btnDis.publish = true;
+        blog.article_add(data).then(res=>{
+          console.log(res);
+          if(res.status){
+            this.$refs.articlelist.getArticleList();
+            this.btnDis.publish = false;
+            this.modals.publish = false;
+          }
+        })
+    },
+
+    autoSave(){
+          console.log(this.curentArticle.visible);
+      if(this.curentArticle.visible==1){
+        this.timer = setInterval(()=>{
+          console.log(this.curentArticle.id);
+        },1000)
+      }
+      else{
+        this.timer = setInterval(()=>{
+          console.log(this.curentArticle.id);
+        },1000)
+      }
+    },
+    beforeDestroy() {
+      clearInterval(this.timer);
+    },
   },
 
   beforeCreate() {
@@ -345,30 +393,13 @@ export default {
       },
       timepicker: new Date(2016, 9, 10, 18, 40),
       msgbody:'asd',
-      articleList: [
-        {
-          articleId: 12345,
-          title: "标题1",
-          wordCount: 100,
-          isPublished: true,
-        },
-        {
-          articleId: 2345,
-          title: "标题2",
-          wordCount: 200,
-          isPublished: true,
-        },
-        {
-          articleId: 23456,
-          title: "未发布的文章",
-          wordCount: 200,
-          isPublished: false,
-        },
-      ],
+      articleList: [],
 
       loading: false,
       article: {},
-
+      btnDis:{
+        publish:false,
+      }, 
       //TinyMCE
       editorConfig:{
          height: 500,
