@@ -15,7 +15,7 @@ class user extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
