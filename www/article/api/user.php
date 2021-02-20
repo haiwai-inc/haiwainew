@@ -40,7 +40,7 @@ class user extends Api {
     public function article_add($article_data,$module_data){
         //验证用户发帖信息
         $obj_article_indexing=load("article_indexing");
-        if(!$obj_article_indexing->article_add_validation($article_data+$module_data))   {$this->error="发帖验证未通过";$this->status=false;return false;}
+        if(!$obj_article_indexing->article_add_validation(array_merge($article_data+$module_data)))   {$this->error="发帖验证未通过";$this->status=false;return false;}
         
         //添加文章 post
         $obj_article_post=load("article_post");
