@@ -117,19 +117,24 @@ class user extends Api {
     }
     
     /**
-     * 小铃铛页
-     * 我关注的人 
-     */
-    public function my_followering_list(){
-        
-    }
-    
-    /**
      * 二级页面
-     * 关注 博主 列表
+     * 我关注的人 列表 
+     * @param integer $lastID | 分页id
      */
-    public function follower_blogger_list(){
+    public function my_followering_list($lastID=0){
+        $obj_account_follower=load("account_follower");
         
+        $fields=['order'=>["id"=>"DESC"],'userID'=>$_SESSION['id']];
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
+        }
+        $rs_account_follower=$obj_account_follower->getAll("*",$fields);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_account_follower=$obj_account_user->get_basic_userinfo($rs_account_follower,"followerID");
+        
+        return $rs_account_follower;
     }
     
     /**

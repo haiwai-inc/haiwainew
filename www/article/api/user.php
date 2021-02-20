@@ -277,44 +277,42 @@ class user extends Api {
      * @response /article/api_response/reply_add.txt
      */
     public function reply_add($article_data){
-         //检查主贴
-         $obj_article_indexing=load("article_indexing");
-         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
-         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
+        //检查主贴
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
+        if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
+        
+        //添加回复 post
+        $obj_article_post=load("article_post");
+        $postID=$obj_article_post->get_id();
+        $time=times::getTime();
+        $fields_indexing=[
+            "postID"=>$postID,
+            "typeID"=>$article_data['typeID'],
+            "basecode"=>$check_article_indexing['postID'],
+            "userID"=>$_SESSION['id'],
+            "treelevel"=>$check_article_indexing['treelevel']+1,
+            "create_date"=>$time,
+            "edit_date"=>$time,
+        ];
+        $obj_article_indexing->insert($fields_indexing);
+        $post_tbn=substr('0'.$_SESSION['id'],-1);
+        $fields_post=[
+            "id"=>$postID,
+            "title"=>"回复 {$check_article_indexing['postID']}",
+            "msgbody"=>$article_data['msgbody'],
+        ];
+        $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
-         //添加回复 post
-         $obj_article_post=load("article_post");
-         $postID=$obj_article_post->get_id();
-         $time=times::getTime();
-         $fields_indexing=[
-             "postID"=>$postID,
-             "typeID"=>$article_data['typeID'],
-             "basecode"=>$check_article_indexing['postID'],
-             "userID"=>$_SESSION['id'],
-             "treelevel"=>$check_article_indexing['treelevel']+1,
-             "create_date"=>$time,
-             "edit_date"=>$time,
-         ];
-         $obj_article_indexing->insert($fields_indexing);
-         $post_tbn=substr('0'.$_SESSION['id'],-1);
-         $fields_post=[
-             "id"=>$postID,
-             "title"=>"回复 {$check_article_indexing['postID']}",
-             "msgbody"=>$article_data['msgbody'],
-         ];
-         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
-         
-         //同步ES索引
-         $obj_article_noindex=load("search_article_noindex");
-         $obj_article_noindex->fetch_and_insert([$postID]);
-         
-         //添加消息列表
-         $obj_account_notification=load("account_notification");
-         $tbn=substr('0'.$check_article_indexing['userID'],-1);
-         $msgbody="{$_SESSION['username']} 评论了您的文章";
-         $obj_account_notification->insert(['userID'=>$check_article_indexing['userID'],'type'=>"reply",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);
-         
-         return true;
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
+        
+        //添加消息列表
+        $obj_account_notification=load("account_notification");
+        $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$check_article_indexing['postID'],"add");
+        
+        return true;
     }
     
     /**
