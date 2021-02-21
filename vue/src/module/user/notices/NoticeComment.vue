@@ -30,7 +30,7 @@ export default {
           comments:[{
               title:'这个标题是第一个',
               articleUrl:'/blog/p/1',
-                comment:[
+            comment:[
                 {
                     ID:1234,
                     avatarUrl:'/img/julie.jpg',

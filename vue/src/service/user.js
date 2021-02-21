@@ -143,6 +143,13 @@ class User extends API{
     async bookmark_delete(postID){
       return await this.sendget("account/user/bookmark_delete/?postID="+postID)
     }
+    /**
+     * 获取notice-全部消息
+     * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
+     */
+    async notification_list(lastID){
+        return await this.sendget("account/user/notification_list/?lastID="+lastID)
+    }
 
     /**
      * 获取我收到的评论

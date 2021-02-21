@@ -14,26 +14,37 @@
         ></left-nav-item>
       </div>
       <div class="col-sm-8 col-12">
-        <span v-if="activeId === 0">
+        <div v-if="activeId === 0">
+          <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)">
+            <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar>
+            <div class="pl-2">
+              <!-- <span class="name">{{item.userinfo_from_userID.username}}</span> -->
+              <span class="wrap">{{item.msgbody}}</span>
+            </div>
+
+          </div>
+        </div>
+        <div v-if="activeId === 1">
           <notice-comment></notice-comment>
-        </span>
-        <span v-if="activeId === 1">
+        </div>
+        <div v-if="activeId === 2">
           <notice-qqh></notice-qqh>
           
-        </span>
-        <span v-if="activeId === 2">
+        </div>
+        <div v-if="activeId === 3">
           <notice-follow></notice-follow>
-        </span>
-        <span v-if="activeId === 3">
-          <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的喜欢</h6>
+        </div>
+        <div v-if="activeId === 4">
+          <!-- <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的喜欢</h6>
           <article-list-item
             v-for="item in articlelists"
             v-bind:key="item.postID"
             v-bind:data="item"
             type="0"
           >
-          </article-list-item>
-        </span>
+          </article-list-item> -->
+          <notice-like></notice-like>
+        </div>
       </div>
     </div>
   </div>
@@ -41,10 +52,12 @@
 <script>
 import MainMenu from "../../blog/pages/components/Main/MainMenu.vue";
 import LeftNavItem from "../../blog/pages/components/Main/LeftNavItem";
-import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem.vue";
+// import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem.vue";
 import NoticeComment from "./NoticeComment";
 import NoticeFollow from "./NoticeFollow";
 import NoticeQqh from "./NoticeQqh";
+import Avatar from "../../blog/pages/components/Main/Avatar";
+import NoticeLike from './NoticeLike.vue';
 // import {DropDown} from "@/components"
 /** 测试数据
   * 用户17登录
@@ -63,117 +76,38 @@ export default {
   name: "notices",
   mounted:function(){
     // this.getUnreadCount();
-    this.getlike()
+    this.showAllNotice()
   },
   data() {
     return {
       activeId: 0,
-      hideArrow:true,
-      authorInfor: {
-        avatarUrl: "/img/julie.jpg",
-        isHot: true,
-        authorHomepage: "",
-        name: "用户名",
-        firstLetter: "用",
-        description: "简介简介简介简介",
-        isFollowed: true,
-      },
+      allNoticeList:[],
       data: [
         {
           id: 0,
+          title: "全部消息",
+          noticeList: [],
+          unread: 2,
+        },{
+          id: 1,
           title: "我收到的评论",
           noticeList: [],
           unread: 2,
-        },
-        {
-          id: 1,
+        },{
+          id: 2,
           title: "我的悄悄话",
           noticeList: [],
           unread: 0,
-        },
-        {
-          id: 2,
+        },{
+          id: 3,
           title: "我的粉丝",
           noticeList: [],
           unread: 3,
-        },
-        {
-          id: 3,
+        },{
+          id: 4,
           title: "我收到的喜欢",
           noticeList: [],
           unread: 6,
-        },
-      ],
-      articlelists: [
-        {
-          articleID: "345678",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg3.jpg",
-        },
-        {
-          articleID: "34567",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456",
-          isHot: false,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg4.jpg",
-        },
-        {
-          articleID: "3456",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "12345",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "/img/bg1.jpg",
-        },
-        {
-          articleID: "345",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: false,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "",
-        },
-        {
-          articleID: "3456789",
-          articleUrl: "",
-          title: "这里是标题....",
-          description:
-            "这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介",
-          author: "这里是作者",
-          authorID: "123456789",
-          isHot: true,
-          read: "3456",
-          commont: "12",
-          likes: "23",
-          image: "",
         },
       ],
     };
@@ -181,11 +115,12 @@ export default {
   components: {
     LeftNavItem,
     MainMenu,
-    ArticleListItem,
-//     DropDown,
+    // ArticleListItem,
+    Avatar,
     NoticeComment,
     NoticeFollow,
     NoticeQqh,
+    NoticeLike,
   },
   computed: {},
   methods: {
@@ -198,18 +133,32 @@ export default {
       this.activeId = id;
       console.log(this);
     },
-    async getlike(){
-      let v = await this.$store.state.user.my_buzz_article_list(0);
+    
+    async showAllNotice(){
+      let v = await this.$store.state.user.notification_list(0);
       if(v.status){
-        this.articlelists = v.data
+        this.allNoticeList = v.data;
+        console.log(this.allNoticeList)
       }
-      console.log(this.articlelists)
+    },
+    gotoDetail(e){
+      if(e.type=="follower"){
+        this.$router.push('blog/user/'+e.from_userID)
+      }
+      if(e.type=="qqh"){
+        this.activeId=2
+      }
+      if(e.type=="reply")this.activeId=1;
+      if(e.type=="buzz")this.activeId=4;
     }
   },
 };
 </script>
 <style>
-
+.noticeItem{
+  padding: 1rem;
+  border-bottom: aliceblue 1px solid;
+}
 @media (max-width: 575.98px) {
   .left-top-nav .name svg,
   .left-top-nav .descrip {

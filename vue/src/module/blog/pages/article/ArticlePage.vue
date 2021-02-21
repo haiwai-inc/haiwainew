@@ -68,11 +68,10 @@
               <!-- blog 正文 -->
             </div>
             
-            <previous-next-bar :data="articleDetail.data"></previous-next-bar>
+            <!-- <previous-next-bar :data="articleDetail.data"></previous-next-bar> -->
             
           </div>
-          <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
-          <div class="comment" v-if="showcomment">
+          <div class="comment">
             <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
@@ -80,13 +79,11 @@
               simple 
               :disabled="replybtndisable" 
               @click="reply_add">发表评论</n-button>
-            <h4 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h4>
+            <h4 class="commentlable">评论（{{articleDetail.data.count_comment}}）</h4>
             
           </div>
-          <div 
-            v-infinite-scroll="test"
-          infinite-scroll-disabled="disabled"
-            infinite-scroll-distance="0">
+          <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
+          <div v-if="showcomment">
               <comment 
               v-for="item in comment"
               :key="item.postID"
@@ -97,7 +94,7 @@
               ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
-              <i class="now-ui-icons loader_refresh spin"></i>
+              <i class="now-ui-icons loader_refresh spin"></i>{{loading.comment}}
           </div>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
@@ -175,7 +172,7 @@ import RecommendListItem from '../components/Main/RecommendListItem';
 import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
-import PreviousNextBar from './PreviousNextBar';
+// import PreviousNextBar from './PreviousNextBar';
 import blog from '../../blog.service';
 import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
@@ -188,7 +185,7 @@ export default {
     BlogerListItem,
     RecommendListItem,
     Comment,
-    PreviousNextBar,
+    // PreviousNextBar,
     [Button.name]: Button,
     [Popover.name]:Popover,
     LoginDialog
@@ -208,7 +205,7 @@ export default {
       this.showcomment = false;
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
-        this.articleDetail = res;
+        this.articleDetail = res;console.log(res);
         let descrip = res.data.postInfo_postID.msgbody
         this.shareItem.title = res.data.postInfo_postID.title;
         this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);

@@ -8,6 +8,16 @@
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index">
+          <div class="d-flex align-items-center" @click="showQqhView(index)">
+            
+            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
+              />
+            <div class="pl-2">
+              <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
+              <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
+            </div>
+
+          </div>
           <div class="pull-right dropdown">
             <drop-down
             class="nav-item dropdown"
@@ -22,16 +32,6 @@
               <a class="dropdown-item" href="#">举报用户</a>
             </drop-down>
             
-          </div>
-          <div class="d-flex align-items-center" @click="showQqhView(index)">
-            
-            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
-              />
-            <div class="pl-2">
-              <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
-              <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
-            </div>
-
           </div>
         </li>
       </ul>
@@ -78,7 +78,6 @@
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
           </li>
-          
         </ul>
       </div>
       <div class="write-message mb-4">
@@ -122,9 +121,7 @@ export default {
   },
   data(){
       return{
-        loginUser:{
-          id:1, //测试用，还差获取登录用户id的接口；
-        },
+        loginUser:{},
         touser:{},
         msgID:0,
         iconmore3v:HaiwaiIcons.iconmore3v,
@@ -132,33 +129,24 @@ export default {
         qqhList:{},
         qqhView:{},
         msgbody:'',
-        authorInfor: {
-          userID:123,
-          avatarUrl: "/img/julie.jpg",
-          isHot: true,
-          authorHomepage: "",
-          name: "用户名",
-          firstLetter: "用",
-          description: "简介简介简介简介",
-          isFollowed: true,
-        },
+        user:this.$store.state.user
       }
   },
   created: function () {
-    this.qqh_list();
     this.getUserInfo();
+    this.qqh_list();
   },
   methods:{
     async getUserInfo(){//获取登录用户信息
-      let user = this.$store.state.user;
-      let res = await user.getUserStatus();
+      // let user = this.$store.state.user;
+      let res = await this.user.getUserStatus();
       this.loginUser = res.data;
       console.log(this.loginUser);
     },
 
     async qqh_list() {
-      let user = this.$store.state.user;
-      let res = await user.qqh_list();
+      // let user = this.$store.state.user;
+      let res = await this.user.qqh_list();
       this.qqhList=res.data;
       this.qqhList.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
         let aTime = a.last_messageinfo.dateline;
@@ -193,8 +181,8 @@ export default {
     },
 
     async send(userID,touserID,msgbody) {
-      let user = this.$store.state.user;
-      let res = await user.sendQqh(userID,touserID,msgbody);
+      // let user = this.$store.state.user;
+      let res = await this.user.sendQqh(userID,touserID,msgbody);
       this.showQqhView(this.msgID);
       this.msgbody='';
       console.log(res);

@@ -13,41 +13,24 @@ export default {
   components: {
     BlogerListItem
   },
+  created() {
+    this.getfollower();
+  },
   methods:{
     async getfollower(){
-      let v= await this.$store.state.user.my_follower_list(0)
-      console.log(v)
+      let v= await this.$store.state.user.my_follower_list(0);
+      if(v.status){
+        this.follows.authorList = v.data;
+      }
     }
   },
   data(){
-      return{
-          follows:{
-              title:'我的粉丝',
-              authorList : [
-            {
-            avatarUrl:'/img/avatar.jpg',
-            isHot:true,
-            name:'English Name',
-            firstLetter:'用',
-            description:'简介简介简介简介 English desciption',
-            isFollowed:true,
-            },{
-            avatarUrl:'/img/eva.jpg',
-            isHot:true,
-            name:'天煞地煞',
-            firstLetter:'天',
-            description:'简介简介简介简介哈哈哈简介简介简介简',
-            isFollowed:true,
-            },{
-            avatarUrl:'/img/julie.jpg',
-            isHot:true,
-            name:'用户名',
-            firstLetter:'用',
-            description:'简介简介简介简介',
-            isFollowed:true,
-            },
-          ]
-      }}
+    return{
+        follows:{
+          title:'我的粉丝',
+          authorList : []
+      }
+    }
   }
 }
 </script>

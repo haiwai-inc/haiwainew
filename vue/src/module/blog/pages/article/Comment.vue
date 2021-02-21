@@ -57,7 +57,7 @@
           <!-- <a
           v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a> -->
           <!-- <div v-if="item.replies.length>0"> https://cloud.tencent.com/developer/article/1360724 -->
-          <div v-if="data.reply.length>0">
+          <div v-if="data.reply">
             <div :id="data.postID" style="display:none">
               <div v-for="(r,idx) in data.reply" :key="'r'+idx" class="d-flex align-items-start mt-2">
                 <avatar :data="r.userinfo_userID" :imgHeight="32" class="mr-2"></avatar>

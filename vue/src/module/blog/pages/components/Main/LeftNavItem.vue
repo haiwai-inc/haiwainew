@@ -1,10 +1,10 @@
 <template>
   <div class="left-nav-item d-flex justify-content-between" @click="wActive(data.id)">
       <div class="name" :style="data.id===activeId?{color:'#39b8eb'}:''">
-        <icon-message class="icon" v-if="data.id===0" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-message>
-        <icon-mail class="icon" v-if="data.id===1" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-mail>
-        <icon-follow class="icon" v-if="data.id===2" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-follow>
-        <icon-like-outline class="icon" v-if="data.id===3" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-like-outline>
+        <icon-message class="icon" v-if="data.id===1" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-message>
+        <icon-mail class="icon" v-if="data.id===2" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-mail>
+        <icon-follow class="icon" v-if="data.id===3" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-follow>
+        <icon-like-outline class="icon" v-if="data.id===4" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-like-outline>
         {{data.title}}</div>
       <div class="descrip" :style="data.id===activeId?{color:'#39b8eb'}:''">{{data.unread}}</div> 
   </div>
