@@ -87,7 +87,7 @@ class user extends Api {
             
         $obj_account_blacklist->insert(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
         
-        return "已屏蔽此用户";
+        return true;
     }
     
     /**
@@ -106,7 +106,7 @@ class user extends Api {
         
         $obj_account_blacklist->remove(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
         
-        return "已取消屏蔽此用户";
+        return true;
     }
     
     /**
@@ -147,7 +147,7 @@ class user extends Api {
             
         $obj_account_bookmark->insert(['userID'=>$_SESSION['id'],'postID'=>$postID]);
         
-        return "已经加入此文章到书签";
+        return true;
     }
     
     /**
@@ -162,7 +162,7 @@ class user extends Api {
         
         $obj_account_bookmark->remove(['userID'=>$_SESSION['id'],'postID'=>$postID]);
         
-        return "已在书签删除此文章";
+        return true;
     }
     
     /**
@@ -222,6 +222,10 @@ class user extends Api {
         
         if($_SESSION['id']==$touserID)  {$this->error="悄悄话的人就是自己";$this->status=false;return false;}
         
+        $obj_account_user=load("account_user");
+        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$touserID,"status"=>1]);
+        if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
+        
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);
         if(empty($check_account_qqh)){
@@ -246,7 +250,11 @@ class user extends Api {
         //更新最后一条信息ID
         $obj_account_qqh->update(['last_messageID'=>$qqh_postID],['id'=>$check_account_qqh['id']]);
         
-        return "悄悄话已发送";
+        //添加消息列表
+        $obj_account_notification=load("account_notification");
+        $obj_account_notification->notification_add($check_account_user['id'],'qqh',$check_account_qqh['id'],"add");
+        
+        return true;
     }
     
     /**
@@ -338,7 +346,7 @@ class user extends Api {
      */
     public function buzz_add($postID){
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID','userID'],['postID'=>$postID]);
         if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_article_post_buzz=load("article_post_buzz");
@@ -365,7 +373,10 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
         
-        return "已赞";
+        //添加消息列表
+        $obj_account_notification=load("account_notification");
+        $obj_account_notification->notification_add($check_article_indexing['userID'],'buzz',$postID,"add");
+        return true;
     }
     
     /**
@@ -375,7 +386,7 @@ class user extends Api {
      */
     public function buzz_delete($postID){
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID'],['postID'=>$postID]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','typeID','count_buzz','bloggerID','userID'],['postID'=>$postID]);
         if(empty($check_article_indexing))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_article_post_buzz=load("article_post_buzz");
@@ -402,7 +413,7 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
         
-        return "已取消赞";
+        return true;
     }
     
     
@@ -426,35 +437,31 @@ class user extends Api {
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $tbn=substr('0'.$userID,-1);
-        $msgbody="{$_SESSION['username']} 关注了您";
-        $obj_account_notification->insert(['userID'=>$userID,'type'=>"follower",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);  
+        $obj_account_notification->notification_add($userID,'follower',$id,"add");
         return true;
     }
     
     /**
      * "很多"页面
      * 关注 取消
-     * @param integer followerID | 取消关注人ID
+     * @param integer $userID | 取消关注人ID
      */
-    public function follower_delete($followerID){
+    public function follower_delete($userID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$userID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
         $obj_account_follower=load("account_follower");
-        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
+        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$userID]);
         if(empty($check_account_follower)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
         
         //移除关注列表
-        $id=$obj_account_follower->remove(['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
+        $obj_account_follower->remove(['userID'=>$_SESSION['id'],'followerID'=>$userID]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $tbn=substr('0'.$followerID,-1);
-        $msgbody="{$_SESSION['username']} 取消了对您的关注";
-        $obj_account_notification->insert(['userID'=>$followerID,'type'=>"follower",'typeID'=>$id,'msgbody'=>$msgbody],"notification_".$tbn);
+        $obj_account_notification->notification_add($userID,'follower',0,"delete");
         return true;
     }
     
@@ -529,7 +536,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_account_follower=$obj_account_user->get_basic_userinfo($rs_account_follower,"userID");
-        
         return $rs_account_follower;
     }
     
@@ -558,7 +564,6 @@ class user extends Api {
         $tbn=substr('0'.$_SESSION['id'],-1);
         
         $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type],"notification_".$tbn);
-        
         return true;
     }
     
@@ -571,17 +576,18 @@ class user extends Api {
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
         
-        $fields=['userID'=>$_SESSION['id'],'limit'=>20];
+        $fields=['userID'=>$_SESSION['id'],'limit'=>20,'order'=>['id'=>'DESC']];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
         
         $rs_account_notification=$obj_account_notification->getAll("*",$fields,"notification_".$tbn);
-        return $rs_account_notification;
-    }
-    
-    public function init_sse(){
         
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_account_notification=$obj_account_user->get_basic_userinfo($rs_account_notification,"from_userID");
+        
+        return $rs_account_notification;
     }
     
     
