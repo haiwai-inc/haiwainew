@@ -41,7 +41,8 @@ class account_notification extends Model{
 	        "type"=>$type,
 	        "typeID"=>$typeID,
 	        "msgbody"=>$msgbody,
-	        "is_read"=>0
+	        "is_read"=>0,
+	        "create_date"=>times::gettime()
 	    ];
 	    $this->insert($where,"notification_".substr('0'.$userID,-1));
 	}
