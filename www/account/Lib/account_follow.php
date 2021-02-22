@@ -1,6 +1,6 @@
 <?php
-class account_follower extends Model{
-	protected $tableName="follower";
+class account_follow extends Model{
+	protected $tableName="follow";
 	protected $dbinfo=array("config"=>"account","type"=>"MySQL");
 }
 ?>
