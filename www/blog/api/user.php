@@ -142,7 +142,7 @@ class user extends Api {
      * 关注 文章 列表
      * @param integer $followingID | 关注人的ID
      */
-    public function follower_article_list($followingID=0){
+    public function following_article_list($followingID=0){
         $obj_account_follow=load("account_follow");
         $obj_account_user=load("account_user");
         
