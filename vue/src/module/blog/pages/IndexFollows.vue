@@ -6,11 +6,12 @@
       </div>
       <div class="row">
         <div class="col-sm-4 d-none d-sm-block">
-          <div class="followed-blogger" v-if="!$store.state.user.userinfo.id">
-            海外名博
-          </div>
-          <div class="followed-blogger" v-if="$store.state.user.userinfo.id">
-            <ul v-if="hasFollowing">
+          <div class="followed-blogger">
+            <ul style="margin-bottom:0">
+              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">海外名博</span></li>
+            </ul>
+            <ul v-if="authorList.length>0">
+              
               <li :class="{active:selectID==0}" @click="selectItem(0)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
               <li 
               v-for="(item,index) in authorList" 
@@ -27,7 +28,7 @@
           </div>
         </div>
         <div class="col-sm-8 col-12">
-          <div v-if="hasFollowing">
+          <div v-if="articlelists.length>0">
             <div v-if="selectID==0">
               <article-list-item 
                 v-for="item in articlelists"
@@ -36,7 +37,7 @@
                 type="0">
               </article-list-item>
             </div>
-            <div v-if="selectID!=0">
+            <div v-if="selectID>0">
               <index-header :userID="selectID"></index-header>
               <article-list-item 
                 v-for="item in articlelists"
@@ -46,12 +47,14 @@
               </article-list-item>
             </div>
           </div>
-          <div v-if="!hasFollowing && hotBlobbers.length>0">
-            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
+          <div v-if="selectID==-1">
+            <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
+            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item" @opendialog="opendialog()"></bloger-list-item>
           </div>
         </div>
       </div>
     </div>
+    <login-dialog ref="dialog"></login-dialog>
   </div>
 </template>
 <script>
@@ -62,6 +65,7 @@ import { IconArticleBg } from '@/components/Icons';
 import blog from '../blog.service';
 import IndexHeader from '../user/IndexHeader'
 import BlogerListItem from './components/Main/BlogerListItem';
+import LoginDialog from '../../user/login/LoginDialog';
 
 export default {
   name: 'index-follows',
@@ -71,45 +75,47 @@ export default {
     Avatar,
     IconArticleBg,
     IndexHeader,
-    BlogerListItem
+    BlogerListItem,
+    LoginDialog
   },
   watch:{
     '$store.state.user.userinfo':function(){
-      console.log(this.$store.state.user.userinfo.id);
-      this.hasFollowing = this.user.userinfo.id?true:false
-      this.initData();
+      console.log(this.user.userinfo.id);
+      this.getFollowing();
       this.getBloggers();
     }
   },
   created:function(){
-    this.hasFollowing = this.user.userinfo.id?true:false
-    this.initData();
     this.getBloggers();
+    this.getFollowing();
   },
   methods:{
     selectItem(idx){
       this.selectID=idx;
-      this.initData();
+      this.getArticleList();
     },
-    initData(){
+    getFollowing(){
       this.user.my_followering_list(0).then(res=>{
         if(res.status){
           this.authorList = res.data;
-          this.hasFollowing = this.authorList.length>0?true:false;
+          this.selectID = this.authorList.length>0?0:-1;
+          this.getArticleList();
         }
       });
-      // if(hasFollowing){
-        this.user.following_article_list(this.selectID).then(res=>{
-          if(res.status){
-            this.articlelists = res.data
-          }
-        })
-      // }
+    },
+    async getArticleList(){
+      let arr = await this.user.following_article_list(this.selectID);
+      this.articlelists = arr.data;
+      console.log(this.articlelists)
     },
     async getBloggers(){
       let arr = await blog.recommand_blogger();
       this.hotBlobbers = arr.data.data
       console.log(this.hotBlobbers)
+    },
+    opendialog(){
+      console.log("ok");
+      this.$refs.dialog.isLogin()
     }
   },
   data() {
@@ -118,7 +124,6 @@ export default {
       selectID:0,
       authorList : [],
       articlelists: [],
-      hasFollowing:false,
       hotBlobbers:[]
     };
   },

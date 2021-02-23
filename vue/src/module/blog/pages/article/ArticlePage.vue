@@ -160,9 +160,9 @@
         </div>
       </div>
     </div>
-    <!-- <el-dialog :visible.sync="showLogin" width="395px"> -->
+    
       <login-dialog ref="dialog"></login-dialog>
-    <!-- </el-dialog> -->
+    
   </div>
 </template>
 <script>
