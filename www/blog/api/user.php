@@ -163,7 +163,7 @@ class user extends Api {
         
         //索引表
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
