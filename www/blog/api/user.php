@@ -157,13 +157,13 @@ class user extends Api {
             $check_account_follow=$obj_account_follow->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,'followerID'=>$_SESSION['id']]);
             if(empty($check_account_follow))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
             foreach($check_account_follow as $v){
-                $followingID_account_follow[]=$v['followerID'];
+                $followingID_account_follow[]=$v['followingID'];
             }
         }
         
         //索引表
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
