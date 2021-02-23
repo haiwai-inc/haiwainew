@@ -150,11 +150,11 @@ class user extends Api {
             $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
             if(empty($check_account_user))  {$this->error="此关注用户已不存在";$this->status=false;return false;}
             
-            $check_account_follower=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
+            $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
             if(empty($check_account_follower)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
             $followingID_account_follow[]=$followerID;
         }else{
-            $rs_account_follower=$obj_account_follow->getAll("*",['followerID'=>$_SESSION['id']]);
+            $check_account_follow=$obj_account_follow->getAll("*",['followerID'=>$_SESSION['id']]);
             if(empty($rs_account_follower))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
             foreach($rs_account_follower as $v){
                 $followingID_account_follow[]=$v['followerID'];
