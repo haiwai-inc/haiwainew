@@ -81,7 +81,7 @@ export default {
   watch:{
     '$store.state.user.userinfo':function(){
       console.log(this.user.userinfo.id);
-      this.getFollowing();
+      if(this.user.userinfo.id)this.getFollowing();
       this.getBloggers();
     }
   },
@@ -114,7 +114,6 @@ export default {
       console.log(this.hotBlobbers)
     },
     opendialog(){
-      console.log("ok");
       this.$refs.dialog.isLogin()
     }
   },
