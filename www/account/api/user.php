@@ -433,7 +433,7 @@ class user extends Api {
         if(!empty($check_account_follow)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
         
         //添加关注列表
-        $id=$check_account_follow->insert(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
+        $id=$obj_account_follow->insert(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
