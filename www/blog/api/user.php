@@ -122,48 +122,48 @@ class user extends Api {
      * @param integer $lastID | 分页id
      */
     public function my_followering_list($lastID=0){
-        $obj_account_follower=load("account_follower");
+        $obj_account_follow=load("account_follow");
         
-        $fields=['order'=>["id"=>"DESC"],'userID'=>$_SESSION['id']];
+        $fields=['order'=>["id"=>"DESC"],'followerID'=>$_SESSION['id']];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
-        $rs_account_follower=$obj_account_follower->getAll("*",$fields);
+        $rs_account_follow=$obj_account_follow->getAll("*",$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_account_follower=$obj_account_user->get_basic_userinfo($rs_account_follower,"followerID");
+        $rs_account_follow=$obj_account_user->get_basic_userinfo($rs_account_follow,"followingID");
         
-        return $rs_account_follower;
+        return $rs_account_follow;
     }
     
     /**
      * 二级页面
      * 关注 文章 列表
-     * @param integer $followerID | 关注人的ID
+     * @param integer $followingID | 关注人的ID
      */
-    public function follower_article_list($followerID=0){
-        $obj_account_follower=load("account_follower");
+    public function following_article_list($followingID=0){
+        $obj_account_follow=load("account_follow");
         $obj_account_user=load("account_user");
         
-        if(!empty($followerID)){
-            $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followerID,"status"=>1]);
+        if(!empty($followingID)){
+            $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
             if(empty($check_account_user))  {$this->error="此关注用户已不存在";$this->status=false;return false;}
             
-            $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$followerID]);
-            if(empty($check_account_follower)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
-            $followerID_account_follower[]=$followerID;
+            $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
+            if(empty($check_account_follow)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
+            $followingID_account_follow[]=$followingID;
         }else{
-            $rs_account_follower=$obj_account_follower->getAll("*",['userID'=>$_SESSION['id']]);
-            if(empty($rs_account_follower))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
-            foreach($rs_account_follower as $v){
-                $followerID_account_follower[]=$v['followerID'];
+            $check_account_follow=$obj_account_follow->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,'followerID'=>$_SESSION['id']]);
+            if(empty($check_account_follow))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
+            foreach($check_account_follow as $v){
+                $followingID_account_follow[]=$v['followingID'];
             }
         }
         
         //索引表
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['visible'=>1,'OR'=>['userID'=>$followerID_account_follower]]);
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");

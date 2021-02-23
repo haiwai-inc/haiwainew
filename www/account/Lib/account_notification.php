@@ -7,7 +7,7 @@ class account_notification extends Model{
     function notification_add($userID,$type,$typeID,$msgtype){
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','username'],['id'=>$_SESSION['id']]);
-	    if($type=="follower"){
+	    if($type=="follow"){
 	        if($msgtype=="add"){
 	            $msgbody=$rs_account_user['username']." 关注了您";
 	        }
@@ -41,7 +41,8 @@ class account_notification extends Model{
 	        "type"=>$type,
 	        "typeID"=>$typeID,
 	        "msgbody"=>$msgbody,
-	        "is_read"=>0
+	        "is_read"=>0,
+	        "create_date"=>times::gettime()
 	    ];
 	    $this->insert($where,"notification_".substr('0'.$userID,-1));
 	}

@@ -419,25 +419,25 @@ class user extends Api {
     
     /**
      * "很多"页面
-     * 关注 添加
-     * @param integer $userID | 添加关注人ID
+     * 我的关注人 添加
+     * @param integer $followingID | 添加关注人ID
      */
-    public function follower_add($userID){
+    public function following_add($followingID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$userID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己关注自己！";$this->status=false;return false;}
         
-        $obj_account_follower=load("account_follower");
-        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$userID]);
-        if(!empty($check_account_follower)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
+        $obj_account_follow=load("account_follow");
+        $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
+        if(!empty($check_account_follow)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
         
         //添加关注列表
-        $id=$obj_account_follower->insert(['userID'=>$_SESSION['id'],'followerID'=>$userID]);
+        $id=$obj_account_follow->insert(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $obj_account_notification->notification_add($userID,'follower',$id,"add");
+        $obj_account_notification->notification_add($followingID,'follow',$id,"add");
         return true;
     }
     
@@ -446,22 +446,22 @@ class user extends Api {
      * 关注 取消
      * @param integer $userID | 取消关注人ID
      */
-    public function follower_delete($userID){
+    public function following_delete($followingID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$userID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
-        $obj_account_follower=load("account_follower");
-        $check_account_follower=$obj_account_follower->getOne(['id'],['userID'=>$_SESSION['id'],'followerID'=>$userID]);
-        if(empty($check_account_follower)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
+        $obj_account_follow=load("account_follow");
+        $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followerID'=>$followingID]);
+        if(empty($check_account_follow)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
         
         //移除关注列表
-        $obj_account_follower->remove(['userID'=>$_SESSION['id'],'followerID'=>$userID]);
+        $obj_account_follow->remove(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $obj_account_notification->notification_add($userID,'follower',0,"delete");
+        $obj_account_notification->notification_add($followingID,'follow',0,"delete");
         return true;
     }
     
@@ -526,17 +526,17 @@ class user extends Api {
      * @param integer $lastID | 最后的id
      */
     public function my_follower_list($lastID=0){
-        $obj_account_follower=load("account_follower");
-        $fields=["followerID"=>$_SESSION['id'],'limit'=>20];
+        $obj_account_follow=load("account_follow");
+        $fields=["followingID"=>$_SESSION['id'],'limit'=>20];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
-        $rs_account_follower=$obj_account_follower->getAll("*",$fields);
+        $rs_account_follow=$obj_account_follow->getAll("*",$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_account_follower=$obj_account_user->get_basic_userinfo($rs_account_follower,"userID");
-        return $rs_account_follower;
+        $rs_account_follow=$obj_account_user->get_basic_userinfo($rs_account_follow,"followerID");
+        return $rs_account_follow;
     }
     
     /**
