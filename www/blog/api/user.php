@@ -152,7 +152,7 @@ class user extends Api {
             
             $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
             if(empty($check_account_follow)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
-            $followingID_account_follow[]=$followerID;
+            $followingID_account_follow[]=$followingID;
         }else{
             $check_account_follow=$obj_account_follow->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,'followerID'=>$_SESSION['id']]);
             if(empty($check_account_follow))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
