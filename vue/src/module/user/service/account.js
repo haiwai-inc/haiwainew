@@ -66,12 +66,12 @@ class Account extends API{
     }
 
 // user functions api
-    async follower_add(followerID){
-        return await this.sendget("account/user/follower_add/?followerID="+followerID);
+    async following_add(followingID){
+        return await this.sendget("account/user/following_add/?followingID="+followingID);
     }
 
-    async follower_delete(followerID){
-        return await this.sendget("account/user/follower_delete/?followerID="+followerID);
+    async following_delete(followingID){
+        return await this.sendget("account/user/following_delete/?followingID="+followingID);
     }
 
     async upload_avatar(avatar){

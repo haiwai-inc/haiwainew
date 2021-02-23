@@ -29,7 +29,7 @@ export default {
         id:Number,
         description:String,
         first_letter:String,
-        is_follower:Boolean,
+        is_following:Boolean,
         is_hot_blogger:Boolean
     }
   },

@@ -230,7 +230,23 @@ class User extends API{
         }
     }
 
+    /**
+     * 获取我关注的人
+     * @param {分页参数} lastID 
+     */
+    async my_followering_list(lastID){
+        return await this.sendget("blog/user/my_followering_list/?lastID="+lastID)
+    }
 
+    /**
+     * 获取我关注的人的文章列表
+     * @param {被我关注人的id，如果为0返回所有被关注者新文章} followingID 
+     */
+    async following_article_list(followingID){
+        return await this.sendget("blog/user/following_article_list/?followingID="+followingID)
+    }
+
+// 公用函数
     async sendget(url){
         try{
             let rs = await this.get(url);

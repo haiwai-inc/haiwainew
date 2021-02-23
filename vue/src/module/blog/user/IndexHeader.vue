@@ -4,7 +4,7 @@
             <div class="user-bgup"></div>
         </div>
         <div class="user-avatar d-flex py-2">
-            <div class="avatarbox">
+            <div class="avatarbox" @click="test()">
                 <div 
                 v-if="!data.userinfo_userID.avatar" 
                 class="avatar-word" :style="{height:'90px',width:'90px',lineHeight:'90px'}">{{data.userinfo_userID.first_letter}}</div>
@@ -32,14 +32,14 @@
                 </n-button>
                 
                 <n-button 
-                :type="data.userinfo_userID.is_follower?'default':'primary'" 
+                :type="data.userinfo_userID.is_following?'default':'primary'" 
                 round 
                 simple 
-                @click="$router.push('/blog/user/1')"
+                @click="$router.push('/blog/user/'+data.userID)"
                 class="editbtn ml-3"
                 size="sm"
                 >
-                    <icon-plus :style="data.userinfo_userID.is_follower?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{data.userinfo_userID.is_follower?'已关注':'关注'}}
+                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                 </n-button>
             </div>
         </div>
@@ -94,6 +94,14 @@ import blog from '../blog.service';
 
 export default {
     name: 'blog-user-index-header',
+    props:{
+        userID:Number
+    },
+    watch:{
+        'userID':function(){console.log("123")
+            this.getInfo();
+        }
+    },
     components:{
         IconPen,
         IconMail,
@@ -101,44 +109,18 @@ export default {
         [Button.name]: Button,
         [Input.name]: Input,
         Modal,
-        
     },
     mounted:function(){
-        blog.blogger_info(this.$route.params.id).then(res=>{
-            this.data = res.data;
-            this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
-            console.log(this.data);
-        })
+        this.getInfo();
     },
     methods:{
-        
-    },
-    data() {
-        return {
-            defaultBackground:'/img/bg5.jpg',
-            data:{
-                bloggerinfo_id:{
-                    background:'',
-                    description:'',
-                    count_read:0,
-                    count_follower:0
-                },
-                id:0,
-                userID:0,
-                userinfo_userID:{
-                    avatar:'',
-                    username:'',
-                    is_follower:0
-                }
-            },
-            modals:{
-                sendQqhModal:false,
-                qqhMsgbody:'',
-                modalData:{}
-            },
-        };
-    },
-    methods:{
+        getInfo(){
+            blog.blogger_info(this.userID).then(res=>{
+                this.data = res.data;
+                this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
+                console.log(this.data);
+            })
+        },
         openModal(){
             this.modals.sendQqhModal=true
         },
@@ -155,7 +137,32 @@ export default {
             },2000)
         //   console.log(res);
         }
-    }
+    },
+    data() {
+        return {
+            defaultBackground:'/img/bg5.jpg',
+            data:{
+                bloggerinfo_id:{
+                    background:'',
+                    description:'',
+                    count_read:0,
+                    count_follower:0
+                },
+                id:0,
+                userID:0,
+                userinfo_userID:{
+                    avatar:'',
+                    username:'',
+                    is_following:0
+                }
+            },
+            modals:{
+                sendQqhModal:false,
+                qqhMsgbody:'',
+                modalData:{}
+            },
+        };
+    },
 }
 </script>
 <style>

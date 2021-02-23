@@ -5,7 +5,7 @@
       </div>
       <div class="row">
        <div class="col-sm-8 col-12">
-            <index-header></index-header>
+            <index-header :userID="Number($route.params.id)"></index-header>
 
             <div class="profile-header mt-2">
             <ul class="nav justify-content-center">
