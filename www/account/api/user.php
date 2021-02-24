@@ -559,11 +559,15 @@ class user extends Api {
      * 消息 清空 计数
      * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follow)
      */
-    public function notification_unread_clear($type='blog_comment'){
+    public function notification_unread_clear($type=''){
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
+        $fileds=['userID'=>$_SESSION['id'],'is_read'=>0];
+        if(!empty($type)){
+            $fileds['type']=$type;
+        }
         
-        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type],"notification_".$tbn);
+        $obj_account_notification->update(['is_read'=>1],$fileds,"notification_".$tbn);
         return true;
     }
     
