@@ -475,8 +475,8 @@ class user extends Api {
         $where=[
             'limit'=>20,
             "userID"=>$_SESSION['id'],
-            "type"=>"blog_comment",
-            "order"=>['id'=>"ASC"]
+            "type"=>"reply",
+            "order"=>['id'=>"DESC"]
         ];
         if(!empty($lastID)){
             $where['id,<']=$lastID;
