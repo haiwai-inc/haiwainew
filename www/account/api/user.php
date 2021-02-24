@@ -557,7 +557,7 @@ class user extends Api {
     /**
      * 小铃铛页
      * 消息 清空 计数
-     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follower)
+     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follow)
      */
     public function notification_unread_clear($type='blog_comment'){
         $obj_account_notification=load("account_notification");
