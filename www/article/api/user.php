@@ -310,7 +310,7 @@ class user extends Api {
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
-        $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$check_article_indexing['postID'],"add");
+        $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
         
         return true;
     }

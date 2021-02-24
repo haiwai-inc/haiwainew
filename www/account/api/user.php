@@ -475,8 +475,8 @@ class user extends Api {
         $where=[
             'limit'=>20,
             "userID"=>$_SESSION['id'],
-            "type"=>"blog_comment",
-            "order"=>['id'=>"ASC"]
+            "type"=>"reply",
+            "order"=>['id'=>"DESC"]
         ];
         if(!empty($lastID)){
             $where['id,<']=$lastID;
@@ -550,20 +550,24 @@ class user extends Api {
         $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
         $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
         $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
-        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['totall'];
+        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['buzz'];
         return $rs;
     }
     
     /**
      * 小铃铛页
      * 消息 清空 计数
-     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follower)
+     * @param integer $type | 小铃铛类型 (blog_comment,qqh,buzz,follow)
      */
-    public function notification_unread_clear($type='blog_comment'){
+    public function notification_unread_clear($type=''){
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
+        $fileds=['userID'=>$_SESSION['id'],'is_read'=>0];
+        if(!empty($type)){
+            $fileds['type']=$type;
+        }
         
-        $obj_account_notification->update(['is_read'=>1],['userID'=>$_SESSION['id'],'is_read'=>0,'type'=>$type],"notification_".$tbn);
+        $obj_account_notification->update(['is_read'=>1],$fileds,"notification_".$tbn);
         return true;
     }
     

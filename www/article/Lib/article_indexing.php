@@ -5,17 +5,17 @@ class article_indexing extends Model
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
     //根据跟帖，补全主贴信息
-    function get_article_info_by_comment($rs){
-        if(empty($rs)){
+    function get_article_info_by_comment($rs_account_notification){
+        if(empty($rs_account_notification)){
             return [];
         }
-        foreach($rs as $v){
+        foreach($rs_account_notification as $v){
             $typeID_account_notification[]=$v['typeID'];
             $hash_account_notification[$v['typeID']]=$v;
         }
         
         //评论信息
-        $rs_article_indexing_comment=$this->getAll(['id','postID','basecode','userID','bloggerID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$typeID_account_notification]]);
+        $rs_article_indexing_comment=$this->getAll("*",['order'=>['postID'=>"DESC"],'OR'=>['postID'=>$typeID_account_notification]]);
         
         //加入评论ES信息
         $obj_search_article_noindex=load("search_article_noindex");
@@ -35,7 +35,7 @@ class article_indexing extends Model
         }
         
         //主贴信息
-        $rs_article_indexing_main=$this->getAll(['id','postID','basecode','userID','bloggerID','count_buzz','count_read','count_comment'],['treelevel'=>0,'OR'=>['basecode'=>$basecode_article_indexing_comment]]);
+        $rs_article_indexing_main=$this->getAll("*",['treelevel'=>0,'OR'=>['basecode'=>$basecode_article_indexing_comment]]);
         if(empty($rs_article_indexing_main)){
             return [];
         }
@@ -46,11 +46,21 @@ class article_indexing extends Model
         //加入主贴用户信息
         $rs_article_indexing_main=$obj_account_user->get_basic_userinfo($rs_article_indexing_main,"userID");
         
+        //合并主贴和评论
         foreach($rs_article_indexing_main as $k=>$v){
             $rs_article_indexing_main[$k]['comment']=$hash_article_indexing_comment[$v['basecode']];
         }
         
-        return $rs_article_indexing_main;
+        //排序
+        $rs=[];
+        foreach($rs_article_indexing_main as $v){
+            $key = $v['comment'][0]['postID'];
+            $rs[$key]=$v;
+        }
+        krsort($rs);
+        $rs=array_values($rs);
+        
+        return $rs;
     }
     
     //补全帖子信息
