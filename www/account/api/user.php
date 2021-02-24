@@ -550,7 +550,7 @@ class user extends Api {
         $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
         $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
         $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
-        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['totall'];
+        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['buzz'];
         return $rs;
     }
     
