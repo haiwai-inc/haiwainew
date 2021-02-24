@@ -1,33 +1,84 @@
 <template>
     <div>  
-        <h6 class="font-weight-normal pb-3" @click="getcomments">
+        <h6 class="font-weight-normal pb-3">
           我收到的评论
         </h6>
-        <div v-for="(item,index) in comments" :key="index">
+        <div v-for="item in comments" :key="item.id">
             <h5 
-            @click="$router.push(item.articleUrl)"
+            @click="$router.push('/blog/p/'+item.postInfo_postID.postID)"
             class="notice-comment-t"
-            >{{item.title}}</h5>
-            <comment :data="item.comment"></comment>
+            >{{item.postInfo_postID.title}} <span style="font-size:1rem;color:gray">的 {{item.comment.length}} 条新评论</span></h5>
+            <ul style="list-style-type: none;" v-if="item.comment">
+                <li v-for="c in item.comment" :key="c.id" class="d-flex pt-3">
+                    <avatar :data="c.userinfo_userID" :imgHeight="48"></avatar>
+                    <div class="pl-3 flex-fill">
+                        <div>{{c.userinfo_userID.username}}</div>
+                        <div class="py-2">{{c.postInfo_postID.msgbody}}</div>
+                        <div class="d-flex" style="font-size:0.85rem;color:gray">
+                            <span class="mr-auto">{{c.create_date*1000 | formatDate}}</span>
+                            <span>{{c.count_buzz}}</span>
+                            <span class="px-3">{{c.count_comment}}</span>
+                            <span>
+                                <el-popconfirm 
+                                    placement="top-end"
+                                    confirm-button-text='删除'
+                                    cancel-button-text='取消'
+                                    title="确定删除这条评论吗？"
+                                    :hide-icon="true"
+                                    @confirm="reply_delete(c.postID)"
+                                >
+                                    <a href="javascript:void(0)" slot="reference" style="color:gray;">删除</a>
+                                </el-popconfirm>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- <comment :data="item.comment"></comment> -->
         </div>
     </div>
 </template>
 <script>
-import Comment from '../../blog/pages/article/Comment'
+import Avatar from '../../blog/pages/components/Main/Avatar.vue';
+import {formatDate} from '@/directives/formatDate.js';
+// import Comment from '../../blog/pages/article/Comment'
 export default {
   name: 'notice-comment',
   components: {
-    Comment
+    Avatar
+    // Comment
+  },
+  created() {
+      this.getcomments()
+  },
+  filters: {
+    formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
   },
   methods:{
       async getcomments(){
-          let v = await this.$store.state.user.my_comment_list(0)
-          console.log(v)
-      }
+          let v = await this.$store.state.user.my_comment_list(0);
+          if(v.status){
+              this.comments=v.data;
+          }
+      },
+      reply_delete(id){
+      blog.reply_delete(id).then(res=>{
+        if(res.status){
+            this.getcomments()
+        }
+      })
+    },
   },
   data(){
       return{
           comments:[{
+              postInfo_postID:{
+                  title:"asd",
+                    postID:123
+              },
               title:'这个标题是第一个',
               articleUrl:'/blog/p/1',
             comment:[
@@ -87,22 +138,6 @@ export default {
                         like:0,
                     }
                     ]
-                }
-                ],
-          },{
-              title:'这个标题是第2个',
-              articleUrl:'/blog/p/1',
-                comment:[
-                {
-                    ID:1234,
-                    avatarUrl:'/img/julie.jpg',
-                    name:'朱莉',
-                    time:'15:30 10/12/2020',
-                    authorHomepage:'blog/user/1',
-                    content:'随便说点什么叽叽歪歪',
-                    like:3,
-                    showReply:false,
-                    replies:[]
                 }
                 ],
           }

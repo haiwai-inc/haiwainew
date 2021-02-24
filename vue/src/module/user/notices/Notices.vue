@@ -76,23 +76,26 @@ export default {
   name: "notices",
   mounted:function(){
     // this.getUnreadCount();
-    this.showAllNotice()
+    this.allNoticeCount();
+    this.showAllNotice();
   },
   data() {
     return {
+      user:this.$store.state.user,
       activeId: 0,
       allNoticeList:[],
+      counts:{},
       data: [
         {
           id: 0,
           title: "全部消息",
           noticeList: [],
-          unread: 2,
+          unread: 0,
         },{
           id: 1,
           title: "我收到的评论",
           noticeList: [],
-          unread: 2,
+          unread: 0,
         },{
           id: 2,
           title: "我的悄悄话",
@@ -102,12 +105,12 @@ export default {
           id: 3,
           title: "我的粉丝",
           noticeList: [],
-          unread: 3,
+          unread: 0,
         },{
           id: 4,
           title: "我收到的喜欢",
           noticeList: [],
-          unread: 6,
+          unread: 0,
         },
       ],
     };
@@ -123,19 +126,30 @@ export default {
     NoticeLike,
   },
   computed: {},
+  beforeDestroy() {
+    this.notification_unread_clear("")
+  },
   methods: {
-    async getUnreadCount(){
-      let user = this.$store.state.user;
-      let res=await user.notification_unread_count();
-      console.log(res);
-    },
     whichActive(id) {
       this.activeId = id;
       console.log(this);
     },
-    
+    async allNoticeCount(){
+      let n = await this.user.notification_unread_count();
+      if(n.status){
+        this.data[0].unread=n.data.totall;
+        this.data[1].unread=n.data.blog_comment;
+        this.data[2].unread=n.data.qqh;
+        this.data[3].unread=n.data.follower;
+        this.data[4].unread=n.data.buzz;
+      }
+    },
+    async notification_unread_clear(type){
+      let n = await this.user.notification_unread_clear(type);
+      console.log(n);
+    },
     async showAllNotice(){
-      let v = await this.$store.state.user.notification_list(0);
+      let v = await this.user.notification_list(0);
       if(v.status){
         this.allNoticeList = v.data;
         console.log(this.allNoticeList)

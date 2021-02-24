@@ -111,6 +111,14 @@ class Blog extends API{
   }
 
   /**
+   * 删除评论
+   * @param postID 评论的postID
+   */
+  async reply_delete(postID){
+    return await this.sendget("article/user/reply_delete/?postID="+postID)
+  }
+
+  /**
    * 点赞
    * @param number postID 
    */

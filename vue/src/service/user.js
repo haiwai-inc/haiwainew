@@ -160,6 +160,22 @@ class User extends API{
     }
 
     /**
+     * 获取消息未读数
+     *  
+     */
+    async notification_unread_count(){
+        return await this.sendget("account/user/notification_unread_count/")
+    }
+
+    /**
+     * 消息未读数清零
+     * @param {消息类型} type 
+     */
+    async notification_unread_clear(type){
+        return await this.sendget("account/user/notification_unread_clear/?type="+type)
+    }
+
+     /**
      * 获取我的粉丝列表
      * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
      */
@@ -217,18 +233,7 @@ class User extends API{
             return false;
         }
     }
-    /**
-     * 获取小铃铛未读数
-     */
-    async notification_unread_count(){
-        try{
-            let res = await this.get("api/v1/account/user/notification_unread_count/");
-            return res;
-        }
-        catch(e){
-            return false;
-        }
-    }
+    
 
     /**
      * 获取我关注的人

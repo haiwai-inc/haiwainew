@@ -267,7 +267,10 @@ export default {
     },
     // 删除回复
     article_reply_delete(id){
-      console.log("Del",id);
+      blog.reply_delete(id).then(res=>{
+        console.log("Del",id);
+
+      })
     },
     regetComment(){
       let id = 0;
