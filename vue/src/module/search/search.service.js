@@ -1,11 +1,11 @@
 import API from "../../service/api";
 
 class Search extends API{
-    tag={data:{data:[]}};
-    article={data:{data:[]}};
-    blogger={data:{data:[]}};
-    categories={data:{data:[]}};
-    tag_articles={data:{data:[]}};
+    tag={data:[]};
+    article={data:[]};
+    blogger={data:[]};
+    categories={data:[]};
+    tag_articles={data:[]};
     /**
      * 获取tag列表
      * @param string keyword 

@@ -19,13 +19,13 @@
       <div class="col-sm-8 col-12">
         <!-- 文章 -->
         <div v-if="activeId === 0">
-          <span v-if="search.article.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <div v-if="search.article.data.data.length>0"
+          <span v-if="search.article.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <div v-if="search.article.data.length>0"
           v-infinite-scroll="infiniteGet"
           infinite-scroll-disabled="disabled"
           infinite-scroll-distance="50">
             <article-list-item
-              v-for="(item,index) in search.article.data.data"
+              v-for="(item,index) in search.article.data"
               v-bind:key="index"
               v-bind:data="item"
               type="0"
@@ -39,13 +39,13 @@
         </div>
         <!-- 用户 -->
         <div v-if="activeId === 1">
-          <span v-if="search.blogger.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <div v-if="search.blogger.data.data.length>0"
+          <span v-if="search.blogger.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <div v-if="search.blogger.data.length>0"
           v-infinite-scroll="infiniteGet"
           infinite-scroll-disabled="disabled"
           infinite-scroll-distance="50">
             <bloger-list-item 
-            v-for="(item,index) in search.blogger.data.data" 
+            v-for="(item,index) in search.blogger.data" 
             v-bind:key="index" 
             :data="item"></bloger-list-item>
           </div>
@@ -56,20 +56,20 @@
         </div>
         <!-- 标签 -->
         <div v-if="activeId === 2">
-          <div v-if="search.tag.data.data.length!==0">
+          <div v-if="search.tag.data.length!==0">
             <b>相关标签</b><div class="w-100"></div>
             <el-button class="search_tag"
             size="mini" 
             round 
-            v-for="(item,index) in search.tag.data.data" 
+            v-for="(item,index) in search.tag.data" 
             :key="index"
             :id="item.id"
             @click="tagChange(item.id)">{{item.name}}</el-button>
           </div>
-          <span v-if="search.tag_articles.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <span v-if="search.tag_articles.data.data.length>0">
+          <span v-if="search.tag_articles.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <span v-if="search.tag_articles.data.length>0">
             <article-list-item
-              v-for="item in search.tag_articles.data.data"
+              v-for="item in search.tag_articles.data"
               v-bind:key="item.postID"
               v-bind:data="item"
               type="0"
@@ -79,9 +79,9 @@
         </div>
         <!-- 文集 -->
         <div v-if="activeId === 3">
-          <span v-if="search.categories.data.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <span v-if="search.categories.data.data.length>0">
-            <div style="padding:10px 0;border-bottom:#eee 1px solid" v-for="(item,index) in search.categories.data.data" :key="index">
+          <span v-if="search.categories.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
+          <span v-if="search.categories.data.length>0">
+            <div style="padding:10px 0;border-bottom:#eee 1px solid" v-for="(item,index) in search.categories.data" :key="index">
               <div style="font-weight:700;font-size:1.3rem;padding-bottom:5px" v-html="item.name"></div>
               <div class="d-flex"><avatar :data="item.userinfo_userID" :imgHeight="18" class="mr-2"></avatar>
               <span style="margin-top:2px">{{item.userinfo_userID.username}}</span></div>
@@ -197,14 +197,14 @@ export default {
       this.loading.article = true;
       if (lastScore==0){
         this.$store.state.search.article = await this.search.search_articles(k,lastScore);
-        let rl = this.$store.state.search.article.data.data;
+        let rl = this.$store.state.search.article.data;
         this.lastScore.article = rl[rl.length-1]._score;
         this.noMore.article = this.nomoreStatus(rl.length);
       }else{
         let r = await this.search.search_articles(k,lastScore);
-        let arr = r.data.data;
-        this.$store.state.search.article.data.data = this.$store.state.search.article.data.data.concat(arr);
-        let data = this.$store.state.search.article.data.data;
+        let arr = r.data;
+        this.$store.state.search.article.data = this.$store.state.search.article.data.concat(arr);
+        let data = this.$store.state.search.article.data;
         this.lastScore.article = data[data.length-1]._score;
         this.noMore.article = this.nomoreStatus(arr.length);
       }
@@ -214,14 +214,14 @@ export default {
       this.loading.blogger = true;
       if(lastScore==0){
         this.$store.state.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
-        let rl = this.$store.state.search.blogger.data.data;
+        let rl = this.$store.state.search.blogger.data;
         this.lastScore.blogger = rl[rl.length-1]._score;
         this.noMore.blogger = this.nomoreStatus(rl.length);
       }else{
         let r = await this.search.search_bloggers(k,lastScore,type,w);
-        let arr = r.data.data;
-        this.$store.state.search.blogger.data.data = this.$store.state.search.blogger.data.data.concat(arr);
-        let data = this.$store.state.search.blogger.data.data;
+        let arr = r.data;
+        this.$store.state.search.blogger.data = this.$store.state.search.blogger.data.concat(arr);
+        let data = this.$store.state.search.blogger.data;
         this.lastScore.blogger = data[data.length-1]._score;
         this.noMore.blogger = this.nomoreStatus(arr.length);
       }
@@ -231,7 +231,7 @@ export default {
       this.$store.state.search.tag = await this.search.get_tags(k);
     },
     async get_all_tag_articles(){
-      this.$store.state.search.tag.data.data.forEach(t=>{
+      this.$store.state.search.tag.data.forEach(t=>{
         this.tagres.push(t.id)
       })
       this.get_tags_articles(this.tagres,0);
