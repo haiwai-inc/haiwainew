@@ -42,19 +42,25 @@ class extract_article_pic{
                         }
                         
                         //文学城本站图片
-                        if(substr($vv,0,8)=='/upload/' && !empty($v['wxc_postID'])){
-                            $image="https://cdn.wenxuecity.com".$vv;
+                        if(substr($vv,0,8)=='/upload/'){
+                            if(!empty($v['wxc_postID'])){
+                                $image="https://cdn.wenxuecity.com".$vv;
+                            }else{
+                                $image="http://beta.haiwai.com".$vv;
+                            }
                         }else{
                             $image=$vv;
                         }
                         
                         //保存头图
-                        $dir="/upload/article/pic/".substr('0000'.$v['postID'],-2)."/".substr('0000'.$v['postID'],-4,-2);
+                        $obj_article_pic=load("article_pic");
+                        $rand=$obj_article_pic->random_string(15);
+                        $filename=$rand."_".$count;
+                        $dir="/upload/article/pic/blog/".substr($rand,-2)."/".substr($rand,-4,-2);
                         $path=DOCUROOT.$dir;
                         if (!file_exists($path)) {
                             mkdir($path, 0777, true);
                         }
-                        $filename=$v['postID']."_".$count;
                         $rs_image=picture::saveImg($image,$path,$filename);
                         if(!empty($rs_image)){
                             //头图压缩为小图
@@ -68,7 +74,7 @@ class extract_article_pic{
                             }
                             
                             //替换文章内容图片路径
-                            $rs_article_post['msgbody']=str_replace($vv, "{$dir}/{$rs_image}", $rs_article_post['msgbody']);
+                            $rs_article_post['msgbody']=str_replace($vv,"{$dir}/{$rs_image}", $rs_article_post['msgbody']);
                             $count++;
                         }else{
                             $is_pic=-1;
