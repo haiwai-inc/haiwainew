@@ -22,10 +22,11 @@ class clear_blog_data{
             $this->obj_account_notification=load("account_notification");
             $this->obj_account_blacklist=load("account_blacklist");
             $this->obj_account_bookmark=load("account_bookmark");
-            $this->account_follow=load("account_follow");
-            $this->account_qqh=load("account_qqh");
-            $this->account_qqh_post=load("account_qqh_post");
-            $this->blog_recommend=load("blog_recommend");
+            $this->obj_account_follow=load("account_follow");
+            $this->obj_account_qqh=load("account_qqh");
+            $this->obj_account_qqh_post=load("account_qqh_post");
+            $this->obj_blog_recommend=load("blog_recommend");
+            $this->obj_article_post_buzz=load("article_post_buzz");
             
             
             $this->obj_account_user->exec("TRUNCATE TABLE `user`");
@@ -38,17 +39,17 @@ class clear_blog_data{
             $this->obj_blog_blogger->exec("TRUNCATE TABLE `blogger`");
             $this->obj_account_blacklist->exec("TRUNCATE TABLE `blacklist`");
             $this->obj_account_bookmark->exec("TRUNCATE TABLE `bookmark`");
-            $this->account_follow->exec("TRUNCATE TABLE `follow`");
-            $this->account_qqh->exec("TRUNCATE TABLE `qqh`");
-            $this->account_qqh_post->exec("TRUNCATE TABLE `qqh_post`");
-            $this->blog_recommend->exec("TRUNCATE TABLE `recommend`");
+            $this->obj_account_follow->exec("TRUNCATE TABLE `follow`");
+            $this->obj_account_qqh->exec("TRUNCATE TABLE `qqh`");
+            $this->obj_account_qqh_post->exec("TRUNCATE TABLE `qqh_post`");
+            $this->obj_blog_recommend->exec("TRUNCATE TABLE `recommend`");
             
             
             for ($i = 0; $i <= 9; $i++) {
                 $this->obj_article_post->exec("TRUNCATE TABLE `post_{$i}`");
                 $this->obj_article_post_tag->exec("TRUNCATE TABLE `post_tag_{$i}`");
-                $this->obj_article_post_tag->exec("TRUNCATE TABLE `post_tag_{$i}`");
                 $this->obj_account_notification->exec("TRUNCATE TABLE `notification_{$i}`");
+                $this->obj_article_post_buzz->exec("TRUNCATE TABLE `post_buzz_{$i}`");
             }
         }
     }
