@@ -8,7 +8,7 @@ class article_pic{
             $file = base64_decode($file);
         }
         $random_num = $this->random_string(10);
-        $first = substr($random_num, 2, 4 );
+        $first = substr($random_num, 2, 2 );
         $second = substr($random_num, 0, 2 );
         $dir = DOCUROOT."/upload/article/pic/group/$first/$second/";
         if( !is_dir($dir)) files::mkdirs($dir);
