@@ -553,7 +553,7 @@ class picture{
         //获取图片文件，自动添加referer
         $http_fetch_data = self::curl_fetch( $url, $refer);
         $img = $http_fetch_data['data'];
-        if(empty($img)){
+        if(empty($img) || strpos($img, '404 Not Found')){
             return false;
         }
         
