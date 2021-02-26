@@ -22,7 +22,7 @@ class article_pic{
     }
 
     public function getFileURL($random_num){
-        $first = substr($random_num, 2, 4 );
+        $first = substr($random_num, 2, 2 );
         $second = substr($random_num, 0, 2 );
         return "/upload/article/pic/group/$first/$second/$random_num.jpg";
     }
