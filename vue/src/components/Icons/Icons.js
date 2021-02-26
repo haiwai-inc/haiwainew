@@ -172,5 +172,5 @@ export default{
   notice,
   message,
   mail,
-  follower
+  follower,
 }

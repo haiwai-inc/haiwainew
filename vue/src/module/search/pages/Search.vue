@@ -100,10 +100,8 @@ import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem.vu
 import BlogerListItem from "../../blog/pages/components/Main/BlogerListItem.vue"
 import Avatar from "../../blog/pages/components/Main/Avatar";
 import { Button, } from 'element-ui';
-// import NoticeComment from "./NoticeComment";
-// import NoticeFollow from "./NoticeFollow";
-// import { LeftArrow, IconMore3v } from "@/components/Icons";
-// import {DropDown} from "@/components"
+import icons from "@/components/Icons/Icons";
+
 export default {
   name: "search",
   data() {
@@ -120,24 +118,28 @@ export default {
       data: [
         {
           id: 0,
+          icon:icons.notice,
           title: "文章",
           noticeList: [],
           unread: "",
         },
         {
           id: 1,
+          icon:icons.notice,
           title: "用户",
           noticeList: [],
           unread: "",
         },
         {
           id: 2,
+          icon:icons.notice,
           title: "标签",
           noticeList: [],
           unread: "",
         },
         {
           id: 3,
+          icon:icons.notice,
           title: "文集",
           noticeList: [],
           unread: "",
@@ -194,54 +196,54 @@ export default {
       return rl<30?true:false
     },
     async get_articles(k,lastScore){
-      this.loading.article = true;
+      // this.loading.article = true;
       if (lastScore==0){
-        this.$store.state.search.article = await this.search.search_articles(k,lastScore);
-        let rl = this.$store.state.search.article.data;
-        this.lastScore.article = rl[rl.length-1]._score;
+        this.search.article = await this.search.search_articles(k,lastScore);
+        let rl = this.search.article.data;
+        this.lastScore.article = rl.length>0?rl[rl.length-1]._score:0;
         this.noMore.article = this.nomoreStatus(rl.length);
       }else{
         let r = await this.search.search_articles(k,lastScore);
         let arr = r.data;
-        this.$store.state.search.article.data = this.$store.state.search.article.data.concat(arr);
-        let data = this.$store.state.search.article.data;
-        this.lastScore.article = data[data.length-1]._score;
+        this.search.article.data = this.search.article.data.concat(arr);
+        let data = this.search.article.data;
+        this.lastScore.article = data.length>0?data[data.length-1]._score:0;
         this.noMore.article = this.nomoreStatus(arr.length);
       }
       this.loading.article = false;
     },
     async get_bloggers(k,lastScore,type,w){
-      this.loading.blogger = true;
+      // this.loading.blogger = true;
       if(lastScore==0){
-        this.$store.state.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
-        let rl = this.$store.state.search.blogger.data;
-        this.lastScore.blogger = rl[rl.length-1]._score;
+        this.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
+        let rl = this.search.blogger.data;
+        this.lastScore.blogger = rl.length>0?rl[rl.length-1]._score:0;
         this.noMore.blogger = this.nomoreStatus(rl.length);
       }else{
         let r = await this.search.search_bloggers(k,lastScore,type,w);
         let arr = r.data;
-        this.$store.state.search.blogger.data = this.$store.state.search.blogger.data.concat(arr);
-        let data = this.$store.state.search.blogger.data;
-        this.lastScore.blogger = data[data.length-1]._score;
+        this.search.blogger.data = this.search.blogger.data.concat(arr);
+        let data = this.search.blogger.data;
+        this.lastScore.blogger = data.length>0?data[data.length-1]._score:0;
         this.noMore.blogger = this.nomoreStatus(arr.length);
       }
       this.loading.blogger = false;
     },
     async get_tags(k){
-      this.$store.state.search.tag = await this.search.get_tags(k);
+      this.search.tag = await this.search.get_tags(k);
     },
     async get_all_tag_articles(){
-      this.$store.state.search.tag.data.forEach(t=>{
+      this.search.tag.data.forEach(t=>{
         this.tagres.push(t.id)
       })
       this.get_tags_articles(this.tagres,0);
-        console.log(this.$store.state.search.tag_articles)
+        console.log(this.search.tag_articles)
     },
     async get_tags_articles(tags,lastScore){
-      this.$store.state.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
+      this.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
     },
     async get_categories(k,lastScore){
-      this.$store.state.search.categories = await this.search.search_categories(k,lastScore);
+      this.search.categories = await this.search.search_categories(k,lastScore);
     },
     infiniteGet(){
       if (this.activeId==0) {
