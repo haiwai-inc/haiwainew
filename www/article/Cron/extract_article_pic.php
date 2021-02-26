@@ -43,10 +43,10 @@ class extract_article_pic{
                         
                         //文学城本站图片
                         if(substr($vv,0,8)=='/upload/'){
-                            if(!empty($v['wxc_postID'])){
-                                $image="https://cdn.wenxuecity.com".$vv;
-                            }else{
+                            if(!empty(strpos($vv, '/article/pic/blog/'))){
                                 $image="http://beta.haiwai.com".$vv;
+                            }else{
+                                $image="https://cdn.wenxuecity.com".$vv;
                             }
                         }else{
                             $image=$vv;
@@ -56,7 +56,7 @@ class extract_article_pic{
                         $obj_article_pic=load("article_pic");
                         $rand=$obj_article_pic->random_string(15);
                         $filename=$rand."_".$count;
-                        $dir="/upload/article/pic/blog/".substr($rand,-2)."/".substr($rand,-4,-2);
+                        $dir="/upload/article/pic/blog/".substr($rand,-8,-6)."/".substr($rand,-6,-4)."/".substr($rand,-4,-2)."/".substr($rand,-2);
                         $path=DOCUROOT.$dir;
                         if (!file_exists($path)) {
                             mkdir($path, 0777, true);
@@ -102,6 +102,8 @@ class extract_article_pic{
 
 $obj = new extract_article_pic();
 $obj->start();
+
+shell_exec("/bin/chown -R www-data:www-data ".DOCUROOT . "/upload/article/pic/blog");
 
 
 
