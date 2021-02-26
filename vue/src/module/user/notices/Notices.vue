@@ -58,6 +58,7 @@ import NoticeFollow from "./NoticeFollow";
 import NoticeQqh from "./NoticeQqh";
 import Avatar from "../../blog/pages/components/Main/Avatar";
 import NoticeLike from './NoticeLike.vue';
+import icons from "@/components/Icons/Icons";
 // import {DropDown} from "@/components"
 /** 测试数据
   * 用户17登录
@@ -88,26 +89,31 @@ export default {
       data: [
         {
           id: 0,
+          icon:icons.notice,
           title: "全部消息",
           noticeList: [],
           unread: 0,
         },{
           id: 1,
+          icon:icons.message,
           title: "我收到的评论",
           noticeList: [],
           unread: 0,
         },{
           id: 2,
+          icon:icons.mail,
           title: "我的悄悄话",
           noticeList: [],
           unread: 0,
         },{
           id: 3,
+          icon:icons.follower,
           title: "我的粉丝",
           noticeList: [],
           unread: 0,
         },{
           id: 4,
+          icon:icons.like_outline,
           title: "我收到的喜欢",
           noticeList: [],
           unread: 0,

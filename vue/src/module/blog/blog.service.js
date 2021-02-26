@@ -222,8 +222,8 @@ class Blog extends API{
    * 删除文集中的已发布文章
    * @param {文章的postID} postID 
    */
-  async article_delete(postID){
-    return await this.sendget('article/user/article_delete/?postID='+postID)
+  async article_delete(postID,visible){
+    return await this.sendget('article/user/article_delete/?postID='+postID+'&visible='+visible)
   }
 
   /**

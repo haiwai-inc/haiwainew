@@ -173,25 +173,24 @@ export default {
     mounted() {
     },
     data(){
-        return{
-          userID:this.$store.state.user.userinfo.UserID,
-          iconmore3v: HaiwaiIcons.iconmore3v,
-          icon_plus:HaiwaiIcons.icon_plus,
-          icon_edit:HaiwaiIcons.icon_edit,
-          icon_delete:HaiwaiIcons.icon_delete,
-          wenjiActiveId: 100,
-          wenjiList: [],
-          articleActiveId:0,
-          articleList:[],
-          modals: {
-            addwenji: false,
-            publish: false,
-            schedule: false,
-          },
-          btnDis:{
-            add:false
-          }
+      return{
+        iconmore3v: HaiwaiIcons.iconmore3v,
+        icon_plus:HaiwaiIcons.icon_plus,
+        icon_edit:HaiwaiIcons.icon_edit,
+        icon_delete:HaiwaiIcons.icon_delete,
+        wenjiActiveId: 100,
+        wenjiList: [],
+        articleActiveId:0,
+        articleList:[],
+        modals: {
+          addwenji: false,
+          publish: false,
+          schedule: false,
+        },
+        btnDis:{
+          add:false
         }
+      }
     },
     methods:{
       changeMenu(e) {
@@ -210,22 +209,24 @@ export default {
           },
           module_data:{
             add:true,
-            bloggerID:this.userID,
+            bloggerID:this.$store.state.user.userinfo.UserID,
             categoryID:this.wjid
           }
         };
         this.btnDis.add = true;
+        console.log(data)
         blog.draft_add(data).then(res=>{
           console.log(res);
           if(res.status){
             this.getArticleList();
+            this.btnDis.add = false;
           }
         })
       },
       delArticle(item){
         if(item.visible==1 || item.visible==-2){
         console.log(item.visible);
-          blog.article_delete(item.postID).then(res=>{
+          blog.article_delete(item.postID,0).then(res=>{
             if(res.status){
               this.getArticleList();
             }
@@ -245,7 +246,6 @@ export default {
           this.articleList = res.data.filter(obj=>obj.visible!=0);
           // this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
           this.changeMenu(this.articleList[0]);
-          this.btnDis.add = false;
         })
       },
       setActiveID(item){
