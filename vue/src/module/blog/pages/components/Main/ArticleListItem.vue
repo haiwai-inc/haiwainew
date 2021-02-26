@@ -91,6 +91,8 @@ h4{
 h4.article-title{
   margin-bottom: .5rem;
   padding-top:1rem;
+  font-weight: 600;
+  font-size: 1.2em
 }
 .list-itme .descript{
   display: -webkit-box;
@@ -99,17 +101,19 @@ h4.article-title{
   -webkit-box-orient: vertical;
 }
 p.descript,div.list-itme-tail{
-  color:#657786;
-  line-height: 1.8 ;
-  font-size: .94rem ;
+        color: #121212;
+        line-height: 1.6;
+        font-size: 1rem;
+        font-weight: normal;
 }
 .list-itme-tail .name{
   color:#333;
 }
 .list-itme-tail .tail-data{
-  font-size: 0.75rem;
-  padding-right:1rem;
-  padding-top:8px;
+        font-size: 0.95rem;
+        padding-right: 1rem;
+        padding-top: 8px;
+        color: #5b7083;
 }
 .list-itme-tail .tail-data a{
   cursor: pointer;

@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-    name: 'icon-mail',
+    name: 'icon-collected',
 };
 </script>
 <style>
