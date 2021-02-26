@@ -27,6 +27,9 @@ class clear_blog_data{
             $this->obj_account_qqh_post=load("account_qqh_post");
             $this->obj_blog_recommend=load("blog_recommend");
             $this->obj_article_post_buzz=load("article_post_buzz");
+            $this->obj_article_post_increment=load("article_post_increment");
+            $this->obj_article_post_tag_increment=load("article_post_tag_increment");
+            $this->obj_account_user_email=load("account_user_email");
             
             
             $this->obj_account_user->exec("TRUNCATE TABLE `user`");
@@ -43,7 +46,9 @@ class clear_blog_data{
             $this->obj_account_qqh->exec("TRUNCATE TABLE `qqh`");
             $this->obj_account_qqh_post->exec("TRUNCATE TABLE `qqh_post`");
             $this->obj_blog_recommend->exec("TRUNCATE TABLE `recommend`");
-            
+            $this->obj_article_post_increment->exec("TRUNCATE TABLE `post_increment`");
+            $this->obj_article_post_tag_increment->exec("TRUNCATE TABLE `post_tag_increment`");
+            $this->obj_account_user_email->exec("TRUNCATE TABLE `user_email`");
             
             for ($i = 0; $i <= 9; $i++) {
                 $this->obj_article_post->exec("TRUNCATE TABLE `post_{$i}`");
