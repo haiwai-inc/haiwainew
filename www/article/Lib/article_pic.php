@@ -7,16 +7,24 @@ class article_pic{
         else {
             $file = base64_decode($file);
         }
-        $random_num = $this->random_string(15);
-        while(file_exists(DOCUROOT."/upload/$random_num.jpg")){
-            $random_num = $this->random_string(15);
+        $random_num = $this->random_string(10);
+        $first = substr($random_num, 2, 4 );
+        $second = substr($random_num, 0, 2 );
+        $dir = DOCUROOT."/upload/article/pic/group/$first/$second/";
+        if( !is_dir($dir)) files::mkdirs($dir);
+        
+        while(file_exists($dir."$random_num.jpg")){
+            $random_num = $this->random_string(10);
         }
-        file_put_contents(DOCUROOT."/upload/$random_num.jpg", $file);
+
+        file_put_contents($dir."$random_num.jpg", $file);
         return $random_num;
     }
 
     public function getFileURL($random_num){
-        return "/upload/$random_num.jpg";
+        $first = substr($random_num, 2, 4 );
+        $second = substr($random_num, 0, 2 );
+        return "/upload/article/pic/group/$first/$second/$random_num.jpg";
     }
 
     public function save_picture($file){
