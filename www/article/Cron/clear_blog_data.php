@@ -22,7 +22,7 @@ class clear_blog_data{
             $this->obj_account_notification=load("account_notification");
             $this->obj_account_blacklist=load("account_blacklist");
             $this->obj_account_bookmark=load("account_bookmark");
-            $this->account_follower=load("account_follower");
+            $this->account_follow=load("account_follow");
             $this->account_qqh=load("account_qqh");
             $this->account_qqh_post=load("account_qqh_post");
             $this->blog_recommend=load("blog_recommend");
