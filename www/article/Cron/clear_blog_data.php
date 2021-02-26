@@ -38,7 +38,7 @@ class clear_blog_data{
             $this->obj_blog_blogger->exec("TRUNCATE TABLE `blogger`");
             $this->obj_account_blacklist->exec("TRUNCATE TABLE `blacklist`");
             $this->obj_account_bookmark->exec("TRUNCATE TABLE `bookmark`");
-            $this->account_follower->exec("TRUNCATE TABLE `follower`");
+            $this->account_follow->exec("TRUNCATE TABLE `follow`");
             $this->account_qqh->exec("TRUNCATE TABLE `qqh`");
             $this->account_qqh_post->exec("TRUNCATE TABLE `qqh_post`");
             $this->blog_recommend->exec("TRUNCATE TABLE `recommend`");
