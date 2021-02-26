@@ -7,16 +7,22 @@ class article_pic{
         else {
             $file = base64_decode($file);
         }
-        $random_num = $this->random_string(15);
-        while(file_exists(DOCUROOT."/upload/$random_num.jpg")){
-            $random_num = $this->random_string(15);
+        $random_num = $this->random_string(10);
+        $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
+        if( !is_dir($dir)) files::mkdirs($dir);
+        
+        while(file_exists($dir."/$random_num.jpg")){
+            $random_num = $this->random_string(10);
+            $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
+            if( !is_dir($dir)) files::mkdirs($dir);
         }
-        file_put_contents(DOCUROOT."/upload/$random_num.jpg", $file);
+
+        file_put_contents($dir."/$random_num.jpg", $file);
         return $random_num;
     }
 
     public function getFileURL($random_num){
-        return "/upload/$random_num.jpg";
+        return "/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2)."/$random_num.jpg";
     }
 
     public function save_picture($file){
