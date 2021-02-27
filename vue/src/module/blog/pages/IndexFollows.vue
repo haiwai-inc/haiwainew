@@ -8,7 +8,7 @@
         <div class="col-sm-4 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
-              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">海外名博</span></li>
+              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
             </ul>
             <ul v-if="authorList.length>0">
               
@@ -62,6 +62,7 @@ import MainMenu from './components/Main/MainMenu';
 import ArticleListItem from './components/Main/ArticleListItem';
 import Avatar from  './components/Main/Avatar';
 import { IconArticleBg } from '@/components/Icons';
+import { IconBloggerBg } from '@/components/Icons';
 import blog from '../blog.service';
 import IndexHeader from '../user/IndexHeader'
 import BlogerListItem from './components/Main/BlogerListItem';
@@ -74,6 +75,7 @@ export default {
     ArticleListItem,
     Avatar,
     IconArticleBg,
+    IconBloggerBg,
     IndexHeader,
     BlogerListItem,
     LoginDialog
