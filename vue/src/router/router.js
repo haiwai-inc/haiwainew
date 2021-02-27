@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import MainNavbar from '../layout/MainNavbar.vue';
+import User from '../service/user';
 
 Vue.use(Router);
 
@@ -27,5 +28,25 @@ let router = new Router({
     }
   },
 });
-
+let user = new User();
+router.beforeEach((to,from,next)=>{
+  const nextRoute = ['write'];
+  let status = false;
+  if(to.matched.some(record=>record.meta.requiresAuth)){
+    user.getUserStatus().then(res=>{
+      status=res.status;
+      console.log(status);
+      if(!status){
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      }else {
+        next()
+      }
+    })
+  }else{
+    next()
+  }
+})
 export default router;

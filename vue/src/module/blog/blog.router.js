@@ -28,10 +28,12 @@ export default [
         path: '/blog/write',
         name: 'editor',
         components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve)},
+        meta:{requiresAuth:true}
       },{
         path: '/blog/success',
         name: 'success',
         components: { default:resolve => require (['./pages/editor/Success.vue'],resolve)},
+        meta:{requiresAuth:true}
       },{
         path: '/blog/user/:id',
         name: 'bloguserindex',

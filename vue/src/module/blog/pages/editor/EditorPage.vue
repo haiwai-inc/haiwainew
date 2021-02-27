@@ -339,10 +339,10 @@ export default {
   },
 
   beforeCreate() {
-    this.$store.state.user.getUserStatus().then(r=>{
+    this.$store.state.user.getUserStatus().then(r=>{console.log(r)
       blog.category_list(r.data.UserID).then(res=>{
-        this.wenjiList = res.data;
-        this.wenjiActiveId = this.wenjiList[0].id;
+        this.wenjiList = res.status?res.data:[];
+        this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
       });
     });
   },
