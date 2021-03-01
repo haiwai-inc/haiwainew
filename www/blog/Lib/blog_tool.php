@@ -253,30 +253,27 @@ class blog_tool{
     }
     
     function add_to_category($rs){
-        if(!empty($rs['catid'])){
-            $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
-            
-            //添加默认文集
-            if(empty($rs_blog_legacy_blogcat_members)){
-                $rs_blog_legacy_blogcat_members['category']="日记";
-            }
-            
-            $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
-            if(empty($check_blog_category)){
-                $field=[
-                    "bloggerID"=>$rs['blogger_new']['id'],
-                    "name"=>$rs_blog_legacy_blogcat_members['category'],
-                ];
-                $field['id']=$this->obj_blog_category->insert($field);
-            }else{
-                $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
-                $field=$check_blog_category;
-            }
-            
-            return $field;
+        $rs['catid']=empty($rs['catid'])?0:$rs['catid'];
+        $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
+        
+        //添加默认文集
+        if(empty($rs_blog_legacy_blogcat_members)){
+            $rs_blog_legacy_blogcat_members['category']="日记";
         }
         
-        return false;
+        $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
+        if(empty($check_blog_category)){
+            $field=[
+                "bloggerID"=>$rs['blogger_new']['id'],
+                "name"=>$rs_blog_legacy_blogcat_members['category'],
+            ];
+            $field['id']=$this->obj_blog_category->insert($field);
+        }else{
+            $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+            $field=$check_blog_category;
+        }
+        
+        return $field;
     }
     
     function add_to_tag($blogcat_id){
