@@ -68,9 +68,7 @@ class blog_tool{
             }
             
             //category
-            if($rs['catid']!=0){
-                $rs['category_new']=$this->add_to_category($rs);
-            }
+            $rs['category_new']=$this->add_to_category($rs);
         }
         
         //article
