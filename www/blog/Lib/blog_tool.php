@@ -9,7 +9,6 @@ class blog_tool{
         $this->obj_account_legacy_user_album=load("account_legacy_user_album");
         
         //article
-        $this->obj_blog_category=load("blog_category");
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_article_tag=load("article_tag");
         $this->obj_article_post=load("article_post");
@@ -17,6 +16,7 @@ class blog_tool{
         
         //blogger
         $this->obj_blog_blogger=load("blog_blogger");
+        $this->obj_blog_category=load("blog_category");
         $this->obj_blog_legacy_blogger=load("blog_legacy_blogger");
         $this->obj_blog_legacy_blogcat=load("blog_legacy_blogcat");
         $this->obj_blog_legacy_blogcat_members=load("blog_legacy_blogcat_members");
