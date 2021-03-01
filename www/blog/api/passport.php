@@ -49,8 +49,8 @@ class passport extends Api {
         $fields=[
             "userID"=>$_SESSION['id'],
             "name"=>$rs_account_user['username']."的博客",
-            "create_date"=>time,
-            "update_date"=>time,
+            "create_date"=>$time,
+            "update_date"=>$time,
             "update_type"=>"register",
             "update_ip"=>$ip
         ];
