@@ -23,7 +23,7 @@ class passport extends Api {
         if(!empty($rs_blog_blogger)){
             $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_blogger];
         }else{
-            $rs=['status'=>false,'msg'=>"no blogger",'data'=>""];
+            $rs=['status'=>false,'msg'=>"此用户未开通博客",'data'=>""];
         }
         
         return $rs;
