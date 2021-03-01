@@ -102,7 +102,7 @@ class blog_tool{
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
                 "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
-                "categoryID"=>empty($rs['category_new']['id'])?-1:$rs['category_new']['id'],
+                "categoryID"=>$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
                 "edit_date"=>strtotime($rs['dateline']),
@@ -255,8 +255,10 @@ class blog_tool{
     function add_to_category($rs){
         if(!empty($rs['catid'])){
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
+            
+            //添加默认文集
             if(empty($rs_blog_legacy_blogcat_members)){
-                return false;
+                $rs_blog_legacy_blogcat_members['category']="日记";
             }
             
             $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
