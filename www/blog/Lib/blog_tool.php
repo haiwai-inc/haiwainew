@@ -253,12 +253,14 @@ class blog_tool{
     }
     
     function add_to_category($rs){
-        $rs['catid']=empty($rs['catid'])?0:$rs['catid'];
-        $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
-        
         //添加默认文集
-        if(empty($rs_blog_legacy_blogcat_members)){
+        if(empty($rs['catid'])){
             $rs_blog_legacy_blogcat_members['category']="日记";
+        }else{
+            $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
+            if(empty($rs_blog_legacy_blogcat_members)){
+                $rs_blog_legacy_blogcat_members['category']="日记";
+            }
         }
         
         $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
