@@ -336,6 +336,35 @@ export default {
     beforeDestroy() {
       clearInterval(this.timer);
     },
+    filePicker:function(callback, value, meta) {
+    // Provide file and text for the link dialog
+      var input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      if(meta.filetype == 'image'){
+        input.setAttribute('accept', 'image/*');
+      }
+      else {
+        input.setAttribute('accept', 'audio/*');
+      }
+
+      var that = this
+
+      input.onchange = function () {
+        var file = this.files[0];
+        var fileType = file.name;
+        var reader = new FileReader();
+        reader.onload = function () {
+        // var id = 'blobid' + (new Date()).getTime();
+        // var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+          var base64 = reader.result.split(',')[1];
+          console.log(reader.result.split(',')[0]);
+          that.uploadFile(meta.filetype, reader.result);
+        }
+      reader.readAsDataURL(file);
+    };
+
+    input.click();
+  }
   },
 
   beforeCreate() {
