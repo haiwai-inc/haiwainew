@@ -280,13 +280,13 @@ export default {
     },
     getContent(e){
       if(e.visible==1){
-        blog.article_view(e.postID).then(res=>{
+        this.user.article_view(e.postID).then(res=>{
           this.curentArticle=res.data;
           // this.autoSave();
           console.log(this.curentArticle)
         });
       }else{
-        blog.draft_view(e.id).then(res=>{
+        this.user.draft_view(e.id).then(res=>{
           this.curentArticle=res.data;
           console.log(this.curentArticle)
         })
@@ -304,7 +304,7 @@ export default {
           },
           module_data:{
             add:true,
-            bloggerID:this.userID,
+            bloggerID:this.user.userinfo.bloggerID,
             categoryID:this.wenjiActiveId
           }
         };
@@ -368,11 +368,15 @@ export default {
   },
 
   beforeCreate() {
-    this.$store.state.user.getUserStatus().then(r=>{
-      blog.category_list(r.data.UserID).then(res=>{
-        this.wenjiList = res.data;
-        this.wenjiActiveId = this.wenjiList[0].id;
-      });
+    this.$store.state.user.getUserStatus().then(r=>{console.log(r)
+      if(r.data.bloggerID){
+        blog.category_list(r.data.bloggerID).then(res=>{
+          this.wenjiList = res.status?res.data:[];
+          this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
+        });
+      }else{
+        this.$router.push('/blog_register');
+      }
     });
   },
 
@@ -399,13 +403,13 @@ export default {
 
   data() {
     return {
-      userID:this.$store.state.user.userinfo.UserID,
+      user:this.$store.state.user,
       iconmore3v: HaiwaiIcons.iconmore3v,
       wenjiList:[],
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}},
+      curentArticle:{postInfo_postID:{title:"我的第一篇博客",msgbody:"开始我的博客之旅..."}},
       modals: {
         addwenji: false,
         publish: false,

@@ -1,16 +1,12 @@
 <template>
   <div class="left-nav-item d-flex justify-content-between" @click="wActive(data.id)">
       <div class="name" :style="data.id===activeId?{color:'#39b8eb'}:''">
-        <icon-message class="icon" v-if="data.id===1" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-message>
-        <icon-mail class="icon" v-if="data.id===2" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-mail>
-        <icon-follow class="icon" v-if="data.id===3" :style="data.id===activeId?{fill:'#39b8eb'}:{fill:'#333'}"></icon-follow>
-        <icon-like-outline class="icon" v-if="data.id===4" :style="data.id===activeId?{stroke:'#39b8eb'}:{stroke:'#333'}"></icon-like-outline>
+       <span v-html="data.icon" class="icon"></span>
         {{data.title}}</div>
       <div class="descrip" :style="data.id===activeId?{color:'#39b8eb'}:''">{{data.unread}}</div> 
   </div>
 </template>
 <script>
-import {IconMessage,IconMail,IconFollow,IconLikeOutline} from '@/components/Icons';
 export default {
   name: 'left-nav-item',
   props: {
@@ -24,9 +20,7 @@ export default {
       unread:Number,
     }
   } ,
-  components:{
-    IconMessage,IconMail,IconFollow,IconLikeOutline,IconLikeOutline
-  },
+  components:{},
   methods:{
     wActive(id){
       this.$emit('which-active',id);
@@ -45,6 +39,10 @@ export default {
 .left-nav-item .name {
   font-size: 1.2rem;
   font-weight: 600
+}
+.left-nav-item .name .icon svg{
+  fill:#1d1d1d;
+  stroke:#1d1d1d;
 }
 .left-nav-item .descrip{
   font-size:small;

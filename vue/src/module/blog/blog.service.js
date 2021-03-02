@@ -75,15 +75,7 @@ class Blog extends API{
    * @param number id 
    */
   async article_view(id){
-    return await this.sendget("article/user/article_view/?id="+id)
-  }
-
-  /**
-   * 返回草稿内容
-   * @param number id 
-   */
-  async draft_view(id){
-    return await this.sendget("article/user/draft_view/?id="+id)
+    return await this.sendget("blog/page/article_view/?id="+id)
   }
 
   /**
@@ -222,8 +214,8 @@ class Blog extends API{
    * 删除文集中的已发布文章
    * @param {文章的postID} postID 
    */
-  async article_delete(postID){
-    return await this.sendget('article/user/article_delete/?postID='+postID)
+  async article_delete(postID,visible){
+    return await this.sendget('article/user/article_delete/?postID='+postID+'&visible='+visible)
   }
 
   /**

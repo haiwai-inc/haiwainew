@@ -8,7 +8,7 @@ import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueLazyload from 'vue-lazyload';
 import infiniteScroll from "vue-infinite-scroll";
-import { Loading, Upload, Image, Dialog, Message,Alert,Input, Checkbox, CheckboxGroup, Form, FormItem,Popconfirm,Popover} from 'element-ui';
+import { Loading, Upload, Image, Dialog, Message,Alert,Input, Checkbox, CheckboxGroup, Form, FormItem,Popconfirm,Popover,Button} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // import "bootstrap/dist/js/bootstrap"
 
@@ -34,6 +34,7 @@ export default {
     Vue.use(Image);
     Vue.use(Dialog);
     Vue.use(Alert);
+    Vue.use(Button);
     Vue.use(Input);
     Vue.use(Checkbox);
     Vue.use(CheckboxGroup);

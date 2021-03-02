@@ -25,13 +25,15 @@ export default [
         name: 'article',
         components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
       },{
-        path: '/blog/write',
+        path: '/blog/editor',
         name: 'editor',
         components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve)},
+        meta:{requiresAuth:true}
       },{
         path: '/blog/success',
         name: 'success',
         components: { default:resolve => require (['./pages/editor/Success.vue'],resolve)},
+        meta:{requiresAuth:true}
       },{
         path: '/blog/user/:id',
         name: 'bloguserindex',

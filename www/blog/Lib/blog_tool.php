@@ -9,7 +9,6 @@ class blog_tool{
         $this->obj_account_legacy_user_album=load("account_legacy_user_album");
         
         //article
-        $this->obj_blog_category=load("blog_category");
         $this->obj_article_indexing=load("article_indexing");
         $this->obj_article_tag=load("article_tag");
         $this->obj_article_post=load("article_post");
@@ -17,6 +16,7 @@ class blog_tool{
         
         //blogger
         $this->obj_blog_blogger=load("blog_blogger");
+        $this->obj_blog_category=load("blog_category");
         $this->obj_blog_legacy_blogger=load("blog_legacy_blogger");
         $this->obj_blog_legacy_blogcat=load("blog_legacy_blogcat");
         $this->obj_blog_legacy_blogcat_members=load("blog_legacy_blogcat_members");
@@ -68,9 +68,7 @@ class blog_tool{
             }
             
             //category
-            if($rs['catid']!=0){
-                $rs['category_new']=$this->add_to_category($rs);
-            }
+            $rs['category_new']=$this->add_to_category($rs);
         }
         
         //article
@@ -102,7 +100,7 @@ class blog_tool{
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
                 "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
-                "categoryID"=>empty($rs['category_new']['id'])?-1:$rs['category_new']['id'],
+                "categoryID"=>$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
                 "edit_date"=>strtotime($rs['dateline']),
@@ -186,7 +184,6 @@ class blog_tool{
             if(!empty($rs_account_legacy_user_album)){
                 $folder1=substr('0000'.$rs['userid'],-4,-2);
                 $folder2=substr('0000'.$rs['userid'],-2);
-                //$old_avatar="https://cdn.wenxuecity.com/cache_data/members/{$folder1}/{$folder2}/400_600-{$rs_account_legacy_user_album['photoname']}";
                 $old_avatar="https://cdn.wenxuecity.com/data/members/{$folder1}/{$folder2}/{$rs_account_legacy_user_album['photoname']}";
                 
                 //save image
@@ -254,28 +251,29 @@ class blog_tool{
     }
     
     function add_to_category($rs){
-        if(!empty($rs['catid'])){
+        //添加默认文集
+        if(empty($rs['catid'])){
+            $rs_blog_legacy_blogcat_members['category']="日记";
+        }else{
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
             if(empty($rs_blog_legacy_blogcat_members)){
-                return false;
+                $rs_blog_legacy_blogcat_members['category']="日记";
             }
-            
-            $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
-            if(empty($check_blog_category)){
-                $field=[
-                    "bloggerID"=>$rs['blogger_new']['id'],
-                    "name"=>$rs_blog_legacy_blogcat_members['category'],
-                ];
-                $field['id']=$this->obj_blog_category->insert($field);
-            }else{
-                $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
-                $field=$check_blog_category;
-            }
-            
-            return $field;
         }
         
-        return false;
+        $check_blog_category=$this->obj_blog_category->getOne("*",['bloggerID'=>$rs['blogger_new']['id'],'name'=>$rs_blog_legacy_blogcat_members['category']]);
+        if(empty($check_blog_category)){
+            $field=[
+                "bloggerID"=>$rs['blogger_new']['id'],
+                "name"=>$rs_blog_legacy_blogcat_members['category'],
+            ];
+            $field['id']=$this->obj_blog_category->insert($field);
+        }else{
+            $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+            $field=$check_blog_category;
+        }
+        
+        return $field;
     }
     
     function add_to_tag($blogcat_id){

@@ -54,6 +54,20 @@ password: haiwai2020
 
 
 
+# 清洗数据
+php www/article/Cron/clear_blog_data.php wxc123456
+php www/search/Cron/init_indexes.php haiwai2020
+
+php www/blog/Cron/sync_recommend_post.php
+php www/search/Cron/update_search.php all
+php www/search/Cron/update_blogger.php 
+php www/search/Cron/update_category_tag.php 
+
+
+
+
+
+
 
 
 
