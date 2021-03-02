@@ -340,10 +340,14 @@ export default {
 
   beforeCreate() {
     this.$store.state.user.getUserStatus().then(r=>{console.log(r)
-      blog.category_list(r.data.UserID).then(res=>{
-        this.wenjiList = res.status?res.data:[];
-        this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
-      });
+      if(r.data.bloggerID){
+        blog.category_list(r.data.bloggerID).then(res=>{
+          this.wenjiList = res.status?res.data:[];
+          this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
+        });
+      }else{
+        this.$router.push('/blog_register');
+      }
     });
   },
 

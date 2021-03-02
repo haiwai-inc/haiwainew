@@ -8,6 +8,11 @@ export default [
         components: { default: resolve => require (['./login/Login.vue'],resolve)},
     },
     {
+        path: '/blog_register',
+        name: 'blog_register',
+        components: { default: resolve => require (['./login/RegistBlog.vue'],resolve), header: MainNavbar },
+    },
+    {
         path: '/profile',
         name: 'profile',
         components: { default: resolve => require (['./Profile.vue'],resolve), header: MainNavbar },

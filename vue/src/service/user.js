@@ -79,6 +79,13 @@ class User extends API{
             return e;
         }
     }
+    
+    /**
+     * 激活博客
+     */
+    async blog_register(){
+        return await this.sendget("blog/passport/blog_register/");
+    }
 
     /**
      * 获取博客设置项

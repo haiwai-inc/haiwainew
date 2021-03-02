@@ -30,18 +30,19 @@ let router = new Router({
 });
 let user = new User();
 router.beforeEach((to,from,next)=>{
-  const nextRoute = ['write'];
   let status = false;
   if(to.matched.some(record=>record.meta.requiresAuth)){
     user.getUserStatus().then(res=>{
       status=res.status;
-      console.log(status);
       if(!status){
         next({
           path: '/login',
           query: { redirect: to.fullPath }
         })
       }else {
+        // if(to.name=="editor" && res.data.bloggerID==0){
+        //   next({path:'/blog_register'})
+        // }
         next()
       }
     })
