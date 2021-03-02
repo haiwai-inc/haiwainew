@@ -32,7 +32,14 @@ class passport extends Api {
             $rs_account_user=$_SESSION;
         }
         
+        //获取基本用户信息
         $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user])[0];
+        
+        //查看博客信息
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id'],['userID'=>$rs_account_user['id']]);
+        $rs_account_user['bloggerID']=empty($rs_blog_blogger)?0:$rs_blog_blogger['id'];
+        
         return $rs_account_user;
     }
     
