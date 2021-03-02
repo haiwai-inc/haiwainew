@@ -258,6 +258,23 @@ class User extends API{
         return await this.sendget("blog/user/following_article_list/?followingID="+followingID)
     }
 
+    /**
+     * 返回正文页内容
+     * @param number id 
+     */
+    async article_view(id){
+    return await this.sendget("article/user/article_view/?id="+id)
+    }
+
+    /**
+     * 返回草稿内容
+     * @param number id 
+     */
+    async draft_view(id){
+    return await this.sendget("article/user/draft_view/?id="+id)
+    }
+
+
 // 公用函数
     async sendget(url){
         try{

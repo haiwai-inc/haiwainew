@@ -75,15 +75,7 @@ class Blog extends API{
    * @param number id 
    */
   async article_view(id){
-    return await this.sendget("article/user/article_view/?id="+id)
-  }
-
-  /**
-   * 返回草稿内容
-   * @param number id 
-   */
-  async draft_view(id){
-    return await this.sendget("article/user/draft_view/?id="+id)
+    return await this.sendget("blog/page/article_view/?id="+id)
   }
 
   /**

@@ -280,13 +280,13 @@ export default {
     },
     getContent(e){
       if(e.visible==1){
-        blog.article_view(e.postID).then(res=>{
+        this.user.article_view(e.postID).then(res=>{
           this.curentArticle=res.data;
           // this.autoSave();
           console.log(this.curentArticle)
         });
       }else{
-        blog.draft_view(e.id).then(res=>{
+        this.user.draft_view(e.id).then(res=>{
           this.curentArticle=res.data;
           console.log(this.curentArticle)
         })
@@ -304,7 +304,7 @@ export default {
           },
           module_data:{
             add:true,
-            bloggerID:this.userID,
+            bloggerID:this.user.userinfo.bloggerID,
             categoryID:this.wenjiActiveId
           }
         };
@@ -374,13 +374,13 @@ export default {
 
   data() {
     return {
-      userID:this.$store.state.user.userinfo.UserID,
+      user:this.$store.state.user,
       iconmore3v: HaiwaiIcons.iconmore3v,
       wenjiList:[],
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}},
+      curentArticle:{postInfo_postID:{title:"我的第一篇博客",msgbody:"开始我的博客之旅..."}},
       modals: {
         addwenji: false,
         publish: false,
