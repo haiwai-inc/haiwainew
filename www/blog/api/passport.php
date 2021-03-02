@@ -12,24 +12,6 @@ class passport extends Api {
     }
 
     /**
-     * 所有博客页面
-     * 博主 信息
-     * @param int $userID|用户ID
-     */
-    public function login_status($userID) {
-        $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne('*',['userID'=>$userID]);
-        
-        if(!empty($rs_blog_blogger)){
-            $rs=['status'=>true,'msg'=>"",'data'=>$rs_blog_blogger];
-        }else{
-            $rs=['status'=>false,'msg'=>"此用户未开通博客",'data'=>""];
-        }
-        
-        return $rs;
-    }
-    
-    /**
      * 用户注册后
      * 博主 注册
      */
