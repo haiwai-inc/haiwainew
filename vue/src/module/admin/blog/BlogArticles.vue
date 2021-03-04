@@ -2,20 +2,19 @@
     <div>
         <ul v-if="articlelist.length>0" style="list-style-type:none">
             <li v-for="item in articlelist" :key="item.id">
-                <div class="mt-3 mb-2 d-flex">
+                <div class="mt-3 mb-2 d-flex p-1" style="background-color:#ddeeff66">
                     <span v-if="item.recommend.id">推荐标题：<b>{{item.recommend.title}}</b></span>
                     <el-popover v-if="item.recommend.id"
                     placement="bottom-start"
                     width="350" 
-                    @show="setName(item)"
                     ref="title"
                     trigger="click">
-                        <el-form :model="item.postInfo_postID" :rules="rules" ref="titleForm" label-width="0px">
+                        <el-form :model="item.recommend" :rules="rules" ref="titleForm" label-width="0px">
                         <el-form-item
                             prop="title"
                             label=""
                         >
-                            <el-input v-model="item.postInfo_postID.title"></el-input>
+                            <el-input v-model="item.recommend.title"></el-input>
                         </el-form-item>
                         </el-form>
                         <el-button 
@@ -95,7 +94,7 @@ export default {
             })
         },
         update(item){
-            this.$store.state.user.article_recommand_update(item.postID,item.postInfo_postID.title).then(res=>{
+            this.$store.state.user.article_recommand_update(item.postID,item.recommend.title).then(res=>{
                 if (res.status){
                     this.getlist();
                 }
