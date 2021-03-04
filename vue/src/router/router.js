@@ -40,9 +40,9 @@ router.beforeEach((to,from,next)=>{
           query: { redirect: to.fullPath }
         })
       }else {
-        // if(to.name=="editor" && res.data.bloggerID==0){
-        //   next({path:'/blog_register'})
-        // }
+        if(to.name=="admin" && res.data.auth_group!=2){
+          next({path:'/'})
+        }
         next()
       }
     })

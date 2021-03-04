@@ -274,6 +274,39 @@ class User extends API{
     return await this.sendget("article/user/draft_view/?id="+id)
     }
 
+    // 管理员相关函数
+    /**
+     * 获取文章列表
+     * @param lastID {列表最后一条id，用于分页；缺省为0}
+     * */ 
+    async admin_article_list(lastID){
+        return await this.sendget("blog/admin/article_list/?lastID="+lastID);
+    }
+
+    /**
+     * 管理员推荐文章
+     * @param postID {推荐文章的postID}
+     * */ 
+    async article_recommand_add(postID){
+        return await this.sendget("blog/admin/article_recommand_add/?lastID="+postID);
+    }
+
+    /**
+     * 管理员取消推荐文章
+     * @param postID {推荐文章的postID}
+     * */ 
+    async article_recommand_delete(postID){
+        return await this.sendget("blog/admin/article_recommand_delete/?postID="+postID);
+    }
+
+    /**
+     * 管理员修改文章标题
+     * @param postID {推荐文章的postID}
+     * @param title {标题文本}
+     * */ 
+    async article_recommand_update(postID,title){
+        return await this.sendget("blog/admin/article_recommand_update/?postID="+postID+"&title="+title);
+    }
 
 // 公用函数
     async sendget(url){

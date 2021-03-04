@@ -503,6 +503,7 @@ html,
   font-size: 30px;
   padding: 10px;
   border: 0;
+  width:100%;
 }
 .publisher input.editorTitle:focus{
   color: #495057;
