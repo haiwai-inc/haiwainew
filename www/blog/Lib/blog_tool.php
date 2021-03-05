@@ -155,16 +155,19 @@ class blog_tool{
     
     function add_to_user($rs){
         $rs_account_legacy_user=$this->obj_account_legacy_user->getOne("*",['userid'=>$rs['userid']]);
-        $check_account_user=$this->obj_account_user->getOne("*",['login_source'=>'wxc','username'=>$rs_account_legacy_user['username']]);
+        $check_account_user=$this->obj_account_user->getOne("*",['username'=>$rs_account_legacy_user['username']]);
         if(empty($check_account_user)){
+            //获取文学城用户密码信息
+            $obj_legacy_user_passwd_new=load("account_legacy_user_passwd_new");
+            $rs_legacy_user_passwd_new=$obj_legacy_user_passwd_new->getOne("*",['userid'=>$rs['userid']]);
+            
             //插入用户
             $rs_account_legacy_user_details=$this->obj_account_legacy_user_details->getOne("*",["user_details_id"=>$rs['userid']]);
             $fields=[
                 'username'=>$rs_account_legacy_user['username'],
                 'description'=>empty($rs_account_legacy_user_details['summary'])?"":$rs_account_legacy_user_details['summary'],
                 'background'=>empty($rs_account_legacy_user_details['aboutme'])?"":$rs_account_legacy_user_details['aboutme'],
-                'password'=>md5("wxc123456"),
-                'email'=>"sida9567@gmail.com",
+                'email'=>"sida9567@gmail.com", //$rs_legacy_user_passwd_new['email']
                 'verified'=>1,
                 'ip'=>$rs_account_legacy_user["ipaddress"],
                 'login_date'=>strtotime($rs_account_legacy_user['dateline']),
@@ -172,12 +175,16 @@ class blog_tool{
                 'update_date'=>strtotime($rs_account_legacy_user['dateline']),
                 'update_type'=>"register",
                 'update_ip'=>$rs_account_legacy_user["ipaddress"],
-                'login_data'=>'wxcusername',
-                'login_token'=>md5("wxc123456"),
-                'login_source'=>'wxc',
                 'avatar'=>empty($avatar)?"":$avatar,
             ];
             $fields['id']=$this->obj_account_user->insert($fields);
+            
+            //绑定文学城用户
+            $obj_account_user_auth=load("account_user_auth");
+            $check_account_user_auth=$obj_account_user_auth->getOne(['id'],['login_source'=>"wxc",'login_data'=>$rs_account_user['username']]);
+            if(empty($check_account_user_auth)){
+                $obj_account_user_auth->insert(['userID'=>$rs['userid'],'login_source'=>'wxc','login_data'=>$rs_legacy_user_passwd_new['email'],'login_token'=>$rs_legacy_user_passwd_new['password']]);
+            }
             
             //老用户头像拉到本地处理
             $rs_account_legacy_user_album=$this->obj_account_legacy_user_album->getOne("*",['pid'=>$rs_account_legacy_user['pid']]);

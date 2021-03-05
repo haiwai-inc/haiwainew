@@ -31,6 +31,70 @@ class account_user_login extends Model{
 	    return $rs_status;
 	}
 	
+	//文学城带入海外登录
+	function wxc_to_haiwai_login($userID){
+	    
+	    
+	    
+	    $obj_memcache = func_initMemcached('cache02');
+	    $rs_memcache=$obj_memcache->get("wxc_to_haiwai_login_".$userID);
+	    if(empty($rs_memcache)){
+	        $rs=['status'=>false,'error'=>'未检测到文学城登录'];
+	        return $rs;
+	    }
+	    
+	    
+	    
+	    
+	    //获取文学城用户信息
+	    $obj_legacy_user_passwd_new=load("account_legacy_user_passwd_new");
+	    $rs_account_user=$obj_legacy_user_passwd_new->getOne("*",['userid'=>$userID]);
+	    
+	    //查看是否注册
+	    $obj_account_user=load("account_user");
+	    $check_account_user=$obj_account_user->getOne("*",['email'=>$rs_account_user['email']]);
+	    if(!empty($check_account_user)){
+	        //检查状态
+	        if(empty($check_account_user['status'])){
+	            $rs=['status'=>false,'error'=>'此用户已被关闭'];
+	            return $rs;
+	        }
+	        $userID=$check_account_user['id'];
+	    }else{
+	        //注册
+	        $time=times::gettime();
+	        $ip=http::getIP();
+	        $fields=[
+	            'username'=>$rs_account_user['username'],
+	            'password'=>$rs_account_user['password'],
+                'email'=>$rs_account_user['email'],
+	            'verified'=>0,
+	            'ip'=>$ip,
+	            'login_date'=>$time,
+	            'create_date'=>$time,
+	            'update_date'=>$time,
+	            'update_type'=>"register_haiwai_from_wxcuser",
+	            'update_ip'=>$ip
+	        ];
+	        $userID=$obj_account_user->insert($fields);
+	    }
+	    
+	    //查看是否绑定
+	    $obj_account_user_auth=load("account_user_auth");
+	    $check_account_user_auth=$obj_account_user_auth->getOne(['id'],['login_source'=>"wxc",'login_data'=>$rs_account_user['username']]);
+	    if(empty($check_account_user_auth)){
+	        $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_user['email'],'login_token'=>$rs_account_user['password']]);
+	    }
+	    
+	    //设置登录cookie
+	    $this->set_user_cookie($check_account_user);
+	    
+	    //设置session
+	    $this->set_user_session($check_account_user);
+	    $rs=['status'=>true];
+	    return $rs;
+	}
+	
 	//文学城登录
 	public function wxc_login($login_data,$login_token){
 	    //查看是否绑定
@@ -159,7 +223,7 @@ class account_user_login extends Model{
 	    }
 	    
 	    $cookie=$this->encrypt($rand."___".$rs_account_user['id']."___".$index);
-	    setcookie("wxc_login",$cookie,time()+(10 * 365 * 24 * 60 * 60),conf()['session']['sessionpath'],conf()['session']['sessiondomain']);
+	    setcookie("haiwai_login",$cookie,time()+(10 * 365 * 24 * 60 * 60),conf()['session']['sessionpath'],conf()['session']['sessiondomain']);
 	}
 	
 	//设置session
@@ -176,7 +240,7 @@ class account_user_login extends Model{
 	
 	//自动登录
 	function auto_login(){
-	    $cookie=explode("___",$this->decrypt($_COOKIE['wxc_login']));
+	    $cookie=explode("___",$this->decrypt($_COOKIE['haiwai_login']));
 	    $rand=$cookie[0];
 	    $userID=$cookie[1];
 	    $pointer=$cookie[2];

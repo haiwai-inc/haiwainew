@@ -16,6 +16,7 @@ class passport extends Api {
      */
     public function login_status($userID=0) {
         $obj_account_user=load("account_user");
+        
         if(empty($_SESSION['UserID']) || !empty($userID)){
             $rs_account_user=$obj_account_user->getOne(['id','auth_group'],['id'=>$userID]);
             
@@ -24,7 +25,7 @@ class passport extends Api {
             $_SESSION['UserLevel']=$rs_account_user['auth_group'];
             
             if(empty($rs_account_user)){
-                $this->error='User not logged in';
+                $this->error='用户未登录';
                 $this->status=false;
                 return false;
             }
@@ -49,8 +50,8 @@ class passport extends Api {
      */
     public function user_logout(){
         session_unset();
-        unset($_COOKIE['wxc_login']);
-        setcookie('wxc_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
+        unset($_COOKIE['haiwai_login']);
+        setcookie('haiwai_login','', time()- 3600,conf()['session']['sessionpath'],conf()['session']['sessiondomain']); 
         return true;
     }
     
@@ -66,6 +67,32 @@ class passport extends Api {
         if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
         
         return $rs_user_login['data'];
+    }
+    
+    /**
+     * 任意登录页
+     * 用户 文学城 到 海外
+     * @param integer $userID|文学城用户ID
+     */
+    public function user_login_wxc_to_haiwai($userID){
+        //文学城带入登录/注册
+        if(empty($_SESSION['UserID'])){
+            $obj_account_user_login=load("account_user_login");
+            $rs_account_user=$obj_account_user_login->wxc_to_haiwai_login($userID);
+            if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
+        }
+        
+        return $this->login_status();
+    }
+    
+    /**
+     * 保存.wenxuecity.com sid
+     * @param integer $userID|文学城用户ID
+     */
+    public function init_wxc_sid($userID){
+        $obj_memcache = func_initMemcached('cache01');
+        $obj_memcache->set("wxc_to_haiwai_login_".$userID,1,86400);
+        return true;
     }
     
     /**
@@ -267,13 +294,9 @@ class passport extends Api {
      * @param string $code|用户登录微信账号获取的code
      */
     public function user_wechat_login($code){
-
-    }
-    
-    
-    public function init_sse(){
         
     }
+    
     
     
     
