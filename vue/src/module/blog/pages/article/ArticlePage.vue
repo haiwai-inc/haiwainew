@@ -68,7 +68,7 @@
               <!-- blog 正文 -->
             </div>
             
-            <!-- <previous-next-bar :data="articleDetail.data"></previous-next-bar> -->
+            <previous-next-bar :data="articleDetail.data"></previous-next-bar>
             
           </div>
           <div class="comment">
