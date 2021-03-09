@@ -1,5 +1,5 @@
 <template>
-  <div class="list-itme d-flex" >
+  <div class="list-itme d-flex mb-3">
     <div>
       <router-link :to="'/blog/p/'+data.postID">
         <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
@@ -90,7 +90,7 @@ h4{
 }
 h4.article-title{
   margin-bottom: .5rem;
-  padding-top:1rem;
+  margin-top:1rem;
   font-weight: 600;
   font-size: 1.2em
 }

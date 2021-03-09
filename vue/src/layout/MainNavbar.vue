@@ -84,7 +84,11 @@
               :username="$store.state.user.userinfo.userinfo_id.username"
               :avatarurl="$store.state.user.userinfo.userinfo_id.avatar"
               class="nav-item">
-        <nav-link :to="'/blog/user/'+$store.state.user.userinfo.id">
+        <nav-link to="/admin" v-if="$store.state.user.userinfo.auth_group==2">
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> 运营管理
+        </nav-link>
+        <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.auth_group==2">
+        <nav-link :to="'/blog/user/'+$store.state.user.userinfo.bloggerID">
           <i class="now-ui-icons users_single-02"></i> 我的主页
         </nav-link>
         <nav-link to="/bookmark">
