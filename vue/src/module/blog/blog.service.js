@@ -262,15 +262,26 @@ class Blog extends API{
     return await this.sendget("article/user/article_shift_category/?postID="+postID+"&categoryID="+categoryID)
   }
 
-  /**
+//   /**
+//    * 上传图片
+//    * @param FormData data 
+//    * @return url
+//    * @error false
+//    */
+//   async uploadImage(data){
+
+//     return await this.sendpost("blog/page/uploadImage/",data);
+// }
+
+ /**
    * 上传图片
    * @param FormData data 
    * @return url
    * @error false
    */
-  async uploadImage(data){
+  async uploadAudio(data){
 
-    return await this.sendpost("blog/page/uploadImage/",data);
+    return await this.sendpost("blog/page/uploadAudio/",data);
 }
 
   /**

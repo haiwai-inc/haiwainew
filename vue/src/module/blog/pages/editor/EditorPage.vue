@@ -405,7 +405,7 @@ export default {
         // var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
           var base64 = reader.result.split(',')[1];
           console.log(reader.result.split(',')[0]);
-          that.uploadFile(meta.filetype, reader.result);
+          that.uploadFile(meta.filetype, reader.result, callback);
         }
       reader.readAsDataURL(file);
     };
@@ -468,12 +468,6 @@ export default {
            bullist numlist outdent indent | removeformat | help',
         language: 'zh_CN',
         file_picker_callback:this.filePicker,
-        emoticons_append: {
-    custom_mind_explode: {
-      keywords: ['brain', 'mind', 'explode', 'blown'],
-      char: '🤯'
-    }
-  },
       });
   },
 
