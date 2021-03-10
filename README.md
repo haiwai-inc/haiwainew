@@ -1,4 +1,5 @@
 https://docs.google.com/spreadsheets/d/1gwQAMukqeHd4c8VjvfS5bUGke7yYPwQgoXez1_LOZT8/edit#gid=220659139
+https://docs.google.com/spreadsheets/d/1lgSyIDChfk1zHacQMlKRGh7-GeImpIyPah79WeG5Sjs/edit#gid=0
 
 # haiwainew
 blog
@@ -32,7 +33,7 @@ npm install
 # 发布定时文章
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/article/Cron/publish_article_timer.php
 # 抓取文章图片
-*/5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/article/Cron/extract_article_pic.php
+# */5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/article/Cron/extract_article_pic.php
 
 # count
 # 同步文章计数到数据库
