@@ -179,7 +179,7 @@ export default {
           { required: true, validator: validateName, trigger: 'blur' },
         ],
         password: [
-          { required: true, validator: validateWxcPass, trigger: 'blur' },
+          { required: true, validator: validatePass, trigger: 'blur' },
           { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
