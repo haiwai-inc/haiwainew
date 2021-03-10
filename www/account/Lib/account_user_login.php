@@ -83,6 +83,8 @@ class account_user_login extends Model{
 	
 	//文学城登录
 	public function wxc_login($login_data,$login_token){
+	    $obj_account_user=load("account_user");
+	    
 	    //查看是否绑定
 	    $obj_account_user_auth=load("account_user_auth");
 	    $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
@@ -92,6 +94,7 @@ class account_user_login extends Model{
 	            $rs_status=['status'=>false,"error"=>"登录密码错误"];
 	            return $rs_status;
 	        }
+	        $userID=$rs_account_user_auth['userID'];
 	    }else{
 	        //检查是否为合法文学城用户
 	        $obj_account_legacy_user=load("account_legacy_user");
@@ -136,9 +139,9 @@ class account_user_login extends Model{
 	        $userID=$obj_account_user->insert($fields);
 	        
 	        //查看是否绑定
-	        $obj_account_user_auth=load("account_user_auth");
 	        $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_legacy_user_passwd_new['username'],'login_token'=>$rs_account_legacy_user_passwd_new['password']]);
 	    }
+	    $check_account_user=$obj_account_user->getOne("*",['id'=>$userID]);
 	    
 	    //设置登录cookie
 	    $this->set_user_cookie($check_account_user);
