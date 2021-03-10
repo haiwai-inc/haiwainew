@@ -64,11 +64,13 @@
       <!-- 编辑器 -->
       
       <!-- <div id="summernote"></div> -->
-      <editor
-       api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw"
+      <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
+      <!-- <editor
        :init="editorConfig"
        v-model="curentArticle.postInfo_postID.msgbody"
-     />
+     /> -->
+     <textarea id="editorText">
+     </textarea>
       <div ref="saveBox">
         <n-button
           v-if="true"
@@ -183,6 +185,39 @@ import {
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../blog.service";
+import tinymce from 'tinymce/tinymce'
+import 'tinymce/themes/silver'
+import 'tinymce/icons/default/icons.js'
+import 'tinymce/plugins/image'
+import 'tinymce/plugins/media'
+import 'tinymce/plugins/advlist'
+import 'tinymce/plugins/autolink'
+import 'tinymce/plugins/lists'
+import 'tinymce/plugins/link'
+import 'tinymce/plugins/anchor'
+import 'tinymce/plugins/charmap'
+import 'tinymce/plugins/print'
+import 'tinymce/plugins/image'
+import 'tinymce/plugins/emoticons'
+import 'tinymce/plugins/emoticons/js/emojis.js'
+import 'tinymce/plugins/fullscreen'
+
+
+import 'tinymce/plugins/searchreplace'
+import 'tinymce/plugins/visualblocks'
+import 'tinymce/plugins/code'
+import 'tinymce/plugins/insertdatetime'
+import 'tinymce/plugins/table'
+import 'tinymce/plugins/help'
+import 'tinymce/plugins/wordcount'
+import 'tinymce/plugins/paste'
+
+import 'tinymce/plugins/preview'
+import 'tinymce/langs/zh_CN.js'
+import 'tinymce/langs/zh_TW.js'
+import "tinymce/skins/ui/oxide/skin.min.css"
+import "tinymce/skins/ui/oxide/content.min.css"
+import "tinymce/skins/content/default/content.min.css"
 
 export default {
   name:"editor-page",
@@ -199,7 +234,7 @@ export default {
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
     IconX,
-    'editor': Editor,
+    // 'editor': Editor,
   },
 
   methods: {
@@ -262,14 +297,26 @@ export default {
       this.wenjiActiveId = wid;
       this.articleActiveId = aid;
     },
-    
-    uploadImage2(blobInfo, success, failure, progress){
-      blog.uploadImage(blobInfo.base64()).then(rs=>{
-        success(rs.data);
-      }
-      ).catch(error=>{
 
-      });
+    uploadFile(fileType, file, success, failure, progress){
+      if(fileType == 'media'){
+        blog.uploadAudio(file).then(rs=>{
+          success(rs.data);
+        }).catch(error=>{
+          
+        })
+      }
+      else {
+        blog.uploadImage(file).then(rs=>{
+          success(rs.data);
+        }).catch(error=>{
+
+        })
+      }
+    },
+    
+    uploadImage(blobInfo, success, failure, progress){
+      this.uploadFile("image", blobInfo.base64(), success, failure, progress);
     },
     setWJid(e){
       this.wenjiActiveId = e;
@@ -336,6 +383,35 @@ export default {
     beforeDestroy() {
       clearInterval(this.timer);
     },
+    filePicker:function(callback, value, meta) {
+    // Provide file and text for the link dialog
+      var input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      if(meta.filetype == 'image'){
+        input.setAttribute('accept', 'image/*');
+      }
+      else {
+        input.setAttribute('accept', 'audio/*');
+      }
+
+      var that = this
+
+      input.onchange = function () {
+        var file = this.files[0];
+        var fileType = file.name;
+        var reader = new FileReader();
+        reader.onload = function () {
+        // var id = 'blobid' + (new Date()).getTime();
+        // var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+          var base64 = reader.result.split(',')[1];
+          console.log(reader.result.split(',')[0]);
+          that.uploadFile(meta.filetype, reader.result, callback);
+        }
+      reader.readAsDataURL(file);
+    };
+
+    input.click();
+  }
   },
 
   beforeCreate() {
@@ -370,6 +446,29 @@ export default {
     source.onmessage = function (message){
       console.log(message)
     };
+
+    tinymce.init({
+        selector: '#editorText',
+        browser_spellcheck: true, // 拼写检查
+        branding: false, // 去水印
+        elementpath: false,  //禁用编辑器底部的状态栏
+        statusbar: false, // 隐藏编辑器底部的状态栏
+        paste_data_images: false, // 允许粘贴图像
+        menubar: false, 
+        image_uploadtab: true,
+        images_upload_handler: this.uploadImage,
+        plugins: [
+           'advlist autolink lists link image charmap print preview anchor',
+           'searchreplace visualblocks code fullscreen emoticons',
+           'insertdatetime media table paste code help wordcount'
+         ],
+         toolbar:
+           'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | image media file emoticons|\
+           bullist numlist outdent indent | removeformat | help',
+        language: 'zh_CN',
+        file_picker_callback:this.filePicker,
+      });
   },
 
   data() {
@@ -406,6 +505,7 @@ export default {
       }, 
       //TinyMCE
       editorConfig:{
+        skin_url:'/tinymce/skins/ui/oxide',
          height: 500,
          menubar: false,
          plugins: [
@@ -420,7 +520,7 @@ export default {
           branding: false,
           language: 'zh_CN',
           image_uploadtab: true,
-          images_upload_handler: this.uploadImage2,
+          images_upload_handler: this.uploadImage,
           media_live_embeds: false,
           media_alt_source: false,
           media_dimensions: false,
@@ -428,6 +528,7 @@ export default {
           media_poster: false,
           file_browser_callback_types: 'file image media',
           relative_urls: false,
+          file_picker_callback:this.filePicker,
           // remove_script_host: false,
           audio_template_callback: function(data) {
    return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';

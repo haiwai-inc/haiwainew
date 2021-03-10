@@ -55,33 +55,34 @@ class http {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2 );
 		
 		//设置Refer
-		if(!empty($header['refer']))
-			curl_setopt($ch, CURLOPT_REFERER, $header['refer']);
+		if(!empty($header['refer'])){
+		    curl_setopt($ch, CURLOPT_REFERER, $header['refer']);
+		}
 	
-			//传递cookie
-			if(!empty($header['cookie'])){
-				$cookie=array();
-				foreach($header['cookie'] as $key=>$val) $cookie[]="{$key}={$val}";
-				curl_setopt($ch, CURLOPT_COOKIE, implode("; ", $cookie));
-			}
-	
-			//编码
-			$encoding = empty($header['encoding'])?'UTF-8':$header['encoding'];
-			curl_setopt($ch, CURLOPT_ENCODING, $encoding);
-	
-			$result = curl_exec($ch);
-			$info = curl_getinfo($ch);
-			curl_close($ch);
-	
-			if(empty($result)) return false;
-	
-			if(empty($info['redirect_url'])){
-				//返回目标页面内容
-				return $result;
-			}else{
-				//使用重定向地址再次请求
-				return http::sendget($info['redirect_url'], $header);
-			}
+		//传递cookie
+		if(!empty($header['cookie'])){
+			$cookie=array();
+			foreach($header['cookie'] as $key=>$val) $cookie[]="{$key}={$val}";
+			curl_setopt($ch, CURLOPT_COOKIE, implode("; ", $cookie));
+		}
+
+		//编码
+		$encoding = empty($header['encoding'])?'UTF-8':$header['encoding'];
+		curl_setopt($ch, CURLOPT_ENCODING, $encoding);
+
+		$result = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+
+		if(empty($result)) return false;
+
+		if(empty($info['redirect_url'])){
+			//返回目标页面内容
+			return $result;
+		}else{
+			//使用重定向地址再次请求
+			return http::sendget($info['redirect_url'], $header);
+		}
 	}
 	
 	static function sendpost($data, $url, $cookievalue=null){
