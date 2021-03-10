@@ -5,6 +5,7 @@ import GoogleLogo from './GoogleLogo';
 import FacebookLogo from './FacebookLogo';
 import WechatLogo from './WechatLogo.vue';
 import LineLogo from './LineLogo.vue';
+import AppleLogo from './AppleLogo.vue';
 import CopyLogo from './CopyLogo.vue';
 import LeftArrow from './LeftArrow';
 import IconPen from './IconPen.vue';
@@ -50,11 +51,14 @@ import IconBloggerBg from './IconBloggerBg.vue';
 
 
 
+
 export {
   HaiwaiLogoWhite,
   WxcLogoWhite,
   WxcLogoGreen,
   GoogleLogo,
+  AppleLogo,
+  LineLogo,
   FacebookLogo,
   LeftArrow,
   IconPen,
@@ -93,7 +97,6 @@ export {
   IconScheduled,
   IconTag,
   CopyLogo,
-  LineLogo,
   WechatLogo,
   IconCollected,
   IconBloggerBg
