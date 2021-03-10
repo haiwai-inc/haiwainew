@@ -273,16 +273,6 @@ class Blog extends API{
 //     return await this.sendpost("blog/page/uploadImage/",data);
 // }
 
- /**
-   * 上传图片
-   * @param FormData data 
-   * @return url
-   * @error false
-   */
-  async uploadAudio(data){
-
-    return await this.sendpost("blog/page/uploadAudio/",data);
-}
 
   /**
    * 新建博客自动保存

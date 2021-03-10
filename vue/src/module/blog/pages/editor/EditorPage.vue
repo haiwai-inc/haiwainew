@@ -213,8 +213,8 @@ import 'tinymce/plugins/wordcount'
 import 'tinymce/plugins/paste'
 
 import 'tinymce/plugins/preview'
-import 'tinymce/langs/zh_CN.js'
-import 'tinymce/langs/zh_TW.js'
+// import 'tinymce/langs/zh_CN.js'
+// import 'tinymce/langs/zh_TW.js'
 import "tinymce/skins/ui/oxide/skin.min.css"
 import "tinymce/skins/ui/oxide/content.min.css"
 import "tinymce/skins/content/default/content.min.css"
@@ -300,7 +300,7 @@ export default {
 
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
-        blog.uploadAudio(file).then(rs=>{
+        blog.uploadMedia(file).then(rs=>{
           success(rs.data);
         }).catch(error=>{
           
@@ -446,7 +446,7 @@ export default {
     source.onmessage = function (message){
       console.log(message)
     };
-
+    import('./langs/zh_CN.js');
     tinymce.init({
         selector: '#editorText',
         browser_spellcheck: true, // 拼写检查
@@ -457,6 +457,7 @@ export default {
         menubar: false, 
         image_uploadtab: true,
         images_upload_handler: this.uploadImage,
+        // language_url : './langs/zh_CN.js',
         plugins: [
            'advlist autolink lists link image charmap print preview anchor',
            'searchreplace visualblocks code fullscreen emoticons',
