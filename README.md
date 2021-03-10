@@ -7,6 +7,7 @@ blog
 # run vue
 npm run serve 
 npm install  
+npm run build
 
 # cronjob
 # account
