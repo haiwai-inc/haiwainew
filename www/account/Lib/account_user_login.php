@@ -53,7 +53,6 @@ class account_user_login extends Model{
 	        $ip=http::getIP();
 	        $fields=[
 	            'username'=>$rs_account_user['username'],
-	            'password'=>$rs_account_user['password'],
                 'email'=>$rs_account_user['email'],
 	            'verified'=>1,
 	            'ip'=>$ip,
@@ -138,7 +137,7 @@ class account_user_login extends Model{
 	        
 	        //查看是否绑定
 	        $obj_account_user_auth=load("account_user_auth");
-            $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_user['email'],'login_token'=>$rs_account_user['password']]);
+	        $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_legacy_user_passwd_new['username'],'login_token'=>$rs_account_legacy_user_passwd_new['password']]);
 	    }
 	    
 	    //设置登录cookie
