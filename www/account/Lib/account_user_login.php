@@ -33,19 +33,6 @@ class account_user_login extends Model{
 	
 	//文学城带入海外登录
 	function wxc_to_haiwai_login($userID){
-	    
-	    
-	    
-	    $obj_memcache = func_initMemcached('cache02');
-	    $rs_memcache=$obj_memcache->get("wxc_to_haiwai_login_".$userID);
-	    if(empty($rs_memcache)){
-	        $rs=['status'=>false,'error'=>'未检测到文学城登录'];
-	        return $rs;
-	    }
-	    
-	    
-	    
-	    
 	    //获取文学城用户信息
 	    $obj_legacy_user_passwd_new=load("account_legacy_user_passwd_new");
 	    $rs_account_user=$obj_legacy_user_passwd_new->getOne("*",['userid'=>$userID]);
@@ -68,7 +55,7 @@ class account_user_login extends Model{
 	            'username'=>$rs_account_user['username'],
 	            'password'=>$rs_account_user['password'],
                 'email'=>$rs_account_user['email'],
-	            'verified'=>0,
+	            'verified'=>1,
 	            'ip'=>$ip,
 	            'login_date'=>$time,
 	            'create_date'=>$time,
@@ -83,7 +70,7 @@ class account_user_login extends Model{
 	    $obj_account_user_auth=load("account_user_auth");
 	    $check_account_user_auth=$obj_account_user_auth->getOne(['id'],['login_source'=>"wxc",'login_data'=>$rs_account_user['username']]);
 	    if(empty($check_account_user_auth)){
-	        $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_user['email'],'login_token'=>$rs_account_user['password']]);
+	        $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_user['username'],'login_token'=>$rs_account_user['password']]);
 	    }
 	    
 	    //设置登录cookie
@@ -101,30 +88,57 @@ class account_user_login extends Model{
 	    $obj_account_user_auth=load("account_user_auth");
 	    $rs_account_user_auth=$obj_account_user_auth->getOne("*",['login_data'=>$login_data,'login_source'=>"wxc"]);
 	    if(!empty($rs_account_user_auth)){
-	        //检测文学成密码
+	        //检测密码
 	        if(md5($login_token)!=$rs_account_user_auth['login_token']){
-	            $rs_status['status']=false;
-	            $rs_status['error']="登录密码错误";
+	            $rs_status=['status'=>false,"error"=>"登录密码错误"];
 	            return $rs_status;
 	        }
 	    }else{
-	        $rs_status['status']=false;
-	        $rs_status['error']="此帐号未绑定文学城";
-	        return $rs_status;
-	    }
-	    
-	    //检测用户信息
-	    $obj_account_user=load("account_user");
-	    $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_user_auth['userID']]);
-	    if(!empty($check_account_user)){
-	        $rs_status=$this->check_user($check_account_user);
-	        if(!$rs_status['status']){
+	        //检查是否为合法文学城用户
+	        $obj_account_legacy_user=load("account_legacy_user");
+	        $check_account_legacy_user=$obj_account_legacy_user->getOne("*",['username'=>$login_data]);
+	        if($check_account_legacy_user['status']==0){
+	            $rs_status=['status'=>false,"error"=>"此用户已经被关闭"];
 	            return $rs_status;
 	        }
-	    }else{
-	        $rs_status['status']=false;
-	        $rs_status['error']="此帐号未绑定文学城";
-	        return $rs_status;
+	        
+	        if($check_account_legacy_user['verified']=='No'){
+	            $rs_status=['status'=>false,"error"=>"此用户未通过审核"];
+	            return $rs_status;
+	        }
+	        
+	        if($check_account_legacy_user['confirmed']==0){
+	            $rs_status=['status'=>false,"error"=>"此用户未激活邮件"];
+	            return $rs_status;
+	        }
+	        
+	        //获取文学城用户密码信息
+	        $obj_legacy_user_passwd_new=load("account_legacy_user_passwd_new");
+	        $rs_account_legacy_user_passwd_new=$obj_legacy_user_passwd_new->getOne("*",['userid'=>$check_account_legacy_user['userid']]);
+	        if(md5($login_token)!=$rs_account_legacy_user_passwd_new['password']){
+	            $rs_status=['status'=>false,"error"=>"登录密码错误"];
+	            return $rs_status;
+	        }
+	        
+	        //注册文学城到海外
+	        $time=times::gettime();
+	        $ip=http::getIP();
+	        $fields=[
+	            'username'=>$rs_account_legacy_user_passwd_new['username'],
+	            'email'=>$rs_account_legacy_user_passwd_new['email'],
+	            'verified'=>1,
+	            'ip'=>$ip,
+	            'login_date'=>$time,
+	            'create_date'=>$time,
+	            'update_date'=>$time,
+	            'update_type'=>"register_haiwai_from_wxcuser",
+	            'update_ip'=>$ip
+	        ];
+	        $userID=$obj_account_user->insert($fields);
+	        
+	        //查看是否绑定
+	        $obj_account_user_auth=load("account_user_auth");
+            $obj_account_user_auth->insert(['userID'=>$userID,'login_source'=>'wxc','login_data'=>$rs_account_user['email'],'login_token'=>$rs_account_user['password']]);
 	    }
 	    
 	    //设置登录cookie

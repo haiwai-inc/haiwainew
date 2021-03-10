@@ -165,9 +165,12 @@ class Api{
 		if($this->space && empty($_SESSION['UserID'])){
 		    $this->error("User Is Not Login!","User Access Forbidden!",0,'403');
 		}
-		if($this->admin && empty($_SESSION['UserLevel'])){
+		
+		//检查超管
+		if($this->admin && $_SESSION['UserLevel']!=2){
 		    $this->error("Administrator Is Not Loign!","User Access Forbidden!",0,'403');
 		}
+		
         //显示文档
         if($method == 'apidocs') $this->apidocs();
         if(!empty($_GET["api_document_{$method}_view"])) $this->viewdoc();
@@ -250,7 +253,7 @@ class Api{
 		if(!$this->sess) $this->sess = true;
 		
 		//自动登录
-		if(empty($_SESSION['UserID']) && !empty($_COOKIE['wxc_login'])){
+		if(empty($_SESSION['UserID']) && !empty($_COOKIE['haiwai_login'])){
 		    $obj_account_user_login=load("account_user_login");
 		    $obj_account_user_login->auto_login();
 		}
