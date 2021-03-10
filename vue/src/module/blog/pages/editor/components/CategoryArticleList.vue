@@ -209,7 +209,7 @@ export default {
           },
           module_data:{
             add:true,
-            bloggerID:this.$store.state.user.userinfo.UserID,
+            bloggerID:this.$store.state.user.userinfo.bloggerID,
             categoryID:this.wjid
           }
         };
