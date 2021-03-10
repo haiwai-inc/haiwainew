@@ -9,7 +9,11 @@ export default {
     name: 'regist-blog',
     methods:{
         onSubmit(){
-            this.$store.state.user.blog_register()
+            this.$store.state.user.blog_register().then(res=>{
+                if(res.status){
+                    this.$router.push('/blog/editor');
+                }
+            })
         }
     },
     beforeCreate() {
