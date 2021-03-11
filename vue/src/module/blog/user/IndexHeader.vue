@@ -190,8 +190,10 @@ export default {
     font-weight: 700;
 }
 .blog-user-index .blog-user-index-des{
-    font-size: 0.85rem;
-    color:gray
+        font-size: 0.9rem;
+        color: gray;
+        max-width: 393px;
+        display: inline-block;
 }
 .blog-user-index .avatar-word{
     background-color: aliceblue;
