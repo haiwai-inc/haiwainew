@@ -172,7 +172,7 @@ import RecommendListItem from '../components/Main/RecommendListItem';
 import { Button } from '@/components';
 import icons from "@/components/Icons/Icons";
 import Comment from './Comment';
-// import PreviousNextBar from './PreviousNextBar';
+import PreviousNextBar from './PreviousNextBar';
 import blog from '../../blog.service';
 import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
@@ -185,7 +185,7 @@ export default {
     BlogerListItem,
     RecommendListItem,
     Comment,
-    // PreviousNextBar,
+    PreviousNextBar,
     [Button.name]: Button,
     [Popover.name]:Popover,
     LoginDialog
