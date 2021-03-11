@@ -181,4 +181,10 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.navbar{
+       -webkit-box-shadow: 0 1px 3px rgb(18 18 18 / 10%);
+        box-shadow: 0 1px 3px rgb(18 18 18 / 10%);
+}
+
+</style>

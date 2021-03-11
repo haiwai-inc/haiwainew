@@ -1,5 +1,5 @@
 <template>
-  <div class="main-menubox d-flex">
+  <div class="main-menubox d-flex mt-2">
     <n-button v-for="(item,index) in menuitems"
         :key="index"
         type="default" 
@@ -48,6 +48,7 @@ export default {
 }
 .main-menubox .active span{
     color:black;
+    font-weight:600
 }
 .main-menubox .active{
     cursor:default !important;
