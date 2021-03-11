@@ -44,14 +44,14 @@
           <div id="google-signin-button" class="mb-3"></div>
             
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
-            <facebook-logo></facebook-logo>  facebook 账号登录
+          <facebook-logo></facebook-logo> facebook 账号登录
           </n-button>
 
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
-              Line 账号登录
+          <line-logo></line-logo> Line 账号登录
           </n-button>
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="appleLogin()">
-              Apple 账号登录
+          <apple-logo></apple-logo> Apple 账号登录
           </n-button>
           <!-- <div id="appleid-signin"></div> -->
           
@@ -83,31 +83,35 @@
 </template>
 <script>
 import {
-  Button,
-  Checkbox,
-  FormGroupInput,
+Button,
+Checkbox,
+FormGroupInput,
 } from '@/components';
 import {
-  //WxcLogoWhite,
-  WxcLogoGreen,
-  FacebookLogo
+//WxcLogoWhite,
+WxcLogoGreen,
+FacebookLogo,
+LineLogo,
+AppleLogo
 } from '@/components/Icons';
 import {Dialog} from "element-ui"
 import account from "../service/account";
 
 export default {
-  name: 'login-page',
-  props:{
-    redirect:{type:String,default:""}
-  },
-  components: {
-    [Button.name]: Button,
-    [Checkbox.name]: Checkbox,
-    [FormGroupInput.name]: FormGroupInput,
-    [Dialog.name]:Dialog,
-    WxcLogoGreen,
-    FacebookLogo
-  },
+name: 'login-page',
+props:{
+redirect:{type:String,default:""}
+},
+components: {
+[Button.name]: Button,
+[Checkbox.name]: Checkbox,
+[FormGroupInput.name]: FormGroupInput,
+[Dialog.name]:Dialog,
+WxcLogoGreen,
+FacebookLogo,
+LineLogo,
+AppleLogo
+},
   data() {
     var validateMail =(rule,value,callback)=>{
       if(value===''){
@@ -179,7 +183,7 @@ export default {
           { required: true, validator: validateName, trigger: 'blur' },
         ],
         password: [
-          { required: true, validator: validateWxcPass, trigger: 'blur' },
+          { required: true, validator: validatePass, trigger: 'blur' },
           { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
