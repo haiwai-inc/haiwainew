@@ -213,8 +213,8 @@ import 'tinymce/plugins/wordcount'
 import 'tinymce/plugins/paste'
 
 import 'tinymce/plugins/preview'
-// import 'tinymce/langs/zh_CN.js'
-// import 'tinymce/langs/zh_TW.js'
+import './langs/zh_CN.js'
+import './langs/zh_TW.js'
 import "tinymce/skins/ui/oxide/skin.min.css"
 import "tinymce/skins/ui/oxide/content.min.css"
 import "tinymce/skins/content/default/content.min.css"
@@ -494,12 +494,12 @@ export default {
         images_upload_handler: this.uploadImage,
         // language_url : './langs/zh_CN.js',
         plugins: [
-           'advlist autolink lists link image charmap print preview anchor',
+           'advlist autolink lists link image charmap print preview anchor paste',
            'searchreplace visualblocks code fullscreen emoticons',
            'insertdatetime media table paste code help wordcount'
          ],
          toolbar:
-           'undo redo | formatselect | bold italic backcolor | \
+           'undo redo | paste pastetext| formatselect | bold italic backcolor forecolor| \
            alignleft aligncenter alignright alignjustify | image media file emoticons|\
            bullist numlist outdent indent | removeformat | help',
         language: 'zh_CN',
