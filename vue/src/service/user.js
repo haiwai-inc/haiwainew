@@ -8,7 +8,7 @@ class User extends API{
     init = this.getUserStatus().then(res=>{
         this.userinfo= res.data;
     });
-
+    published = {};
     /**
      * Login function for example
      * @param {*} email 
