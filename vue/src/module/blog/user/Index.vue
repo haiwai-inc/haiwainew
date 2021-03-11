@@ -7,7 +7,7 @@
        <div class="col-sm-8 col-12">
             <index-header :userID="Number($route.params.id)"></index-header>
 
-            <div class="profile-header mt-2">
+            <div class="profile-header mt-2 mb-3">
             <ul class="nav justify-content-center">
                 <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
                     <a 

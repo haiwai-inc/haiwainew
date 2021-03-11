@@ -5,7 +5,7 @@
       </div>
       <div class="row">
        <div class="col-sm-8 col-12">   
-            <div class="profile-header mt-2 mb-3">
+            <div class="profile-header mt-2">
              <!-- header start -->  
               <div class="user-avatar d-flex py-2 px-4">
                  <div class="flex-grow-1">
