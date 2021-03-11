@@ -185,7 +185,7 @@ export default {
   },
   mounted: function () {
     let userinfor = this.$store.state.user.userinfo
-    this.loginuserID = userinfor?userinfor.userID:-1;
+    this.loginuserID = userinfor?userinfor.UserID:-1;
     // console.log(this.data)
   },
   computed:{
