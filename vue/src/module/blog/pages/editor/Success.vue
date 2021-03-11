@@ -2,8 +2,9 @@
    <div>
       <div class="jumbotron text-center">
          <h4 class="font-weight-bold">{{this.$store.state.user.publidhed.postInfo_postID.title}}</h4>
-         <p class="lead"><i class="now-ui-icons ui-1_check text-success font-weight-bold mr-2"></i><router-link  :to="'/blog/p/'+this.$store.state.user.publidhed.postID">发布成功，点击查看文章</router-link></p>
-         <p class="lead">
+         <p class="lead font-weight">
+         <i class="now-ui-icons ui-1_check text-success font-weight-bold mr-2"></i><router-link  :to="'/blog/p/'+this.$store.state.user.publidhed.postID">发布成功，点击查看文章</router-link></p>
+         <p class="lead my-4 h6 font-weight-bold">
             <a class="btn bg-white btn-simple btn-primary btn-round mx-2" href="#" role="button">
                <facebook-logo class="mr-2"></facebook-logo>
                Facebook
@@ -58,4 +59,6 @@
    },
    };
 </script>
-<style></style>
+<style>
+
+</style>
