@@ -84,7 +84,8 @@ class user extends Api {
             $obj_article_draft->remove(['id'=>$article_data['draftID']]);
         }
         
-        return true;
+        //显示当前插入信息
+        return $this->article_view($article_data['postID']);
     }
     
     /**
