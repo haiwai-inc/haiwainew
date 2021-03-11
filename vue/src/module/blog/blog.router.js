@@ -32,7 +32,7 @@ export default [
       },{
         path: '/blog/success',
         name: 'success',
-        components: { default:resolve => require (['./pages/editor/Success.vue'],resolve)},
+        components: { default:resolve => require (['./pages/editor/Success.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
       },{
         path: '/blog/user/:id',

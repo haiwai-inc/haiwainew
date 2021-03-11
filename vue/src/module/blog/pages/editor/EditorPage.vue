@@ -239,7 +239,7 @@ export default {
 
   methods: {
     test() {
-      console.log(this.$refs);
+      console.log(this.$store.state);
       
       // console.log(blog);
       // blog.message();
@@ -360,9 +360,11 @@ export default {
         blog.article_add(data).then(res=>{
           console.log(res);
           if(res.status){
+            this.$store.state.user.publidhed = res.data;
             this.$refs.articlelist.getArticleList();
             this.btnDis.publish = false;
             this.modals.publish = false;
+            this.$router.push("/blog/success");
           }
         })
     },
@@ -480,7 +482,7 @@ export default {
       wenjiActiveId: 0,
       articleActiveId: 12345,
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"我的第一篇博客",msgbody:"开始我的博客之旅..."}},
+      curentArticle:{postInfo_postID:{title:"",msgbody:""}},
       modals: {
         addwenji: false,
         publish: false,
@@ -547,6 +549,9 @@ html,
 .wrapper,
 .publisher {
   height: 100%;
+}
+body{
+  margin:0;
 }
 .publisher .header {
   background-color: #39b8eb;

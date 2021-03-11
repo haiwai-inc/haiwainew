@@ -128,17 +128,17 @@ export default {
         callback();
       }
     }
-    var validateWxcPass = (rule, value, callback) => {
-      var patrn=/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if(!patrn.exec(value)){
-          callback(new Error('至少包含一个数字和一个字母'))
-        }
-        callback();
-      }
-    }
+    // var validateWxcPass = (rule, value, callback) => {
+    //   var patrn=/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+    //   if (value === '') {
+    //     callback(new Error('请输入密码'));
+    //   } else {
+    //     if(!patrn.exec(value)){
+    //       callback(new Error('至少包含一个数字和一个字母'))
+    //     }
+    //     callback();
+    //   }
+    // }
     var validateName =(rule,value,callback)=>{
       if(value===''){
         callback(new Error('请输入用户名'));
