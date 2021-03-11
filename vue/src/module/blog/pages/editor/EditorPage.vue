@@ -65,12 +65,12 @@
       
       <!-- <div id="summernote"></div> -->
       <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
-      <!-- <editor
+      <editor
        :init="editorConfig"
        v-model="curentArticle.postInfo_postID.msgbody"
-     /> -->
-     <textarea id="editorText">
-     </textarea>
+     />
+     <!-- <textarea id="editorText"> -->
+     <!-- </textarea> -->
       <div ref="saveBox">
         <n-button
           v-if="true"
@@ -234,7 +234,7 @@ export default {
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
     IconX,
-    // 'editor': Editor,
+    'editor': Editor,
   },
 
   methods: {
@@ -447,29 +447,6 @@ export default {
       console.log(message)
     };
     import('./langs/zh_CN.js');
-    tinymce.init({
-        selector: '#editorText',
-        browser_spellcheck: true, // 拼写检查
-        branding: false, // 去水印
-        elementpath: false,  //禁用编辑器底部的状态栏
-        statusbar: false, // 隐藏编辑器底部的状态栏
-        paste_data_images: false, // 允许粘贴图像
-        menubar: false, 
-        image_uploadtab: true,
-        images_upload_handler: this.uploadImage,
-        // language_url : './langs/zh_CN.js',
-        plugins: [
-           'advlist autolink lists link image charmap print preview anchor',
-           'searchreplace visualblocks code fullscreen emoticons',
-           'insertdatetime media table paste code help wordcount'
-         ],
-         toolbar:
-           'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | image media file emoticons|\
-           bullist numlist outdent indent | removeformat | help',
-        language: 'zh_CN',
-        file_picker_callback:this.filePicker,
-      });
   },
 
   data() {
@@ -506,10 +483,17 @@ export default {
       }, 
       //TinyMCE
       editorConfig:{
-        skin_url:'/tinymce/skins/ui/oxide',
-         height: 500,
-         menubar: false,
-         plugins: [
+        selector: '#editorText',
+        browser_spellcheck: true, // 拼写检查
+        branding: false, // 去水印
+        elementpath: false,  //禁用编辑器底部的状态栏
+        statusbar: false, // 隐藏编辑器底部的状态栏
+        paste_data_images: false, // 允许粘贴图像
+        menubar: false, 
+        image_uploadtab: true,
+        images_upload_handler: this.uploadImage,
+        // language_url : './langs/zh_CN.js',
+        plugins: [
            'advlist autolink lists link image charmap print preview anchor',
            'searchreplace visualblocks code fullscreen emoticons',
            'insertdatetime media table paste code help wordcount'
@@ -518,23 +502,9 @@ export default {
            'undo redo | formatselect | bold italic backcolor | \
            alignleft aligncenter alignright alignjustify | image media file emoticons|\
            bullist numlist outdent indent | removeformat | help',
-          branding: false,
-          language: 'zh_CN',
-          image_uploadtab: true,
-          images_upload_handler: this.uploadImage,
-          media_live_embeds: false,
-          media_alt_source: false,
-          media_dimensions: false,
-          media_filter_html: true,
-          media_poster: false,
-          file_browser_callback_types: 'file image media',
-          relative_urls: false,
-          file_picker_callback:this.filePicker,
-          // remove_script_host: false,
-          audio_template_callback: function(data) {
-   return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
- }
-       }
+        language: 'zh_CN',
+        file_picker_callback:this.filePicker,
+      }
     };
   },
 };
