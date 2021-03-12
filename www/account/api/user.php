@@ -88,7 +88,6 @@ class user extends Api {
         file_put_contents($path."/".$rs_image, $file);
         
         //小图处理
-        $rs_image=$dir."/".$filename;
         $obj_account_user=load("account_user");
         $obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
         $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
