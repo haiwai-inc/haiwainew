@@ -97,6 +97,7 @@ html, body, #app, .wrapper, .login-index .row{
 .login-index .login-left{
   background-color: #39B8EB;
   height: 100%;
+  box-shadow: inset 0 0 5em 1em rgb(0 0 0 / 11%)
 }
 @media (max-width: 575.98px){
     .login-index .login-left{
