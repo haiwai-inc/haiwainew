@@ -65,21 +65,18 @@ class user extends Api {
     
     /**
      * 用户设置页
-     * 用户 修改 头像
+     * 用户 头像 修改
      * @param string $avatar
      * @post avatar
      */
     public function user_avatar_update($avatar){
-        //文件
-	if(substr($avatar, 0, 4) === "data"){
+	    if(substr($avatar, 0, 4) === "data"){
             $file = file_get_contents($avatar);
         }
-        else {
+        else{
             $file = base64_decode($avatar);
         }
 
-        $extension = explode('/', mime_content_type($avatar))[1];
-        
         //路径
         $dir="/upload/user/avatar/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
         $path=DOCUROOT.$dir;
@@ -89,6 +86,7 @@ class user extends Api {
         
         //文件名
         $filename=$_SESSION['id']."_avatar";
+        $extension = explode('/', mime_content_type($avatar))[1];
         $rs_image=$filename.".".$extension;
         
         //保存
