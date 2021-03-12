@@ -71,14 +71,14 @@
      <!-- <textarea id="editorText"> -->
      <!-- </textarea> -->
       <div ref="saveBox">
-        <n-button
+        <n-button v-if="curentArticle.visible!==1"
           type="primary"
           round
           simple
           @click.native="modals.publish=true"
           class="editbtn"
         >
-          发布文章
+          {{curentArticle.visible==-1?'发布文章':'更新文章'}}
         </n-button>
         <n-button
           v-if="false"
@@ -446,7 +446,6 @@ export default {
         }
       };
       console.log(this.curentArticle,data)
-      this.flags.publish = true;
       this.flags.autosaving = true;
       this.flags.autosaved = false;
       this.user.draft_update(data).then(res=>{
