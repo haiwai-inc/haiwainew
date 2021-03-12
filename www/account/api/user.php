@@ -71,7 +71,13 @@ class user extends Api {
      */
     public function user_avatar_update($avatar){
         //文件
-        $file = base64_decode($avatar);
+	if(substr($avatar, 0, 4) === "data"){
+            $file = file_get_contents($avatar);
+        }
+        else {
+            $file = base64_decode($avatar);
+        }
+
         $extension = explode('/', mime_content_type($avatar))[1];
         
         //路径
