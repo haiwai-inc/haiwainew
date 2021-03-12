@@ -344,6 +344,16 @@ class User extends API{
         return await this.sendget('article/user/article_share/?postID='+postID+'&is_share='+val)
     }
 
+    /**
+     * 定时发布
+     * @param {*} draftID
+     * @param {val=1 公开; 0 私密} is_timer
+     * @param {time 与现在时间的时间差秒数} time 
+     */
+     async article_timer(draftID,val){
+        return await this.sendget('article/user/article_timer/?draftID='+draftID+'&is_timer='+is_timer+'&time='+time)
+    }
+
     // 管理员相关函数
     /**
      * 获取文章列表

@@ -117,12 +117,56 @@
       </template>
     </modal>
 
+    <!-- Schedule Modal -->
+    <modal :show.sync="modals.schedule" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">
+        设置定时发布时间
+      </h4>
+
+      <div class="datepicker-container d-flex justify-content-center">
+        <fg-input>
+          <el-date-picker
+            type="date"
+            popper-class="date-picker date-picker-primary"
+            placeholder="选择要发布的日期"
+            v-model="pickers.datePicker"
+            :picker-options="pickers.expireTimeOption"
+          >
+          </el-date-picker>
+        </fg-input>
+        <fg-input class="ml-3">
+          <el-time-picker
+            v-model="timepicker"
+            :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59',
+            }"
+            placeholder="选择发布时间"
+          >
+          </el-time-picker>
+        </fg-input>
+      </div>
+
+      <template slot="footer">
+        <n-button
+          class="mr-3"
+          type="default"
+          link
+          @click.native="modals.schedule = false"
+        >
+          取消
+        </n-button>
+        <n-button type="primary" round simple>
+          定时发布
+        </n-button>
+      </template>
+    </modal>
     </div>
 </template>
 <script>
 
 import { Button, DropDown, Modal, FormGroupInput  } from "@/components";
 import HaiwaiIcons from "@/components/Icons/Icons";
+import { DatePicker, TimePicker, } from "element-ui";
 import blog from "../../../blog.service";
 import {
   // IconPlus,
@@ -155,7 +199,8 @@ export default {
       DropDown,
       Modal,
       [FormGroupInput.name]: FormGroupInput,
-      
+      [DatePicker.name]: DatePicker,
+    [TimePicker.name]: TimePicker,
       IconDraft,
       // IconEdit,
       IconForbid,
@@ -191,7 +236,17 @@ export default {
         },
         btnDis:{
           add:false
-        }
+        },
+        pickers: {
+          datePicker: "",
+          expireTimeOption: {
+            disabledDate(date) {
+              //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+              return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+            },
+          },
+        },
+        timepicker: new Date(2016, 9, 10, 18, 40),
       }
     },
     methods:{
