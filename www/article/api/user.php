@@ -203,9 +203,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
-        debug::D($rs_article_draft);
-        exit;
-        
         return $rs_article_draft;
     }
     
