@@ -177,7 +177,7 @@ class user extends Api {
         ];
         $obj_article_draft->insert($fields);
         
-        return true;
+        return $this->article_view($rs_article_indexing['postID']);
     }
     
     /**
