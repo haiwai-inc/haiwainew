@@ -54,7 +54,7 @@ class user extends Api {
         }
         
         //路径
-        $dir="/upload/user/avatar/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
+        $dir="/upload/user/background/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
         $path=DOCUROOT.$dir;
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
@@ -70,8 +70,8 @@ class user extends Api {
         
         //小图处理
         $obj_account_user=load("account_user");
-        $obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
-        $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
+        $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+        $obj_account_user->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
         
         return "{$dir}/{$rs_image}";
     }
