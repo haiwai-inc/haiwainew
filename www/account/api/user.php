@@ -81,14 +81,19 @@ class user extends Api {
         }
         
         //文件名
-        $filename=$fields['id']."_avatar.jpg";
+        $filename=$_SESSION['id']."_avatar";
+        $rs_image=$filename.".jpg";
         
         //保存
-        file_put_contents($path."/".$filename, $file);
-        return $random_num;
+        file_put_contents($path."/".$rs_image, $file);
         
+        //小图处理
+        $rs_image=$dir."/".$filename;
+        $obj_account_user=load("obj_account_user");
+        $obj_account_user->update(['avatar'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
+        $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_100_100",100,100);
         
-        return $url;
+        return "{$dir}/{$rs_image}";
     }
     
     /**
