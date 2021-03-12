@@ -168,7 +168,8 @@ export default {
 <style>
 .blog-user-index .user-bg{
     background-size:cover;
-    background-position-y: center
+    background-position-y: center;
+    background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
     height:100px
