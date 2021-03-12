@@ -19,10 +19,10 @@
             :key="index"
             class="aritcleItem d-flex justify-content-between align-items-center"
             :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
-            @click="changeMenu(item)"
           >
             <div
               class="flex-fill"
+            @click="changeMenu(item)"
             >
               <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
               <icon-published class="icon" v-if="item.visible==1"></icon-published>
@@ -37,7 +37,8 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
             >
-              <a v-if="item.visible!==1" class="dropdown-item" href="#"
+              <a v-if="item.visible!==1"
+              @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
                 ><icon-publish class="icon"></icon-publish>直接发布</a
               >
               <a  v-if="item.visible!==1"
@@ -53,7 +54,7 @@
               <a v-if="item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
                 ><icon-top class="icon"></icon-top>取消置顶</a
               >
-              <div class="submenu-item dropleft">
+              <div class="submenu-item dropleft" v-if="cats.length>1">
                 <a
                   class="dropdown-item dropdown-toggle pl-3"
                   href="#"
@@ -69,14 +70,14 @@
                   <a class="dropdown-item" href="javascript:void(0)" v-for="(o,index) in cats.filter(e=>e.id!==wjid)" :key="index" @click="shiftCategory(item.postID,o.id)">{{o.name}}</a>
                 </div>
               </div>
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-private class="icon"></icon-private>设为私密</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_publish(item)"
+                ><icon-private class="icon"></icon-private>{{item.is_publish==1?'设为私密':'设为公开'}}</a
               >
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-forbid class="icon"></icon-forbid>禁止评论</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_comment(item)"
+                ><icon-forbid class="icon"></icon-forbid>{{item.is_comment==1?'禁止评论':'允许评论'}}</a
               >
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-forbid class="icon"></icon-forbid>禁止转载</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_share(item)"
+                ><icon-forbid class="icon"></icon-forbid>{{item.is_share==1?'禁止转载':'允许转载'}}</a
               >
               <!-- <a class="dropdown-item pl-4" href="javascript:void(0)" @click="delArticle(item)"
                 ><icon-delete class="icon"></icon-delete>删除文章</a
@@ -174,6 +175,7 @@ export default {
     },
     data(){
       return{
+        user:this.$store.state.user,
         iconmore3v: HaiwaiIcons.iconmore3v,
         icon_plus:HaiwaiIcons.icon_plus,
         icon_edit:HaiwaiIcons.icon_edit,
@@ -267,8 +269,50 @@ export default {
           }
         })
       },
-      test(e){
-        console.log(e)
+      // 直接发布
+      draft_to_article_by_draftID(id){
+        this.user.draft_to_article_by_draftID(id).then(res=>{
+          if(res.status){
+            this.getArticleList();
+        console.log(id)
+          }
+        })
+      },
+      // 设为隐私/公开
+      article_publish(item){
+        let isShare = 0
+        if(item.is_publish==0){
+          isShare = 1
+        }
+        this.user.article_publish(item.postID,isShare).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      // 禁止/允许评论
+      article_comment(item){
+        let val = 0;
+        if(item.is_comment==0){
+          val = 1;
+        }
+        this.user.article_comment(item.postID,val).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      // 禁止/允许转载
+      article_share(item){
+        let val = 0;
+        if(item.is_share==0){
+          val = 1
+        }
+        this.user.article_share(item.postID,val).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
       }
     }
 }

@@ -314,7 +314,34 @@ class User extends API{
      * @param {*} draftID 
      */
      async draft_to_article_by_draftID(draftID){
-        return await this.sendget('article/user/article_to_draft_by_postID/?draftID='+draftID)
+        return await this.sendget('article/user/article_to_draft_by_postID/?id='+draftID)
+    }
+
+    /**
+     * 文章设为私密/公开
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_publish 
+     */
+     async article_publish(postID,val){
+        return await this.sendget('article/user/article_publish/?postID='+postID+'&is_publish='+val)
+    }
+
+    /**
+     * 文章禁止/允许评论
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_comment 
+     */
+     async article_comment(postID,val){
+        return await this.sendget('article/user/article_comment/?postID='+postID+'&is_comment='+val)
+    }
+
+    /**
+     * 文章禁止/允许转载
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_share 
+     */
+     async article_share(postID,val){
+        return await this.sendget('article/user/article_share/?postID='+postID+'&is_share='+val)
     }
 
     // 管理员相关函数

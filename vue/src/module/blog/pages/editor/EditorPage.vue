@@ -466,6 +466,7 @@ export default {
         },5000)
       }
     },
+    
     beforeDestroy() {
       clearTimeout(this.timer);
     },
