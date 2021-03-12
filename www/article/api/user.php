@@ -561,8 +561,16 @@ class user extends Api {
         return true;
     }
     
-    
-    
+    /**
+     * @param string $type
+     * @param string $file
+     * @post file
+     */
+    public function upload_file($type, $file){
+        $pic_obj = load("article_pic");
+        $url = $pic_obj -> save_picture($file);
+        return $url;
+    }
     
     
     
