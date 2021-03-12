@@ -202,15 +202,6 @@ class Blog extends API{
   }
 
   /**
-   * 新建博客文章
-   * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
-   * @param {add:true,bloggerID:#,categoryID:#} module_data 
-   */
-  async article_add(data){
-    return await this.sendpost('article/user/article_add/',data)
-  }
-
-  /**
    * 删除文集中的已发布文章
    * @param {文章的postID} postID 
    */
