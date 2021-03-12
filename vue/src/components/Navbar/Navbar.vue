@@ -1,5 +1,5 @@
 <template>
-  <nav :class="classes" class="navbar">
+  <nav :class="classes" class="navbar sticky-top">
     <div class="container">
       <div class="navbar-translate">
         <slot v-bind="slotData"></slot>
@@ -183,8 +183,8 @@ export default {
 </script>
 <style>
 .navbar{
-       -webkit-box-shadow: 0 1px 3px rgb(18 18 18 / 10%);
-        box-shadow: 0 1px 3px rgb(18 18 18 / 10%);
+
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 12%);
 }
 
 </style>

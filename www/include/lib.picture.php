@@ -291,7 +291,7 @@ class picture{
         
         //反转图片
         if( is_file($this->filepath) && function_exists("exif_read_data") ){
-            $exif= exif_read_data($this->filepath, 0, true);
+            $exif= @exif_read_data($this->filepath, 0, true);
             if(!empty($exif['IFD0']['Orientation']))
             {
                 switch($exif['IFD0']['Orientation']) {
