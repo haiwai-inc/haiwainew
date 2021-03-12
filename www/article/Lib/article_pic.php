@@ -30,6 +30,12 @@ class article_pic{
         return $this->getFileURL($file_number);
     }
 
+    public function save_media($file){
+        $f = finfo_open();
+        $mime_type = finfo_buffer($f, $file, FILEINFO_MIME_TYPE);
+        debug::d($mime_type);
+    }
+
 
     
 
