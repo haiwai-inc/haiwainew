@@ -47,10 +47,9 @@
       
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
-      <div ref="saving">
-        <span style="font-size:13px;padding-left:8px;"
-          >自动保存中... 已保存</span
-        >
+      <div ref="saving" style="font-size:13px;padding-left:8px;">
+        <span v-if="flags.autosaving">自动保存中...</span> 
+        <span v-if="flags.autosaved" class="text-success">已自动保存</span>
       </div>
       <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
         <input
@@ -72,15 +71,14 @@
      <!-- <textarea id="editorText"> -->
      <!-- </textarea> -->
       <div ref="saveBox">
-        <n-button
-          v-if="true"
+        <n-button v-if="curentArticle.visible!==1"
           type="primary"
           round
           simple
           @click.native="modals.publish=true"
           class="editbtn"
         >
-          发布文章
+          {{curentArticle.visible==-1?'发布文章':'更新文章'}}
         </n-button>
         <n-button
           v-if="false"
@@ -121,55 +119,15 @@
         >
           取消
         </n-button>
-        <n-button type="primary" round simple @click="publish()" :disabled="btnDis.publish">
+        <n-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish">
           发布
         </n-button>
-      </template>
-    </modal>
-
-    <!-- Schedule Modal -->
-    <modal :show.sync="modals.schedule" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">
-        设置定时发布时间
-      </h4>
-
-      <div class="datepicker-container d-flex justify-content-center">
-        <fg-input>
-          <el-date-picker
-            type="date"
-            popper-class="date-picker date-picker-primary"
-            placeholder="选择要发布的日期"
-            v-model="pickers.datePicker"
-            :picker-options="pickers.expireTimeOption"
-          >
-          </el-date-picker>
-        </fg-input>
-        <fg-input class="ml-3">
-          <el-time-picker
-            v-model="timepicker"
-            :picker-options="{
-              selectableRange: '00:00:00 - 23:59:59',
-            }"
-            placeholder="选择发布时间"
-          >
-          </el-time-picker>
-        </fg-input>
-      </div>
-
-      <template slot="footer">
-        <n-button
-          class="mr-3"
-          type="default"
-          link
-          @click.native="modals.schedule = false"
-        >
-          取消
-        </n-button>
-        <n-button type="primary" round simple>
-          定时发布
+        <n-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish">
+          发布更新
         </n-button>
       </template>
     </modal>
+
   </div>
 </template>
 <script>
@@ -178,7 +136,7 @@ import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
 import { Button, Modal, FormGroupInput } from "@/components";
-import { DatePicker, TimePicker, Collapse, CollapseItem } from "element-ui";
+import { Collapse, CollapseItem } from "element-ui";
 import {
   HaiwaiLogoWhite,
   IconX,
@@ -228,23 +186,37 @@ export default {
     // DropDown,
     Modal,
     [FormGroupInput.name]: FormGroupInput,
-    [DatePicker.name]: DatePicker,
-    [TimePicker.name]: TimePicker,
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
   },
-
-  methods: {
-    test() {
-      console.log(this.$store.state);
-      
-      // console.log(blog);
-      // blog.message();
+  watch:{
+    'curentArticle.postInfo_postID.title':function(val){
+      this.watchModify(val)
     },
+    'curentArticle.postInfo_postID.msgbody':function(val){
+      this.watchModify(val)
+    }
+  },
+  methods: {
+    test(val) {
+      
+    },
+    watchModify(val){
+      this.watchCount+=1;
+      if(this.curentArticle.visible==1 && this.watchCount>2){
+        // 将已发布文章转为草稿
+        this.article_to_draft_by_postID();
 
+        console.log("ok");
+      }
+      if(this.curentArticle.visible!==1 && this.watchCount>2){
+        this.autoSave()
+      }
+      console.log(this.watchCount);
+    },
     async fetchData() {
       let postid = 0;
       if (this.$route.query.postid != undefined) {
@@ -282,7 +254,10 @@ export default {
     destroyApp() {
       app.$destroy();
     },
-    
+    uploadImage(blobInfo, success, failure, progress){
+      this.uploadFile("image", blobInfo.base64(), success, failure, progress);
+    },
+
     // addArticle() {
     //   var newarticle = {
     //     articleId: 9089,
@@ -315,15 +290,17 @@ export default {
       }
     },
     
-    uploadImage(blobInfo, success, failure, progress){
-      this.uploadFile("image", blobInfo.base64(), success, failure, progress);
-    },
     setWJid(e){
       this.wenjiActiveId = e;
     },
     setArtid(e){
       this.articleActiveId = e.id;
       this.getContent(e);
+      this.watchCount = 0;
+      // if(this.timer){
+        clearTimeout(this.timer);
+      // }
+      this.flags.autosaved = false;
     },
     getContent(e){
       if(e.visible==1){
@@ -337,9 +314,10 @@ export default {
           this.curentArticle=res.data;
           console.log(this.curentArticle)
         })
-        // this.curentArticle={postInfo_postID:{title:"新建文章",msgbody:"这是个草稿"}}
+        
       }
     },
+    // 发布一篇新文章（草稿=>文章）
     publish(){
       let data={
           article_data:{
@@ -356,34 +334,96 @@ export default {
           }
         };
         console.log(data);
-        this.btnDis.publish = true;
-        blog.article_add(data).then(res=>{
+        this.flags.publish = true;
+        this.user.article_add(data).then(res=>{
           console.log(res);
           if(res.status){
-            this.$store.state.user.publidhed = res.data;
-            this.$refs.articlelist.getArticleList();
-            this.btnDis.publish = false;
-            this.modals.publish = false;
-            this.$router.push("/blog/success");
+            this.published(res);
           }
         })
     },
-
+    // 更新已发布文章 
+    article_update(){
+      let data={
+        article_data:{
+          title:this.curentArticle.postInfo_postID.title,
+          msgbody:this.curentArticle.postInfo_postID.msgbody,
+          tagname:['test'],
+          postID:this.curentArticle.postID,
+          typeID:1,
+          draftID:this.curentArticle.id
+        },
+        module_data:{
+          edit:true,
+          bloggerID:this.user.userinfo.bloggerID,
+          categoryID:this.wenjiActiveId
+        }
+      };
+      console.log(this.curentArticle,data)
+      this.flags.publish = true;
+      this.user.article_update(data).then(res=>{
+        console.log(res);
+        if(res.status){
+          this.published(res);
+        }
+      })
+    },
+    // 发布成后续动作
+    published(res){
+      this.$store.state.user.publidhed = res.data;
+      this.$refs.articlelist.getArticleList();
+      this.flags.publish = false;
+      this.modals.publish = false;
+      this.$router.push("/blog/success");
+    },
+    article_to_draft_by_postID(){
+      this.user.article_to_draft_by_postID(this.curentArticle.id).then(res=>{
+        console.log(res)
+        if(res.status){
+          this.$refs.articlelist.getArticleList();
+          this.curentArticle = res.data
+        }
+      })
+    },
+    draft_update(){
+      let data={
+        article_data:{
+          title:this.curentArticle.postInfo_postID.title,
+          msgbody:this.curentArticle.postInfo_postID.msgbody,
+          tagname:[],
+          typeID:1,
+          draftID:this.curentArticle.id
+        },
+        module_data:{
+          edit:true,
+          bloggerID:this.user.userinfo.bloggerID,
+          categoryID:this.wenjiActiveId
+        }
+      };
+      console.log(this.curentArticle,data)
+      this.flags.autosaving = true;
+      this.flags.autosaved = false;
+      this.user.draft_update(data).then(res=>{
+        console.log(res);
+        if(res.status){
+          this.$refs.articlelist.getArticleList();
+          this.flags.autosaving = false;
+          this.flags.autosaved = true;
+        }
+      })
+    },
     autoSave(){
-          console.log(this.curentArticle.visible);
-      if(this.curentArticle.visible==1){
-        this.timer = setInterval(()=>{
+      clearTimeout(this.timer);
+      if(this.curentArticle.visible!==1){
+        this.timer = setTimeout(()=>{
           console.log(this.curentArticle.id);
-        },1000)
-      }
-      else{
-        this.timer = setInterval(()=>{
-          console.log(this.curentArticle.id);
-        },1000)
+          this.draft_update();
+        },5000)
       }
     },
+    
     beforeDestroy() {
-      clearInterval(this.timer);
+      clearTimeout(this.timer);
     },
     filePicker:function(callback, value, meta) {
     // Provide file and text for the link dialog
@@ -412,8 +452,8 @@ export default {
       reader.readAsDataURL(file);
     };
 
-    input.click();
-  }
+      input.click();
+    },
   },
 
   beforeCreate() {
@@ -460,28 +500,22 @@ export default {
       articleActiveId: 12345,
       activeName: "0",
       curentArticle:{postInfo_postID:{title:"",msgbody:""}},
+      watchCount:0,
+      
       modals: {
         addwenji: false,
         publish: false,
         schedule: false,
       },
-      pickers: {
-        datePicker: "",
-        expireTimeOption: {
-          disabledDate(date) {
-            //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
-            return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-          },
-        },
-      },
-      timepicker: new Date(2016, 9, 10, 18, 40),
       msgbody:'asd',
       articleList: [],
 
       loading: false,
       article: {},
-      btnDis:{
+      flags:{
         publish:false,
+        autosaving:false,
+        autosaved:false,
       }, 
       //TinyMCE
       editorConfig:{

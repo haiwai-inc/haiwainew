@@ -14,6 +14,16 @@ class article_draft extends Model{
 	        }
 	    }
 	    
+	    $rs_article=reset($rs_article_draft);
+	    
+	    if(!empty($rs_article)){
+	        $obj_article_tag=load("article_tag");
+	        $rs_article_tag=$obj_article_tag->getAll(['id','name'],['OR'=>['id'=>$rs_article['postInfo_postID']['tags']]]);
+	        foreach($rs_article_draft as $k=>$v){
+	            $rs_article_draft[$k]['postInfo_postID']['tags']=$rs_article_tag;
+	        }
+	    }
+	    
 	    return $rs_article_draft;
 	}
 	

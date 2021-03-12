@@ -19,10 +19,10 @@
             :key="index"
             class="aritcleItem d-flex justify-content-between align-items-center"
             :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
-            @click="changeMenu(item)"
           >
             <div
               class="flex-fill"
+            @click="changeMenu(item)"
             >
               <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
               <icon-published class="icon" v-if="item.visible==1"></icon-published>
@@ -37,12 +37,13 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
             >
-              <a class="dropdown-item" href="#"
+              <a v-if="item.visible!==1"
+              @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
                 ><icon-publish class="icon"></icon-publish>直接发布</a
               >
-              <a
+              <a  v-if="item.visible!==1"
                 class="dropdown-item pl-4"
-                href="#"
+                href="javascript:void(0)"
                 @click="modals.schedule = true"
               >
                 <icon-schedule class="icon"></icon-schedule>定时发布
@@ -53,7 +54,7 @@
               <a v-if="item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
                 ><icon-top class="icon"></icon-top>取消置顶</a
               >
-              <div class="submenu-item dropleft">
+              <div class="submenu-item dropleft" v-if="cats.length>1">
                 <a
                   class="dropdown-item dropdown-toggle pl-3"
                   href="#"
@@ -69,14 +70,14 @@
                   <a class="dropdown-item" href="javascript:void(0)" v-for="(o,index) in cats.filter(e=>e.id!==wjid)" :key="index" @click="shiftCategory(item.postID,o.id)">{{o.name}}</a>
                 </div>
               </div>
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-private class="icon"></icon-private>设为私密</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_publish(item)"
+                ><icon-private class="icon"></icon-private>{{item.is_publish==1?'设为私密':'设为公开'}}</a
               >
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-forbid class="icon"></icon-forbid>禁止评论</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_comment(item)"
+                ><icon-forbid class="icon"></icon-forbid>{{item.is_comment==1?'禁止评论':'允许评论'}}</a
               >
-              <a class="dropdown-item pl-4" href="#"
-                ><icon-forbid class="icon"></icon-forbid>禁止转载</a
+              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_share(item)"
+                ><icon-forbid class="icon"></icon-forbid>{{item.is_share==1?'禁止转载':'允许转载'}}</a
               >
               <!-- <a class="dropdown-item pl-4" href="javascript:void(0)" @click="delArticle(item)"
                 ><icon-delete class="icon"></icon-delete>删除文章</a
@@ -116,12 +117,56 @@
       </template>
     </modal>
 
+    <!-- Schedule Modal -->
+    <modal :show.sync="modals.schedule" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up" style="padding-top:5px">
+        设置定时发布时间
+      </h4>
+
+      <div class="datepicker-container d-flex justify-content-center">
+        <fg-input>
+          <el-date-picker
+            type="date"
+            popper-class="date-picker date-picker-primary"
+            placeholder="选择要发布的日期"
+            v-model="pickers.datePicker"
+            :picker-options="pickers.expireTimeOption"
+          >
+          </el-date-picker>
+        </fg-input>
+        <fg-input class="ml-3">
+          <el-time-picker
+            v-model="timepicker"
+            :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59',
+            }"
+            placeholder="选择发布时间"
+          >
+          </el-time-picker>
+        </fg-input>
+      </div>
+
+      <template slot="footer">
+        <n-button
+          class="mr-3"
+          type="default"
+          link
+          @click.native="modals.schedule = false"
+        >
+          取消
+        </n-button>
+        <n-button type="primary" round simple>
+          定时发布
+        </n-button>
+      </template>
+    </modal>
     </div>
 </template>
 <script>
 
 import { Button, DropDown, Modal, FormGroupInput  } from "@/components";
 import HaiwaiIcons from "@/components/Icons/Icons";
+import { DatePicker, TimePicker, } from "element-ui";
 import blog from "../../../blog.service";
 import {
   // IconPlus,
@@ -154,7 +199,8 @@ export default {
       DropDown,
       Modal,
       [FormGroupInput.name]: FormGroupInput,
-      
+      [DatePicker.name]: DatePicker,
+    [TimePicker.name]: TimePicker,
       IconDraft,
       // IconEdit,
       IconForbid,
@@ -174,6 +220,7 @@ export default {
     },
     data(){
       return{
+        user:this.$store.state.user,
         iconmore3v: HaiwaiIcons.iconmore3v,
         icon_plus:HaiwaiIcons.icon_plus,
         icon_edit:HaiwaiIcons.icon_edit,
@@ -189,7 +236,17 @@ export default {
         },
         btnDis:{
           add:false
-        }
+        },
+        pickers: {
+          datePicker: "",
+          expireTimeOption: {
+            disabledDate(date) {
+              //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+              return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+            },
+          },
+        },
+        timepicker: new Date(2016, 9, 10, 18, 40),
       }
     },
     methods:{
@@ -267,8 +324,50 @@ export default {
           }
         })
       },
-      test(e){
-        console.log(e)
+      // 直接发布
+      draft_to_article_by_draftID(id){
+        this.user.draft_to_article_by_draftID(id).then(res=>{
+          if(res.status){
+            this.getArticleList();
+        console.log(id)
+          }
+        })
+      },
+      // 设为隐私/公开
+      article_publish(item){
+        let isShare = 0
+        if(item.is_publish==0){
+          isShare = 1
+        }
+        this.user.article_publish(item.postID,isShare).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      // 禁止/允许评论
+      article_comment(item){
+        let val = 0;
+        if(item.is_comment==0){
+          val = 1;
+        }
+        this.user.article_comment(item.postID,val).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
+      },
+      // 禁止/允许转载
+      article_share(item){
+        let val = 0;
+        if(item.is_share==0){
+          val = 1
+        }
+        this.user.article_share(item.postID,val).then(res=>{
+          if(res.status){
+            this.getArticleList();
+          }
+        })
       }
     }
 }

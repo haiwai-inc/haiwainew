@@ -44,7 +44,7 @@
           <div id="google-signin-button" class="mb-3"></div>
             
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
-          <facebook-logo></facebook-logo> facebook 账号登录
+          <facebook-logo></facebook-logo> Facebook 账号登录
           </n-button>
 
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
@@ -358,6 +358,9 @@ border:1px solid #eee;
 font-size: 16px;
 font-weight: 600;
 box-shadow: 0 2px 4px 0 rgb(0 0 0 / 25%);
+}
+.auth-button-container .btn.btn-simple svg{
+ margin-right:10px 
 }
 .auth-button-container .btn.btn-simple:hover{
 box-shadow: 0 0 3px 3px rgb(66 133 244 / 30%);

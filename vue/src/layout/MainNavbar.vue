@@ -76,7 +76,7 @@
           <p class="d-lg-none d-xl-none">消息</p>
         </a> 
       </li>
-      <div style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">登录/注册</router-link></div>
+      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">登录/注册</router-link></div>
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"

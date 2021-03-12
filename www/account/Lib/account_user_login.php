@@ -133,7 +133,7 @@ class account_user_login extends Model{
 	            'login_date'=>$time,
 	            'create_date'=>$time,
 	            'update_date'=>$time,
-	            'update_type'=>"register_haiwai_from_wxcuser",
+	            'update_type'=>"register_from_wxcuser",
 	            'update_ip'=>$ip
 	        ];
 	        $userID=$obj_account_user->insert($fields);

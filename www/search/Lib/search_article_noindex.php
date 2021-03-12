@@ -133,11 +133,12 @@ class search_article_noindex extends Search
 		return $rs;
 	}
 
+	//添加ES信息
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
+	    //hash处理
 	    if(empty($rs)){
 	        return $rs;
 	    }
-	    
         foreach($rs as $v){
             if(empty($v)){
                 continue;
@@ -165,7 +166,22 @@ class search_article_noindex extends Search
 		    }
 		}
 		
-		$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
+		//补全ES信息
+		$hash_posts=$this->get_postID_map($tmp_rs_id,$full_msg);
+		
+		//加入tagname
+		if(count($hash_posts)==1){
+		    $rs_article=reset($hash_posts);
+		    if(!empty($rs_article)){
+		        $obj_article_tag=load("article_tag");
+		        $rs_article_tag=$obj_article_tag->getAll(['id','name'],['OR'=>['id'=>$rs_article['tags']]]);
+		        foreach($hash_posts as $k=>$v){
+		            $hash_posts[$k]['tags']=$rs_article_tag;
+		        }
+		    }
+		}
+		
+		//加入所有信息
         foreach($rs as $k=>$v){
 			if(empty($hash_posts[$v[$hashID]])){
 				unset($rs[$k]);

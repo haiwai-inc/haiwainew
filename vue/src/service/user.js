@@ -273,6 +273,86 @@ class User extends API{
     async draft_view(id){
     return await this.sendget("article/user/draft_view/?id="+id)
     }
+    
+    /**
+     * 发布新博客文章
+     * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
+     * @param {add:true,bloggerID:#,categoryID:#} module_data 
+     */
+    async article_add(data){
+        return await this.sendpost('article/user/article_add/',data)
+    }
+    /**
+     * 编辑已发布的文章（已发布文章转草稿）
+     * @param {*} id 
+     */
+    async article_to_draft_by_postID(id){
+        return await this.sendget('article/user/article_to_draft_by_postID/?id='+id)
+    }
+    // article/user/article_update
+        
+    /**
+     * 发布编辑的已发布文章（已发布文章草稿转成发布状态）
+     * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],postID:0,typeID:1(bolg模块为1),draftID:0} article_data 
+   * @param {edit:true,bloggerID:#,categoryID:#} module_data 
+     */
+     async article_update(data){
+        return await this.sendpost('article/user/article_update/',data)
+    }
+  
+    /**
+     * 草稿自动保存
+     * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1),draftID:0} article_data 
+   * @param {edit:true,bloggerID:#,categoryID:#} module_data 
+     */
+     async draft_update(data){
+        return await this.sendpost('article/user/draft_update/',data)
+    }
+
+    /**
+     * 快速发布草稿（快速发布已发布的文章草稿）
+     * @param {*} draftID 
+     */
+     async draft_to_article_by_draftID(draftID){
+        return await this.sendget('article/user/article_to_draft_by_postID/?id='+draftID)
+    }
+
+    /**
+     * 文章设为私密/公开
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_publish 
+     */
+     async article_publish(postID,val){
+        return await this.sendget('article/user/article_publish/?postID='+postID+'&is_publish='+val)
+    }
+
+    /**
+     * 文章禁止/允许评论
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_comment 
+     */
+     async article_comment(postID,val){
+        return await this.sendget('article/user/article_comment/?postID='+postID+'&is_comment='+val)
+    }
+
+    /**
+     * 文章禁止/允许转载
+     * @param {*} postID
+     * @param {val=1 公开; 0 私密} is_share 
+     */
+     async article_share(postID,val){
+        return await this.sendget('article/user/article_share/?postID='+postID+'&is_share='+val)
+    }
+
+    /**
+     * 定时发布
+     * @param {*} draftID
+     * @param {val=1 公开; 0 私密} is_timer
+     * @param {time 与现在时间的时间差秒数} time 
+     */
+     async article_timer(draftID,val){
+        return await this.sendget('article/user/article_timer/?draftID='+draftID+'&is_timer='+is_timer+'&time='+time)
+    }
 
     // 管理员相关函数
     /**

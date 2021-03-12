@@ -44,7 +44,7 @@ class user extends Api {
         
         //添加文章 post
         $obj_article_post=load("article_post");
-        $article_data['postID']=$module_data['postID']=$obj_article_post->get_id();
+        $article_data['postID']=$obj_article_post->get_id();
         $time=times::getTime();
         $fields_indexing=[
             "postID"=>$article_data['postID'],
@@ -71,7 +71,7 @@ class user extends Api {
         //转文章为博客类型
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($module_data);
+            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
         }
         
         //同步ES索引
@@ -126,7 +126,7 @@ class user extends Api {
         //修改博客类型文章
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($module_data);
+            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
         }
         
         //同步ES索引
@@ -139,7 +139,7 @@ class user extends Api {
             $obj_article_draft->remove(['id'=>$article_data['draftID']]);
         }
         
-        return true;
+        return $this->article_view($article_data['postID']);
     }
     
     /**
@@ -161,7 +161,14 @@ class user extends Api {
         $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
         if(!empty($check_article_draft)) {$this->error="此草稿已经存在";$this->status=false;return false;}
         
-        $tagID=implode(",",$rs_article_indexing['postInfo_postID']['tags']);
+        //字符串tagID
+        if(!empty($rs_article_indexing['postInfo_postID']['tags'])){
+            foreach($rs_article_indexing['postInfo_postID']['tags'] as $v){
+                $tagID[]=$v['id'];
+            }
+            $tagID=implode(",",$tagID);
+        }
+        
         $fields=[
             "postID"=>$rs_article_indexing['postID'],
             "typeID"=>empty($rs_article_indexing['typeID'])?"":$rs_article_indexing['typeID'],
@@ -177,7 +184,7 @@ class user extends Api {
         ];
         $obj_article_draft->insert($fields);
         
-        return true;
+        return $this->article_view($rs_article_indexing['postID']);
     }
     
     /**
@@ -196,7 +203,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
-        
         return $rs_article_draft;
     }
     
@@ -522,7 +528,7 @@ class user extends Api {
      * @param integer $postID | 文章的postID
      * @param integer $is_publish | 1开 0关
      */
-    public function article_publish($postID,$is_share){
+    public function article_publish($postID,$is_publish){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($check_article_indexing)) {$this->error="设置私密文章不存在";$this->status=false;return false;}
@@ -552,7 +558,7 @@ class user extends Api {
      * @param integer $postID | 文章的postID
      * @param integer $is_share | 1开 0关
      */
-    public function article_share($postID,$is_publish){
+    public function article_share($postID,$is_share){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($check_article_indexing)) {$this->error="禁止转载的文章不存在";$this->status=false;return false;}
@@ -561,8 +567,16 @@ class user extends Api {
         return true;
     }
     
-    
-    
+    /**
+     * @param string $type
+     * @param string $file
+     * @post file
+     */
+    public function upload_file($type, $file){
+        $pic_obj = load("article_pic");
+        $url = $pic_obj -> save_picture($file);
+        return $url;
+    }
     
     
     

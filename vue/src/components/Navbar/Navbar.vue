@@ -1,5 +1,5 @@
 <template>
-  <nav :class="classes" class="navbar">
+  <nav :class="classes" class="navbar sticky-top">
     <div class="container">
       <div class="navbar-translate">
         <slot v-bind="slotData"></slot>
@@ -181,4 +181,10 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.navbar{
+
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 12%);
+}
+
+</style>
