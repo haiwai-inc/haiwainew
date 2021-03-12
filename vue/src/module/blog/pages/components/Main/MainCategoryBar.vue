@@ -1,7 +1,7 @@
 <template>
 <div>
   <span class="d-none d-sm-block">
-    <div class="main-category-bar d-flex">
+    <div class="main-category-bar d-flex mb-3">
       <span v-for="(item,index) of data" :key="index">
         <n-button v-if="index<6 && item.visible==1"
             :key="item.id"

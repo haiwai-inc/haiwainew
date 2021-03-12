@@ -66,12 +66,31 @@ class user extends Api {
     /**
      * 用户设置页
      * 用户 修改 头像
-     * 
+     * @param string $avatar
+     * @post avatar
      */
-    public function user_avatar_update(){
+    public function user_avatar_update($avatar){
+        //文件
+        $file = base64_decode($avatar);
         
+        //路径
+        $dir="/upload/user/avatar/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
+        $path=DOCUROOT.$dir;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        
+        //文件名
+        $filename=$fields['id']."_avatar.jpg";
+        
+        //保存
+        file_put_contents($path."/".$filename, $file);
+        return $random_num;
+        
+        
+        return $url;
     }
-
+    
     /**
      * 很多页面
      * 黑名单 添加

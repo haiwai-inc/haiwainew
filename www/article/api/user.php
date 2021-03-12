@@ -44,7 +44,7 @@ class user extends Api {
         
         //添加文章 post
         $obj_article_post=load("article_post");
-        $article_data['postID']=$module_data['postID']=$obj_article_post->get_id();
+        $article_data['postID']=$obj_article_post->get_id();
         $time=times::getTime();
         $fields_indexing=[
             "postID"=>$article_data['postID'],
@@ -71,7 +71,7 @@ class user extends Api {
         //转文章为博客类型
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($module_data);
+            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
         }
         
         //同步ES索引
@@ -126,7 +126,7 @@ class user extends Api {
         //修改博客类型文章
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($module_data);
+            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
         }
         
         //同步ES索引
@@ -139,7 +139,7 @@ class user extends Api {
             $obj_article_draft->remove(['id'=>$article_data['draftID']]);
         }
         
-        return true;
+        return $this->article_view($article_data['postID']);
     }
     
     /**
@@ -177,7 +177,7 @@ class user extends Api {
         ];
         $obj_article_draft->insert($fields);
         
-        return true;
+        return $this->article_view($rs_article_indexing['postID']);
     }
     
     /**

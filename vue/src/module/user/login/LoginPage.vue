@@ -31,7 +31,7 @@
             <button type="button" class="btn btn-link btn-primary" @click="isShowLogin('signin')">前往注册</button>
           </span>
         </div>
-        <div>
+        <div class="auth-button-container">
         <div style="color:#f56c6c;text-align:center" v-if="loginErr.status">{{loginErr.msg}}</div>
           
           <!-- <n-checkbox v-model="checkboxes.unchecked"><span class="checkbox">在这台电脑上记住我（一个月之内不用再登录）</span></n-checkbox> :disabled="loginForm.submitDisable"-->
@@ -44,7 +44,7 @@
           <div id="google-signin-button" class="mb-3"></div>
             
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
-          <facebook-logo></facebook-logo> facebook 账号登录
+          <facebook-logo></facebook-logo> Facebook 账号登录
           </n-button>
 
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="lineLogin()">
@@ -335,25 +335,45 @@ AppleLogo
 </script>
 <style>
 .login-page .btn{
-  margin: 0;
+margin: 0;
 }
 .login-page .noaccount, .login-page .checkbox{
-  font-size: 14px;
-  color:gray;
+font-size: 14px;
+color:gray;
 }
 .login-page .form-check{
-  margin-bottom: 6px;
+margin-bottom: 6px;
 }
 .login-page .form-check .form-check-sign::before, .login-page .form-check .form-check-sign::after{
-  width: 18px;
-  height:18px;
+width: 18px;
+height:18px;
 }
 .login-page .form-check .form-check-label{
-  line-height: 18px;
-  padding-left: 24px;
+line-height: 18px;
+padding-left: 24px;
+}
+.auth-button-container .btn.btn-simple{
+height:50px;
+border:1px solid #eee;
+font-size: 16px;
+font-weight: 600;
+box-shadow: 0 2px 4px 0 rgb(0 0 0 / 25%);
+}
+.auth-button-container .btn.btn-simple svg{
+ margin-right:10px 
+}
+.auth-button-container .btn.btn-simple:hover{
+box-shadow: 0 0 3px 3px rgb(66 133 244 / 30%);
+border-color: #fff;
 }
 /* google btn */
 #google-signin-button .abcRioButton{
   border-radius: 25px;
+}
+#google-signin-button .abcRioButtonContents{
+display: flex;
+}
+#google-signin-button .abcRioButtonIcon{
+margin-left: 75px;
 }
 </style>

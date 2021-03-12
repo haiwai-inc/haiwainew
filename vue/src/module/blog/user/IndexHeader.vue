@@ -1,5 +1,5 @@
 <template>
-    <div class="blog-user-index">
+    <div class="blog-user-index mb-3">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup"></div>
         </div>
@@ -168,7 +168,8 @@ export default {
 <style>
 .blog-user-index .user-bg{
     background-size:cover;
-    background-position-y: center
+    background-position-y: center;
+    background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
     height:100px
@@ -190,8 +191,10 @@ export default {
     font-weight: 700;
 }
 .blog-user-index .blog-user-index-des{
-    font-size: 0.85rem;
-    color:gray
+        font-size: 0.9rem;
+        color: gray;
+        max-width: 393px;
+        display: inline-block;
 }
 .blog-user-index .avatar-word{
     background-color: aliceblue;

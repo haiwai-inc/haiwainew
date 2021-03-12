@@ -52,14 +52,14 @@ class blog_blogger extends Model{
 	}
 	
 	//转文章为博客类型
-	function to_blog_article($data){
+	function to_blog_article($postID,$module_data){
 	    $fields_indexing=[
-	        'bloggerID'=>$data['bloggerID'],
+	        'bloggerID'=>$module_data['bloggerID'],
 	    ];
 	    
 	    //文集
 	    $obj_blog_category=load("blog_category");
-	    $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$data['bloggerID'],'id'=>$data['categoryID']]);
+	    $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
 	    
 	    if(!empty($check_blog_category)){
 	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
@@ -68,23 +68,23 @@ class blog_blogger extends Model{
 	    
 	    //修改索引表
 	    $obj_article_indexing=load("article_indexing");
-	    $obj_article_indexing->update($fields_indexing,['postID'=>$data['postID']]);
+	    $obj_article_indexing->update($fields_indexing,['postID'=>$postID]);
 	    
 	    //修改博主计数信息
 	    $time=times::getTime();
-	    $check_blogger=$this->getOne('*',['id'=>$data['bloggerID']]);
+	    $check_blogger=$this->getOne('*',['id'=>$module_data['bloggerID']]);
 	    $fields_blogger=[
 	        'update_date'=>$time,
 	        'update_ip'=>http::getIP()
 	    ];
-	    if(!empty($data['add'])){
+	    if(!empty($module_data['add'])){
 	        $fields_blogger['count_article']=$check_blogger['count_article']+1;
 	        $fields_blogger['update_type']='add_article';
 	    }
-	    if(!empty($data['edit'])){
+	    if(!empty($module_data['edit'])){
 	        $fields_blogger['update_type']='edit_article';
 	    }
-	    $this->update($fields_blogger,['id'=>$data['bloggerID']]);
+	    $this->update($fields_blogger,['id'=>$module_data['bloggerID']]);
 	}
 	
 	
