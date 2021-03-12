@@ -56,7 +56,7 @@ class publish_article_timer{
                 //转文章为博客类型
                 if($article_data['typeID']==1){
                     $obj_blog_blogger=load("blog_blogger");
-                    $obj_blog_blogger->to_blog_article($module_data);
+                    $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
                 }
                 
                 //同步ES索引
