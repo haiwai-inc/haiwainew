@@ -522,7 +522,7 @@ class user extends Api {
      * @param integer $postID | 文章的postID
      * @param integer $is_publish | 1开 0关
      */
-    public function article_publish($postID,$is_share){
+    public function article_publish($postID,$is_publish){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($check_article_indexing)) {$this->error="设置私密文章不存在";$this->status=false;return false;}
@@ -552,7 +552,7 @@ class user extends Api {
      * @param integer $postID | 文章的postID
      * @param integer $is_share | 1开 0关
      */
-    public function article_share($postID,$is_publish){
+    public function article_share($postID,$is_share){
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($check_article_indexing)) {$this->error="禁止转载的文章不存在";$this->status=false;return false;}
