@@ -37,12 +37,12 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
             >
-              <a class="dropdown-item" href="#"
+              <a v-if="item.visible!==1" class="dropdown-item" href="#"
                 ><icon-publish class="icon"></icon-publish>直接发布</a
               >
-              <a
+              <a  v-if="item.visible!==1"
                 class="dropdown-item pl-4"
-                href="#"
+                href="javascript:void(0)"
                 @click="modals.schedule = true"
               >
                 <icon-schedule class="icon"></icon-schedule>定时发布

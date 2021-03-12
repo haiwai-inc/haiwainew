@@ -436,6 +436,10 @@ class user extends Api {
         
         //添加文章
         $this->article_add($article_data,$module_data);
+        
+        //删除草稿
+        $obj_article_draft=load("article_draft");
+        $obj_article_draft->remove(['id'=>$draftID]);
         return true;
     }
     
