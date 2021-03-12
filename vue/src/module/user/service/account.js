@@ -75,7 +75,7 @@ class Account extends API{
     }
 
     async upload_avatar(avatar){
-        return await this.sendpost("search/user/update_avatar/", avatar)
+        return await this.sendpost("account/user/update_avatar/", avatar)
     }
 
 // base function 
