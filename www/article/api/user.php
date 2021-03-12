@@ -121,7 +121,7 @@ class user extends Api {
         
         //添加文章 tag
         $obj_article_tag=load("article_tag");
-        $article_data=$obj_article_tag->article_tag_add($article_data);
+        $obj_article_tag->article_tag_add($article_data);
         
         //修改博客类型文章
         if($article_data['typeID']==1){
