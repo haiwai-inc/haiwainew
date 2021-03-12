@@ -139,7 +139,7 @@ class user extends Api {
             $obj_article_draft->remove(['id'=>$article_data['draftID']]);
         }
         
-        return true;
+        return $this->article_view($article_data['postID']);
     }
     
     /**
