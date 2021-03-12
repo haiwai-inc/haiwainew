@@ -72,6 +72,7 @@ class user extends Api {
     public function user_avatar_update($avatar){
         //文件
         $file = base64_decode($avatar);
+        $extension = explode('/', mime_content_type($avatar))[1];
         
         //路径
         $dir="/upload/user/avatar/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
@@ -82,7 +83,7 @@ class user extends Api {
         
         //文件名
         $filename=$_SESSION['id']."_avatar";
-        $rs_image=$filename.".jpg";
+        $rs_image=$filename.".".$extension;
         
         //保存
         file_put_contents($path."/".$rs_image, $file);
