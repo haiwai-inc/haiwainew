@@ -172,7 +172,7 @@ class search_article_noindex extends Search
 		//加入tagname
 		if(count($hash_posts)==1){
 		    $rs_article=reset($hash_posts);
-		    if(!empty($rs_article)){
+		    if(!empty($rs_article['tags'])){
 		        $obj_article_tag=load("article_tag");
 		        $rs_article_tag=$obj_article_tag->getAll(['id','name'],['OR'=>['id'=>$rs_article['tags']]]);
 		        foreach($hash_posts as $k=>$v){
