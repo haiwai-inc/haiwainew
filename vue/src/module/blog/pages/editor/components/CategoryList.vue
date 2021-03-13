@@ -136,7 +136,7 @@ export default {
         }
       };
       return{
-        userID:this.$store.state.user.userinfo.UserID,
+        userID:this.$store.state.user.userinfo.bloggerID,
         iconmore3v: HaiwaiIcons.iconmore3v,
         icon_plus:HaiwaiIcons.icon_plus,
         icon_edit:HaiwaiIcons.icon_edit,

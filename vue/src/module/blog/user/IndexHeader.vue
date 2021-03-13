@@ -58,7 +58,7 @@
       </div>
       
       <template slot="footer">
-          <span :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data}}</span>
+          <span :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data?'发送成功':'发送失败'}}</span>
         <n-button 
         class="mr-3"
         type="default" 

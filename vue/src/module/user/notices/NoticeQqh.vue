@@ -7,11 +7,16 @@
       </h6>
      
       <ul>
-        <li v-for="(item,index) in qqhList" :key="index">
+        <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
           <div class="d-flex align-items-center" @click="showQqhView(index)">
             
-            <img class="rounded-circle" style="width:48px;height:48px" :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
+            <img class="rounded-circle" style="width:48px;height:48px"
+             :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
+             v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
               />
+              <div 
+              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter.toUpperCase():item.userinfo_touserID.first_letter.toUpperCase()}}</div>
             <div class="pl-2">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
@@ -72,9 +77,13 @@
           v-for="(item,index) in qqhView.data" 
           :key="index"
           :class="{'message-l':item.userID!==loginUser.id,'message-r':item.userID===loginUser.id,}" >
-            <a href="#" class="avatar"
-              ><img class="rounded-circle" :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
-            /></a>
+            <a href="#" class="avatar">
+              <img class="rounded-circle" 
+              :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
+              v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
+              />
+              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter.toUpperCase():touser.first_letter.toUpperCase()}}</div>
+            </a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
           </li>
@@ -147,7 +156,7 @@ export default {
     async qqh_list() {
       // let user = this.$store.state.user;
       let res = await this.user.qqh_list();
-      this.qqhList=res.data;
+      this.qqhList=res.data;console.log(this.qqhList)
       this.qqhList.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
         let aTime = a.last_messageinfo.dateline;
         let bTime = b.last_messageinfo.dateline;
@@ -166,7 +175,7 @@ export default {
       }
       let user = this.$store.state.user;
       let res = await user.qqh_view(list[idx].id);
-      this.qqhView=res;
+      this.qqhView=res;console.log(res.data)
       this.qqhView.data=res.data.reverse();//对话倒序排列
     },
 
@@ -236,7 +245,6 @@ export default {
   color: #14171a;
   font-weight: 700;
 }
-
 .qiaoqiao-list p {
   margin: 28px 0 0;
   font-size: 1rem;
@@ -270,6 +278,17 @@ export default {
   text-align: center;
   background-color: #fff;
   border-bottom: 1px solid #f0f0f0;
+}
+.qiaoqiao-view .first_letter,.qiaoqiao-list .first_letter{
+  color:#14171a;
+  border-radius: 50%;
+  height:48px;
+  width: 48px;
+  margin: 0 !important;
+  text-align: center;
+  line-height: 48px;
+  display: block;
+  background-color: aliceblue;
 }
 .chat-top a {
   color: #333;

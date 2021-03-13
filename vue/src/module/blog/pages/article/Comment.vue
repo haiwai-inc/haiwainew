@@ -30,6 +30,7 @@
             <el-popover 
               placement="bottom-start"
               width="375" 
+              :ref="'pop-'+data.postID"
               trigger="click">
                 <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
                 <n-button 
@@ -87,6 +88,7 @@
                       placement="bottom-start"
                       width="375" 
                       @show="reply(r)"
+                      :ref="'pop-'+r.postID"
                       trigger="click">
                         <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
                         <n-button 
@@ -114,7 +116,13 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-link btn-info" style="padding-left:0px" v-on:click="replystatus(data.postID)">{{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="has_author">[含作者]</span></button>
+            <button 
+            v-if="data.reply.length>0"
+            class="btn btn-link btn-info" 
+            style="padding-left:0px" 
+            v-on:click="replystatus(data.postID)">
+              {{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="has_author">[含作者]</span>
+            </button>
           </div>
       </div>
     <!-- </div> -->
@@ -238,16 +246,15 @@ export default {
     },
     // 回复
     reply(item){
-      this.currentItem = item ;
-      
+      this.currentItem = item ;console.log(this.$refs)
         if(item.treelevel==2){
           this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
         }else{
           this.replymsgbody = "";
         }
-      
     },
     reply_add(){
+      console.log(this.loginuserID);
       let obj = {
         article_data:{msgbody:this.replymsgbody,
         postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
@@ -256,9 +263,11 @@ export default {
       this.replybtndisable = true;
       if(this.loginuserID!=-1){
         blog.reply_add(obj).then(res=>{
+          let pop = 'pop-'+this.currentItem.postID;
           this.replybtndisable = false;
           this.regetComment();
           this.replymsgbody="";
+          this.$refs[`${pop}`].doClose();
           this.modals.reply = false;
         })
       }else{

@@ -20,12 +20,12 @@
                 </router-link>
               </div>
               <div>
-                  <a v-if="!data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(data.userID)">
+                  <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(data.userID)">
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
                           关注
                       </div></a>
-                  <a v-if="data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(data.userID)">
+                  <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(data.userID)">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
                               <icon-x :style="{fill:'#FF3636'}"></icon-x>
@@ -103,8 +103,8 @@ export default {
     following_add(id){
       if(this.loginuserID!=-1){
         account.following_add(id).then(res=>{console.log(res.data,this.data)
-          if(res.data == true) {
-            data.userinfo_userID.is_following = 1;
+          if(res.status) {
+            this.curent_data.userinfo_userID.is_following = 1;
           }else{
             this.$message.error(res.error);
           }
@@ -117,7 +117,7 @@ export default {
       if(this.loginuserID!=-1){
         account.following_delete(id).then(res=>{
           if(res.data == true) {
-            data.userinfo_userID.is_following = 0;
+            this.curent_data.userinfo_userID.is_following = 0;
           }else{
             this.$message.error(res.error);
           }
@@ -128,7 +128,8 @@ export default {
   data(){
     return {
       loginuserID:-1,
-      error:''
+      error:'',
+      curent_data:this.data
     }
   }
 }

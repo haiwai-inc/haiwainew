@@ -573,6 +573,9 @@ html,
 body{
   margin:0;
 }
+.tox-tinymce{
+  height: calc(100% - 160px) !important;
+}
 .publisher .header {
   background-color: #39b8eb;
   padding: 5px;

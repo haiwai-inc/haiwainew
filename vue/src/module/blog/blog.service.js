@@ -122,7 +122,7 @@ class Blog extends API{
 	 *          评论的postID
 	 */
   async reply_delete(postID){
-    return await this.sendget("article/user/reply_delete/?postID="+postID)
+    return await this.sendget("article/user/reply_delete/?id="+postID)
   }
 
   /**
