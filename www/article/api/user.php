@@ -161,7 +161,14 @@ class user extends Api {
         $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
         if(!empty($check_article_draft)) {$this->error="此草稿已经存在";$this->status=false;return false;}
         
-        $tagID=implode(",",$rs_article_indexing['postInfo_postID']['tags']);
+        //字符串tagID
+        if(!empty($rs_article_indexing['postInfo_postID']['tags'])){
+            foreach($rs_article_indexing['postInfo_postID']['tags'] as $v){
+                $tagID[]=$v['id'];
+            }
+            $tagID=implode(",",$tagID);
+        }
+        
         $fields=[
             "postID"=>$rs_article_indexing['postID'],
             "typeID"=>empty($rs_article_indexing['typeID'])?"":$rs_article_indexing['typeID'],
@@ -196,7 +203,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
-        
         return $rs_article_draft;
     }
     

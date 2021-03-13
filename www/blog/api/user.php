@@ -42,9 +42,38 @@ class user extends Api {
     /**
      * 博主设置页
      * 博主 背景 修改
+     * @param string $background
+     * @post background
      */
-    public function blogger_background_update(){
+    public function blogger_background_update($background){
+        if(substr($avatar, 0, 4) === "data"){
+            $file = file_get_contents($background);
+        }
+        else{
+            $file = base64_decode($background);
+        }
         
+        //路径
+        $dir="/upload/user/background/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
+        $path=DOCUROOT.$dir;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        
+        //文件名
+        $filename=$_SESSION['id']."_avatar";
+        $extension = explode('/', mime_content_type($avatar))[1];
+        $rs_image=$filename.".".$extension;
+        
+        //保存
+        file_put_contents($path."/".$rs_image, $file);
+        
+        //小图处理
+        $obj_account_user=load("account_user");
+        $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+        $obj_account_user->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
+        
+        return "{$dir}/{$rs_image}";
     }
     
     /**
