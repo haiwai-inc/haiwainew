@@ -58,10 +58,10 @@
       </drop-down>
       <n-switch
         class="switchbtn"
-        style=""
         v-model="switches.defaultOff"
         on-text="简"
         off-text="繁"
+        @input="test"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
         <a
@@ -186,7 +186,9 @@ export default {
       console.log(item);
       this.doSearch(this.keyword,item.id);
     },
-
+    test(val){
+      console.log(val,this.$i18n)
+    },
     onSubmit(){
       this.doSearch(this.keyword,0);
     },

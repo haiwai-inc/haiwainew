@@ -25,6 +25,7 @@
     "vue-cropperjs": "^4.2.0",
     "vue-ele-gallery": "^2.1.7",
     "vue-ele-upload-image": "^2.0.12",
+    "vue-i18n": "^8.24.1",
     "vue-image-crop-upload": "^2.5.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-lazy-load": "^0.0.7",

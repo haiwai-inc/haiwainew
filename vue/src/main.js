@@ -8,6 +8,7 @@ import User from './service/user';
 import Search from './module/search/search.service.js';
 import VueSocialSharing from 'vue-social-sharing';
 import Croppa from 'vue-croppa';
+// import i18n from './i18n/i18n';
 
 Vue.use(Croppa);
 Vue.config.productionTip = false;
@@ -34,5 +35,6 @@ const store = new Vuex.Store({
 new Vue({
   store: store,
   router,
+  // i18n,
   render: h => h(App),
 }).$mount('#app');
