@@ -1,11 +1,9 @@
 <template>
   <div class="container">
      
-    <main-menu></main-menu>
-    
+    <main-menu></main-menu> 
     <div class="row">
-      <div class="col-lg-2"></div>
-      <div class="col-sm-12 col-12 col-lg-8">
+      <div class="col-sm-12 col-12 col-lg-12">
         <h6 class="font-weight-normal pt-3"> 我的收藏</h6>
         <div class="text-center mt-5" v-if="articlelists.length==0">
           <h5>您的文件夹是空的, 您还没有收藏任何文章</h5>
