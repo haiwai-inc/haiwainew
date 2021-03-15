@@ -23,19 +23,19 @@
                   <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(data.userID)">
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
-                          关注
+                          {{$t('message').blog.blogger_follow}}
                       </div></a>
                   <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(data.userID)">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
-                              <icon-x :style="{fill:'#FF3636'}"></icon-x>
-                              取消关注
+                            <icon-x :style="{fill:'#FF3636'}"></icon-x>
+                            {{$t('message').blog.blogger_remove_follow}}
                           </div>
                       </span>
                       <span class="followed-text text-default">
                           <div class="d-flex justify-content-end align-items-end" style="fill:#999">
                               <icon-check></icon-check>
-                              已关注
+                              {{$t('message').blog.blogger_followed}}
                           </div>
                       </span>
                   </a>

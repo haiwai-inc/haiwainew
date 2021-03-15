@@ -41,7 +41,7 @@
               @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
                 ><icon-publish class="icon"></icon-publish>直接发布</a
               >
-              <a  v-if="false"
+              <a  v-if="item.visible!==1"
                 class="dropdown-item pl-4"
                 href="javascript:void(0)"
                 @click="modals.schedule = true"
@@ -217,6 +217,7 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
+      console.log(this.$t('message').topnav.myindex)
     },
     data(){
       return{

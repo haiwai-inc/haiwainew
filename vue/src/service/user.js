@@ -9,6 +9,7 @@ class User extends API{
         this.userinfo= res.data;
     });
     published = {};
+    notice={};
     /**
      * Login function for example
      * @param {*} email 
@@ -171,7 +172,9 @@ class User extends API{
      *  
      */
     async notification_unread_count(){
-        return await this.sendget("account/user/notification_unread_count/")
+        let res = await this.sendget("account/user/notification_unread_count/")
+        if(res.status) this.notice=res.data
+        return res
     }
 
     /**
@@ -179,7 +182,9 @@ class User extends API{
      * @param {消息类型} type 
      */
     async notification_unread_clear(type){
-        return await this.sendget("account/user/notification_unread_clear/?type="+type)
+        let res = await this.sendget("account/user/notification_unread_clear/?type="+type)
+        if(res.status) await this.notification_unread_count()
+        return res
     }
 
      /**

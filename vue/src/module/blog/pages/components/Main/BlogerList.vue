@@ -2,7 +2,7 @@
   <div class="bolger-box">
     <div class="blogger-title d-flex justify-content-between">
       <h4>{{title}}</h4>
-      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</n-button>
+      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh()"><i class="now-ui-icons arrows-1_refresh-69"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
     </div>
     <bloger-list-item 
     v-for="(item,index) in hotBloggerList.data" 

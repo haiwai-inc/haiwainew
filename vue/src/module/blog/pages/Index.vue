@@ -25,7 +25,7 @@
         </div>
         <div class="col-sm-4 d-none d-sm-block">
           <div class="hot-bloger" v-if="bloggerList.length>0">
-            <bloger-list v-bind:data="bloggerList" title="热门博主"></bloger-list>
+            <bloger-list v-bind:data="bloggerList" :title="$t('message').blog.index_title_hot"></bloger-list>
           </div>
         </div>
       </div>
