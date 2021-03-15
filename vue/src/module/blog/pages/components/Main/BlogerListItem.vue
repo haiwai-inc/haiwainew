@@ -148,6 +148,9 @@ export default {
   color:#14171a;
   text-decoration: none;
 }
+.hot-blogger a:hover{
+color: #235592  
+}
 .hot-blogger .description a{
   color:#657786
 }

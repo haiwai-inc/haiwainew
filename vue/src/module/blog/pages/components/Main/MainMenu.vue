@@ -65,6 +65,9 @@ export default {
   margin-right: 1rem;
   color: gray;
 }
+.main-menubox span:hover{
+  color:black
+}
 .main-menubox button{
   margin: 0;
   margin-top:-5px;
@@ -76,5 +79,8 @@ export default {
 }
 .main-menubox .active{
     cursor:default !important;
+}
+.btn-primary.btn-simple:hover{
+  background: #dbfbff5e
 }
 </style>

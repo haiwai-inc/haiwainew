@@ -1,5 +1,5 @@
 <template>
-  <div class="list-itme mb-3">
+  <div class="list-itme d-flex mb-3">
     <div>
       <router-link :to="'/blog/p/'+data.postID">
         <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
@@ -94,11 +94,17 @@ h4.article-title{
   font-weight: 600;
   font-size: 1.2em
 }
+h4.article-title:hover{
+color: #235592 
+}
 .list-itme .descript{
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+.list-itme .descript:hover{
+color: #646464
 }
 p.descript,div.list-itme-tail{
         color: #121212;
