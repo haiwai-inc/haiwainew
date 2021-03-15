@@ -8,49 +8,49 @@
             <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between">
                <div class="name" >
                   <icon-blog-set></icon-blog-set>
-                  博客设置
+                  {{$t('message').setting.menu_bolg}}
                </div>
             </div>
             <div @click="menuId=1" class="left-nav-item d-flex justify-content-between">
                <div class="name">
                   <icon-account-set></icon-account-set>
-                  账号设置
+                  {{$t('message').setting.menu_accout}}
                </div>
             </div>
             <div @click="menuId=2" class="left-nav-item d-flex justify-content-between">
                <div class="name">
                   <icon-black-list></icon-black-list>
-                  黑名单
+                  {{$t('message').setting.menu_blacklist}}
                </div>
             </div>
          </div>
          <div class="col-sm-8 col-12">
             <div v-if="menuId===0">
-               <h6 class="border-bottom pb-3">博客设置</h6>
+               <h6 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h6>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
                      <div class="user-bgup"></div>
                   </div>
                </div>
-               <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">修改博客头像背景</button></div>
+               <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">{{$t('message').setting.blog_bgimg_btn}}</button></div>
                <div>
-                  <p class="pt-3"><b>博客名</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.blog_name}}</b></p>
                   <fg-input
-                     placeholder="博客名"
+                     :placeholder="$t('message').setting.blog_name_ph"
                      v-model="blogProfile.name"
                      >
                   </fg-input>
-                  <p class="pt-3"><b>博客简介</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.blog_descript}}</b></p>
                   <fg-input
-                     placeholder="博客简介"
+                     :placeholder="$t('message').setting.blog_descript_ph"
                      v-model="blogProfile.description"
                      >
                   </fg-input>
                </div>
-               <button class="btn btn-round btn-primary" @click="saveBlockProfile">保存</button>
+               <button class="btn btn-round btn-primary" @click="saveBlockProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
-               <h6 class="border-bottom pb-3">账号设置</h6>
+               <h6 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h6>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
@@ -63,7 +63,9 @@
                      @change="setImage"
                      style="display:none"
                   />
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">修改我的头像</button></div>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">
+                     {{$t('message').setting.accout_avatar_btn}}
+                  </button></div>
                   <!-- <avatar-upload field="img"
                      @crop-success="cropSuccess"
                      @crop-upload-success="cropUploadSuccess"
@@ -76,16 +78,14 @@
                      :headers="headers"
                      img-format="png"></avatar-upload> -->
 <br>
-
-                  
                </div>
                <div v-show = "show" v-if="show"> 
-                  
-                  
                   <VueCropper v-if="imgSrc" ref="cropper"  :src="imgSrc" alt="Source Image" preview=".preview" :aspectRatio="1"></VueCropper>
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="saveImage">确认修改</button></div>
-                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">取消</button></div>
-                <div class="preview" />
+                  <div class="d-flex align-items-center">
+                     <button class="btn btn-simple btn-round btn-primary" @click="saveImage">{{$t('message').setting.accout_avatar_save_btn}}</button>
+                     <button class="btn btn-simple btn-round btn-default ml-3" @click="toggleShow">{{$t('message').setting.accout_cancel_btn}}</button>
+                  </div>
+               <div class="preview" />
         <!-- <div class="cropped-image">
           <img
             v-if="croppedImage"
@@ -96,45 +96,36 @@
         </div> -->
                </div>
                <div>
-                  <p class="pt-3"><b>笔名</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.accout_name}}</b></p>
                   <fg-input
-                     placeholder="笔名"
+                     :placeholder="$t('message').setting.accout_name_ph"
                      v-model="authorInfor.username">
                   </fg-input>
-                  <p class="pt-3"><b>个人简介</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.accout_descript}}</b></p>
                   <fg-input
-                     placeholder="写点什么介绍你自己吧"
+                     :placeholder="$t('message').setting.accout_descript_ph"
                      v-model="authorInfor.description"
                      >
                   </fg-input>
-                  <p class="pt-3"><b>登录账号</b> : <span>{{authorInfor.email}}</span></p>
+                  <p class="pt-3"><b>{{$t('message').setting.accout_accout}}</b> : <span>{{authorInfor.email}}</span></p>
                   <hr class="mb-4">
-                  <p class="pt-3"><b>修改密码</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.accout_pass}}</b></p>
                   <el-form :model="signupForm" :rules="rules" ref="signupForm" label-width="10px">
           
                      <el-form-item label="" prop="password">
-                        <el-input type="password" placeholder="密码" v-model="signupForm.password" autocomplete="off"></el-input>
+                        <el-input type="password" :placeholder="$t('message').setting.accout_pass_ph" v-model="signupForm.password" autocomplete="off"></el-input>
                      </el-form-item>
                      <el-form-item label="" prop="checkPassword">
-                        <el-input type="password" placeholder="确认密码" v-model="signupForm.checkPassword" autocomplete="off"></el-input>
+                        <el-input type="password" :placeholder="$t('message').setting.accout_comfirm_ph" v-model="signupForm.checkPassword" autocomplete="off"></el-input>
                      </el-form-item>
                      
                   </el-form>
-                  <!-- <fg-input
-                     addon-left-icon="now-ui-icons objects_key-25"
-                     placeholder="密码"
-                     >
-                  </fg-input>
-                  <fg-input
-                     addon-left-icon="now-ui-icons objects_key-25"
-                     placeholder="确认密码"
-                     >
-                  </fg-input> -->
+                 
                </div>
-               <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">修改密码</button>
+               <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
             </div>
             <div v-if="menuId===2">
-               <h6 class="border-bottom pb-3">黑名单</h6>
+               <h6 class="border-bottom pb-3">{{$t('message').setting.black_title}}</h6>
                <div class="box my-3">
                   <div v-for="(item,index) in blackList" :key="index" class=" blacklist align-self-center col-12 no-gutters">
                      <div class="d-flex align-self-center">
@@ -145,7 +136,7 @@
                            <a class="m-0  btn btn-link text-default w-100">
                               <div @click="blackListRemove(item)" class="d-flex text-gray  justify-content-end align-items-end">
                                  <icon-delete></icon-delete>
-                                 从黑名单中移除
+                                 {{$t('message').setting.black_remove}}
                               </div>
                            </a>
                         </div>

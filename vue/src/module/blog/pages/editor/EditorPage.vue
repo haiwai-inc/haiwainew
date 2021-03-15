@@ -48,15 +48,15 @@
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <div ref="saving" style="font-size:13px;padding-left:8px;">
-        <span v-if="flags.autosaving">自动保存中...</span> 
-        <span v-if="flags.autosaved" class="text-success">已自动保存</span>
+        <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
+        <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
       </div>
       <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
         <input
           class="editorTitle"
           type="text"
           v-model="curentArticle.postInfo_postID.title"
-          placeholder="新建博文标题"
+          :placeholder="$t('message').editor.title_ph"
         />
       </div>
 

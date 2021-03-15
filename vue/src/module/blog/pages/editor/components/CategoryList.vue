@@ -2,7 +2,7 @@
     <div>
         <button class="btn btn-link m-3" @click="modals.addwenji = true">
           <span v-html="icon_plus"></span>
-          <span style="font-size:1rem;color:#14171A">新建文集</span>
+          <span style="font-size:1rem;color:#14171A">{{$t('message').editor.wenji_new_btn}}</span>
         </button>
         <ul>
           <li
@@ -41,19 +41,19 @@
                   simple
                   :disabled="btnDisable"
                   @click="category_update(item)"
-                    >修改</n-button
+                    >{{$t('message').editor.wenji_update_btn}}</n-button
                   >
-                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>修改文集名称</a>
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>{{$t('message').editor.wenji_update_menu}}</a>
               </el-popover>
               <el-popconfirm
                 placement="top-end"
-                confirm-button-text='删除'
+                confirm-button-text="刪除"
                 cancel-button-text='取消'
-                :title="'确定删除文集 '+item.name+' 吗？'"
+                :title="$t('message').editor.wenji_comfirm_title+item.name+$t('message').editor.wenji_comfirm_title1"
                 :hide-icon="true"
                 @confirm="category_delete(item)"
               >
-                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>删除文集</a>
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>{{$t('message').editor.wenji_delet_menu}}</a>
               </el-popconfirm>
             </drop-down>
 
@@ -63,7 +63,7 @@
     <!-- Add Wenji Modal -->
     <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
-        请输入新文集名称
+        {{$t('message').editor.wenji_new_title}}
       </h4>
       <el-form :model="catForm" :rules="WJrules" ref="catForm" label-width="0px">
         <el-form-item
@@ -83,9 +83,9 @@
           link
           @click.native="modals.addwenji = false"
         >
-          取消
+          {{$t('message').editor.wenji_new_cancel}}
         </n-button>
-        <n-button type="primary" round simple @click="categoryAdd()" :disabled="btnDisable">保存</n-button>
+        <n-button type="primary" round simple @click="categoryAdd()" :disabled="btnDisable">{{$t('message').editor.wenji_new_save}}</n-button>
       </template>
     </modal>
 
