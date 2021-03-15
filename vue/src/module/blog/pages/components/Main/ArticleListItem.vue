@@ -1,5 +1,5 @@
 <template>
-  <div class="list-itme d-flex mb-3">
+  <div class="list-itme mb-3">
     <div>
       <router-link :to="'/blog/p/'+data.postID">
         <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
