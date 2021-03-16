@@ -92,9 +92,14 @@ export default {
   font-weight: 500;
   color: gray;
 }
+
 .main-category-bar button{
   background-color: #f5f5f5 !important;
   margin-right:1rem;
+}
+.main-category-bar button:hover{
+  background-color: aliceblue !important
+
 }
 .main-category-bar .active ,.main-category-bar .active span{
   text-align: center;
