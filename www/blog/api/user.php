@@ -126,6 +126,9 @@ class user extends Api {
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
+        $count_blog_category=$obj_blog_category->count(['bloggerID'=>$check_blog_blogger['id']]);
+        if($count_blog_category==1) {$this->error="最后一个文集无法删除";$this->status=false;return false;}
+        
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         return true;
     }
