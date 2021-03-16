@@ -61,8 +61,8 @@ class user extends Api {
         }
         
         //文件名
-        $filename=$_SESSION['id']."_avatar";
-        $extension = explode('/', mime_content_type($avatar))[1];
+        $filename=$_SESSION['id']."_background";
+        $extension = explode('/', mime_content_type($background))[1];
         $rs_image=$filename.".".$extension;
         
         //保存
