@@ -9,12 +9,13 @@ class article_tag extends Model{
     
     //添加文章标签
     public function article_tag_add($article_data){
+        $obj_article_post_tag=load("article_post_tag");
+        $post_tag_tbn=substr('0'.$article_data['postID'],-1);
+        if(!empty($article_data['postID'])){
+            $obj_article_post_tag->remove(['postID'=>$article_data['postID']],"post_tag_".$post_tag_tbn);
+        }
+        
         if(!empty($article_data['tagname'])){
-            $obj_article_post_tag=load("article_post_tag");
-            $post_tag_tbn=substr('0'.$article_data['postID'],-1);
-            if(!empty($article_data['postID'])){
-                $obj_article_post_tag->remove(['postID'=>$article_data['postID']],"post_tag_".$post_tag_tbn);
-            }
             foreach($article_data['tagname'] as $v){
                 $check_article_tag=$this->getOne("*",['name'=>$v]);
                 if(empty($check_article_tag)){

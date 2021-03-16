@@ -8557,6 +8557,11 @@
   "resolved" "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
+"vue-i18n@^8.24.1":
+  "integrity" "sha512-iqM+npjvI9SGOAYkw1Od/y4O74gpvn5WOHeb3K125TmDJssvR62tDMMLIasPmKNbePZ1BMZ6d5jOBsrB/cK8Lw=="
+  "resolved" "https://registry.npmjs.org/vue-i18n/-/vue-i18n-8.24.1.tgz"
+  "version" "8.24.1"
+
 "vue-image-crop-upload@^2.5.0":
   "integrity" "sha512-AV+ZwPuaZ8tKdSopaSOCk4v0JqKZjFu6uLQg5D06pzt2GLcIR8NgrFz+/S0YN25RgkC4vHvUr9+XcNSUTk28ng=="
   "resolved" "https://registry.npmjs.org/vue-image-crop-upload/-/vue-image-crop-upload-2.5.0.tgz"

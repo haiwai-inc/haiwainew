@@ -79,7 +79,7 @@ class Account extends API{
     }
 
     async upload_background(background){
-        return await this.sendpost("account/user/blog_background_update/", background);
+        return await this.sendpost("search/user/update_blog_background/", background);
     }
 
 // base function 

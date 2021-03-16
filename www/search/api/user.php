@@ -106,6 +106,21 @@ class user extends Api
     }
 
     /**
+     * @param string $background
+     * @post background
+     */
+    public function update_blog_background($background){
+        // debug::d($avatar);
+        $pic_obj = load("article_pic");
+        $url = $pic_obj -> save_picture($background);
+
+        //update blog background
+         
+
+        return $url;
+    }
+
+    /**
      * @param string $type
      * @param string $file
      * @post file

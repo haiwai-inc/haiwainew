@@ -38,7 +38,7 @@
         </el-autocomplete> -->
         <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
-          placeholder="搜索文章/用户..."
+          :placeholder="$t('message').topnav.seachplaceholder"
           v-model="keyword"
           @keyup.enter.native="onSubmit"
         >
@@ -58,10 +58,10 @@
       </drop-down>
       <n-switch
         class="switchbtn"
-        style=""
-        v-model="switches.defaultOff"
+        v-model="langswitch"
         on-text="简"
         off-text="繁"
+        @input="s_t"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
         <a
@@ -71,12 +71,12 @@
           title="消息"
           data-placement="bottom"
           href="/notices">
-          <div class="noticealert"></div>
+          <div class="noticealert" v-if="$store.state.user.notice.totall"></div>
           <i class="now-ui-icons ui-1_bell-53"></i>
-          <p class="d-lg-none d-xl-none">消息</p>
+          <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
         </a> 
       </li>
-      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">登录/注册</router-link></div>
+      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">{{$t('message').topnav.login}}</router-link></div>
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
@@ -85,35 +85,35 @@
               :avatarurl="$store.state.user.userinfo.userinfo_id.avatar"
               class="nav-item">
         <nav-link to="/admin" v-if="$store.state.user.userinfo.auth_group==2">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> 运营管理
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.admin}}
         </nav-link>
         <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.auth_group==2">
         <nav-link :to="'/blog/user/'+$store.state.user.userinfo.bloggerID">
-          <i class="now-ui-icons users_single-02"></i> 我的主页
+          <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myindex}}
         </nav-link>
         <nav-link to="/bookmark">
-          <i class="now-ui-icons location_bookmark"></i> 我的收藏
+          <i class="now-ui-icons location_bookmark"></i> {{$t('message').topnav.myfavorite}}
         </nav-link>
         <hr class="mb-1 mt-1">
         <nav-link to="/notices">
-          <i class="now-ui-icons ui-2_chat-round"></i> 我收到的评论
+          <i class="now-ui-icons ui-2_chat-round"></i> {{$t('message').topnav.mycomment}}
         </nav-link>
         <nav-link to="/notices">
-          <i class="now-ui-icons ui-1_email-85"></i> 我的悄悄话
+          <i class="now-ui-icons ui-1_email-85"></i> {{$t('message').topnav.myqqh}}
         </nav-link>
          <nav-link to="/notices">
-          <i class="now-ui-icons users_single-02"></i> 我的粉丝
+          <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myfuns}}
         </nav-link>
          <nav-link to="/notices">
-          <i class="now-ui-icons ui-2_favourite-28"></i> 我收到喜欢
+          <i class="now-ui-icons ui-2_favourite-28"></i> {{$t('message').topnav.likeme}}
         </nav-link>
         <hr class="mb-2 mt-1">
         <nav-link to="/profile">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> 个人设置
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.profile}}
         </nav-link>
         <hr class="mb-1 mt-1">
         <a href="javascript:void(0)" @click="logout" class="dropdown-item">
-          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> 退出登录
+          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> {{$t('message').topnav.logout}}
         </a>
         
       </profile-drop-down>
@@ -125,7 +125,7 @@
         simple 
         @click="$refs.dialog.isLogin()"
         class="editbtn">
-          <icon-pen class="editicon"></icon-pen>写博客
+          <icon-pen class="editicon"></icon-pen>{{$t('message').topnav.editbtn}}
         </n-button>
       </li>
     </template>
@@ -164,13 +164,11 @@ export default {
     IconPen,
     LoginDialog
   },
+  
   data(){
     return {
       bodyclass:'',
-      switches: {
-        defaultOn: true,
-        defaultOff: false
-      },
+      langswitch: localStorage.lang?localStorage=='cns'?true:false:true,
       keyword: '',
       search:this.$store.state.search,
     };
@@ -186,7 +184,18 @@ export default {
       console.log(item);
       this.doSearch(this.keyword,item.id);
     },
-
+    test(val){
+      console.log(val,this.$i18n)
+    },
+    // 簡繁轉換
+    s_t(val){
+      if(val){
+        localStorage.lang = 'cns';
+      }else{
+        localStorage.lang = 'cnt'
+      }
+      this.$i18n.locale = localStorage.lang
+    },
     onSubmit(){
       this.doSearch(this.keyword,0);
     },
@@ -214,6 +223,7 @@ export default {
   beforeCreate(){
   },
   mounted() {
+    localStorage.lang = localStorage.lang?localStorage.lang:'cns'
   }
 };
 </script>

@@ -85,4 +85,7 @@ export default {
 .dropdown .dropdown-toggle {
   cursor: pointer;
 }
+.no-caret::after{
+  border-top:0 !important
+}
 </style>

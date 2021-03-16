@@ -24,6 +24,7 @@
       <slot>
         <input
           :value="value"
+          :placeholder="placeholder"
           v-on="listeners"
           v-bind="$attrs"
           class="form-control"
@@ -64,6 +65,7 @@ export default {
     error: String,
     labelClasses: String,
     inputClasses: String,
+    placeholder:String,
     value: {
       type: [String, Number],
       default: ''

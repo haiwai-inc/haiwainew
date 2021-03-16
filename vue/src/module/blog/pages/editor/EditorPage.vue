@@ -48,15 +48,15 @@
     </div>
     <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <div ref="saving" style="font-size:13px;padding-left:8px;">
-        <span v-if="flags.autosaving">自动保存中...</span> 
-        <span v-if="flags.autosaved" class="text-success">已自动保存</span>
+        <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
+        <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
       </div>
       <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
         <input
           class="editorTitle"
           type="text"
           v-model="curentArticle.postInfo_postID.title"
-          placeholder="新建博文标题"
+          :placeholder="$t('message').editor.title_ph"
         />
       </div>
 
@@ -70,7 +70,7 @@
      />
      <!-- <textarea id="editorText"> -->
      <!-- </textarea> -->
-      <div ref="saveBox">
+      <div ref="saveBox" class="m-2">
         <n-button v-if="curentArticle.visible!==1"
           type="primary"
           round
@@ -105,11 +105,14 @@
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
-        发布文章
+        发布文章{{curentArticle.postID}}
       </h4>
-      <p>
-        您可以选择一些适合的标签，能方便分类检索，文章也更容易让其他用户看到。
-      </p>
+      <small>
+        您可以输入一些适合的标签，能方便分类检索，文章也更容易让其他用户看到。
+      </small>
+      <p><span class="mr-3" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)">X</a></span></p>
+      
+      <input v-model="tag" type="text"> <a href="javascript:void(0)" @click="pushtag(tag)">添加</a>
       <template slot="footer">
         <n-button
           class="mr-3"
@@ -193,6 +196,13 @@ export default {
     'editor': Editor,
   },
   watch:{
+    'curentArticle.postInfo_postID.tags':function(val){
+      this.tags = []
+      this.curentArticle.postInfo_postID.tags.forEach(item=>{
+        this.tags.push(item.name)
+      })
+      console.log(val)
+    },
     'curentArticle.postInfo_postID.title':function(val){
       this.watchModify(val)
     },
@@ -210,12 +220,10 @@ export default {
         // 将已发布文章转为草稿
         this.article_to_draft_by_postID();
 
-        console.log("ok");
       }
       if(this.curentArticle.visible!==1 && this.watchCount>2){
         this.autoSave()
       }
-      console.log(this.watchCount);
     },
     async fetchData() {
       let postid = 0;
@@ -348,7 +356,7 @@ export default {
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
-          tagname:['test'],
+          tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,
           draftID:this.curentArticle.id
@@ -390,7 +398,7 @@ export default {
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
-          tagname:[],
+          tagname:this.tags,
           typeID:1,
           draftID:this.curentArticle.id
         },
@@ -421,7 +429,14 @@ export default {
         },5000)
       }
     },
-    
+    removetag(index){
+      this.curentArticle.postInfo_postID.tags.splice(index,1);
+    },
+    pushtag(val){
+      let o={name:val}
+      this.curentArticle.postInfo_postID.tags.push(o);
+      this.tag='';
+    },
     beforeDestroy() {
       clearTimeout(this.timer);
     },
@@ -501,7 +516,8 @@ export default {
       activeName: "0",
       curentArticle:{postInfo_postID:{title:"",msgbody:""}},
       watchCount:0,
-      
+      tags:[],
+      tag:'',
       modals: {
         addwenji: false,
         publish: false,
@@ -557,6 +573,9 @@ html,
 }
 body{
   margin:0;
+}
+.tox-tinymce{
+  height: calc(100% - 160px) !important;
 }
 .publisher .header {
   background-color: #39b8eb;

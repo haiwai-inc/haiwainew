@@ -68,11 +68,13 @@
               <!-- blog 正文 -->
             </div>
             
-            <previous-next-bar :data="articleDetail.data"></previous-next-bar>
+            <previous-next-bar
+              v-if="articleDetail.data.article_previous_next.next.length>0 ||articleDetail.data.article_previous_next.previous.length>0"
+             :data="articleDetail.data"></previous-next-bar>
             
           </div>
           <div class="comment">
-            <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+            <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
               round 
@@ -302,7 +304,7 @@ export default {
     buzz_add(item){
       blog.buzz_add(item.postID).then(res=>{
         console.log(res);
-        if(res.data=="已赞"){
+        if(res.status){
           this.articleDetail.data.postInfo_postID.is_buzz=1
         }
       })
@@ -310,7 +312,7 @@ export default {
     buzz_delete(item){
       blog.buzz_delete(item.postID).then(res=>{
         console.log(res)
-        if(res.data=="已取消赞"){
+        if(res.status){
           this.articleDetail.data.postInfo_postID.is_buzz=0
         }
       })
@@ -323,14 +325,14 @@ export default {
     },
     bookmark_add(item){
       blog.bookmark_add(item.postID).then(res=>{
-        console.log(res);
-        this.articleDetail.data.postInfo_postID.is_bookmark=1;
+        // console.log(res);
+        if(res.status)this.articleDetail.data.postInfo_postID.is_bookmark=1;
       })
     },
     bookmark_delete(item){
       blog.bookmark_delete(item.postID).then(res=>{
-        console.log(res);
-        this.articleDetail.data.postInfo_postID.is_bookmark=0;
+        // console.log(res);
+        if(res.status)this.articleDetail.data.postInfo_postID.is_bookmark=0;
       })
     },
     test(){

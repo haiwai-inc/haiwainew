@@ -16,7 +16,7 @@ class article_draft extends Model{
 	    
 	    $rs_article=reset($rs_article_draft);
 	    
-	    if(!empty($rs_article)){
+	    if(!empty($rs_article['postInfo_postID']['tags'])){
 	        $obj_article_tag=load("article_tag");
 	        $rs_article_tag=$obj_article_tag->getAll(['id','name'],['OR'=>['id'=>$rs_article['postInfo_postID']['tags']]]);
 	        foreach($rs_article_draft as $k=>$v){

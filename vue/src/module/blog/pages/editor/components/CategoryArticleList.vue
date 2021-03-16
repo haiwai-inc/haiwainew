@@ -217,6 +217,7 @@ export default {
       // [Popover.name]:Popover
     },
     mounted() {
+      console.log(this.$t('message').topnav.myindex)
     },
     data(){
       return{
@@ -228,6 +229,7 @@ export default {
         wenjiActiveId: 100,
         wenjiList: [],
         articleActiveId:0,
+        currentAaticle:{},
         articleList:[],
         modals: {
           addwenji: false,
@@ -256,6 +258,7 @@ export default {
           this.$emit('setarticleid',e)
         }
       },
+      // 新建草稿
       addArticle(){
         let data={
           article_data:{
@@ -275,7 +278,7 @@ export default {
         blog.draft_add(data).then(res=>{
           console.log(res);
           if(res.status){
-            this.getArticleList();
+            this.getArticleList('add');
             this.btnDis.add = false;
           }
         })
@@ -285,24 +288,33 @@ export default {
         console.log(item.visible);
           blog.article_delete(item.postID,0).then(res=>{
             if(res.status){
-              this.getArticleList();
+              this.getArticleList("del");
             }
           })
         }
         if(item.visible==-1){
           blog.draft_delete(item.id).then(res=>{
             if(res.status){
-              this.getArticleList()
+              this.getArticleList("del")
             }
           })
         }
       },
-      getArticleList(){
+      getArticleList(type){
         blog.category_article_list(this.wjid,0).then(res=>{
+          // 需要完善翻頁
           console.log(res);
           this.articleList = res.data.filter(obj=>obj.visible!=0);
+          this.articleList.forEach(item=>{
+            if(item.postID==this.articleActiveId){
+              this.changeMenu(item)
+            }
+          })
+          if(type=="add"||type=="del"){
+            this.changeMenu(this.articleList[0]);
+          }
           // this.articleActiveId = res.data.length>0?this.articleList[0].id:0;
-          this.changeMenu(this.articleList[0]);
+          // 
         })
       },
       setActiveID(item){
@@ -373,5 +385,7 @@ export default {
 }
 </script>
 <style>
-
+.aritcleItem .nav-link{
+  padding-right:0
+}
 </style>
