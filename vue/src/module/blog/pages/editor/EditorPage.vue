@@ -549,13 +549,15 @@ export default {
         plugins: [
            'advlist autolink lists link image charmap print preview anchor paste',
            'searchreplace visualblocks code fullscreen emoticons',
-           'insertdatetime media table paste code help wordcount'
+           'insertdatetime media table paste help wordcount'
          ],
          toolbar:
            'undo redo | paste pastetext| formatselect | bold italic backcolor forecolor| \
            alignleft aligncenter alignright alignjustify | image media file emoticons|\
-           bullist numlist outdent indent | removeformat | help',
+           bullist numlist outdent indent | removeformat | help code',
         language: 'zh_CN',
+        relative_urls : false,
+        remove_script_host : true,
         file_picker_callback:this.filePicker,
       }
     };
