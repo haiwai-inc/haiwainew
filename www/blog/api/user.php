@@ -92,7 +92,7 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $obj_blog_category->insert(['bloggerID'=>$_SESSION['id'],'name'=>$name]);
+        $obj_blog_category->insert(['bloggerID'=>$check_blog_category['id'],'name'=>$name]);
         return true;
     }
     
