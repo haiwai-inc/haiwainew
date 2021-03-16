@@ -11,6 +11,7 @@
               <drop-down
               class="nav-item dropdown"
               :haiwaiIcon="iconmore3v"
+              :hideArrow="true"
               haiwaiClass="haiwaiicon"
               style="padding:0;"
             >
@@ -71,6 +72,7 @@
                       <drop-down
                       class="nav-item dropdown"
                       :haiwaiIcon="iconmore3v"
+                      :hideArrow="true"
                       haiwaiClass="haiwaiicon"
                       style="padding:0;"
                     >
@@ -246,7 +248,7 @@ export default {
     },
     // 回复
     reply(item){
-      this.currentItem = item ;console.log(this.$refs)
+      this.currentItem = item ;console.log(this.$refs,item.postID)
         if(item.treelevel==2){
           this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
         }else{
@@ -260,15 +262,17 @@ export default {
         postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
         typeID:1}
       }
+      let pop = 'pop-'+this.currentItem.postID;
       this.replybtndisable = true;
       if(this.loginuserID!=-1){
         blog.reply_add(obj).then(res=>{
-          let pop = 'pop-'+this.currentItem.postID;
-          this.replybtndisable = false;
-          this.regetComment();
-          this.replymsgbody="";
-          this.$refs[`${pop}`].doClose();
-          this.modals.reply = false;
+          if(res.status){
+            this.regetComment();
+            this.replybtndisable = false;
+            console.log(pop);
+            this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
+            this.replymsgbody="";
+          }
         })
       }else{
         this.$emit('opendialog')
