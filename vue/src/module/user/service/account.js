@@ -78,6 +78,10 @@ class Account extends API{
         return await this.sendpost("account/user/user_avatar_update/", avatar)
     }
 
+    async upload_background(background){
+        return await this.sendpost("account/user/blog_background_update/", background);
+    }
+
 // base function 
     async sendget(url){
         try{

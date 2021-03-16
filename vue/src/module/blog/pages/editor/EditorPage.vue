@@ -527,6 +527,7 @@ export default {
         paste_data_images: false, // 允许粘贴图像
         menubar: false, 
         image_uploadtab: true,
+        autoresize:false,
         images_upload_handler: this.uploadImage,
         // language_url : './langs/zh_CN.js',
         plugins: [
@@ -684,7 +685,9 @@ body{
 .note-toolbar, .card-header{
   background-color: lightgray !important;
 }
-
+.tox-tinymce{
+  height:80%
+}
 @media (max-width: 575.98px){
   .publisher .menu1{
     height:auto;

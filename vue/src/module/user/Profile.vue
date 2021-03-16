@@ -32,7 +32,21 @@
                      <div class="user-bgup"></div>
                   </div>
                </div>
-               <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">修改博客头像背景</button></div>
+               <input
+                     ref="bgInput"
+                     type="file"
+                     name="image"
+                     accept="image/*"
+                     @change="setBackground"
+                     style="display:none"
+                  />
+               <div class="flot-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary" v-on:click="clickInput('bgInput')">修改博客头像背景</button></div>
+               <div v-show = "show" v-if="show"> 
+                  <VueCropper v-if="imgSrc" ref="cropperbg"  :src="imgSrc" alt="Source Image" preview=".preview" :aspectRatio="1"></VueCropper>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="saveBackground">确认修改</button></div>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">取消</button></div>
+                <div class="preview" />
+                </div>
                <div>
                   <p class="pt-3"><b>博客名</b></p>
                   <fg-input
@@ -64,17 +78,7 @@
                      style="display:none"
                   />
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">修改我的头像</button></div>
-                  <!-- <avatar-upload field="img"
-                     @crop-success="cropSuccess"
-                     @crop-upload-success="cropUploadSuccess"
-                     @crop-upload-fail="cropUploadFail"
-                     v-model="show"
-                     :width="300"
-                     :height="300"
-                     url="/upload"
-                     :params="params"
-                     :headers="headers"
-                     img-format="png"></avatar-upload> -->
+                 
 <br>
 
                   
@@ -193,7 +197,14 @@ export default {
 
          }
       });
-      this.getBlogProfile();
+      this.getBlogProfile().then(res=>{
+         if(res.status){
+            this.blogInfor = res.data
+            console.log(this.blogInfor)
+         }else{
+
+         }
+      });
       this.getBlackList(0);
    },
   data(){
@@ -219,6 +230,7 @@ export default {
     return{
       menuId:1,
       authorInfor : null,
+      blogInfor:null,
       show: false,
       params: {
          token: '123456798',
@@ -329,23 +341,30 @@ export default {
       },
       setImage(e) {
          this.toggleShow();
-      const file = e.target.files[0];
-      if (file.type.indexOf('image/') === -1) {
-        alert('Please select an image file');
-        return;
-      }
-      if (typeof FileReader === 'function') {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          this.imgSrc = event.target.result; 
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
+         this.setImg(e);
+    },
+    setBackground(e) {
+         this.toggleShow();
+         this.setImg(e);
+    },
+    setImg(e, name = "picInput"){
+       const file = e.target.files[0];
+         if (file.type.indexOf('image/') === -1) {
+            alert('Please select an image file');
+            return;
+         }
+         if (typeof FileReader === 'function') {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+            this.imgSrc = event.target.result; 
+            // rebuild cropperjs with the updated source
+            this.$refs.cropper.replace(event.target.result);
+         };
+         reader.readAsDataURL(file);
       } else {
         alert('Sorry, FileReader API not supported');
       }
-         this.$refs.picInput.value = "";
+         this.$refs[name].value = "";
     },
     saveImage() {
       const userId = this.$route.params.user_id
@@ -363,8 +382,25 @@ export default {
 
          });
     },
-    clickInput(){
-       this.$refs.picInput.click();
+
+    saveBackground() {
+       const userId = this.$route.params.user_id
+      this.cropedImage = this.$refs.cropper.getCroppedCanvas().toDataURL()
+      account.upload_background({background:this.cropedImage}).then(rs=>{
+         if(rs.status){
+            this.blogInfor.background = rs.data;
+            this.toggleShow();
+         }
+         else {
+
+         }
+            
+         }).catch(err=>{
+
+         });
+    },
+    clickInput(name = "picInput"){
+       this.$refs[name].click();
     },
       async getBlackList(lastID){
          let v = await this.$store.state.user.blacklist_list(lastID);
