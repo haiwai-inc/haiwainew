@@ -102,6 +102,7 @@
     border-color: $default-color;
     padding: $padding-btn-vertical - 1 $padding-round-horizontal - 1;
     background-color: $transparent-bg;
+    font-weight: $font-weight-bold;
 }
 
 .btn-simple,
@@ -121,7 +122,10 @@
         }
     }
 }
-
+.btn-primary.btn-simple:hover{
+  background: #dbfbff5e;
+  cursor: pointer
+}
 .btn-lg{
    @include btn-size($padding-large-vertical, $padding-large-horizontal, $font-size-large, $border-radius-large);
 }

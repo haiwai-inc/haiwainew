@@ -50,6 +50,9 @@ export default {
   padding: 12px 18px;
   border-top:1px solid #ddd;
 }
+.recommend-list:hover{
+  background-color:#d9e9f740
+}
 .recommend-list .name {
   font-size: 1rem;
   font-weight: 600

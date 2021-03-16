@@ -80,7 +80,12 @@ export default {
 .main-menubox .active{
     cursor:default !important;
 }
-.btn-primary.btn-simple:hover{
-  background: #dbfbff5e
+textarea{
+  border: #ddd 1px solid;
+  border-radius:5px
+}
+textarea:focus{
+  border: 1px solid #8590a6;;
+         outline: none
 }
 </style>
