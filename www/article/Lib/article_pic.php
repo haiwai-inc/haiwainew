@@ -1,6 +1,6 @@
 <?php
 class article_pic{
-    public function save_file($file){
+    public function save_file($file, $ext){
         if(substr($file, 0, 4) === "data"){
             $file = file_get_contents($file);
         }
@@ -11,29 +11,28 @@ class article_pic{
         $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
         if( !is_dir($dir)) files::mkdirs($dir);
         
-        while(file_exists($dir."/$random_num.jpg")){
+        while(file_exists($dir."/$random_num.".$ext)){
             $random_num = $this->random_string(10);
             $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
             if( !is_dir($dir)) files::mkdirs($dir);
         }
 
-        file_put_contents($dir."/$random_num.jpg", $file);
+        file_put_contents($dir."/$random_num.".$ext, $file);
         return $random_num;
     }
 
-    public function getFileURL($random_num){
-        return "/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2)."/$random_num.jpg";
+    public function getFileURL($random_num, $ext){
+        return "/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2)."/$random_num.".$ext;
     }
 
     public function save_picture($file){
-        $file_number = $this->save_file($file);
-        return $this->getFileURL($file_number);
+        $file_number = $this->save_file($file, "jpg");
+        return $this->getFileURL($file_number,"jpg");
     }
 
     public function save_media($file){
-        $f = finfo_open();
-        $mime_type = finfo_buffer($f, $file, FILEINFO_MIME_TYPE);
-        debug::d($mime_type);
+        $file_number = $this->save_file($file, "mp3");
+        return $this->getFileURL($file_number, "mp3");
     }
 
 
