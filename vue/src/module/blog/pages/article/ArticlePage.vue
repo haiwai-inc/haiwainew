@@ -74,6 +74,7 @@
             
           </div>
           <div class="comment">
+            <!-- {{formatDate(1615936658, 'yyyy-MM-dd hh:mm')}} -->
             <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
