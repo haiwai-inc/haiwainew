@@ -37,6 +37,7 @@ class article_tag extends Model{
     
     //添加草稿 tag
     public function draft_tag_add($article_data){
+        $tagID=[];
         if(!empty($article_data['tagname'])){
             $obj_article_tag=load("article_tag");
             foreach($article_data['tagname'] as $v){
