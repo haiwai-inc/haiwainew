@@ -157,6 +157,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['edit_date'=>'DESC']
@@ -195,6 +196,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['count_read'=>'DESC']
@@ -233,6 +235,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'treelevel'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
@@ -467,6 +470,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
