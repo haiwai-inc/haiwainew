@@ -46,6 +46,7 @@
                 <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>{{$t('message').editor.wenji_update_menu}}</a>
               </el-popover>
               <el-popconfirm
+                v-if="wenjiList.length>1"
                 placement="top-end"
                 confirm-button-text="刪除"
                 cancel-button-text='取消'
