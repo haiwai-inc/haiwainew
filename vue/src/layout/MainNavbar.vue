@@ -223,7 +223,7 @@ export default {
   beforeCreate(){
   },
   mounted() {
-    localStorage.lang = localStorage.lang?localStorage.lang:'cns'
+    
   }
 };
 </script>

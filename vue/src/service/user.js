@@ -319,7 +319,7 @@ class User extends API{
      * @param {*} draftID 
      */
      async draft_to_article_by_draftID(draftID){
-        return await this.sendget('article/user/article_to_draft_by_postID/?id='+draftID)
+        return await this.sendget('article/user/draft_to_article_by_draftID/?draftID='+draftID)
     }
 
     /**

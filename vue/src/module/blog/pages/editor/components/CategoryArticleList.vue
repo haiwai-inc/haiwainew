@@ -48,10 +48,10 @@
               >
                 <icon-schedule class="icon"></icon-schedule>定时发布
               </a>
-              <a v-if="!item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,1)"
+              <a v-if="!item.is_sticky&&item.visible==1" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,1)"
                 ><icon-top class="icon"></icon-top>置顶文章</a
               >
-              <a v-if="item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
+              <a v-if="item.is_sticky&&item.visible==1" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
                 ><icon-top class="icon"></icon-top>取消置顶</a
               >
               <div class="submenu-item dropleft" v-if="cats.length>1">
