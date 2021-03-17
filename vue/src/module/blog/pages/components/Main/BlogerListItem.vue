@@ -232,6 +232,7 @@ color: #235592
   overflow: hidden;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  margin-top: 3px;
 }
 @media (max-width: 575.98px){
     .list-itme .list-itme-image{
