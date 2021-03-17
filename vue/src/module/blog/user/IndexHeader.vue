@@ -58,7 +58,7 @@
       </div>
       
       <template slot="footer">
-          <span :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data?'发送成功':'发送失败'}}</span>
+          <span v-if="modals.modalData" :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data?'发送成功':'发送失败'}}</span>
         <n-button 
         class="mr-3"
         type="default" 
@@ -128,11 +128,13 @@ export default {
             this.send(1,id,this.modals.qqhMsgbody);
         },
         async send(userID,touserID,msgbody) {
-          let user = this.$store.state.user;
-          let res = await user.sendQqh(userID,touserID,msgbody);
-          this.modals.modalData=res
+            let user = this.$store.state.user;
+            let res = await user.sendQqh(userID,touserID,msgbody);
+          
+            this.modals.modalData=res
+          
             setTimeout(()=>{
-                this.modals.modalData={};
+                this.modals.modalData=undefined;
                 this.modals.sendQqhModal=res.status?false:true;
             },2000)
         //   console.log(res);
@@ -159,7 +161,7 @@ export default {
             modals:{
                 sendQqhModal:false,
                 qqhMsgbody:'',
-                modalData:{}
+                modalData:undefined
             },
         };
     },

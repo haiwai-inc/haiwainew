@@ -248,7 +248,7 @@ export default {
     },
     // 回复
     reply(item){
-      this.currentItem = item ;
+      this.currentItem = item ;console.log(item);
         if(item.treelevel==2){
           this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
         }else{
@@ -327,7 +327,7 @@ export default {
   },
   filters: {
     formatDate(time) {
-        var date = new Date(1615936658000);
+        var date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm');
     }
   }
