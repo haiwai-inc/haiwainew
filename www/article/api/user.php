@@ -573,8 +573,14 @@ class user extends Api {
      * @post file
      */
     public function upload_file($type, $file){
-        $pic_obj = load("article_pic");
-        $url = $pic_obj -> save_picture($file);
+        if($type == "pic"){
+            $pic_obj = load("article_pic");
+            $url = $pic_obj -> save_picture($file);
+        }
+        elseif($type == 'media'){
+            $pic_obj = load("article_pic");
+            $url = $pic_obj -> save_media($file);
+        }
         return $url;
     }
     

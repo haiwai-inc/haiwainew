@@ -46,7 +46,7 @@ class user extends Api {
      * @post background
      */
     public function blogger_background_update($background){
-        if(substr($avatar, 0, 4) === "data"){
+        if(substr($background, 0, 4) === "data"){
             $file = file_get_contents($background);
         }
         else{
@@ -54,15 +54,15 @@ class user extends Api {
         }
         
         //路径
-        $dir="/upload/user/background/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
+        $dir="/upload/blog/background/".substr('0000'.$_SESSION['id'],-2)."/".substr('0000'.$_SESSION['id'],-4,-2);
         $path=DOCUROOT.$dir;
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
         
         //文件名
-        $filename=$_SESSION['id']."_avatar";
-        $extension = explode('/', mime_content_type($avatar))[1];
+        $filename=$_SESSION['id']."_background";
+        $extension = explode('/', mime_content_type($background))[1];
         $rs_image=$filename.".".$extension;
         
         //保存
@@ -71,7 +71,9 @@ class user extends Api {
         //小图处理
         $obj_account_user=load("account_user");
         $obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
-        $obj_account_user->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$_SESSION['id']]);
+        
+        $obj_blog_blogger=load("blog_blogger");
+        $obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['userID'=>$_SESSION['id']]);
         
         return "{$dir}/{$rs_image}";
     }
@@ -90,7 +92,7 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $obj_blog_category->insert(['bloggerID'=>$_SESSION['id'],'name'=>$name]);
+        $obj_blog_category->insert(['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         return true;
     }
     
@@ -124,6 +126,9 @@ class user extends Api {
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
+        $count_blog_category=$obj_blog_category->count(['bloggerID'=>$check_blog_blogger['id']]);
+        if($count_blog_category==1) {$this->error="最后一个文集无法删除";$this->status=false;return false;}
+        
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         return true;
     }

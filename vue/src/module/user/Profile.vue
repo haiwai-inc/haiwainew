@@ -32,7 +32,21 @@
                      <div class="user-bgup"></div>
                   </div>
                </div>
-               <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary">{{$t('message').setting.blog_bgimg_btn}}</button></div>
+               <input
+                     ref="bgInput"
+                     type="file"
+                     name="image"
+                     accept="image/*"
+                     @change="setBackground"
+                     style="display:none"
+                  />
+               <div v-show = "show" v-if="show"> 
+                  <VueCropper v-if="imgSrc" ref="cropperbg"  :src="imgSrc" alt="Source Image" preview=".preview" :aspectRatio="4.5"></VueCropper>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="saveBackground">确认修改</button></div>
+                  <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" @click="toggleShow">取消</button></div>
+                <div class="preview" />
+                </div>
+               <div class="float-right align-items-center ml-3"><button class="btn btn-simple btn-round  btn-primary" v-on:click="clickInput('bgInput')">{{$t('message').setting.blog_bgimg_btn}}</button></div>
                <div>
                   <p class="pt-3"><b>{{$t('message').setting.blog_name}}</b></p>
                   <fg-input
@@ -66,17 +80,6 @@
                   <div class="d-flex align-items-center ml-3"><button class="btn btn-simple btn-round btn-primary" v-on:click="clickInput()">
                      {{$t('message').setting.accout_avatar_btn}}
                   </button></div>
-                  <!-- <avatar-upload field="img"
-                     @crop-success="cropSuccess"
-                     @crop-upload-success="cropUploadSuccess"
-                     @crop-upload-fail="cropUploadFail"
-                     v-model="show"
-                     :width="300"
-                     :height="300"
-                     url="/upload"
-                     :params="params"
-                     :headers="headers"
-                     img-format="png"></avatar-upload> -->
 <br>
                </div>
                <div v-show = "show" v-if="show"> 
@@ -184,7 +187,6 @@ export default {
 
          }
       });
-      this.getBlogProfile();
       this.getBlackList(0);
    },
   data(){
@@ -320,23 +322,33 @@ export default {
       },
       setImage(e) {
          this.toggleShow();
-      const file = e.target.files[0];
-      if (file.type.indexOf('image/') === -1) {
-        alert('Please select an image file');
-        return;
-      }
-      if (typeof FileReader === 'function') {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          this.imgSrc = event.target.result; 
-          // rebuild cropperjs with the updated source
-          this.$refs.cropper.replace(event.target.result);
-        };
-        reader.readAsDataURL(file);
+         this.setImg(e);
+    },
+    setBackground(e) {
+         this.toggleShow();
+         this.setImg(e, "bgInput");
+    },
+    setImg(e, name = "picInput"){
+       const file = e.target.files[0];
+         if (file.type.indexOf('image/') === -1) {
+            alert('Please select an image file');
+            return;
+         }
+         if (typeof FileReader === 'function') {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+            this.imgSrc = event.target.result; 
+            // rebuild cropperjs with the updated source
+            if(name == "picInput")
+               this.$refs.cropper.replace(event.target.result);
+            else 
+               this.$refs.cropperbg.replace(event.target.result);
+         };
+         reader.readAsDataURL(file);
       } else {
         alert('Sorry, FileReader API not supported');
       }
-         this.$refs.picInput.value = "";
+      this.$refs[name].value = "";
     },
     saveImage() {
       const userId = this.$route.params.user_id
@@ -354,8 +366,25 @@ export default {
 
          });
     },
-    clickInput(){
-       this.$refs.picInput.click();
+
+    saveBackground() {
+       const userId = this.$route.params.user_id
+      this.cropedImage = this.$refs.cropperbg.getCroppedCanvas().toDataURL()
+      account.upload_background({background:this.cropedImage}).then(rs=>{
+         if(rs.status){
+            this.blogProfile.background = rs.data;
+            this.toggleShow();
+         }
+         else {
+
+         }
+            
+         }).catch(err=>{
+
+         });
+    },
+    clickInput(name = "picInput"){
+       this.$refs[name].click();
     },
       async getBlackList(lastID){
          let v = await this.$store.state.user.blacklist_list(lastID);

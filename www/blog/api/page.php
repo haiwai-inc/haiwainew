@@ -157,6 +157,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['edit_date'=>'DESC']
@@ -195,6 +196,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['count_read'=>'DESC']
@@ -233,6 +235,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'treelevel'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
@@ -450,7 +453,7 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['id'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
@@ -467,6 +470,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,

@@ -33,7 +33,7 @@
               width="375" 
               :ref="'pop-'+data.postID"
               trigger="click">
-                <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                <textarea  type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
                 <n-button 
                 type="primary"
                 round 
