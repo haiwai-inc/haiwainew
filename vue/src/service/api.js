@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 class API {
-
     apiPrefix = "/api/v1/"
     get(url){
         return new Promise((resolve, reject) =>{
@@ -10,7 +9,7 @@ class API {
                 url: this.apiPrefix+url, 
               })
                 .then(response => {
-                    resolve(response.data)       
+                    resolve(response.data)  
                 })
                 .catch(error => reject(error));
         });
