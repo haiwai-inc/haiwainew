@@ -14,7 +14,7 @@ class user extends Api {
      */
     public function blogger_profile(){
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','name','description','background'],['id'=>$_SESSION['id']]);
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','name','description','background'],['userID'=>$_SESSION['id']]);
         $rs_blog_blogger['first_letter']=substr(strings::subString($rs_blog_blogger['name'],1), 0, -3);
         
         return $rs_blog_blogger;
@@ -28,8 +28,11 @@ class user extends Api {
      */
     public function blogger_profile_update($name,$description=NULL){
         $obj_blog_blogger=load("blog_blogger");
-        $check_blog_blogger=$obj_blog_blogger->getOne("*",['name'=>$name]);
-        if(!empty($check_blog_blogger)) {$this->error="此博主名已经被占用";$this->status=false;return false;}
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if($check_blog_blogger['name']!=$name){
+            $check_name=$obj_blog_blogger->getOne("*",['name'=>$name]);
+            if(!empty($check_name)) {$this->error="此博主名已经被占用";$this->status=false;return false;}
+        }
         
         $fields=[
             "name"=>empty($name)?"":$name,
