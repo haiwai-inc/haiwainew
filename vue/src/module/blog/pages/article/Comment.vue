@@ -281,7 +281,9 @@ export default {
     article_reply_delete(id){
       blog.reply_delete(id).then(res=>{
         console.log("Del",id);
-
+        if(res.status){
+          this.regetComment();
+        }
       })
     },
     regetComment(){
