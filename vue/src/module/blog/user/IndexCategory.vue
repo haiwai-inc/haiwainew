@@ -11,7 +11,7 @@
                  <div class="flex-grow-1">
                    <h4 class="blog-user-index-name">{{currentCat.name}}</h4>
                    <span class="blog-user-index-des">{{currentCat.count_article}}篇文章</span>
-                   <span class="blog-user-index-des ml-4">阅读.10853(假数据)</span>
+                   <!-- <span class="blog-user-index-des ml-4">阅读.10853(假数据)</span> -->
                  </div>
                  <div>
                   <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
