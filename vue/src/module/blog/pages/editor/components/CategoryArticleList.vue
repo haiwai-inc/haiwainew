@@ -37,6 +37,7 @@
                 :haiwaiIcon="iconmore3v"
                 haiwaiClass="haiwaiicon"
                 style="padding:0;"
+                :position="'right'"
               >
                 <a v-if="item.visible!==1"
                 @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
