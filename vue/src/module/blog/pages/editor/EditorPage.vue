@@ -225,19 +225,19 @@ export default {
         this.autoSave()
       }
     },
-    async fetchData() {
-      let postid = 0;
-      if (this.$route.query.postid != undefined) {
-        postid = this.$route.query.postid;
-        // this.article = await blog.getArticle(blogid);
-        this.article = (
-          await blog.article_view(postid)
-        ).data.postInfo_postID;
-        console.log(this.article);
-        this.setEditorContent(this.article.msgbody)
-        // $("#summernote").summernote("code", this.article.msgbody);
-      }
-    },
+    // async fetchData() {
+    //   let postid = 0;
+    //   if (this.$route.query.postid != undefined) {
+    //     postid = this.$route.query.postid;
+    //     // this.article = await blog.getArticle(blogid);
+    //     this.article = (
+    //       await blog.article_view(postid)
+    //     ).data.postInfo_postID;
+    //     console.log(this.article);
+    //     this.setEditorContent(this.article.msgbody)
+    //     // $("#summernote").summernote("code", this.article.msgbody);
+    //   }
+    // },
 
     //for editor
     toggleEditorDisabled() {
@@ -276,10 +276,10 @@ export default {
     //   this.articleList.unshift(newarticle);
     //   this.changeMenu(this.wenjiActiveId, newarticle.articleId);
     // },
-    changeMenu(wid, aid) {
-      this.wenjiActiveId = wid;
-      this.articleActiveId = aid;
-    },
+    // changeMenu(wid, aid) {
+    //   this.wenjiActiveId = wid;
+    //   this.articleActiveId = aid;
+    // },
 
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
@@ -298,8 +298,8 @@ export default {
       }
     },
     
-    setWJid(e){
-      this.wenjiActiveId = e;
+    setWJid(id){
+      this.wenjiActiveId = id;
     },
     setArtid(e){
       this.articleActiveId = e.id;
@@ -310,6 +310,7 @@ export default {
       // }
       this.flags.autosaved = false;
     },
+    // 获取编辑器内容
     getContent(e){
       if(e.visible==1){
         this.user.article_view(e.postID).then(res=>{
@@ -322,7 +323,6 @@ export default {
           this.curentArticle=res.data;
           console.log(this.curentArticle)
         })
-        
       }
     },
     // 发布一篇新文章（草稿=>文章）
@@ -464,19 +464,30 @@ export default {
           console.log(reader.result.split(',')[0]);
           that.uploadFile(meta.filetype, reader.result, callback);
         }
-      reader.readAsDataURL(file);
-    };
+        reader.readAsDataURL(file);
+      };
 
       input.click();
     },
+    initTabStatus(cats){
+      cats.forEach(item=>{
+        this.tabStatus[item.id]=0
+      })
+      console.log(this.tabStatus)
+    },
+    setTabStatus(cid,aid){
+      this.tabStatus[cid]=aid
+    }
   },
 
   beforeCreate() {
-    this.$store.state.user.getUserStatus().then(r=>{console.log(r)
+    this.$store.state.user.getUserStatus().then(r=>{
       if(r.data.bloggerID){
         blog.category_list(r.data.bloggerID).then(res=>{
           this.wenjiList = res.status?res.data:[];
           this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
+          console.log(this.wenjiList);
+          this.initTabStatus(this.wenjiList)
         });
       }else{
         this.$router.push('/blog_register');
@@ -485,7 +496,7 @@ export default {
   },
 
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
   mounted() {
     // this.initEditor();
@@ -512,9 +523,10 @@ export default {
       iconmore3v: HaiwaiIcons.iconmore3v,
       wenjiList:[],
       wenjiActiveId: 0,
-      articleActiveId: 12345,
+      articleActiveId: 0,
       activeName: "0",
       curentArticle:{postInfo_postID:{title:"",msgbody:""}},
+      tabStatus:{},
       watchCount:0,
       tags:[],
       tag:'',
@@ -525,7 +537,6 @@ export default {
       },
       msgbody:'asd',
       articleList: [],
-
       loading: false,
       article: {},
       flags:{

@@ -37,7 +37,7 @@
         <div class="col-sm-4 d-none d-sm-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3">
-            <collection-list v-bind:data="collectionList" title="文集"></collection-list>
+            <collection-list v-bind:data="collectionList" :userdata="false" title="文集"></collection-list>
           </div>
         </div>
       </div>

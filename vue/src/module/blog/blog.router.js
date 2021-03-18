@@ -39,7 +39,7 @@ export default [
         name: 'bloguserindex',
         components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
       },{
-        path: '/blog/c/:id',
+        path: '/blog/c/:userid/:catid',
         name: 'categorindex',
         components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar},
       }

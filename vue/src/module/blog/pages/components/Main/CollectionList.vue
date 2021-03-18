@@ -1,8 +1,11 @@
 <template>
   <div class="collection-box">
+    <span class="blogger-box">
+      <bloger-list-item v-if="userdata" :data="userdata" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
+    </span>
     <div class="collection-title d-flex justify-content-between">
       <h4>{{title}}</h4>
-      <n-button type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button>
+      <n-button v-if="false" type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button>
     </div>
     <div v-if="data.length===0" class="pl-3">暂无文集</div>
     <div v-if="data.length!==0">
@@ -22,13 +25,16 @@ import {
 import {
   Button,
 } from '@/components';
-import CollectionListItem from './CollectionListItem'
+import CollectionListItem from './CollectionListItem';
+import BlogerListItem from './BlogerListItem';
+
 export default {
   name: 'collection-list',
   props: {
     type:String,
     title:String,
-    data:{}
+    data:{},
+    userdata:{}
   },
   data(){
     return {
@@ -38,6 +44,7 @@ export default {
   components: {
     [Button.name]: Button,
     CollectionListItem,
+    BlogerListItem,
     IconPlus,
     IconRight
   }

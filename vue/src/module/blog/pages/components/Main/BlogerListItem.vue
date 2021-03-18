@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
       <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
-        <router-link :to="'/blog/user/'+data.userID">
+        <router-link :to="'/blog/user/'+data.id">
         <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
         <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
           <div v-if="!data.userinfo_userID.avatar" class="avatar-word">{{data.userinfo_userID.first_letter}}</div>
@@ -97,7 +97,7 @@ export default {
   },
   mounted: function () {
     let userinfor = this.$store.state.user.userinfo
-    this.loginuserID = userinfor?userinfor.userID:-1;
+    this.loginuserID = userinfor?userinfor.userID:-1;console.log(this.data);
   },
   methods:{
     following_add(id){

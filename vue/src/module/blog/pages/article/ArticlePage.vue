@@ -74,7 +74,6 @@
             
           </div>
           <div class="comment">
-            <!-- {{formatDate(1615936658, 'yyyy-MM-dd hh:mm')}} -->
             <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
@@ -82,7 +81,7 @@
               simple 
               :disabled="replybtndisable" 
               @click="reply_add">发表评论</n-button>
-            <h5 class="commentlable">评论（{{articleDetail.data.count_comment}}）</h5>
+            <h5 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h5>
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
