@@ -312,7 +312,8 @@ class user extends Api {
         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
         //更新主贴
-        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$check_article_indexing['count_comment']+1],['postID'=>$check_article_indexing['basecode']]);
+        $count_comment=$check_article_indexing['count_comment']+1;
+        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$count_comment],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
