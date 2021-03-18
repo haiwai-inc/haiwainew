@@ -286,7 +286,7 @@ class user extends Api {
     public function reply_add($article_data){
         //检查主贴
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
+        $check_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
         
         //添加回复 post
@@ -311,6 +311,9 @@ class user extends Api {
         ];
         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
+        //更新主贴
+        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$check_article_indexing['count_comment']+1],['postID'=>$article_data['postID']]);
+        
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
