@@ -360,7 +360,7 @@ class user extends Api {
      * 文章 回复 删除
      * @param int $id | 回复的postID
      */
-    public function reply_delete($id,$basecode){
+    public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$id]);
