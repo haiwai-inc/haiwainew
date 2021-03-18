@@ -312,12 +312,12 @@ class user extends Api {
         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
         //更新主贴
-        $count_comment=$check_article_indexing['count_comment']+1;
-        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$count_comment],['postID'=>$check_article_indexing['basecode']]);
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$check_main_article_indexing['count_comment']+1],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert([$postID]);
+        $obj_article_noindex->fetch_and_insert([$postID,$check_main_article_indexing['postID']]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
@@ -369,9 +369,13 @@ class user extends Api {
         //更新帖子状态
         $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
         
+        //更新主贴
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-1],['postID'=>$check_article_indexing['basecode']]);
+        
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        $obj_article_noindex->fetch_and_insert([$id,$check_main_article_indexing['postID']]);
         
         return true;
     }
