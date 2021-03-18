@@ -296,7 +296,7 @@ class user extends Api {
         $fields_indexing=[
             "postID"=>$postID,
             "typeID"=>$article_data['typeID'],
-            "basecode"=>$check_article_indexing['postID'],
+            "basecode"=>$check_article_indexing['basecode'],
             "userID"=>$_SESSION['id'],
             "treelevel"=>$check_article_indexing['treelevel']+1,
             "create_date"=>$time,
@@ -360,7 +360,7 @@ class user extends Api {
      * 文章 回复 删除
      * @param int $id | 回复的postID
      */
-    public function reply_delete($id){
+    public function reply_delete($id,$basecode){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$id]);
