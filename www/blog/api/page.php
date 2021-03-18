@@ -32,13 +32,14 @@ class page extends Api {
      * 二级页面 
      * 推荐 文章
      * @param integer $lastID | 最后一个id
+     * @param integer $limit | 分页数
      */
-    public function recommend_article($lastID=0){
+    public function recommend_article($lastID=0,$limit=30){
         $obj_blog_recommend=load("blog_recommend");
         $obj_search_article_noindex=load("search_article_noindex");
         
         $fields=[
-            "limit"=>30,
+            "limit"=>$limit,
             'order'=>['id'=>'DESC']
         ];
         if(!empty($lastID)){
@@ -458,7 +459,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页 
      * 文集 文章列表
      * @param integer $id | 文集ID
      * @param integer $lastID | 最后文章ID
