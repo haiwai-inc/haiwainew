@@ -20,6 +20,7 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
               tag="div"
+              :position="'right'"
             >
               <el-popover 
               placement="bottom-start"

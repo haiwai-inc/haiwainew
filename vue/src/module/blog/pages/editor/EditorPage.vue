@@ -46,8 +46,8 @@
       ></category-article-list>
       
     </div>
-    <div v-if="articleActiveId==0" class="col-md-7">
-      <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
+    <div class="col-md-7">
+      <p v-if="articleActiveId==0" style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
     </div>
     <div v-if="articleActiveId!=0" class="col-md-7 editor" id="editor_container" ref="editorContainer">
       <!-- <div v-if="articleActiveId==0">
