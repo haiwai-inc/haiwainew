@@ -371,6 +371,9 @@ class user extends Api {
         
         //更新主贴
         $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        if($check_main_article_indexing['treelevel']==2){
+            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        }
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-1],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
