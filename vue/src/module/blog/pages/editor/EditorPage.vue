@@ -46,59 +46,68 @@
       ></category-article-list>
       
     </div>
-    <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
-      <div ref="saving" style="font-size:13px;padding-left:8px;">
-        <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
-        <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+    <div v-if="articleActiveId==0" class="col-md-7">
+      <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
+    </div>
+    <div v-if="articleActiveId!=0" class="col-md-7 editor" id="editor_container" ref="editorContainer">
+      <!-- <div v-if="articleActiveId==0">
+        请点击新建文章按钮 <span>或 选择一个要编辑的文章</span>
       </div>
-      <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
-        <input
-          class="editorTitle"
-          type="text"
-          v-model="curentArticle.postInfo_postID.title"
-          :placeholder="$t('message').editor.title_ph"
-        />
-      </div>
+      <div v-if="articleActiveId!=0"> -->
+        <div ref="saving" style="font-size:13px;padding-left:8px;">
+          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
+          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
+          <input
+            class="editorTitle"
+            type="text"
+            v-model="curentArticle.postInfo_postID.title"
+            :placeholder="$t('message').editor.title_ph"
+          />
+        </div>
 
-      <!-- 编辑器 -->
+        <!-- 编辑器 -->
+        
+        <!-- <div id="summernote"></div> -->
+        <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
+        <editor
+        :init="editorConfig"
+        v-model="curentArticle.postInfo_postID.msgbody"
+      />
+      <!-- <textarea id="editorText"> -->
+      <!-- </textarea> -->
+        <div ref="saveBox" class="m-2">
+          <n-button v-if="curentArticle.visible!==1"
+            type="primary"
+            round
+            simple
+            @click.native="modals.publish=true"
+            class="editbtn"
+          >
+            {{curentArticle.visible==-1?'发布文章':'更新文章'}}
+          </n-button>
+          <n-button
+            v-if="false"
+            type="default"
+            link
+            @click.native="save"
+            class="editbtn"
+          >
+            <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
+          </n-button>
+        </div>
+        <!-- <n-button 
+          type="primary" 
+          round 
+          simple 
+          @click="save"
+          class="editbtn"
+          >
+            <icon-plus class="editicon"></icon-plus>保存
+          </n-button> -->
+      <!-- </div> -->
       
-      <!-- <div id="summernote"></div> -->
-      <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
-      <editor
-       :init="editorConfig"
-       v-model="curentArticle.postInfo_postID.msgbody"
-     />
-     <!-- <textarea id="editorText"> -->
-     <!-- </textarea> -->
-      <div ref="saveBox" class="m-2">
-        <n-button v-if="curentArticle.visible!==1"
-          type="primary"
-          round
-          simple
-          @click.native="modals.publish=true"
-          class="editbtn"
-        >
-          {{curentArticle.visible==-1?'发布文章':'更新文章'}}
-        </n-button>
-        <n-button
-          v-if="false"
-          type="default"
-          link
-          @click.native="save"
-          class="editbtn"
-        >
-          <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
-        </n-button>
-      </div>
-      <!-- <n-button 
-        type="primary" 
-        round 
-        simple 
-        @click="save"
-        class="editbtn"
-        >
-          <icon-plus class="editicon"></icon-plus>保存
-        </n-button> -->
     </div>
 
 
@@ -300,6 +309,7 @@ export default {
     
     setWJid(id){
       this.wenjiActiveId = id;
+      this.articleActiveId = 0;
     },
     setArtid(e){
       this.articleActiveId = e.id;

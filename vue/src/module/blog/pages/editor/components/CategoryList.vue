@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="category_box">
         <button class="btn btn-link m-3" @click="modals.addwenji = true">
           <span v-html="icon_plus"></span>
           <span style="font-size:1rem;color:#14171A">{{$t('message').editor.wenji_new_btn}}</span>
@@ -237,5 +237,12 @@ export default {
 }
 </script>
 <style>
-
+.category_box{
+  height:calc(100vh - 55px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+div.category_box::-webkit-scrollbar{
+  width:0
+}
 </style>
