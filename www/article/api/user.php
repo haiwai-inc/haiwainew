@@ -286,7 +286,7 @@ class user extends Api {
     public function reply_add($article_data){
         //检查主贴
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
         
         //添加回复 post
@@ -296,7 +296,7 @@ class user extends Api {
         $fields_indexing=[
             "postID"=>$postID,
             "typeID"=>$article_data['typeID'],
-            "basecode"=>$check_article_indexing['postID'],
+            "basecode"=>$check_article_indexing['basecode'],
             "userID"=>$_SESSION['id'],
             "treelevel"=>$check_article_indexing['treelevel']+1,
             "create_date"=>$time,
@@ -311,9 +311,13 @@ class user extends Api {
         ];
         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
          
+        //更新主贴
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        $obj_article_indexing->update(['comment_date'=>$time,'count_comment'=>$check_main_article_indexing['count_comment']+1],['postID'=>$check_article_indexing['basecode']]);
+        
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert([$postID]);
+        $obj_article_noindex->fetch_and_insert([$postID,$check_main_article_indexing['postID']]);
         
         //添加消息列表
         $obj_account_notification=load("account_notification");
@@ -359,15 +363,22 @@ class user extends Api {
     public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
         $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
         
+        //更新主贴
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        if($check_main_article_indexing['treelevel']==2){
+            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        }
+        $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-1],['postID'=>$check_article_indexing['basecode']]);
+        
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
+        $obj_article_noindex->fetch_and_insert([$id,$check_main_article_indexing['postID']]);
         
         return true;
     }
@@ -441,7 +452,13 @@ class user extends Api {
         ];
         
         //添加文章
-        $this->article_add($article_data,$module_data);
+        if($rs_article_draft['visible']==-1){
+            $this->article_add($article_data,$module_data);
+        }
+        if($rs_article_draft['visible']==-2){
+            $article_data['postID']=$rs_article_draft['postID'];
+            $this->article_update($article_data,$module_data);
+        }
         return true;
     }
     
