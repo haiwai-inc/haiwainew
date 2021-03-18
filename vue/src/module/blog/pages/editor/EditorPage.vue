@@ -34,7 +34,7 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId"></category-list>
+        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId" :activeid="articleActiveId"></category-list>
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
@@ -78,7 +78,7 @@
       <!-- <textarea id="editorText"> -->
       <!-- </textarea> -->
         <div ref="saveBox" class="m-2">
-          <n-button v-if="curentArticle.visible!==1"
+          <n-button v-if="curentArticle.visible!==1&&curentArticle.postInfo_postID.title!=''"
             type="primary"
             round
             simple
@@ -436,7 +436,7 @@ export default {
         this.timer = setTimeout(()=>{
           console.log(this.curentArticle.id);
           this.draft_update();
-        },5000)
+        },3000)
       }
     },
     removetag(index){

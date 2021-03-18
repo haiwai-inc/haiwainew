@@ -190,7 +190,8 @@ export default {
     name: 'category-article-list',
     props:{
       wjid:Number,
-      cats:Array
+      cats:Array,
+      activeid:Number
     },
     watch:{
       wjid:function(v){
@@ -231,7 +232,7 @@ export default {
         icon_delete:HaiwaiIcons.icon_delete,
         wenjiActiveId: 100,
         wenjiList: [],
-        articleActiveId:0,
+        articleActiveId:this.activeid,
         currentAaticle:{},
         articleList:[],
         modals: {
