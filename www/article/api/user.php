@@ -296,7 +296,7 @@ class user extends Api {
         $fields_indexing=[
             "postID"=>$postID,
             "typeID"=>$article_data['typeID'],
-            "basecode"=>$check_article_indexing['basecode'],
+            "basecode"=>$check_article_indexing['postID'],
             "userID"=>$_SESSION['id'],
             "treelevel"=>$check_article_indexing['treelevel']+1,
             "create_date"=>$time,
@@ -363,16 +363,16 @@ class user extends Api {
     public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
         $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
         
         //更新主贴
-        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel'],['postID'=>$check_article_indexing['basecode']]);
         if($check_main_article_indexing['treelevel']==2){
-            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment'],['postID'=>$check_article_indexing['basecode']]);
+            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel'],['postID'=>$check_article_indexing['basecode']]);
         }
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-1],['postID'=>$check_article_indexing['basecode']]);
         
