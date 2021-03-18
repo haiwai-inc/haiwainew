@@ -296,7 +296,7 @@ class user extends Api {
         $fields_indexing=[
             "postID"=>$postID,
             "typeID"=>$article_data['typeID'],
-            "basecode"=>$check_article_indexing['basecode'],
+            "basecode"=>$check_article_indexing['postID'],
             "userID"=>$_SESSION['id'],
             "treelevel"=>$check_article_indexing['treelevel']+1,
             "create_date"=>$time,
