@@ -441,7 +441,13 @@ class user extends Api {
         ];
         
         //添加文章
-        $this->article_add($article_data,$module_data);
+        if($rs_article_draft['visible']==-1){
+            $this->article_add($article_data,$module_data);
+        }
+        if($rs_article_draft['visible']==-2){
+            $article_data['postID']=$rs_article_draft['postID'];
+            $this->article_update($article_data,$module_data);
+        }
         return true;
     }
     
