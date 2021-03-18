@@ -286,7 +286,7 @@ class user extends Api {
     public function reply_add($article_data){
         //检查主贴
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$article_data['postID']]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
         
         //添加回复 post
@@ -363,7 +363,7 @@ class user extends Api {
     public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
