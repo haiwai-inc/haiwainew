@@ -46,7 +46,7 @@ tinymce.addI18n('zh_TW',{
 "Div": "Div",
 "Pre": "Pre",
 "Code": "\u4ee3\u78bc",
-"Paragraph": "\u6bb5\u843d",
+"Paragraph": "\u6b63\u6587",
 "Blockquote": "\u5f15\u6587\u5340\u584a",
 "Inline": "\u5167\u806f",
 "Blocks": "\u57fa\u584a",

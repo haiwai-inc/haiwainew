@@ -185,7 +185,7 @@ import 'tinymce/plugins/image'
 import 'tinymce/plugins/emoticons'
 import 'tinymce/plugins/emoticons/js/emojis.js'
 import 'tinymce/plugins/fullscreen'
-
+// import 'tinymce/plugins/fontsizeselect'
 
 import 'tinymce/plugins/searchreplace'
 import 'tinymce/plugins/visualblocks'
@@ -195,13 +195,13 @@ import 'tinymce/plugins/table'
 import 'tinymce/plugins/help'
 import 'tinymce/plugins/wordcount'
 import 'tinymce/plugins/paste'
-
+import 'tinymce/plugins/searchreplace'
 import 'tinymce/plugins/preview'
 import './langs/zh_CN.js'
 import './langs/zh_TW.js'
-import "tinymce/skins/ui/oxide/skin.min.css"
-import "tinymce/skins/ui/oxide/content.min.css"
-import "tinymce/skins/content/default/content.min.css"
+import "tinymce/skins/ui/oxide/skin.css"
+import "tinymce/skins/ui/oxide/content.css"
+import "tinymce/skins/content/default/content.css"
 
 export default {
   name:"editor-page",
@@ -560,6 +560,7 @@ export default {
   },
 
   data() {
+    let lang = localStorage.lang ? (localStorage.lang == "cns" ? 'zh_CN' :'zh_TW') : 'zh_CN';
     return {
       user:this.$store.state.user,
       iconmore3v: HaiwaiIcons.iconmore3v,
@@ -590,6 +591,7 @@ export default {
       //TinyMCE
       editorConfig:{
         selector: '#editorText',
+        content_css : "dark",
         browser_spellcheck: true, // 拼写检查
         branding: false, // 去水印
         elementpath: false,  //禁用编辑器底部的状态栏
@@ -597,22 +599,31 @@ export default {
         paste_data_images: false, // 允许粘贴图像
         menubar: false, 
         image_uploadtab: true,
-        autoresize:false,
         images_upload_handler: this.uploadImage,
         // language_url : './langs/zh_CN.js',
         plugins: [
            'advlist autolink lists link image charmap print preview anchor paste',
            'searchreplace visualblocks code fullscreen emoticons',
-           'insertdatetime media table paste help wordcount'
+           'insertdatetime media table paste help wordcount fontsizeselect'
          ],
+         toolbar_mode:"wrap",
          toolbar:
-           'undo redo | paste pastetext| formatselect | bold italic backcolor forecolor| \
-           alignleft aligncenter alignright alignjustify | image media file emoticons|\
-           bullist numlist outdent indent | removeformat | help code',
-        language: 'zh_CN',
+           'undo redo | bold italic underline strikethrough | paste pastetext | alignleft aligncenter alignright alignjustify | \
+            image link media file emoticons|\
+           formatselect  fontsizeselect backcolor forecolor | bullist numlist outdent indent | removeformat | searchreplace help code',
+        language: lang,
         relative_urls : false,
         remove_script_host : true,
+        image_dimensions:false,
         file_picker_callback:this.filePicker,
+        fontsize_formats: 'x-Large Medium x-Small',
+        media_dimensions:false,
+        media_live_embeds:true,
+        // media_poster:false,
+        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;}',
+        video_template_callback : function(data){
+            return "";
+        }
       }
     };
   },
@@ -686,6 +697,13 @@ body{
   font-size: 1rem;
   font-weight: 700;
 }
+
+.mce-content-body .mce-offscreen-selection {
+      position: absolute;
+      left: -9999999999px;
+      max-width: 1000000px;
+    }
+
 .publisher .editorTitle{
   font-size: 30px;
   padding: 10px;
@@ -696,6 +714,8 @@ body{
   color: #495057;
   outline: 0;
 }
+
+
 .publisher .dropdown .icon {
   margin-right: 5px;
   width: 20px;

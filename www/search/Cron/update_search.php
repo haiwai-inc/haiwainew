@@ -27,7 +27,7 @@ class update_search{
         }
         
         $count=0;
-        while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>200,'postID,>'=>$lastid,'visible'=>1]) ){
+        while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>200,'postID,>'=>$lastid]) ){
             foreach($rs_article_indexing as $k=>$v){
                 $lastid=$v['postID'];
                 
