@@ -97,12 +97,12 @@ export default {
   },
   mounted: function () {
     let userinfor = this.$store.state.user.userinfo
-    this.loginuserID = userinfor?userinfor.userID:-1;console.log(this.data);
+    this.loginuserID = userinfor?userinfor.userID:-1;
   },
   methods:{
     following_add(id){
       if(this.loginuserID!=-1){
-        account.following_add(id).then(res=>{console.log(res.data,this.data)
+        account.following_add(id).then(res=>{
           if(res.status) {
             this.curent_data.userinfo_userID.is_following = 1;
           }else{

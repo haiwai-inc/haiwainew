@@ -3,7 +3,8 @@
         <h6 class="font-weight-normal pb-3">
           我收到的评论
         </h6>
-        <div v-for="item in comments" :key="item.id">
+        <div v-if="comments.status">
+        <div v-for="item in comments.data" :key="item.id">
             <h5 
             @click="$router.push('/blog/p/'+item.postInfo_postID.postID)"
             class="notice-comment-t"
@@ -36,11 +37,13 @@
             </ul>
             <!-- <comment :data="item.comment"></comment> -->
         </div>
+        </div>
     </div>
 </template>
 <script>
 import Avatar from '../../blog/pages/components/Main/Avatar.vue';
 import {formatDate} from '@/directives/formatDate.js';
+import blog from '../../blog/blog.service';
 // import Comment from '../../blog/pages/article/Comment'
 export default {
   name: 'notice-comment',
@@ -61,7 +64,7 @@ export default {
       async getcomments(){
           let v = await this.$store.state.user.my_comment_list(0);
           if(v.status){
-              this.comments=v.data;
+              this.comments=v;
           }
       },
       reply_delete(id){
@@ -74,74 +77,7 @@ export default {
   },
   data(){
       return{
-          comments:[{
-              postInfo_postID:{
-                  title:"asd",
-                    postID:123
-              },
-              title:'这个标题是第一个',
-              articleUrl:'/blog/p/1',
-            comment:[
-                {
-                    ID:1234,
-                    avatarUrl:'/img/julie.jpg',
-                    name:'朱莉',
-                    time:'15:30 10/12/2020',
-                    authorHomepage:'blog/user/1',
-                    content:'随便说点什么叽叽歪歪',
-                    like:3,
-                    showReply:false,
-                    replies:[
-                    {
-                        ID:2234,
-                        avatarUrl:'/img/ryan.jpg',
-                        name:'Ryan',
-                        time:'15:30 10/12/2020',
-                        authorHomepage:'blog/user/1',
-                        content:'随便回复点什么，巴拉巴拉',
-                        like:3,
-                    },{
-                        ID:2234,
-                        avatarUrl:'/img/julie.jpg',
-                        name:'Julie',
-                        time:'15:30 10/12/2020',
-                        authorHomepage:'blog/user/1',
-                        content:'<span class="text-info">@Ryan</span> 随便给Ryan回复点什么，巴拉巴拉',
-                        like:1,
-                    }
-                    ]
-                },{
-                    ID:1234,
-                    avatarUrl:'/img/julie.jpg',
-                    name:'Julie',
-                    time:'30分钟前',
-                    authorHomepage:'blog/user/1',
-                    content:'随便说点什么叽叽歪歪',
-                    like:0,
-                    showReply:false,
-                    replies:[
-                    {
-                        ID:2234,
-                        avatarUrl:'/img/ryan.jpg',
-                        name:'Ryan',
-                        time:'15:30 10/12/2020',
-                        authorHomepage:'blog/user/1',
-                        content:'随便回复点什么，巴拉巴拉',
-                        like:0,
-                    },{
-                        ID:2234,
-                        avatarUrl:'/img/julie.jpg',
-                        name:'Julie',
-                        time:'15:30 10/12/2020',
-                        authorHomepage:'blog/user/1',
-                        content:'<span class="text-info">@Ryan</span> 随便给Ryan回复点什么，巴拉巴拉',
-                        like:0,
-                    }
-                    ]
-                }
-                ],
-          }
-          ]
+          comments:{status:false}
       }
   }
 }
