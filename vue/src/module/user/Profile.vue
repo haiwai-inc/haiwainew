@@ -62,6 +62,7 @@
                      >
                   </fg-input>
                </div>
+               <span v-if="flag.blog" class="text-success">保存成功</span><br>
                <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
@@ -247,7 +248,10 @@ export default {
       imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
       image:false,
       imgSrc:false,
-      myCroppa:{}
+      myCroppa:{},
+      flag:{
+         blog:false
+      }
     }
   },
   methods:{
@@ -419,6 +423,10 @@ export default {
             if(res.status){
                this.getBlogProfile();
                this.err.bloggername.flag = false
+               this.flag.blog=true;
+               setTimeout(()=>{
+                  this.flag.blog=false;
+               },3000)
             }else{
                this.err.bloggername.msg = res.error
                this.err.bloggername.flag = true
