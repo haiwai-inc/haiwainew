@@ -591,7 +591,6 @@ export default {
       //TinyMCE
       editorConfig:{
         selector: '#editorText',
-        content_css : "dark",
         browser_spellcheck: true, // 拼写检查
         branding: false, // 去水印
         elementpath: false,  //禁用编辑器底部的状态栏
@@ -608,9 +607,9 @@ export default {
          ],
          toolbar_mode:"wrap",
          toolbar:
-           'undo redo | bold italic underline strikethrough | paste pastetext | alignleft aligncenter alignright alignjustify | \
-            image link media file emoticons|\
-           formatselect  fontsizeselect backcolor forecolor | bullist numlist outdent indent | removeformat | searchreplace help code',
+           'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
+            image link media file emoticons\
+           formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
         language: lang,
         relative_urls : false,
         remove_script_host : true,
@@ -620,7 +619,7 @@ export default {
         media_dimensions:false,
         media_live_embeds:true,
         // media_poster:false,
-        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;}',
+        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body {font-size:medium;}',
         video_template_callback : function(data){
             return "";
         }

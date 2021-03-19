@@ -416,5 +416,8 @@ tinymce.addI18n('zh_TW',{
 "Whole words": "\u6574\u500b\u55ae\u5b57",
 "Spellcheck": "\u62fc\u5b57\u6aa2\u67e5",
 "Caption": "\u8868\u683c\u6a19\u984c",
-"Insert template": "\u63d2\u5165\u6a23\u7248"
+"Insert template": "\u63d2\u5165\u6a23\u7248",
+"x-Large" : "大",
+"medium" : "中",
+"x-Small" : "小"
 });
