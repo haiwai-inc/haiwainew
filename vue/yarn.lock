@@ -8144,10 +8144,10 @@
   "resolved" "https://registry.npmjs.org/timsort/-/timsort-0.3.0.tgz"
   "version" "0.3.0"
 
-"tinymce@^5.7.0":
-  "integrity" "sha512-WikgMpJbqYPaucV3lfstCj+Y4NquZlK61gyuJ2eqDUBlSU+4fFh6rpwnelVTxuvtEyJsAVOl8HZmbzBfDJiLsQ=="
-  "resolved" "https://registry.npmjs.org/tinymce/-/tinymce-5.7.0.tgz"
-  "version" "5.7.0"
+"tinymce@^5.7.1":
+  "integrity" "sha512-1gY8RClc734srSlkYwY0MQzmkS1j73PuPC+nYtNtrrQVPY9VNcZ4bOiRwzTbdjPPD8GOtv6BAk8Ww/H2RiqKpA=="
+  "resolved" "https://registry.npmjs.org/tinymce/-/tinymce-5.7.1.tgz"
+  "version" "5.7.1"
 
 "tmp@^0.0.33":
   "integrity" "sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw=="
