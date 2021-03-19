@@ -22,6 +22,7 @@ class blog_tool{
         $this->obj_blog_legacy_blogcat_members=load("blog_legacy_blogcat_members");
         $this->obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
         $this->obj_blog_legacy_202005_msg=load("blog_legacy_202005_msg");
+        $this->obj_blog_legacy_hot_blogger=load("blog_legacy_hot_blogger");
     }
     
     //import legacy blog data
@@ -217,6 +218,7 @@ class blog_tool{
     
     function add_to_blogger($rs){
         $rs_blog_legacy_blogger=$this->obj_blog_legacy_blogger->getOne("*",['blogid'=>$rs['blogid']]);
+        $rs_blog_legacy_hot_blogger=$this->obj_blog_legacy_hot_blogger->getOne("*",['blogid'=>$rs['blogid']]);
         
         $check_blog_blogger=$this->obj_blog_blogger->getOne("*",['userID'=>$rs['user_new']['id']]);
         if(empty($check_blog_blogger)){
@@ -228,6 +230,7 @@ class blog_tool{
                 'update_date'=>strtotime($rs_blog_legacy_blogger['dateline']),
                 'update_type'=>"register",
                 'update_ip'=>$rs['user_new']['update_ip'],
+                'is_hot'=>empty($rs_blog_legacy_hot_blogger)?0:1,
             ];
             $fields['id']=$this->obj_blog_blogger->insert($fields);
         }else{
