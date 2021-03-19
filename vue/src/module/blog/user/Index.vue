@@ -64,8 +64,11 @@ export default {
     this.loadArticle(this.currentTabId);
     blog.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
-        console.log(res);
+        console.log(res,this.token);
     })
+    
+    this.user_login_wxc_to_haiwai(this.token)
+    
   },
   methods:{
       changeTab(id){
@@ -100,11 +103,20 @@ export default {
                 this.loading.article=false;
                 // console.log(arr,this.lastID,this.noMore);
             }
+      },
+      user_login_wxc_to_haiwai(token){
+          let user =this.$store.state.user;
+          if(this.token && !user.userinfo.id){
+            user.user_login_wxc_to_haiwai(token).then(res=>{
+                console.log(res);
+            })
+          }
       }
   },
   data() {
     return {
         userID:this.$route.params.id,
+        token:this.$route.query.haiwai_token,
         currentTabId:0,
         noMore:false,
         lastID:{article:0,wenji:0},

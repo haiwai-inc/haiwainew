@@ -51,6 +51,7 @@ class User extends API{
             return false;
         }
     }
+
     /**
      * get user infor
      * @param userID
@@ -86,6 +87,14 @@ class User extends API{
      */
     async blog_register(){
         return await this.sendget("blog/passport/blog_register/");
+    }
+
+    /**
+     * 文学城用户sso 
+     * @param {文学城token} haiwai_token
+     */
+    async user_login_wxc_to_haiwai(token){
+        return await this.sendget("account/passport/user_login_wxc_to_haiwai/?haiwai_token="+token);
     }
 
     /**

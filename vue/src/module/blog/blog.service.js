@@ -15,8 +15,8 @@ class Blog extends API{
   /**
 	 * 返回推荐博主列表
 	 */
-  async recommand_blogger(){
-    return await this.sendget("blog/page/recommand_blogger/");
+  async hot_blogger(){
+    return await this.sendget("blog/page/hot_blogger/");
   }
   
   /**

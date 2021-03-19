@@ -111,7 +111,7 @@ export default {
       console.log(this.articlelists)
     },
     async getBloggers(){
-      let arr = await blog.recommand_blogger();
+      let arr = await blog.hot_blogger();
       this.hotBlobbers = arr.data.data
       console.log(this.hotBlobbers)
     },
