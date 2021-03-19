@@ -115,9 +115,27 @@
       <p>
         您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。
       </p>
-      <p>您添加的标签：<span class="mr-3" style="color:#39b8eb" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)" style="color:#1a1a1a;font-weight:600;cursor:pointer">X</a></span></p>
-      
-      <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button>
+      <p>
+        <el-tag
+      class="mr-2"
+  v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
+  closable
+  :disable-transitions="false"
+  @close="removetag(index)">
+  {{item.name}}
+</el-tag>
+      <el-input
+  class="input-new-tag"
+  v-if="inputVisible"
+  v-model="tag"
+  ref="saveTagInput"
+  size="small"
+  @keyup.enter.native="handleInputConfirm"
+  @blur="handleInputConfirm"
+>
+</el-input>
+<el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button></p>
+      <!-- <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button> -->
       <template slot="footer">
         <n-button
           class="mr-3"
@@ -144,7 +162,7 @@ import CategoryList from "./components/CategoryList.vue";
 import CategoryArticleList from "./components/CategoryArticleList";
 
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem } from "element-ui";
+import { Collapse, CollapseItem, Tag} from "element-ui";
 import {
   HaiwaiLogoWhite,
   IconX,
@@ -196,6 +214,7 @@ export default {
     [FormGroupInput.name]: FormGroupInput,
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
+    [Tag.name]:Tag,
     HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
@@ -435,6 +454,23 @@ export default {
         },3000)
       }
     },
+// tag 相关
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+    handleInputConfirm() {
+      let inputValue = this.tag;
+      if (inputValue) {
+        // this.dynamicTags.push(inputValue);
+        this.pushtag(inputValue)
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
     removetag(index){
       this.curentArticle.postInfo_postID.tags.splice(index,1);
     },
@@ -536,6 +572,7 @@ export default {
       watchCount:0,
       tags:[],
       tag:'',
+      inputVisible:false,
       modals: {
         addwenji: false,
         publish: false,
@@ -726,6 +763,11 @@ body{
 .tox-tinymce{
   height:80%
 }
+.input-new-tag {
+    width: 120px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 @media (max-width: 575.98px){
   .publisher .menu1{
     height:auto;
