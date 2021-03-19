@@ -639,7 +639,7 @@ html,
   height: 100%;
 }
 body{
-  margin:0;
+  margin:0 !important;
 }
 .tox-tinymce{
   height: calc(100% - 160px) !important;
