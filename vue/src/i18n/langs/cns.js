@@ -42,6 +42,7 @@ const cns = {
       blog_descript: "博客简介",
       blog_descript_ph: "博客简介",
       blog_save_btn: "保存",
+      blog_saved: "已保存",
       accout_title:"账号设置",
       accout_avatar_btn:"修改我的头像",
       accout_avatar_save_btn:"确认修改",

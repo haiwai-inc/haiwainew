@@ -112,12 +112,12 @@
       <h4 slot="header" class="title title-up" style="padding-top:5px">
         发布文章{{curentArticle.postID}}
       </h4>
-      <small>
-        您可以输入一些适合的标签，能方便分类检索，文章也更容易让其他用户看到。
-      </small>
-      <p><span class="mr-3" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)">X</a></span></p>
+      <p>
+        您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。
+      </p>
+      <p>您添加的标签：<span class="mr-3" style="color:#39b8eb" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)" style="color:#1a1a1a;font-weight:600;cursor:pointer">X</a></span></p>
       
-      <input v-model="tag" type="text"> <a href="javascript:void(0)" @click="pushtag(tag)">添加</a>
+      <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button>
       <template slot="footer">
         <n-button
           class="mr-3"

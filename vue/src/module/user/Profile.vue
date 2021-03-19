@@ -62,7 +62,7 @@
                      >
                   </fg-input>
                </div>
-               <span v-if="flag.blog" class="text-success">保存成功</span><br>
+               <span v-if="flag.blog" class="text-success">{{$t('message').setting.blog_saved}}</span><br>
                <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
