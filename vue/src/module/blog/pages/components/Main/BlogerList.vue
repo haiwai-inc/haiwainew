@@ -1,7 +1,7 @@
 <template>
   <div class="bolger-box">
     <div class="blogger-title d-flex justify-content-between">
-      <h4>{{title}}</h4>
+      <h5 class="font-weight-bold">{{title}}</h5>
       <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh()"><i class="now-ui-icons arrows-1_refresh-69"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
     </div>
     <bloger-list-item 

@@ -81,7 +81,7 @@ class account_user extends Model{
 	        }
 	        
 	        //如果登录
-	        $followingID_accout_follow=[];
+	        $followerID_accout_follow=[];
 	        if(!empty($_SESSION['id'])){
 	            //加入关注人
 	            $obj_accout_follow=load("account_follow");
@@ -112,7 +112,7 @@ class account_user extends Model{
 	            $item['is_hot_blogger']=(in_array($item['id'],$userID_rs_memcache))?1:0;
 	            
 	            //是否关注
-	            $item['is_following']=(in_array($item['id'],$followingID_accout_follow))?1:0;
+	            $item['is_following']=(in_array($item['id'],$followerID_accout_follow))?1:0;
 	            
 	            //大图+小图
 	            $item['o_avatar']=$item['avatar'];

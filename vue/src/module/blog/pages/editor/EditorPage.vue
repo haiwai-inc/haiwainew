@@ -34,7 +34,7 @@
         </el-collapse>
       </div>
       <div class="d-none d-sm-block">
-        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId"></category-list>
+        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId" :activeid="articleActiveId"></category-list>
       </div>
     </div>
     <div class="col-md-3 menu2 d-none d-sm-block">
@@ -46,59 +46,64 @@
       ></category-article-list>
       
     </div>
-    <div class="col-md-7 editor" id="editor_container" ref="editorContainer">
-      <div ref="saving" style="font-size:13px;padding-left:8px;">
-        <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
-        <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
-      </div>
-      <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
-        <input
-          class="editorTitle"
-          type="text"
-          v-model="curentArticle.postInfo_postID.title"
-          :placeholder="$t('message').editor.title_ph"
-        />
-      </div>
+    <div v-if="articleActiveId==0" class="col-md-7">
+      <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
+    </div>
+    <div v-if="articleActiveId!=0" class="col-md-7 editor" id="editor_container" ref="editorContainer">
+        <div ref="saving" style="font-size:13px;padding-left:8px;">
+          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
+          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
+          <input
+            class="editorTitle"
+            type="text"
+            v-model="curentArticle.postInfo_postID.title"
+            :placeholder="$t('message').editor.title_ph"
+          />
+        </div>
 
-      <!-- 编辑器 -->
+        <!-- 编辑器 -->
+        
+        <!-- <div id="summernote"></div> -->
+        <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
+        <editor
+        :init="editorConfig"
+        v-model="curentArticle.postInfo_postID.msgbody"
+      />
+      <!-- <textarea id="editorText"> -->
+      <!-- </textarea> -->
+        <div ref="saveBox" class="m-2">
+          <n-button v-if="curentArticle.visible!==1&&curentArticle.postInfo_postID.title!=''"
+            type="primary"
+            round
+            simple
+            @click.native="modals.publish=true"
+            class="editbtn"
+          >
+            {{curentArticle.visible==-1?'发布文章':'更新文章'}}
+          </n-button>
+          <n-button
+            v-if="false"
+            type="default"
+            link
+            @click.native="save"
+            class="editbtn"
+          >
+            <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
+          </n-button>
+        </div>
+        <!-- <n-button 
+          type="primary" 
+          round 
+          simple 
+          @click="save"
+          class="editbtn"
+          >
+            <icon-plus class="editicon"></icon-plus>保存
+          </n-button> -->
       
-      <!-- <div id="summernote"></div> -->
-      <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
-      <editor
-       :init="editorConfig"
-       v-model="curentArticle.postInfo_postID.msgbody"
-     />
-     <!-- <textarea id="editorText"> -->
-     <!-- </textarea> -->
-      <div ref="saveBox" class="m-2">
-        <n-button v-if="curentArticle.visible!==1"
-          type="primary"
-          round
-          simple
-          @click.native="modals.publish=true"
-          class="editbtn"
-        >
-          {{curentArticle.visible==-1?'发布文章':'更新文章'}}
-        </n-button>
-        <n-button
-          v-if="false"
-          type="default"
-          link
-          @click.native="save"
-          class="editbtn"
-        >
-          <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
-        </n-button>
-      </div>
-      <!-- <n-button 
-        type="primary" 
-        round 
-        simple 
-        @click="save"
-        class="editbtn"
-        >
-          <icon-plus class="editicon"></icon-plus>保存
-        </n-button> -->
+      
     </div>
 
 
@@ -107,12 +112,12 @@
       <h4 slot="header" class="title title-up" style="padding-top:5px">
         发布文章{{curentArticle.postID}}
       </h4>
-      <small>
-        您可以输入一些适合的标签，能方便分类检索，文章也更容易让其他用户看到。
-      </small>
-      <p><span class="mr-3" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)">X</a></span></p>
+      <p>
+        您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。
+      </p>
+      <p>您添加的标签：<span class="mr-3" style="color:#39b8eb" v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id">{{item.name}} <a herf="javascript:void(0)" @click="removetag(index)" style="color:#1a1a1a;font-weight:600;cursor:pointer">X</a></span></p>
       
-      <input v-model="tag" type="text"> <a href="javascript:void(0)" @click="pushtag(tag)">添加</a>
+      <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button>
       <template slot="footer">
         <n-button
           class="mr-3"
@@ -225,19 +230,19 @@ export default {
         this.autoSave()
       }
     },
-    async fetchData() {
-      let postid = 0;
-      if (this.$route.query.postid != undefined) {
-        postid = this.$route.query.postid;
-        // this.article = await blog.getArticle(blogid);
-        this.article = (
-          await blog.article_view(postid)
-        ).data.postInfo_postID;
-        console.log(this.article);
-        this.setEditorContent(this.article.msgbody)
-        // $("#summernote").summernote("code", this.article.msgbody);
-      }
-    },
+    // async fetchData() {
+    //   let postid = 0;
+    //   if (this.$route.query.postid != undefined) {
+    //     postid = this.$route.query.postid;
+    //     // this.article = await blog.getArticle(blogid);
+    //     this.article = (
+    //       await blog.article_view(postid)
+    //     ).data.postInfo_postID;
+    //     console.log(this.article);
+    //     this.setEditorContent(this.article.msgbody)
+    //     // $("#summernote").summernote("code", this.article.msgbody);
+    //   }
+    // },
 
     //for editor
     toggleEditorDisabled() {
@@ -276,10 +281,10 @@ export default {
     //   this.articleList.unshift(newarticle);
     //   this.changeMenu(this.wenjiActiveId, newarticle.articleId);
     // },
-    changeMenu(wid, aid) {
-      this.wenjiActiveId = wid;
-      this.articleActiveId = aid;
-    },
+    // changeMenu(wid, aid) {
+    //   this.wenjiActiveId = wid;
+    //   this.articleActiveId = aid;
+    // },
 
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
@@ -298,8 +303,9 @@ export default {
       }
     },
     
-    setWJid(e){
-      this.wenjiActiveId = e;
+    setWJid(id){
+      this.wenjiActiveId = id;
+      this.articleActiveId = 0;
     },
     setArtid(e){
       this.articleActiveId = e.id;
@@ -310,6 +316,7 @@ export default {
       // }
       this.flags.autosaved = false;
     },
+    // 获取编辑器内容
     getContent(e){
       if(e.visible==1){
         this.user.article_view(e.postID).then(res=>{
@@ -322,7 +329,6 @@ export default {
           this.curentArticle=res.data;
           console.log(this.curentArticle)
         })
-        
       }
     },
     // 发布一篇新文章（草稿=>文章）
@@ -426,7 +432,7 @@ export default {
         this.timer = setTimeout(()=>{
           console.log(this.curentArticle.id);
           this.draft_update();
-        },5000)
+        },3000)
       }
     },
     removetag(index){
@@ -464,19 +470,30 @@ export default {
           console.log(reader.result.split(',')[0]);
           that.uploadFile(meta.filetype, reader.result, callback);
         }
-      reader.readAsDataURL(file);
-    };
+        reader.readAsDataURL(file);
+      };
 
       input.click();
     },
+    initTabStatus(cats){
+      cats.forEach(item=>{
+        this.tabStatus[item.id]=0
+      })
+      console.log(this.tabStatus)
+    },
+    setTabStatus(cid,aid){
+      this.tabStatus[cid]=aid
+    }
   },
 
   beforeCreate() {
-    this.$store.state.user.getUserStatus().then(r=>{console.log(r)
+    this.$store.state.user.getUserStatus().then(r=>{
       if(r.data.bloggerID){
         blog.category_list(r.data.bloggerID).then(res=>{
           this.wenjiList = res.status?res.data:[];
           this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
+          console.log(this.wenjiList);
+          this.initTabStatus(this.wenjiList)
         });
       }else{
         this.$router.push('/blog_register');
@@ -485,7 +502,7 @@ export default {
   },
 
   created() {
-    this.fetchData();
+    // this.fetchData();
   },
   mounted() {
     // this.initEditor();
@@ -513,9 +530,10 @@ export default {
       iconmore3v: HaiwaiIcons.iconmore3v,
       wenjiList:[],
       wenjiActiveId: 0,
-      articleActiveId: 12345,
+      articleActiveId: 0,
       activeName: "0",
       curentArticle:{postInfo_postID:{title:"",msgbody:""}},
+      tabStatus:{},
       watchCount:0,
       tags:[],
       tag:'',
@@ -526,7 +544,6 @@ export default {
       },
       msgbody:'asd',
       articleList: [],
-
       loading: false,
       article: {},
       flags:{

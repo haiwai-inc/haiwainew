@@ -81,7 +81,7 @@
               simple 
               :disabled="replybtndisable" 
               @click="reply_add">发表评论</n-button>
-            <h5 class="commentlable">评论（{{articleDetail.data.count_comment}}）</h5>
+            <h5 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h5>
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>

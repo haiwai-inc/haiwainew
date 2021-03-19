@@ -32,13 +32,14 @@ class page extends Api {
      * 二级页面 
      * 推荐 文章
      * @param integer $lastID | 最后一个id
+     * @param integer $limit | 分页数
      */
-    public function recommend_article($lastID=0){
+    public function recommend_article($lastID=0,$limit=30){
         $obj_blog_recommend=load("blog_recommend");
         $obj_search_article_noindex=load("search_article_noindex");
         
         $fields=[
-            "limit"=>30,
+            "limit"=>$limit,
             'order'=>['id'=>'DESC']
         ];
         if(!empty($lastID)){
@@ -72,7 +73,7 @@ class page extends Api {
      * 二级页面 
      * 推荐 博主
      */
-    public function recommand_blogger(){
+    public function hot_blogger(){
         $obj_memcache = func_initMemcached('cache01');
         $rs_memcache = $obj_memcache->get("blog_hot_blogger");
         
@@ -81,6 +82,8 @@ class page extends Api {
             return $rs;
         }
         
+        $obj_account_user=load("account_user");
+        $rs_memcache=$obj_account_user->get_basic_userinfo($rs_memcache,"userID");
         $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
         return $rs;
     }
@@ -157,6 +160,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['edit_date'=>'DESC']
@@ -195,6 +199,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['count_read'=>'DESC']
@@ -233,6 +238,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'treelevel'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
@@ -450,12 +456,12 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['id'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页 
      * 文集 文章列表
      * @param integer $id | 文集ID
      * @param integer $lastID | 最后文章ID
@@ -467,6 +473,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'visible'=>1,
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,

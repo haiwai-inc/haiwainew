@@ -42,6 +42,7 @@ const cnt = {
             blog_descript:"博客簡介",
             blog_descript_ph: "博客簡介",
             blog_save_btn:"保存",
+            blog_saved: "已保存",
             accout_title:"賬號設置",
             accout_avatar_btn:"修改我的頭像",
             accout_avatar_save_btn:"確認修改",

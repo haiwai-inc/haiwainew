@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="category_box">
         <button class="btn btn-link m-3" @click="modals.addwenji = true">
           <span v-html="icon_plus"></span>
           <span style="font-size:1rem;color:#14171A">{{$t('message').editor.wenji_new_btn}}</span>
@@ -20,6 +20,7 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
               tag="div"
+              :position="'right'"
             >
               <el-popover 
               placement="bottom-start"
@@ -46,6 +47,7 @@
                 <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>{{$t('message').editor.wenji_update_menu}}</a>
               </el-popover>
               <el-popconfirm
+                v-if="wenjiList.length>1"
                 placement="top-end"
                 confirm-button-text="刪除"
                 cancel-button-text='取消'
@@ -236,5 +238,12 @@ export default {
 }
 </script>
 <style>
-
+.category_box{
+  height:calc(100vh - 55px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+div.category_box::-webkit-scrollbar{
+  width:0
+}
 </style>

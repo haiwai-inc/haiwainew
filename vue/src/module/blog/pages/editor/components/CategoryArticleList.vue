@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="aricle_list_box">
         <div style="text-align:center;border-bottom:1px #ddd solid;padding:24px 0;" >
             <n-button
             type="primary"
@@ -13,89 +13,93 @@
              <span>新建文章</span>
             </n-button>
         </div>
-        <ul v-if="articleList.length!=0">
-          <li
-            v-for="(item, index) in articleList"
-            :key="index"
-            class="aritcleItem d-flex justify-content-between align-items-center"
-            :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
-          >
-            <div
-              class="flex-fill"
-            @click="changeMenu(item)"
+        <div class="aricle_list">
+          <ul  v-if="articleList.length!=0">
+            <li
+              v-for="(item, index) in articleList"
+              :key="index"
+              class="aritcleItem d-flex justify-content-between align-items-center"
+              :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
             >
-              <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
-              <icon-published class="icon" v-if="item.visible==1"></icon-published>
-              {{ item.postInfo_postID.title }}
-              <div>
-                <small v-if="item.visible==-2">已发布文章，再编辑中...</small>
-              </div>
-            </div>
-            <drop-down
-              class="nav-item dropdown"
-              :haiwaiIcon="iconmore3v"
-              haiwaiClass="haiwaiicon"
-              style="padding:0;"
-            >
-              <a v-if="item.visible!==1"
-              @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
-                ><icon-publish class="icon"></icon-publish>直接发布</a
+              <div
+                class="flex-fill"
+              @click="changeMenu(item)"
               >
-              <a  v-if="item.visible!==1"
-                class="dropdown-item pl-4"
-                href="javascript:void(0)"
-                @click="modals.schedule = true"
-              >
-                <icon-schedule class="icon"></icon-schedule>定时发布
-              </a>
-              <a v-if="!item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,1)"
-                ><icon-top class="icon"></icon-top>置顶文章</a
-              >
-              <a v-if="item.is_sticky" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
-                ><icon-top class="icon"></icon-top>取消置顶</a
-              >
-              <div class="submenu-item dropleft" v-if="cats.length>1">
-                <a
-                  class="dropdown-item dropdown-toggle pl-3"
-                  href="#"
-                  id="move"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <icon-folder class="icon"></icon-folder>移动文章
-                </a>
-                <div class="dropdown-menu" aria-labelledby="move">
-                  <a class="dropdown-item" href="javascript:void(0)" v-for="(o,index) in cats.filter(e=>e.id!==wjid)" :key="index" @click="shiftCategory(item.postID,o.id)">{{o.name}}</a>
+                <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
+                <icon-published class="icon" v-if="item.visible==1"></icon-published>
+                {{ item.postInfo_postID.title }}
+                <div>
+                  <small v-if="item.visible==-2">已发布文章，再编辑中...</small>
                 </div>
               </div>
-              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_publish(item)"
-                ><icon-private class="icon"></icon-private>{{item.is_publish==1?'设为私密':'设为公开'}}</a
+              <drop-down
+                class="nav-item dropdown"
+                :haiwaiIcon="iconmore3v"
+                haiwaiClass="haiwaiicon"
+                style="padding:0;"
+                :position="'right'"
               >
-              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_comment(item)"
-                ><icon-forbid class="icon"></icon-forbid>{{item.is_comment==1?'禁止评论':'允许评论'}}</a
-              >
-              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_share(item)"
-                ><icon-forbid class="icon"></icon-forbid>{{item.is_share==1?'禁止转载':'允许转载'}}</a
-              >
-              <!-- <a class="dropdown-item pl-4" href="javascript:void(0)" @click="delArticle(item)"
-                ><icon-delete class="icon"></icon-delete>删除文章</a
-              > -->
-              <el-popconfirm
-                placement="top-end"
-                confirm-button-text='删除'
-                cancel-button-text='取消'
-                :title="'确定删除这篇文章吗？'"
-                :hide-icon="true"
-                @confirm="delArticle(item)"
-              >
-                <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>删除文章</a>
-              </el-popconfirm>
-            </drop-down>
-          </li>
-        </ul>
+                <a v-if="item.visible!==1"
+                @click="draft_to_article_by_draftID(item.id)" class="dropdown-item" href="#"
+                  ><icon-publish class="icon"></icon-publish>直接发布</a
+                >
+                <a  v-if="item.visible!==1"
+                  class="dropdown-item pl-4"
+                  href="javascript:void(0)"
+                  @click="modals.schedule = true"
+                >
+                  <icon-schedule class="icon"></icon-schedule>定时发布
+                </a>
+                <a v-if="!item.is_sticky&&item.visible==1" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,1)"
+                  ><icon-top class="icon"></icon-top>置顶文章</a
+                >
+                <a v-if="item.is_sticky&&item.visible==1" class="dropdown-item pl-4" href="javascript:void(0)" @click="articleSticky(item,0)"
+                  ><icon-top class="icon"></icon-top>取消置顶</a
+                >
+                <div class="submenu-item dropleft" v-if="cats.length>1">
+                  <a
+                    class="dropdown-item dropdown-toggle pl-3"
+                    href="#"
+                    id="move"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <icon-folder class="icon"></icon-folder>移动文章
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="move">
+                    <a class="dropdown-item" href="javascript:void(0)" v-for="(o,index) in cats.filter(e=>e.id!==wjid)" :key="index" @click="shiftCategory(item.postID,o.id)">{{o.name}}</a>
+                  </div>
+                </div>
+                <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_publish(item)"
+                  ><icon-private class="icon"></icon-private>{{item.is_publish==1?'设为私密':'设为公开'}}</a
+                >
+                <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_comment(item)"
+                  ><icon-forbid class="icon"></icon-forbid>{{item.is_comment==1?'禁止评论':'允许评论'}}</a
+                >
+                <a class="dropdown-item pl-4" href="javascript:void(0)" @click="article_share(item)"
+                  ><icon-forbid class="icon"></icon-forbid>{{item.is_share==1?'禁止转载':'允许转载'}}</a
+                >
+                <!-- <a class="dropdown-item pl-4" href="javascript:void(0)" @click="delArticle(item)"
+                  ><icon-delete class="icon"></icon-delete>删除文章</a
+                > -->
+                <el-popconfirm
+                  placement="top-end"
+                  confirm-button-text='删除'
+                  cancel-button-text='取消'
+                  :title="'确定删除这篇文章吗？'"
+                  :hide-icon="true"
+                  @confirm="delArticle(item)"
+                >
+                  <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_delete" class="icon"></span>删除文章</a>
+                </el-popconfirm>
+              </drop-down>
+            </li>
+          </ul>
 
+        </div>
+        
     <!-- Add Wenji Modal -->
     <modal :show.sync="modals.addwenji" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
@@ -187,7 +191,8 @@ export default {
     name: 'category-article-list',
     props:{
       wjid:Number,
-      cats:Array
+      cats:Array,
+      activeid:Number
     },
     watch:{
       wjid:function(v){
@@ -228,7 +233,7 @@ export default {
         icon_delete:HaiwaiIcons.icon_delete,
         wenjiActiveId: 100,
         wenjiList: [],
-        articleActiveId:0,
+        articleActiveId:this.activeid,
         currentAaticle:{},
         articleList:[],
         modals: {
@@ -262,7 +267,7 @@ export default {
       addArticle(){
         let data={
           article_data:{
-            title:'新建博文标题',
+            title:'',
             msgbody:'',
             tagname:[],
             typeID:1
@@ -306,6 +311,9 @@ export default {
           console.log(res);
           this.articleList = res.data.filter(obj=>obj.visible!=0);
           this.articleList.forEach(item=>{
+            if(item.postInfo_postID.title==""){
+              item.postInfo_postID.title = this.$t('message').editor.title_ph
+            }
             if(item.postID==this.articleActiveId){
               this.changeMenu(item)
             }
@@ -387,5 +395,16 @@ export default {
 <style>
 .aritcleItem .nav-link{
   padding-right:0
+}
+div.aricle_list{
+  overflow-y:auto;
+  overflow-x: hidden;
+  height:calc(100vh - 100px);
+}
+div.aricle_list::-webkit-scrollbar{
+  width:0
+}
+.aricle_list_box{
+  height:calc(100vh)
 }
 </style>

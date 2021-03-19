@@ -7,12 +7,11 @@
        <div class="col-sm-8 col-12">   
             <div class="profile-header mt-2">
              <!-- header start -->  
-              <div class="user-avatar d-flex py-2 px-4">
+              <div class="user-avatar d-flex p-3 mb-3" style="background-color:#f6f6f6;border-radius:5px">
                  <div class="flex-grow-1">
-                   <span class="blog-user-index-name">美国往事</span>
-                   <br>
-                   <span class="blog-user-index-des">21篇文章</span>
-                   <span class="blog-user-index-des ml-4">阅读.10853</span>
+                   <h4 class="blog-user-index-name">{{currentCat.name}}</h4>
+                   <span class="blog-user-index-des">{{currentCat.count_article}}篇文章</span>
+                   <!-- <span class="blog-user-index-des ml-4">阅读.10853(假数据)</span> -->
                  </div>
                  <div>
                   <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
@@ -41,7 +40,7 @@
         <div class="col-sm-4 d-none d-sm-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3">
-            <collection-list v-bind:data="collectionList" title="文集"></collection-list>
+            <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" title="文集"></collection-list>
           </div>
         </div>
       </div>
@@ -63,12 +62,24 @@ export default {
     ArticleListItem,
     CollectionList,
   },
+  computed:{
+    disabled () {
+      return this.loading.article || this.noMore
+    }
+  },
   created () {
-    this.loadArticle(this.currentTabId);
+    this.getBloggerInfo();
     blog.category_list(this.userID).then(res=>{
-        this.collectionList=res.data;
-        console.log(res);
+      this.collectionList=res.data;
+      console.log(res.data);
+      this.loadArticle(this.catID);
     })
+  },
+  watch:{
+    '$route.params.catid':function(val){
+      console.log(val)
+      this.loadArticle(val)
+    }
   },
   methods:{
       changeTab(id){
@@ -78,21 +89,23 @@ export default {
         this.loadArticle(this.currentTabId);
       },
       loadArticle(id){
-        if(id==0){
-            blog.article_list_recent(this.userID,this.lastID.article).then(res=>{
-                this.getList(res);
-            });
-        };
-        if(id==1){
-            blog.article_list_hot(this.userID,this.lastID.article).then(res=>{
-                this.getList(res);
-            });
-        };
-        if(id==2){
-            blog.article_list_comment(this.userID,this.lastID.article).then(res=>{
-                this.getList(res);
-            });
-        };
+        this.loading.article=true;
+        blog.pubcat_article_list(id,0).then(res=>{
+          if(res.status){
+            this.articlelists=res.data
+            this.loading.article=false;
+          }
+          if(this.articlelists.length<30){
+            this.noMore=true;
+          }else{
+            this.noMore=false;
+          }
+        })
+        this.collectionList.forEach(item=>{
+          if(item.id==id){
+            this.currentCat=item
+          }
+        })
       },
       getList(res){
             if(res.status){
@@ -103,15 +116,26 @@ export default {
                 this.loading.article=false;
                 // console.log(arr,this.lastID,this.noMore);
             }
+      },
+      getBloggerInfo(){
+        blog.blogger_info(this.userID).then(res=>{
+          console.log(res)
+          if(res.status){
+            this.userInfo = res.data;
+            this.loading.userinfo=true;
+          }
+        })
       }
   },
   data() {
     return {
-        userID:this.$route.params.id,
-        currentTabId:0,
+        userID:this.$route.params.userid,
+        catID:this.$route.params.catid,
+        currentCat:{},
         noMore:false,
+        userInfo:{},
         lastID:{article:0,wenji:0},
-        loading:{article:true,wenji:true},
+        loading:{article:true,wenji:true,userinfo:false},
         tabs:[
             {
                 id:0,
@@ -127,6 +151,7 @@ export default {
         authorInfo : {},
         articlelists: [],
         collectionList : [],
+        icons:icons
     };
   },
 };

@@ -15,8 +15,8 @@ class Blog extends API{
   /**
 	 * 返回推荐博主列表
 	 */
-  async recommand_blogger(){
-    return await this.sendget("blog/page/recommand_blogger/");
+  async hot_blogger(){
+    return await this.sendget("blog/page/hot_blogger/");
   }
   
   /**
@@ -225,7 +225,7 @@ class Blog extends API{
   }
 
   /**
-	 * 返回某文集的文章列表
+	 * 返回某文集的文章列表（登录用户）
 	 * 
 	 * @param number
 	 *          $id
@@ -234,6 +234,18 @@ class Blog extends API{
 	 */
   async category_article_list(id,lastID){
     return await this.sendget("blog/user/article_list/?id="+id+"&lastID="+lastID)
+  }
+
+/**
+	 * 返回某文集的文章列表（游客）
+	 * 
+	 * @param number
+	 *          $id
+	 * @param number
+	 *          $lastID
+	 */
+ async pubcat_article_list(id,lastID){
+    return await this.sendget("blog/page/category_article_list/?id="+id+"&lastID="+lastID)
   }
 
   /**

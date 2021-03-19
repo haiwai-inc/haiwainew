@@ -66,7 +66,7 @@ export default {
     },
   },
   created () {
-    blog.recommand_blogger().then(res=>{
+    blog.hot_blogger().then(res=>{
       if(res.status){
         this.res_bloggerList=res.data.data;
         this.bloggerList=this.res_bloggerList;

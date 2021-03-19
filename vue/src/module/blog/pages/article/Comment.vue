@@ -231,24 +231,24 @@ export default {
         // this.modals.login = true ;
         this.$emit('opendialog')
       }
-        console.log(this.currentItem);
+        // console.log(this.currentItem);
       
     },
     buzz_add(item){
       blog.buzz_add(item.postID).then(res=>{
-        console.log(res);
+        // console.log(res);
         this.regetComment();
       })
     },
     buzz_delete(item){
       blog.buzz_delete(item.postID).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.regetComment();
       })
     },
     // 回复
     reply(item){
-      this.currentItem = item ;console.log(this.$refs,item.postID)
+      this.currentItem = item ;console.log(item);
         if(item.treelevel==2){
           this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
         }else{
@@ -269,7 +269,6 @@ export default {
           if(res.status){
             this.regetComment();
             this.replybtndisable = false;
-            console.log(pop);
             this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
             this.replymsgbody="";
           }
@@ -282,7 +281,9 @@ export default {
     article_reply_delete(id){
       blog.reply_delete(id).then(res=>{
         console.log("Del",id);
-
+        if(res.status){
+          this.regetComment();
+        }
       })
     },
     regetComment(){

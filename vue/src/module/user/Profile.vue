@@ -54,6 +54,7 @@
                      v-model="blogProfile.name"
                      >
                   </fg-input>
+                  <span class="text-danger" v-if="err.bloggername.flag">{{err.bloggername.msg}}</span>
                   <p class="pt-3"><b>{{$t('message').setting.blog_descript}}</b></p>
                   <fg-input
                      :placeholder="$t('message').setting.blog_descript_ph"
@@ -61,7 +62,8 @@
                      >
                   </fg-input>
                </div>
-               <button class="btn btn-round btn-primary" @click="saveBlockProfile">{{$t('message').setting.blog_save_btn}}</button>
+               <span v-if="flag.blog" class="text-success">{{$t('message').setting.blog_saved}}</span><br>
+               <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
                <h6 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h6>
@@ -188,6 +190,7 @@ export default {
          }
       });
       this.getBlackList(0);
+      this.getBlogProfile();
    },
   data(){
      var validatePass = (rule, value, callback) => {
@@ -222,6 +225,12 @@ export default {
       },
       blackList:[],
       blogProfile:{},
+      err:{
+         bloggername:{
+            flag:false,
+            msg:""
+         }
+      },
       signupForm:{
         password:'',
         checkPassword:'',
@@ -239,7 +248,10 @@ export default {
       imgDataUrl: '/img/julie.jpg', // the datebase64 url of created image,
       image:false,
       imgSrc:false,
-      myCroppa:{}
+      myCroppa:{},
+      flag:{
+         blog:false
+      }
     }
   },
   methods:{
@@ -402,15 +414,24 @@ export default {
          let v = await this.$store.state.user.blogger_profile();
          if(v.status){
             this.blogProfile=v.data;
-            console.log(v.data)
+            console.log(v)
          }
       },
-      saveBlockProfile(){
+      saveBlogProfile(){
          this.$store.state.user.blogger_profile_update(this.blogProfile.name,this.blogProfile.description).then(res=>{
             console.log(res)
             if(res.status){
                this.getBlogProfile();
+               this.err.bloggername.flag = false
+               this.flag.blog=true;
+               setTimeout(()=>{
+                  this.flag.blog=false;
+               },3000)
+            }else{
+               this.err.bloggername.msg = res.error
+               this.err.bloggername.flag = true
             }
+            this.err.bloggername.msg = res.error
          })
       }
 
