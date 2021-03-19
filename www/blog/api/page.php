@@ -73,7 +73,7 @@ class page extends Api {
      * 二级页面 
      * 推荐 博主
      */
-    public function recommand_blogger(){
+    public function hot_blogger(){
         $obj_memcache = func_initMemcached('cache01');
         $rs_memcache = $obj_memcache->get("blog_hot_blogger");
         
@@ -82,6 +82,8 @@ class page extends Api {
             return $rs;
         }
         
+        $obj_account_user=load("account_user");
+        $rs_memcache=$this->obj_account_user->get_basic_userinfo($rs_memcache,"userID");
         $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
         return $rs;
     }
