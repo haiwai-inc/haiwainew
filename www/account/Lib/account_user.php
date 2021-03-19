@@ -81,7 +81,7 @@ class account_user extends Model{
 	        }
 	        
 	        //如果登录
-	        $followingID_accout_follow=[];
+	        $followerID_accout_follow=[];
 	        if(!empty($_SESSION['id'])){
 	            //加入关注人
 	            $obj_accout_follow=load("account_follow");
