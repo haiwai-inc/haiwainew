@@ -257,7 +257,7 @@ export default {
   beforeCreate(){
   },
   mounted() {
-    this.translatePage()
+    this.translatePage();
   }
 };
 </script>
