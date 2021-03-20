@@ -85,7 +85,7 @@
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
-          <div v-if="showcomment">
+          <div v-if="comment.length>0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
@@ -282,6 +282,9 @@ export default {
     },
     rewrite(id){
       console.log("reget",id);
+      if(!id){
+        this.comment.splice(0,1)
+      }
       blog.article_view_comment_one(id).then(res=>{
         this.comment.forEach(obj=>{
           if (obj.postID==id){
