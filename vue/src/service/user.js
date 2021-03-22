@@ -10,6 +10,8 @@ class User extends API{
     });
     published = {};
     notice={};
+    editorObj=[];
+    editorTabStatus=[];
     /**
      * Login function for example
      * @param {*} email 
@@ -111,6 +113,14 @@ class User extends API{
      */
     async blogger_profile_update(name,description){
         return await this.sendget("blog/user/blogger_profile_update/?name=" + name + "&description=" + description)
+    }
+    
+    /**
+     * 更新用户设置项
+     *  
+     */
+     async user_profile_update(username,description){
+        return await this.sendget("account/user/user_profile_update/?username=" + username + "&description=" + description)
     }
     
     /**

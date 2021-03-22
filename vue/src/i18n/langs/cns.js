@@ -48,6 +48,7 @@ const cns = {
       accout_avatar_save_btn:"确认修改",
       accout_cancel_btn:"取消",
       accout_name:"笔名",
+      accout_name_err:"笔名不能为空",
       accout_name_ph:"笔名",
       accout_descript:"个人简介",
       accout_descript_ph:"写点什么介绍你自己吧",
