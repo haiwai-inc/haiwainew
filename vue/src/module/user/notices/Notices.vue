@@ -35,7 +35,7 @@
           <notice-follow></notice-follow>
         </div>
         <div v-if="activeId === 4">
-          <!-- <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的喜欢</h6>
+          <!-- <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的赞</h6>
           <article-list-item
             v-for="item in articlelists"
             v-bind:key="item.postID"
