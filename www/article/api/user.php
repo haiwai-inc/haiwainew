@@ -383,9 +383,9 @@ class user extends Api {
         //删除记录消息
         $obj_account_notification=load("account_notification");
         if($check_article_indexing['userID']==$_SESSION['id']){
-            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['ID']]);
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['id']]);
         }else{
-            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'userID'=>$_SESSION['ID']]);
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'userID'=>$_SESSION['id']]);
         }
         
         return true;
