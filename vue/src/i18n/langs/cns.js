@@ -29,7 +29,7 @@ const cns = {
       notice_menu_comment: "我收到的评论",
       notice_menu_qqh: "我的悄悄话",
       notice_menu_funs: "我的粉丝",
-      notice_menu_likeme: "我收到的喜欢",
+      notice_menu_likeme: "我收到的赞",
     },
     setting: {
       menu_bolg: "博客设置",

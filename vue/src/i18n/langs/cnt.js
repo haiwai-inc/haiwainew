@@ -9,7 +9,7 @@ const cnt = {
             mycomment:"我收到的評論",
             myqqh:"我的悄悄話",
             myfuns:"我的粉絲",
-            likeme:"我收到的喜歡",
+            likeme:"我收到的讚",
             profile:"我的賬號",
             logout:"登出",
             login:"登錄/註冊",
@@ -29,7 +29,7 @@ const cnt = {
             notice_menu_comment:"我收到的評論",
             notice_menu_qqh:"我的悄悄話",
             notice_menu_funs:"我的粉絲",
-            notice_menu_likeme:"我收到的喜歡"
+            notice_menu_likeme:"我收到的讚"
         },
         setting:{
             menu_bolg:"博客設置",
