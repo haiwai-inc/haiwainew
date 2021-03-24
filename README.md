@@ -69,9 +69,12 @@ php www/search/Cron/update_category_tag.php
 
 
 
-
-
-
+//测试文档
+https://docs.google.com/document/d/1DEcLHCBXJ177qt1js-a8Iki5jGr7OS0v23nK0nfxuao/edit?usp=sharing 
+//测试附件
+https://docs.google.com/document/d/1FxRo6PK3fWL-dq07GSGBQ9DBHDX2Yk1KvVkV5x4v7DU/edit?usp=sharing
+//测试过程
+https://docs.google.com/document/d/14xEn4sfIZCxfBe3Aca--4s8SMWwr0lucIhaghMdgI_U/edit?usp=sharing
 
 
 
