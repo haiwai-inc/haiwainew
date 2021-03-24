@@ -320,8 +320,10 @@ class user extends Api {
         $obj_article_noindex->fetch_and_insert([$postID,$check_main_article_indexing['postID']]);
         
         //添加消息列表
-        $obj_account_notification=load("account_notification");
-        $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
+        if($check_article_indexing['treelevel']==0){
+            $obj_account_notification=load("account_notification");
+            $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
+        }
         
         return true;
     }
