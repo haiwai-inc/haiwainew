@@ -183,7 +183,6 @@ class passport extends Api {
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$fields['username'],'email'=>$fields['email'],'data'=>serialize(['token'=>$token,'id'=>$userID])]);
         
         //登录
-        $this->user_login($email,$password,"haiwai");
         return true;
     }
     
