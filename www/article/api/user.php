@@ -380,6 +380,14 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$id,$check_main_article_indexing['postID']]);
         
+        //删除记录消息
+        $obj_account_notification=load("account_notification");
+        if($check_article_indexing['userID']==$_SESSION['id']){
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['ID']]);
+        }else{
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'userID'=>$_SESSION['ID']]);
+        }
+        
         return true;
     }
     
