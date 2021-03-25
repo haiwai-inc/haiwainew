@@ -285,6 +285,10 @@ class page extends Api {
         //添加上下文章
         $rs_article_indexing['article_previous_next']=$this->article_previous_next($id);
         
+        //计数+1
+        $obj_count_tool=load("count_tool");
+        $obj_count_tool->add_article($id);
+        
         return $rs_article_indexing;
     }
     
