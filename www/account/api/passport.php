@@ -107,6 +107,8 @@ class passport extends Api {
      * @param integer $login_token|登录凭证 密码
      */
     public function user_login_wxc($login_data,$login_token){
+        $login_data=str_replace(" ","+",$login_data);
+        
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
         if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
@@ -137,6 +139,7 @@ class passport extends Api {
      */
     public function user_register($email,$password){
         $email=urldecode($email);
+        $email=str_replace(" ","+",$email);
         $password=urldecode($password);
         
         //验证邮箱
@@ -238,6 +241,8 @@ class passport extends Api {
      * @param integer $email|邮箱
      */
     public function user_email_check($email){
+        $email=str_replace(" ","+",$email);
+        
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->check_email($email);
         if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
