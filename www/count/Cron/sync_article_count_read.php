@@ -13,6 +13,11 @@ class sync_article_count_read{
         $rs_article_key=$obj_count_tool->obj_redis->SMEMBERS($obj_count_tool->sync_article_key);
         if(!empty($rs_article_key)){
             foreach($rs_article_key as $v){
+                $rs_article_indexing=$obj_article_indexing->getOne(['bloggerID','count_read'],['postID'=>$v]);
+                if($count_read<$rs_article_indexing['count_read']){
+                    continue;
+                }
+                
                 $count_read=$obj_count_tool->view_article($v);
                 
                 //sync database
@@ -22,7 +27,6 @@ class sync_article_count_read{
                 $obj_count_tool->obj_redis->srem($obj_count_tool->sync_article_key,$v);
                 
                 //add sync blogger key
-                $rs_article_indexing=$obj_article_indexing->getOne(['bloggerID'],['postID'=>$v]);
                 $obj_count_tool->obj_redis->sAdd($obj_count_tool->sync_blogger_key, $rs_article_indexing['bloggerID']);
                 
                 echo "{$v}\n";
