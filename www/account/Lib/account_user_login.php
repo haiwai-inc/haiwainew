@@ -250,7 +250,9 @@ class account_user_login extends Model{
 	    $_SESSION=$rs_user_session;
 	    
 	    $obj_account_user=load("account_user");
-	    $rs_user_session=$obj_account_user->get_basic_userinfo([$rs_user_session])[0];
+	    $rs_user_session=$obj_account_user->get_basic_userinfo([$rs_user_session]);
+	    $rs_user_session=empty($rs_user_session)?[]:$rs_user_session[0];
+	    
 	    return $rs_user_session;
 	}
 	

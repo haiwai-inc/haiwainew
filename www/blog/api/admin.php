@@ -71,7 +71,8 @@ class admin extends Api {
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo([$check_article_indexing])[0];
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$check_article_indexing]);
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         $time=times::gettime();
         $obj_blog_recommend->insert([

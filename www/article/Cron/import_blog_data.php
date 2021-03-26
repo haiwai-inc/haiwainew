@@ -13,11 +13,17 @@ class import_blog_data{
         while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible'=>1],"blog_202001_post") ){                      
             foreach($rs_blog_legacy_202005_post as $k=>$v){
                 $lastid=$v['postid'];
-                $obj_blog_tool->import_post($v);
+                $rs_import_post=$obj_blog_tool->import_post($v);
                 
                 echo $lastid."\n";
+                
+                $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
             }
         }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
     }
 }
 

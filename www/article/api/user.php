@@ -24,7 +24,8 @@ class user extends Api {
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID")[0];
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         return $rs_article_indexing;
     }
@@ -155,7 +156,8 @@ class user extends Api {
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         $obj_article_draft=load("article_draft");
         $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
@@ -202,7 +204,9 @@ class user extends Api {
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
+        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID");
+        $rs_article_draft=empty($rs_article_draft)?[]:$rs_article_draft[0];
+        
         return $rs_article_draft;
     }
     

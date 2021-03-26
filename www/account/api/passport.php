@@ -34,7 +34,8 @@ class passport extends Api {
         }
         
         //获取基本用户信息
-        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user])[0];
+        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user]);
+        $rs_account_user=empty($rs_account_user)?[]:$rs_account_user[0];
         
         //查看博客信息
         $obj_blog_blogger=load("blog_blogger");

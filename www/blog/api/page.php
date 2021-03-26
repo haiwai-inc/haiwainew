@@ -280,7 +280,8 @@ class page extends Api {
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
         
         //添加文章计数信息
-        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing)[0];
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         //添加上下文章
         $rs_article_indexing['article_previous_next']=$this->article_previous_next($id);
