@@ -19,11 +19,11 @@ class import_blog_data{
                 
                 $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
             }
+            
+            //同步ES索引
+            $obj_article_noindex=load("search_article_noindex");
+            $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
         }
-        
-        //同步ES索引
-        $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
     }
 }
 
