@@ -173,7 +173,7 @@ class user extends Api {
         $check_account_user_report=$obj_account_user_report->getOne("*",['userID'=>$userID,'from_userID'=>$_SESSION['id']]);
         if(!empty($check_account_user_report))  {$this->error="您已经举报过次用户了";$this->status=false;return false;}
         
-        $obj_account_user_report->insert(['userID'=>$userID,'from_userID'=>$from_userID,'msgbody'=>$msgbody]);
+        $obj_account_user_report->insert(['userID'=>$userID,'from_userID'=>$_SESSION['id'],'msgbody'=>$msgbody]);
         return true;
     }
     
