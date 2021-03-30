@@ -419,5 +419,7 @@ tinymce.addI18n('zh_CN',{
 "Insert template": "\u63d2\u5165\u6a21\u677f",
 "x-Large" : "大",
 "medium" : "中",
-"x-Small" : "小"
+"x-Small" : "小",
+"wide":"宽",
+"narrow":"窄"
 });
