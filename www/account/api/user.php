@@ -166,13 +166,14 @@ class user extends Api {
      * 很多页
      * 举报 添加
      * @param integer $userID|举报用户的userID
+     * @param string $msgbody|举报用户的msgbody
      */
-    public function report_add($userID){
+    public function report_add($userID,$msgbody){
         $obj_account_user_report=load("account_user_report");
         $check_account_user_report=$obj_account_user_report->getOne("*",['userID'=>$userID,'from_userID'=>$_SESSION['id']]);
         if(!empty($check_account_user_report))  {$this->error="您已经举报过次用户了";$this->status=false;return false;}
         
-        $obj_account_user_report->insert(['userID'=>$userID,'from_userID'=>$from_userID]);
+        $obj_account_user_report->insert(['userID'=>$userID,'from_userID'=>$_SESSION['id'],'msgbody'=>$msgbody]);
         return true;
     }
     
@@ -591,11 +592,11 @@ class user extends Api {
     public function notification_unread_count(){
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
-        $rs['blog_comment']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'blog_comment'],"notification_".$tbn);
+        $rs['reply']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'reply'],"notification_".$tbn);
         $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
-        $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
+        $rs['follow']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follow'],"notification_".$tbn);
         $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
-        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['buzz'];
+        $rs['totall']=$rs['reply']+$rs['qqh']+$rs['follow']+$rs['buzz'];
         return $rs;
     }
     
