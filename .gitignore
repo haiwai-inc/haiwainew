@@ -32,3 +32,7 @@ Thumbs.db
 /www/include/editor/ckeditor5/build
 /www/include/editor/ckeditor5/node_modules
 .DS_Store
+
+
+
+/vue/src/module/blog/pages/editor/EditorPage copy.vue

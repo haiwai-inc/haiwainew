@@ -4,7 +4,7 @@
             <div class="user-bgup"></div>
         </div>
         <div class="user-avatar d-flex py-2">
-            <div class="avatarbox" @click="test()">
+            <div class="avatarbox" @click="go()">
                 <div 
                 v-if="!data.userinfo_userID.avatar" 
                 class="avatar-word" :style="{height:'90px',width:'90px',lineHeight:'90px'}">{{data.userinfo_userID.first_letter}}</div>
@@ -138,6 +138,13 @@ export default {
                 this.modals.sendQqhModal=res.status?false:true;
             },2000)
         //   console.log(res);
+        },
+        go(){
+            let url=this.$route.path
+            let isidx = url.indexOf('blog/user')
+            if(isidx==-1){
+                this.$router.push('/blog/user/' + this.data.id);
+            }
         }
     },
     data() {
