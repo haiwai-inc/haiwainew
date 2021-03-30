@@ -160,7 +160,7 @@ class user extends Api {
         //同步文集数
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
-        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']+1],['postID'=>$postID]);
+        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']+1],['id'=>$rs_article_indexing['categoryID']]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
