@@ -622,6 +622,7 @@ export default {
           {title: 'medium', value:'medium-img'},
           {title: 'narrow', value:'narrow-img'},
         ],
+        image_description:false,
         // media_poster:false,
         content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;}',
         video_template_callback : function(data){

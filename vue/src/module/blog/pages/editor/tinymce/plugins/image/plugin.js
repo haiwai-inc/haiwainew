@@ -1460,9 +1460,9 @@
         var tabPanel = {
           type: 'tabpanel',
           tabs: flatten([
-            [MainTab.makeTab(info)],
             info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-            info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
+            info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : [],
+            [MainTab.makeTab(info)],
           ])
         };
         return tabPanel;
