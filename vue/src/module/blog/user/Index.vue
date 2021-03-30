@@ -3,7 +3,10 @@
       <div>
         <main-menu type="-1"></main-menu>
       </div>
-      <div class="row">
+      <div v-if="$route.params.id==0">
+          <regist-blog></regist-blog>
+      </div>
+      <div class="row" v-if="$route.params.id!=0">
        <div class="col-sm-8 col-12">
             <index-header :userID="Number($route.params.id)"></index-header>
 
@@ -49,6 +52,7 @@ import ArticleListItem from '../pages/components/Main/ArticleListItem.vue';
 import UserIndexSort from '../pages/components/Main/UserIndexSort.vue';
 import CollectionList from '../pages/components/Main/CollectionList.vue';
 import IndexHeader from './IndexHeader';
+import RegistBlog from '../../user/login/RegistBlog';
 
 import blog from '../blog.service';
 
@@ -58,7 +62,8 @@ export default {
     MainMenu,
     ArticleListItem,
     CollectionList,
-    IndexHeader
+    IndexHeader,
+    RegistBlog
   },
   created () {
     this.loadArticle(this.currentTabId);

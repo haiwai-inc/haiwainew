@@ -25,7 +25,10 @@
             </div>
          </div>
          <div class="col-sm-8 col-12">
-            <div v-if="menuId===0">
+            <div v-if="menuId===0 && !$store.state.user.bloggerID">
+               <regist-blog></regist-blog>
+            </div>
+            <div v-if="menuId===0 && $store.state.user.bloggerID">
                <h6 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h6>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
@@ -166,9 +169,10 @@ import {
 import avatarUpload from 'vue-image-crop-upload';
 import EleUploadImage from "vue-ele-upload-image";
 import account from './service/account';
+import RegistBlog from './login/RegistBlog';
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
- import Editor from '@tinymce/tinymce-vue'
+import Editor from '@tinymce/tinymce-vue'
 
 export default {
   name: 'profile',
@@ -177,20 +181,15 @@ export default {
    //  Avatar,
     MainMenu,
     [FormGroupInput.name]: FormGroupInput,IconAccountSet,IconBlogSet,IconBlackList,IconDelete,
+    RegistBlog,
     VueCropper, 
    //  'el-upload':EleUpload
    //  EleUploadImage,
    //  Croppa 
   },
    created(){
-      account.get_user_profile().then(res=>{
-         if(res.status){
-            this.authorInfor = res.data
-            console.log(this.authorInfor)
-         }else{
-
-         }
-      });
+      this.authorInfor = this.$store.state.user.userinfo.userinfo_id
+      
       this.getBlackList(0);
       this.getBlogProfile();
    },
