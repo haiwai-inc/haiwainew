@@ -592,11 +592,11 @@ class user extends Api {
     public function notification_unread_count(){
         $obj_account_notification=load("account_notification");
         $tbn=substr('0'.$_SESSION['id'],-1);
-        $rs['blog_comment']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'blog_comment'],"notification_".$tbn);
+        $rs['reply']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'reply'],"notification_".$tbn);
         $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
-        $rs['follower']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follower'],"notification_".$tbn);
+        $rs['follow']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follow'],"notification_".$tbn);
         $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
-        $rs['totall']=$rs['blog_comment']+$rs['qqh']+$rs['follower']+$rs['buzz'];
+        $rs['totall']=$rs['reply']+$rs['qqh']+$rs['follow']+$rs['buzz'];
         return $rs;
     }
     
