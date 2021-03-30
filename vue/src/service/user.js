@@ -148,6 +148,15 @@ class User extends API{
     }
 
     /**
+     * 举报
+     * @param {要举报的用户id} userID 
+     * @param {举报内容} msgbody
+     */
+     async report_add(userID,msgbody){
+        return await this.sendget("account/user/report_add/?userID="+userID+"&msgbody="+msgbody)
+    }
+
+    /**
      * 获取我的收藏
      * @param {翻页时需要的参数，为当前列表的最后一个id；初始值为0} lastID 
      */

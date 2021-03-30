@@ -14,9 +14,26 @@
               :hideArrow="true"
               haiwaiClass="haiwaiicon"
               style="padding:0;"
-            >
-              <a class="dropdown-item" href="#">举报</a>
-              <a class="dropdown-item pl-4" href="javascript:void(0)" @click="blockUser(data.userID)">加入黑名单</a>
+              >
+                <el-popover 
+                placement="bottom-start"
+                width="375" 
+                :ref="'report-'+data.postID"
+                trigger="click">
+                  <div>我要举报 <b>{{data.userinfo_userID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
+                  <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
+                  <n-button 
+                  type="primary"
+                  round 
+                  simple
+                  :disabled="replybtndisable"
+                  @click="report(data)"
+                    >举报</n-button
+                  >
+                  <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
+                </el-popover>
+                <!-- <a class="dropdown-item" href="javascript:void(0)" @click="report(data)">举报</a> -->
+                <a class="dropdown-item pl-4" href="javascript:void(0)" style="color:gray" @click="blockUser(data.userID)">加入黑名单</a>
             </drop-down>
             </span>
           </div>
@@ -295,8 +312,12 @@ export default {
       }
       this.$emit("regetcomment",id);console.log(id)
     },
-    checkstatus(){
-      this.replybtndisable = this.replymsgbody?false:true;
+    checkstatus(type){
+      if(type==1){
+        this.replybtndisable = this.reportmsgbody?false:true;
+      }else{
+        this.replybtndisable = this.replymsgbody?false:true;
+      }
     },
     replystatus(id){
       let obj = document.getElementById(id);
@@ -308,6 +329,19 @@ export default {
       this.$store.state.user.blacklist_add(id).then(res=>{
         console.log(res)
       })
+    },
+    //举报
+    report(data){
+      let pop = 'report-'+data.postID;
+      this.$store.state.user.report_add(data.userID,this.reportmsgbody).then(res=>{
+        console.log(res.status);
+        this.report_status = true;
+        setTimeout(()=>{
+          this.report_status = false;
+          this.$refs[`${pop}`].doClose();
+        },2000)
+      }
+      )
     }
   },
   data(){
@@ -316,6 +350,8 @@ export default {
       loginuserID:-1,
       replyshowstatus:'显示',
       replymsgbody:'',
+      reportmsgbody:'',
+      report_status:false,
       replyusername:'',
       replybtndisable:true,
       noMore:false,
