@@ -18,7 +18,9 @@ class page extends Api {
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
+        
         if(empty($rs_article_indexing['postInfo_postID']['buzz'])){
             return [];
         }
@@ -44,7 +46,8 @@ class page extends Api {
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         $obj_search_article_noindex=load("search_article_noindex");
-        $rs_search_article_noindex=$obj_search_article_noindex->get_postInfo([$rs_article_indexing])[0];
+        $rs_search_article_noindex=$obj_search_article_noindex->get_postInfo([$rs_article_indexing]);
+        $rs_search_article_noindex=empty($rs_search_article_noindex)?[]:$rs_search_article_noindex[0];
         
         $rs=['qr_code'=>picture::QRCode($url, 200),'article_data'=>$rs_search_article_noindex];
         return $rs;

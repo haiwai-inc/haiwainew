@@ -101,7 +101,8 @@
         </div> -->
                </div>
                <div>
-                  <p class="pt-3"><b>{{$t('message').setting.accout_name}}</b></p>
+                  <p class="pt-3"><b>{{$t('message').setting.accout_name}}</b>
+                  <span v-if="err.username.flag" class="ml-4 text-danger">{{err.username.msg}}</span></p>
                   <fg-input
                      :placeholder="$t('message').setting.accout_name_ph"
                      v-model="authorInfor.username">
@@ -112,6 +113,7 @@
                      v-model="authorInfor.description"
                      >
                   </fg-input>
+                  <button class="btn btn-round btn-primary" @click="user_profile_update">{{$t('message').setting.blog_save_btn}}</button>
                   <p class="pt-3"><b>{{$t('message').setting.accout_accout}}</b> : <span>{{authorInfor.email}}</span></p>
                   <hr class="mb-4">
                   <p class="pt-3"><b>{{$t('message').setting.accout_pass}}</b></p>
@@ -213,6 +215,7 @@ export default {
       }
     };
     return{
+      user:this.$store.state.user,
       menuId:1,
       authorInfor : null,
       show: false,
@@ -227,6 +230,10 @@ export default {
       blogProfile:{},
       err:{
          bloggername:{
+            flag:false,
+            msg:""
+         },
+         username:{
             flag:false,
             msg:""
          }
@@ -399,26 +406,26 @@ export default {
        this.$refs[name].click();
     },
       async getBlackList(lastID){
-         let v = await this.$store.state.user.blacklist_list(lastID);
+         let v = await this.user.blacklist_list(lastID);
          if(v.status){
             this.blackList = v.data;console.log(v.data)
          }
       },
       blackListRemove(item){
-         this.$store.state.user.blacklist_delete(item.blockID).then(res=>{
+         this.user.blacklist_delete(item.blockID).then(res=>{
             console.log(res);
             this.getBlackList(0);
          })
       },
       async getBlogProfile(){
-         let v = await this.$store.state.user.blogger_profile();
+         let v = await this.user.blogger_profile();
          if(v.status){
             this.blogProfile=v.data;
             console.log(v)
          }
       },
       saveBlogProfile(){
-         this.$store.state.user.blogger_profile_update(this.blogProfile.name,this.blogProfile.description).then(res=>{
+         this.user.blogger_profile_update(this.blogProfile.name,this.blogProfile.description).then(res=>{
             console.log(res)
             if(res.status){
                this.getBlogProfile();
@@ -433,6 +440,22 @@ export default {
             }
             this.err.bloggername.msg = res.error
          })
+      },
+      user_profile_update(){
+         if(this.authorInfor.username){
+            this.err.username.flag=false;
+            this.user.user_profile_update(this.authorInfor.username,this.authorInfor.description).then(res=>{
+               console.log(res)
+               if(!res.status){
+                  this.err.username.flag=true;
+                  this.err.username.msg = res.error
+               }
+            })
+         }else{
+            this.err.username.flag=true;
+            this.err.username.msg = this.$t('message').setting.accout_name_err
+         }
+         
       }
 
   }

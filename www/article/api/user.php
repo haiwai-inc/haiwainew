@@ -24,7 +24,8 @@ class user extends Api {
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID")[0];
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         return $rs_article_indexing;
     }
@@ -155,7 +156,8 @@ class user extends Api {
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
-        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true)[0];
+        $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
+        $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         $obj_article_draft=load("article_draft");
         $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
@@ -202,7 +204,9 @@ class user extends Api {
         
         //添加用户信息
         $obj_account_user=load("account_user");
-        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID")[0];
+        $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID");
+        $rs_article_draft=empty($rs_article_draft)?[]:$rs_article_draft[0];
+        
         return $rs_article_draft;
     }
     
@@ -320,8 +324,10 @@ class user extends Api {
         $obj_article_noindex->fetch_and_insert([$postID,$check_main_article_indexing['postID']]);
         
         //添加消息列表
-        $obj_account_notification=load("account_notification");
-        $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
+        if($check_article_indexing['treelevel']==0){
+            $obj_account_notification=load("account_notification");
+            $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
+        }
         
         return true;
     }
@@ -370,15 +376,23 @@ class user extends Api {
         $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
         
         //更新主贴
-        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel'],['postID'=>$check_article_indexing['basecode']]);
+        $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
         if($check_main_article_indexing['treelevel']==2){
-            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel'],['postID'=>$check_article_indexing['basecode']]);
+            $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
         }
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-1],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$id,$check_main_article_indexing['postID']]);
+        
+        //删除记录消息
+        $obj_account_notification=load("account_notification");
+        if($check_article_indexing['userID']==$_SESSION['id']){
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['id']],"notification_".substr('0'.$check_main_article_indexing['userID'],-1));
+        }else{
+            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'userID'=>$_SESSION['id']],"notification_".substr('0'.$_SESSION['id'],-1));
+        }
         
         return true;
     }

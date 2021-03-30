@@ -4,13 +4,13 @@ const cnt = {
         topnav:{
             seachplaceholder:"檢索文章/用戶...",
             notice:"消息",
-            myindex:"我的主頁",
+            myindex:"我的博客",
             myfavorite:"我的收藏",
             mycomment:"我收到的評論",
             myqqh:"我的悄悄話",
             myfuns:"我的粉絲",
-            likeme:"我收到的喜歡",
-            profile:"個人設置",
+            likeme:"我收到的讚",
+            profile:"我的賬號",
             logout:"登出",
             login:"登錄/註冊",
             admin:"運營管理",
@@ -29,7 +29,7 @@ const cnt = {
             notice_menu_comment:"我收到的評論",
             notice_menu_qqh:"我的悄悄話",
             notice_menu_funs:"我的粉絲",
-            notice_menu_likeme:"我收到的喜歡"
+            notice_menu_likeme:"我收到的讚"
         },
         setting:{
             menu_bolg:"博客設置",
@@ -48,6 +48,7 @@ const cnt = {
             accout_avatar_save_btn:"確認修改",
             accout_cancel_btn:"取消",
             accout_name:"筆名",
+            accout_name_err:"筆名不能為空",
             accout_name_ph:"筆名",
             accout_descript:"個人簡介",
             accout_descript_ph:"寫點什麼介紹你自己吧",

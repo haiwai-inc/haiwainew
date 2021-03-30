@@ -5,7 +5,7 @@
     </span>
     <div class="collection-title d-flex justify-content-between">
       <h4>{{title}}</h4>
-      <n-button v-if="false" type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button>
+      <!-- <n-button v-if="false" type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button> -->
     </div>
     <div v-if="data.length===0" class="pl-3">暂无文集</div>
     <div v-if="data.length!==0">
@@ -19,7 +19,7 @@
 </template>
 <script>
 import {
-    IconPlus,
+    // IconPlus,
     IconRight
 } from '@/components/Icons';
 import {
@@ -45,7 +45,7 @@ export default {
     [Button.name]: Button,
     CollectionListItem,
     BlogerListItem,
-    IconPlus,
+    // IconPlus,
     IconRight
   }
   

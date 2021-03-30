@@ -9,60 +9,60 @@
           <div v-if="!articleDetail.status" class="text-center text-warning">{{articleDetail.error}}</div>
           <div v-if="articleDetail.status">
             <h4>{{articleDetail.data.postInfo_postID.title}}</h4>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
-            
-            <span class="media-icons">
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
+              <div style="color:gray;">阅读数：{{articleDetail.data.countinfo_postID.count_read}}</div>
+              <div class="media-icons">
+                <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
+                  
+                </button>
+                <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" @click="like()">
+                  <span v-if="articleDetail.data.postInfo_postID.is_buzz" style="fill:#39B8EB" v-html="icons.like"></span>
+                  <span v-if="!articleDetail.data.postInfo_postID.is_buzz" style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
+                </button>
+                <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" @click="bookmark()">
+                  <span v-if="articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star"></span>
+                  <span v-if="!articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star_outline"></span>
+                </button>
                 
-              </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" @click="like()">
-                <span v-if="articleDetail.data.postInfo_postID.is_buzz" style="fill:#39B8EB" v-html="icons.like"></span>
-                <span v-if="!articleDetail.data.postInfo_postID.is_buzz" style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
-              </button>
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" @click="bookmark()">
-                <span v-if="articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star"></span>
-                <span v-if="!articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star_outline"></span>
-              </button>
-              
-              <el-popover
-              placement="top-end"
-              trigger="click"
-              v-model="share.showShareBar"
-              ><div class="shareIcons">
-                <ShareNetwork
-                v-for="item in shareNetworks"
-                :key="item.network"
-                :network="item.network"
-                :url="shareItem.url"
-                :title="shareItem.title"
-                :description="shareItem.description"
-                quote=""
-                hashtags=""
-                >
-                  <span class="shareIcon mr-1" v-html="item.icon" @click="share.showShareBar=false"></span>  
-                </ShareNetwork>
-                <el-popover 
-                placement="bottom-end"
-                width="400" 
+                <el-popover
+                placement="top-end"
                 trigger="click"
-                visible-arrow="false"
-                v-model="share.wechatQR">
-                  <div class="float-right" @click="share.wechatQR=false">关闭</div>
-                  <div class="mt-5">打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮</div>
-                  <img style="margin: 0 95px;" :src="shareItem.QRcode" alt="">
-                  <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                v-model="share.showShareBar">
+                  <div class="shareIcons">
+                    <ShareNetwork
+                    v-for="item in shareNetworks"
+                    :key="item.network"
+                    :network="item.network"
+                    :url="shareItem.url"
+                    :title="shareItem.title"
+                    :description="shareItem.description"
+                    quote=""
+                    hashtags=""
+                    >
+                      <span class="shareIcon mr-1" v-html="item.icon" @click="share.showShareBar=false"></span>  
+                    </ShareNetwork>
+                    <el-popover 
+                    placement="bottom-end"
+                    width="400" 
+                    trigger="click"
+                    visible-arrow="false"
+                    v-model="share.wechatQR">
+                      <div class="float-right" @click="share.wechatQR=false">关闭</div>
+                      <div class="mt-5">打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮</div>
+                      <img style="margin: 0 95px;" :src="shareItem.QRcode" alt="">
+                      <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                    </el-popover>
+                  </div>
+                    
+                  <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
+                    <span style=" fill:#39B8EB;" v-html="icons.share"></span>
+                  </button>
                 </el-popover>
+              
               </div>
-                
-              <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
-                <span style=" fill:#39B8EB;" v-html="icons.share"></span>
-              </button>
-            </el-popover>
-            
-            </span>
             </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
               <!-- blog 正文 -->
@@ -85,7 +85,7 @@
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
-          <div v-if="showcomment">
+          <div v-if="comment.length>0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
@@ -282,6 +282,9 @@ export default {
     },
     rewrite(id){
       console.log("reget",id);
+      if(!id){
+        this.comment.splice(0,1)
+      }
       blog.article_view_comment_one(id).then(res=>{
         this.comment.forEach(obj=>{
           if (obj.postID==id){
@@ -452,7 +455,7 @@ padding: 0 18px;
 }
 .article-page .media-icons .btn{
   font-size: 1.5rem !important;
-  margin:10px 0 0 0;
+  margin:-5px 0 0 0;
 }
 
 @media (max-width: 575.98px){

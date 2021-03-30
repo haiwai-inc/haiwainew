@@ -24,7 +24,7 @@ class account_notification extends Model{
 	    }
 	    if($type=="reply"){
 	        $obj_article_post=load("article_post");
-	        $rs_article_post=$obj_article_post->getOne(['title'],['id'=>$typeID],"post_".substr('0'.$userID,-1));
+	        $rs_article_post=$obj_article_post->getOne(['title'],['postID'=>$typeID],"post_".substr('0'.$userID,-1));
 	        if($msgtype=="add"){
 	            $msgbody=$rs_account_user['username']." 评论了您的文章: ". $rs_article_post['title'];
 	        }

@@ -1,5 +1,5 @@
 <template>
-  <div class="comment d-flex align-items-start mt-2">
+  <div class="comment d-flex align-items-start mt-2" v-if="data.postID">
     
     <!-- <div v-for="(item, index) in data" :key="index" class="d-flex align-items-start mt-2"> -->
         <avatar :data="data.userinfo_userID" :imgHeight="38" class="mr-2"></avatar>
@@ -51,7 +51,7 @@
               cancel-button-text='取消'
               title="确定删除这条回复吗？"
               :hide-icon="true"
-              @confirm="article_reply_delete(data.postID)"
+              @confirm="article_reply_delete(data)"
             >
               <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray">删除</a>
             </el-popconfirm>
@@ -110,7 +110,7 @@
                         cancel-button-text='取消'
                         title="确定删除这条回复吗？"
                         :hide-icon="true"
-                        @confirm="article_reply_delete(r.postID)"
+                        @confirm="article_reply_delete(r)"
                       >
                         <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray;">删除</a>
                       </el-popconfirm>
@@ -237,13 +237,13 @@ export default {
     buzz_add(item){
       blog.buzz_add(item.postID).then(res=>{
         // console.log(res);
-        this.regetComment();
+        this.regetComment(item);
       })
     },
     buzz_delete(item){
       blog.buzz_delete(item.postID).then(res=>{
         // console.log(res)
-        this.regetComment();
+        this.regetComment(item);
       })
     },
     // 回复
@@ -267,7 +267,7 @@ export default {
       if(this.loginuserID!=-1){
         blog.reply_add(obj).then(res=>{
           if(res.status){
-            this.regetComment();
+            this.regetComment(this.currentItem);
             this.replybtndisable = false;
             this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
             this.replymsgbody="";
@@ -278,22 +278,22 @@ export default {
       }
     },
     // 删除回复
-    article_reply_delete(id){
-      blog.reply_delete(id).then(res=>{
-        console.log("Del",id);
+    article_reply_delete(item){
+      blog.reply_delete(item.postID).then(res=>{
+        console.log("Del",item);
         if(res.status){
-          this.regetComment();
+          this.regetComment(item);
         }
       })
     },
-    regetComment(){
+    regetComment(item){
       let id = 0;
-      if(this.currentItem.treelevel==2){
-        id = this.currentItem.basecode;
+      if(item.treelevel==2){
+        id = item.basecode;
       }else{
-        id = this.currentItem.postID;
+        id = item.postID;
       }
-      this.$emit("regetcomment",id);
+      this.$emit("regetcomment",id);console.log(id)
     },
     checkstatus(){
       this.replybtndisable = this.replymsgbody?false:true;

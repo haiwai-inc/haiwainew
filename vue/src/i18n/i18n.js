@@ -3,7 +3,7 @@ import locale from 'element-ui/lib/locale';
 import VueI18n from 'vue-i18n';
 import messages from './langs';
 Vue.use(VueI18n)
-let browserLanguage = window.navigator.language.toLowerCase();console.log(browserLanguage)
+let browserLanguage = window.navigator.language.toLowerCase();
 if(!localStorage.lang){
     if (browserLanguage === 'zh-cn') {
         localStorage.lang = 'cns'

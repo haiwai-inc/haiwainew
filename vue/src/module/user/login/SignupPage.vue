@@ -32,6 +32,16 @@
             center
             v-if="signErr.password">
           </el-alert>
+          <el-dialog
+            title="离成功还差一步！"
+            :visible="signupSuccess"
+            :show-close="false"
+            center>
+            <p class="text-center">请去您的邮箱 <b>{{userEmail}}</b> 进行确认，以完成注册。</p>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="signupSuccess = false">知道了</el-button>
+            </span>
+          </el-dialog>
           <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')" :disabled="signupForm.submitDisable">注册</n-button>
           <p class="text-center checkbox my-2">或</p>
           <n-button type="primary" round simple class="w-100 mb-3" @click="isShowLogin('login')">
@@ -101,6 +111,8 @@ export default {
         policy:[],
         submitDisable:false
       },
+      signupSuccess:false,
+      userEmail:"xxx@gmail.com",
       rules: {
         email:[
           { required: true, validator:validateMail, trigger: 'blur' },
@@ -140,8 +152,10 @@ export default {
           account.signup(this.signupForm).then(res=>{
             console.log(res);
             if(res.status){
+              this.userEmail = this.signupForm.email;
+              this.signupSuccess = true;
               this.initForm();
-              this.$router.go(-1);
+              this.$router.push("/");
             }else{
               this.signErr = res.error;
               this.signupForm.submitDisable = true;
