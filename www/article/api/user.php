@@ -406,7 +406,7 @@ class user extends Api {
         if($check_main_article_indexing['treelevel']==2){
             $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
         }
-        $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$check_main_article_indexing['postID']]);
+        $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$id]);
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete-1],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
