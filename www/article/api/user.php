@@ -145,6 +145,32 @@ class user extends Api {
     
     /**
      * 编辑器页
+     * 文章 删除
+     * @param integer $postID | 文章的postID
+     * @param integer $visible | 1开 0关
+     */
+    public function article_delete($postID,$visible){
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID]);
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        $time=times::gettime();
+        $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
+        
+        //同步文集数
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
+        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']+1],['postID'=>$postID]);
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
+        
+        return true;
+    }
+    
+    /**
+     * 编辑器页
      * 文章 草稿 添加
      * @param integer $id | 编辑帖子id
      */
@@ -419,24 +445,6 @@ class user extends Api {
      */
     public function article_add_audio(){
         
-    }
-    
-    /**
-     * 编辑器页 
-     * 文章 删除
-     * @param integer $postID | 文章的postID
-     * @param integer $visible | 1开 0关
-     */
-    public function article_delete($postID,$visible){
-        $obj_article_indexing=load("article_indexing");
-        $time=times::gettime();
-        $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
-        
-        //同步ES索引
-        $obj_article_noindex=load("search_article_noindex");
-        $obj_article_noindex->fetch_and_insert([$postID]);
-        
-        return true;
     }
     
     /**
