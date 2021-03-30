@@ -148,10 +148,12 @@ export default {
     async allNoticeCount(){
       let n = await this.user.notification_unread_count();
       if(n.status){
+        // "reply":1,"qqh":0,"follow":0,"buzz":0,"totall":1
         this.data[0].unread=n.data.totall;
-        this.data[1].unread=n.data.blog_comment;
+        // this.data[1].unread=n.data.blog_comment;
+        this.data[1].unread=n.data.reply;
         this.data[2].unread=n.data.qqh;
-        this.data[3].unread=n.data.follower;
+        this.data[3].unread=n.data.follow;
         this.data[4].unread=n.data.buzz;
       }
     },
