@@ -276,6 +276,7 @@ class blog_tool{
             $field=[
                 "bloggerID"=>$rs['blogger_new']['id'],
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
+                'count_article'=>1
             ];
             $field['id']=$this->obj_blog_category->insert($field);
         }else{

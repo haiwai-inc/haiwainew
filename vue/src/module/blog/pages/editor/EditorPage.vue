@@ -169,11 +169,11 @@ import {
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../blog.service";
-import tinymce from 'tinymce/tinymce'
+import tinymce from './tinymce/tinymce.min'
 import 'tinymce/themes/silver'
 import 'tinymce/icons/default/icons.js'
-import 'tinymce/plugins/image'
-import 'tinymce/plugins/media'
+import './tinymce/plugins/image'
+import './tinymce/plugins/media'
 import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/lists'
@@ -181,11 +181,10 @@ import 'tinymce/plugins/link'
 import 'tinymce/plugins/anchor'
 import 'tinymce/plugins/charmap'
 import 'tinymce/plugins/print'
-import 'tinymce/plugins/image'
 import 'tinymce/plugins/emoticons'
 import 'tinymce/plugins/emoticons/js/emojis.js'
 import 'tinymce/plugins/fullscreen'
-// import 'tinymce/plugins/fontsizeselect'
+// import './tinymce/plugins/fontsizeselect'
 
 import 'tinymce/plugins/searchreplace'
 import 'tinymce/plugins/visualblocks'
@@ -618,8 +617,14 @@ export default {
         fontsize_formats: 'x-Large Medium x-Small',
         media_dimensions:false,
         media_live_embeds:true,
+        image_class_list : [
+          {title: 'wide', value:'wide-img'},
+          {title: 'medium', value:'medium-img'},
+          {title: 'narrow', value:'narrow-img'},
+        ],
+        image_description:false,
         // media_poster:false,
-        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body {font-size:medium;}',
+        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;}',
         video_template_callback : function(data){
             return "";
         }
