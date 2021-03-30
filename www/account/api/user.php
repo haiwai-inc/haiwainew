@@ -163,6 +163,20 @@ class user extends Api {
     }
     
     /**
+     * 很多页
+     * 举报 添加
+     * @param integer $userID|举报用户的userID
+     */
+    public function report_add($userID){
+        $obj_account_user_report=load("account_user_report");
+        $check_account_user_report=$obj_account_user_report->getOne("*",['userID'=>$userID,'from_userID'=>$_SESSION['id']]);
+        if(!empty($check_account_user_report))  {$this->error="您已经举报过次用户了";$this->status=false;return false;}
+        
+        $obj_account_user_report->insert(['userID'=>$userID,'from_userID'=>$from_userID]);
+        return true;
+    }
+    
+    /**
      * 文章详情页
      * 书签 添加
      * @param integer $postID|收藏文章的postID
