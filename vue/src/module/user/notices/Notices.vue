@@ -72,11 +72,7 @@ import icons from "@/components/Icons/Icons";
   * 
   * 清空特定类型的消息
   * http://local.haiwainew.com/api/v1/account/user/notification_unread_clear/?type=blog_comment
-  * 小铃铛功能，这个接口里面的字段换了一下
-
-{"data":{"reply":1,"qqh":0,"follow":0,"buzz":0,"totall":1},"error":false,"status":true}
-
-/api/v1/account/user/notification_unread_count/
+  * 
  */
 export default {
   name: "notices",

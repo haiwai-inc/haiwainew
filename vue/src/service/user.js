@@ -88,7 +88,14 @@ class User extends API{
      * 激活博客
      */
     async blog_register(){
-        return await this.sendget("blog/passport/blog_register/");
+        let res = await this.sendget("blog/passport/blog_register/");
+        if (res.status){
+            this.getUserInfo(this.userinfo.id).then(r=>{
+                if(r.status){
+                    return res
+                }
+            })
+        }
     }
 
     /**

@@ -38,7 +38,7 @@
               </article-list-item>
             </div>
             <div v-if="selectID>0">
-              <index-header :userID="selectID"></index-header>
+              <index-header :bloggerID="selectID"></index-header>
               <article-list-item 
                 v-for="item in articlelists"
                 v-bind:key="item.articleID"

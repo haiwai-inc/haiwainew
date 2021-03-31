@@ -16,7 +16,13 @@ class Blog extends API{
 	 * 返回推荐博主列表
 	 */
   async hot_blogger(){
-    return await this.sendget("blog/page/hot_blogger/");
+    let res = await this.sendget("blog/page/hot_blogger/");
+	if(res.status){
+		res.data.data.forEach(item=>{
+			item.bloggerID = item.id
+		})
+	}
+	return res
   }
   
   /**
@@ -61,7 +67,12 @@ class Blog extends API{
 	 *          bloggerID
 	 */
   async blogger_info(bloggerID){
-    return await this.sendget("blog/page/blogger_info/?bloggerID="+bloggerID);
+    let res = await this.sendget("blog/page/blogger_info/?bloggerID="+bloggerID);
+	if(res.status){
+		res.data.bloggerID = res.data.id
+	}
+	console.log(res)
+	return res
   }
   
   /**
@@ -70,9 +81,9 @@ class Blog extends API{
 	 * @param number
 	 *          bloger
 	 */
-  async getArticleList(bloger){
-      return await this.sendget("blog/dashboard/getArticleList/?bloger="+bloger)
-  }
+//   async getArticleList(bloger){
+//       return await this.sendget("blog/dashboard/getArticleList/?bloger="+bloger)
+//   }
 
   /**
 	 * 返回正文页内容

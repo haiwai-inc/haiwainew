@@ -8,7 +8,7 @@
       </div>
       <div class="row" v-if="$route.params.id!=0">
        <div class="col-sm-8 col-12">
-            <index-header :userID="Number($route.params.id)"></index-header>
+            <index-header :bloggerID="Number($route.params.id)"></index-header>
 
             <div class="profile-header mt-2 mb-3">
             <ul class="nav justify-content-center">

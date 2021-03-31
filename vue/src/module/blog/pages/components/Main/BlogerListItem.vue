@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
       <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
-        <router-link :to="'/blog/user/'+data.id">
+        <router-link :to="'/blog/user/'+data.bloggerID">
         <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
         <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
           <div v-if="!data.userinfo_userID.avatar" class="avatar-word">{{data.userinfo_userID.first_letter}}</div>
@@ -16,7 +16,7 @@
       <div class='align-self-center right pl-2 flex-grow-1'> 
           <div class="d-flex align-self-center justify-content-between">
               <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-                <router-link :to="'/blog/user/'+data.userID">{{data.userinfo_userID.username}}
+                <router-link :to="'/blog/user/'+data.bloggerID">{{data.userinfo_userID.username}}
                 </router-link>
               </div>
               <div>

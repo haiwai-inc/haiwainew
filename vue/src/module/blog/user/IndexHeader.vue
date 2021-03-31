@@ -35,7 +35,7 @@
                 :type="data.userinfo_userID.is_following?'default':'primary'" 
                 round 
                 simple 
-                @click="$router.push('/blog/user/'+data.userID)"
+                @click="$router.push('/blog/user/'+data.bloggerID)"
                 class="editbtn ml-3"
                 size="sm"
                 >
@@ -95,10 +95,10 @@ import blog from '../blog.service';
 export default {
     name: 'blog-user-index-header',
     props:{
-        userID:Number
+        bloggerID:Number
     },
     watch:{
-        'userID':function(){console.log("123")
+        'bloggerID':function(){
             this.getInfo();
         }
     },
@@ -115,7 +115,7 @@ export default {
     },
     methods:{
         getInfo(){
-            blog.blogger_info(this.userID).then(res=>{
+            blog.blogger_info(this.bloggerID).then(res=>{
                 this.data = res.data;
                 this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
                 console.log(this.data);
@@ -143,7 +143,7 @@ export default {
             let url=this.$route.path
             let isidx = url.indexOf('blog/user')
             if(isidx==-1){
-                this.$router.push('/blog/user/' + this.data.id);
+                this.$router.push('/blog/user/' + this.data.bloggerID);
             }
         }
     },

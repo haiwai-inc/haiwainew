@@ -11,7 +11,12 @@ export default {
         onSubmit(){
             this.$store.state.user.blog_register().then(res=>{
                 if(res.status){
-                    this.$router.push('/blog/editor');
+                    this.$store.state.user.getUserInfo(this.$store.state.user.userinfo.id).then(res=>{
+                        console.log(res.data);
+                        if(res.status){
+                            this.$router.push('/blog/editor');
+                        }
+                    });
                 }
             })
         }

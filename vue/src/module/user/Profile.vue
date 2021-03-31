@@ -25,10 +25,10 @@
             </div>
          </div>
          <div class="col-sm-8 col-12">
-            <div v-if="menuId===0 && !$store.state.user.bloggerID">
+            <div v-if="menuId===0 && $store.state.user.bloggerID==0">
                <regist-blog></regist-blog>
             </div>
-            <div v-if="menuId===0 && $store.state.user.bloggerID">
+            <div v-if="menuId===0 && $store.state.user.bloggerID!=0">
                <h6 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h6>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
