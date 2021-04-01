@@ -16,7 +16,8 @@ class sync_follower_update{
                 $rs_account_follow=explode("_",$v);
                 
                 //同步数据库
-                $obj_account_follow->update(['follower_update'=>$rs_account_follow[2]],['followerID'=>$rs_account_follow[0],'followingID'=>$rs_account_follow[1]]);
+                $time=times::gettime();
+                $obj_account_follow->update(['follower_update'=>$time],['followerID'=>$rs_account_follow[0],'followingID'=>$rs_account_follow[1]]);
                 
                 //移除更新ID
                 $obj_account_follow->obj_redis->srem($obj_account_follow->sync_follower_update_key,$v);

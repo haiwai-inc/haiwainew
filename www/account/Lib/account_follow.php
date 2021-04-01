@@ -28,8 +28,7 @@ class account_follow extends Model{
         }
         
         //添加关注更新ID
-        $time=times::gettime();
-        $this->obj_redis->sAdd($this->sync_follower_update_key, $_SESSION['id']."_".$followingID."_".$time); 
+        $this->obj_redis->sAdd($this->sync_follower_update_key, $_SESSION['id']."_".$followingID); 
 	}
 }
 ?>

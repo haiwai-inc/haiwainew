@@ -212,6 +212,10 @@ class user extends Api {
         //添加文章计数信息
         $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
+        //更新关注时间缓存
+        $obj_account_follow=load("account_follow");
+        $obj_account_follow->sync_follower_update($followingID);
+        
         return $rs_article_indexing;
     }
     
