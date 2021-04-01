@@ -46,7 +46,7 @@
       </div>
     </template>
     <template slot="navbar-menu">     
-      <drop-down
+      <drop-down v-if="!($route.path.indexOf('/blog/p/'))"
         class="nav-item dropdown"
         icon="now-ui-icons text_caps-small"
         style="margin-top:3px;"
