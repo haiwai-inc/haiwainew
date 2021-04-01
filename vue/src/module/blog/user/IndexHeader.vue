@@ -22,7 +22,13 @@
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.bloggerinfo_id.count_follower}}</span>
             </div>
-            <div class="pr-3">
+            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
+                <n-button  
+                link 
+                size="sm"
+                >博客设置</n-button>
+            </div>
+            <div class="pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
                 <n-button  
                 link 
                 size="sm"

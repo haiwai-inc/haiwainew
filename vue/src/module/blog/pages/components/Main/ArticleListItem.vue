@@ -1,6 +1,6 @@
 <template>
   <div class="list-itme d-flex mb-3">
-    <div>
+    <div class="flex-fill">
       <router-link :to="'/blog/p/'+data.postID">
         <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
         <p class="descript" v-html="data.postInfo_postID.msgbody"></p>
@@ -19,6 +19,18 @@
             <span class="ml-3" v-if="type=='bookmark'">
               <a herf="javascript:void(0)" v-if="data.postInfo_postID.is_bookmark==1" @click="deletBookmark(data.postID)">取消收藏</a>
             </span>
+
+            <a class="ml-3" v-if="data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb">编辑</a>
+            <el-popconfirm  v-if="data.userID==$store.state.user.userinfo.UserID"
+              placement="top-end"
+              confirm-button-text='删除'
+              cancel-button-text='取消'
+              title="确定删除这篇文章吗？"
+              :hide-icon="true"
+              @confirm="article_delete(data)"
+            >
+              <a href="javascript:void(0)" slot="reference" class="ml-3" style="color:#39b8eb">删除</a>
+            </el-popconfirm>
           </div>
         </div>
     </div>
@@ -58,7 +70,10 @@ export default {
   },
   methods:{
     deletBookmark(postID){
-      this.$emit('delete-bookmark',postID);console.log(postID)
+      this.$emit('delete-bookmark',postID);
+    },
+    article_delete(item){
+      console.log("删除功能");
     }
   }
    

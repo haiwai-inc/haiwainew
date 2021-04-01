@@ -20,8 +20,8 @@
               :class="{active:selectID==item.followingID}"
                @click="selectItem(item.followingID)">
                 <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar>
-                <span class="pl-2">{{item.userinfo_followingID.username}}</span>
-                <span class="ml-auto">123</span>
+                <span class="pl-2 ">{{item.userinfo_followingID.username}}</span>
+                <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
               </li>
             </ul>
             
@@ -131,7 +131,14 @@ export default {
 };
 </script>
 <style>
-
+.noticealert{ 
+  position: absolute;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #FF3636;
+}
 .followed-blogger ul {
   list-style: none;
   padding-left: 0;

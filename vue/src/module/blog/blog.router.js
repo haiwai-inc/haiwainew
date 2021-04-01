@@ -39,6 +39,11 @@ export default [
         name: 'bloguserindex',
         components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
       },{
+        path: '/blog/my',
+        name: 'myblog',
+        components: { default:resolve => require (['./user/blog/Index.vue'],resolve), header: MainNavbar},
+        meta:{requiresAuth:true}
+      },{
         path: '/blog/c/:userid/:catid',
         name: 'categorindex',
         components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar},
