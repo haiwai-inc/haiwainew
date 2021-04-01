@@ -20,13 +20,13 @@ class sync_article_count_read{
                 
                 $count_read=$obj_count_tool->view_article($v);
                 
-                //sync database
+                //同步数据库
                 $obj_article_indexing->update(['count_read'=>$count_read],['postID'=>$v]);
                 
-                //remove sync_article_key
+                //移除更新ID
                 $obj_count_tool->obj_redis->srem($obj_count_tool->sync_article_key,$v);
                 
-                //add sync blogger key
+                //添加博主更新ID
                 $obj_count_tool->obj_redis->sAdd($obj_count_tool->sync_blogger_key, $rs_article_indexing['bloggerID']);
                 
                 echo "{$v}\n";

@@ -13,21 +13,23 @@ npm run build
 # account
 # 发送用户邮件
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/send_email.php
+# 更新关注时间
+*/1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/sync_follower_update.php
 
 # blog
 # 同步文学城博客推荐
 */5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/sync_recommend_post.php
-#生成最热博主
+# 生成最热博主
 0 */12 * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/generate_hot_blogger.php
 # 生成最热标签
 0 */12 * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/generate_hot_tag.php
 
 # search
-#同步修改的文章到搜索引擎
+# 同步修改的文章到搜索引擎
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_search.php
-#同步博客名和用户名到搜索引擎
+# 同步博客名和用户名到搜索引擎
 */5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_blogger.php
-#同步标签和文集到搜索引擎
+# 同步标签和文集到搜索引擎
 */5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_category_tag.php
 
 # article

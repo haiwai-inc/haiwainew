@@ -290,6 +290,12 @@ class page extends Api {
         $obj_count_tool=load("count_tool");
         $obj_count_tool->add_article($id);
         
+        //更新关注时间缓存
+        if(!empty($_SESSION['id'])){
+            $obj_account_follow=load("account_follow");
+            $obj_account_follow->sync_follower_update($rs_article_indexing['userID']);
+        }
+        
         return $rs_article_indexing;
     }
     
