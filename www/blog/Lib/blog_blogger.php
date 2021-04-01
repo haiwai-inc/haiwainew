@@ -84,6 +84,11 @@ class blog_blogger extends Model{
 	    if(!empty($module_data['edit'])){
 	        $fields_blogger['update_type']='edit_article';
 	    }
+	    
+	    //更新关注时间
+	    $obj_account_follow=load("account_follow");
+	    $obj_account_follow->update(['following_update'=>$time],["followingID"=>$check_blogger['userID']]);
+	    
 	    $this->update($fields_blogger,['id'=>$module_data['bloggerID']]);
 	}
 	

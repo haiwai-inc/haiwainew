@@ -15,8 +15,7 @@ class sync_blogger_count_read{
         $rs_blogger_key=$obj_count_tool->obj_redis->SMEMBERS($obj_count_tool->sync_blogger_key);
         if(!empty($rs_blogger_key)){
             foreach($rs_blogger_key as $v){
-                
-                //count all articles
+                //计数文章
                 $lastid=0;
                 $count=0;
                 while($rs_article_indexing=$obj_article_indexing->getAll(['postID','count_read'],['bloggerID'=>$v,'postID,>'=>$lastid,'limit'=>500,'treelevel'=>0,'visible'=>1,'order'=>['postID'=>'ASC']])){
@@ -27,10 +26,10 @@ class sync_blogger_count_read{
                     }
                 }
                 
-                //sync database
+                //同步数据库
                 $obj_blog_blogger->update(['count_read'=>$count],['id'=>$v]);
                 
-                //remove sync_blogger_key
+                //移除博主更新ID
                 $obj_count_tool->obj_redis->srem($obj_count_tool->sync_blogger_key,$v);
                 echo "========================================{$v}\n";
             }

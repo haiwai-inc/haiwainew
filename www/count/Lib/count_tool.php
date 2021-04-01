@@ -18,19 +18,18 @@ class count_tool{
     
     //读数+1
     function add_article($id){
-        //init cache
         $rs=$this->view_article($id);
         
-        //buffer
+        //缓冲
         $rs_buffer=$this->obj_redis->incr($id.$this->buffer_key);
         $this->obj_redis->expire($id."_buffer",$this->buffer_time);
         
-        //real counter
+        //添加计数
         if($rs_buffer<$this->buffer_max){
             $rs=$this->obj_redis->incr($id);
         }
         
-        //add sync article key
+        //添加文章更新ID
         $this->obj_redis->sAdd($this->sync_article_key, $id); 
         
         return $rs;
