@@ -13,6 +13,8 @@ npm run build
 # account
 # 发送用户邮件
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/send_email.php
+# 更新关注时间
+*/1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/sync_follower_update.php
 
 # blog
 # 同步文学城博客推荐
