@@ -168,7 +168,7 @@ export default {
   data(){
     return {
       bodyclass:'',
-      langswitch: localStorage.lang?localStorage=='cns'?true:false:true,
+      langswitch: localStorage.lang?localStorage.lang=='cns'?true:false:true,
       keyword: '',
       search:this.$store.state.search,
       stopDOM : ["BR","TIME","IMG","CANVAS","SCRIPT"],
@@ -258,6 +258,7 @@ export default {
   },
   mounted() {
     this.translatePage();
+    this.s_t(this.langswitch);
   }
 };
 </script>
