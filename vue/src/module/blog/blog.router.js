@@ -30,6 +30,11 @@ export default [
         components: { default:resolve => require (['./pages/editor/EditorPage.vue'],resolve)},
         meta:{requiresAuth:true}
       },{
+        path: '/blog/my/editor',
+        name: 'myeditor',
+        components: { default:resolve => require (['./pages/editor/Index.vue'],resolve)},
+        meta:{requiresAuth:true}
+      },{
         path: '/blog/success',
         name: 'success',
         components: { default:resolve => require (['./pages/editor/Success.vue'],resolve), header: MainNavbar},

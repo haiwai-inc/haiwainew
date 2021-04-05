@@ -10,6 +10,7 @@ class User extends API{
     });
     published = {};
     notice={};
+    myEditor={};
     editorObj=[];
     editorTabStatus=[];
     /**

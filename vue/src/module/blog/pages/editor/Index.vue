@@ -1,55 +1,72 @@
 <template>
-  <div class="row no-gutters publisher">
-    <div class="col-md-2 menu1">
-      <div class="header">
-        <router-link class="navbar-brand" to="/">
-          <haiwai-logo-white></haiwai-logo-white>
-        </router-link>
-      </div>
-      <div class="d-sm-none"> <!-- for mobile -->
-        <el-collapse v-model="activeName" accordion>
-          <el-collapse-item title="日记本" name="1">
-            <div>
-              与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；
-            </div>
-            <div>
-              在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。
-            </div>
-          </el-collapse-item>
-          <el-collapse-item title="飞鸟集" name="2">
-            <div>
-              控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；
-            </div>
-            <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-          </el-collapse-item>
-          <el-collapse-item title="飞猪集" name="3">
-            <div>简化流程：设计简洁直观的操作流程；</div>
-            <div>
-              清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；
-            </div>
-            <div>
-              帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-      </div>
-      <div class="d-none d-sm-block">
-        <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId" :activeid="articleActiveId"></category-list>
-      </div>
-    </div>
-    <div class="col-md-3 menu2 d-none d-sm-block">
-      <category-article-list 
-      @setarticleid="setArtid" 
-      :wjid="wenjiActiveId" 
-      :cats="wenjiList"
-      ref="articlelist"
-      ></category-article-list>
+  <div class="container publisher">
+    <div class="row editorbox">
       
-    </div>
-    <div v-if="articleActiveId==0" class="col-md-7">
-      <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
-    </div>
-    <div v-if="articleActiveId!=0" class="col-md-7 editor" id="editor_container" ref="editorContainer">
+      <!-- <div class="col-md-4">
+        <div class="header">
+          <router-link class="navbar-brand" to="/">
+            <haiwai-logo-white></haiwai-logo-white>
+          </router-link>
+        </div>
+        <div class="d-sm-none"> 
+          <el-collapse v-model="activeName" accordion>
+            <el-collapse-item title="日记本" name="1">
+              <div>
+                与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；
+              </div>
+              <div>
+                在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。
+              </div>
+            </el-collapse-item>
+            <el-collapse-item title="飞鸟集" name="2">
+              <div>
+                控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；
+              </div>
+              <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+            </el-collapse-item>
+            <el-collapse-item title="飞猪集" name="3">
+              <div>简化流程：设计简洁直观的操作流程；</div>
+              <div>
+                清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；
+              </div>
+              <div>
+                帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+        <div class="d-none d-sm-block">
+          <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId" :activeid="articleActiveId"></category-list>
+        </div>
+      </div> -->
+      <!-- <div class="col-md-3 menu2 d-none d-sm-block">
+        <category-article-list 
+        @setarticleid="setArtid" 
+        :wjid="wenjiActiveId" 
+        :cats="wenjiList"
+        ref="articlelist"
+        ></category-article-list>
+      </div> -->
+      <!-- <div v-if="articleActiveId==0" class="col-md-7">
+        <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
+      </div> -->
+      <div class="col-md-8 editor mx-auto col-12" id="editor_container" ref="editorContainer">
+        <div class="col-12 d-flex mt-3">
+          <div class=" flex-fill"><h5>发表博客文章</h5></div>
+          <div class="mr-3 text-muted">所属目录：我的文章</div>
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              更多功能<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-folder">移动文章</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-arrow-up">置顶文章</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check">允许评论</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check">允许转载</el-dropdown-item>
+              <el-dropdown-item divided icon="el-icon-delete">删除文章</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
         <div ref="saving" style="font-size:13px;padding-left:8px;">
           <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
           <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
@@ -63,18 +80,39 @@
           />
         </div>
 
-        <!-- 编辑器 -->
-        
-        <!-- <div id="summernote"></div> -->
-        <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
-        <editor
-        :init="editorConfig"
-        v-model="curentArticle.postInfo_postID.msgbody"
+          <!-- 编辑器 -->
+          
+          <!-- <div id="summernote"></div> -->
+          <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
+        <editor v-if="curentArticle.postInfo_postID.msgbody"
+          :init="editorConfig"
+          v-model="curentArticle.postInfo_postID.msgbody"
         />
-      <!-- <textarea id="editorText"> -->
-      <!-- </textarea> -->
+        <div class="py-2">
+          <el-tag
+            class="mr-2"
+            v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
+            closable
+            :disable-transitions="false"
+            @close="removetag(index)">
+            {{item.name}}
+          </el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="inputVisible"
+            v-model="tag"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          >
+          </el-input>
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
+        </div>
+        <!-- <textarea id="editorText"> -->
+        <!-- </textarea>发布按钮显示条件(curentArticle.visible!==1&&curentArticle.postInfo_postID.title!='') -->
         <div ref="saveBox" class="m-2">
-          <n-button v-if="curentArticle.visible!==1&&curentArticle.postInfo_postID.title!=''"
+          <n-button v-if="curentArticle.postInfo_postID.title!=''"
             type="primary"
             round
             simple
@@ -93,19 +131,19 @@
             <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
           </n-button>
         </div>
-        <!-- <n-button 
-          type="primary" 
-          round 
-          simple 
-          @click="save"
-          class="editbtn"
-          >
-            <icon-plus class="editicon"></icon-plus>保存
-          </n-button> -->
-      
-      
+          <!-- <n-button 
+            type="primary" 
+            round 
+            simple 
+            @click="save"
+            class="editbtn"
+            >
+              <icon-plus class="editicon"></icon-plus>保存
+            </n-button> -->
+        
+        
+      </div>
     </div>
-
 
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
@@ -158,13 +196,12 @@
 </template>
 <script>
 import Editor from '@tinymce/tinymce-vue'
-import CategoryList from "./components/CategoryList.vue";
-import CategoryArticleList from "./components/CategoryArticleList";
+// import CategoryList from "./components/CategoryList.vue";
+// import CategoryArticleList from "./components/CategoryArticleList";
 
 import { Button, Modal, FormGroupInput } from "@/components";
 import { Collapse, CollapseItem, Tag} from "element-ui";
 import {
-  HaiwaiLogoWhite,
   IconX,
 } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
@@ -203,10 +240,10 @@ import "tinymce/skins/ui/oxide/content.css"
 import "tinymce/skins/content/default/content.css"
 
 export default {
-  name:"editor-page",
+  name:"my-editor",
   components: {
-    CategoryList,
-    CategoryArticleList,
+    // CategoryList,
+    // CategoryArticleList,
     [Button.name]: Button,
     // DropDown,
     Modal,
@@ -214,7 +251,7 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [Tag.name]:Tag,
-    HaiwaiLogoWhite,
+    // HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
   },
@@ -336,7 +373,15 @@ export default {
     },
     // 获取编辑器内容
     getContent(e){
+      //visible=undefined 一定是已发布文章；
+       e.visible = e.visible==undefined? 1 : e.visible
       if(e.visible==1){
+      //   this.user.article_to_draft_by_postID(e.postID).then(res=>{
+      //   console.log(res)
+      //   if(res.status){
+      //     this.curentArticle = res.data
+      //   }
+      // })
         this.user.article_view(e.postID).then(res=>{
           this.curentArticle=res.data;
           // this.autoSave();
@@ -409,7 +454,7 @@ export default {
       this.$router.push("/blog/success");
     },
     article_to_draft_by_postID(){
-      this.user.article_to_draft_by_postID(this.curentArticle.id).then(res=>{
+      this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
         console.log(res)
         if(res.status){
           this.$refs.articlelist.getArticleList();
@@ -530,6 +575,9 @@ export default {
           console.log(this.wenjiList);
           this.initTabStatus(this.wenjiList)
         });
+        // 4.3.2021
+        console.log(this.$route.query.id)
+        this.getContent({postID:this.$route.query.id})
       }else{
         this.$router.push('/blog_register');
       }
@@ -639,14 +687,18 @@ body,
 html,
 #app,
 .wrapper,
-.publisher {
+.publisher,
+.editorbox {
   height: 100%;
 }
 body{
   margin:0 !important;
 }
+.editor{
+  height:100%
+}
 .tox-tinymce{
-  height: calc(100% - 160px) !important;
+  height: calc(100% - 240px) !important;
 }
 .publisher .header {
   background-color: #39b8eb;
@@ -791,6 +843,10 @@ body{
     width: 120px;
     margin-left: 10px;
     vertical-align: bottom;
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #39b8eb;
   }
 @media (max-width: 575.98px){
   .publisher .menu1{

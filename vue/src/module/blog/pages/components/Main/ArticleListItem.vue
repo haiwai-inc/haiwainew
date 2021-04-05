@@ -20,7 +20,7 @@
               <a herf="javascript:void(0)" v-if="data.postInfo_postID.is_bookmark==1" @click="deletBookmark(data.postID)">取消收藏</a>
             </span>
 
-            <a class="ml-3" v-if="data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb">编辑</a>
+            <a class="ml-3" v-if="data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(data)">编辑</a>
             <el-popconfirm  v-if="data.userID==$store.state.user.userinfo.UserID"
               placement="top-end"
               confirm-button-text='删除'
@@ -74,6 +74,11 @@ export default {
     },
     article_delete(item){
       console.log("删除功能");
+    },
+    gotoEditor(item){
+      let id = item.visible==1 ? item.postID : item.visible == undefined ? item.postID :item.id ;
+      this.$router.push('/blog/my/editor/?id='+id);
+      console.log(item)
     }
   }
    
