@@ -40,7 +40,7 @@
         <div class="col-sm-4 d-none d-sm-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3">
-            <collection-list v-bind:data="collectionList" :userdata="false" title="文集"></collection-list>
+            <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录"></collection-list>
           </div>
         </div>
       </div>
@@ -64,6 +64,20 @@ export default {
     CollectionList,
     IndexHeader,
     RegistBlog
+  },
+  watch:{
+    "$route.params.id":function(val){
+        this.userID = this.$route.params.id;
+        this.articlelists = [];
+        this.loadArticle(this.currentTabId);
+        blog.category_list(this.userID).then(res=>{
+            this.collectionList=res.data;
+            this.$forceUpdate();
+            console.log(res,this.token);
+        })
+            
+        this.user_login_wxc_to_haiwai(this.token)
+    }
   },
   created () {
     this.loadArticle(this.currentTabId);
@@ -106,7 +120,7 @@ export default {
                 this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
                 this.articlelists = this.articlelists.concat(arr) ;
                 this.loading.article=false;
-                // console.log(arr,this.lastID,this.noMore);
+                console.log(arr,this.lastID,this.noMore);
             }
       },
       user_login_wxc_to_haiwai(token){

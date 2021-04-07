@@ -5,7 +5,7 @@
     </span>
     <div class="collection-title d-flex justify-content-between">
       <h4>{{title}}</h4>
-      <!-- <n-button v-if="false" type="default" link v-bind:style="{paddingRight:0 }"><icon-plus></icon-plus> <b style="color:#333;">添加文集</b></n-button> -->
+      <el-button v-if="$store.state.user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()"><i class="el-icon-setting"></i> 管理博文目录</el-button>
     </div>
     <div v-if="data.length===0" class="pl-3">暂无文集</div>
     <div v-if="data.length!==0">
@@ -14,14 +14,14 @@
       v-bind:key="index" 
       :data="item"></collection-list-item>
     </div>
-    <div v-if="data.length>4" class="collection-footer">展开全部 <icon-right class="ratate90"></icon-right></div>
+    <!-- <div v-if="data.length>4" class="collection-footer">展开全部 <icon-right class="ratate90"></icon-right></div> -->
   </div>
 </template>
 <script>
-import {
-    // IconPlus,
-    IconRight
-} from '@/components/Icons';
+// import {
+//     // IconPlus,
+//     IconRight
+// } from '@/components/Icons';
 import {
   Button,
 } from '@/components';
@@ -46,9 +46,16 @@ export default {
     CollectionListItem,
     BlogerListItem,
     // IconPlus,
-    IconRight
-  }
-  
+    // IconRight
+  },
+  methods: {
+    go(){
+      this.$router.push("/blog/my/")
+    }
+  },
+  mounted() {
+    console.log(this.$store.state.user.userinfo)
+  },
 };
 
 </script>

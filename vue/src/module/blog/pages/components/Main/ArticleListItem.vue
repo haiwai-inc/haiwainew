@@ -39,7 +39,7 @@
       class='list-itme-image' 
       v-if="data.postInfo_postID.pic"
       v-bind:style="{backgroundImage:'url('+data.postInfo_postID.pic+')'}">
-        <router-link to="/blog/p/${data.postID}">
+        <router-link :to="'/blog/p/'+data.postID">
           <div class="imgspace" id="imgspace"></div>
         </router-link>
     </div>
