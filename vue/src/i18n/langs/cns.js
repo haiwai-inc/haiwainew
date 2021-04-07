@@ -14,11 +14,11 @@ const cns = {
       logout: "退出登录",
       login: "登录/注册",
       admin: "运营管理",
-      editbtn: "写博客",
+      editbtn: "发博文",
     },
     blog: {
       menu_follow: "关注",
-      menu_recommend: "推荐",
+      menu_recommend: "精选",
       menu_hot: "热榜",
       index_title_hot: "热门博主",
       bloggerlist_refresh: "换一批",
