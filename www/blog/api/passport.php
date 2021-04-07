@@ -40,7 +40,7 @@ class passport extends Api {
         
         //文集表
         $obj_blog_category=load("blog_category");
-        $obj_blog_category->insert(['bloggerID'=>$bloggerID,"name"=>"日记"]);
+        $obj_blog_category->insert(['bloggerID'=>$bloggerID,"name"=>"我的文章"]);
         
         return true;
     }
