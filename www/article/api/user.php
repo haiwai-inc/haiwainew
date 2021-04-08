@@ -55,6 +55,7 @@ class user extends Api {
             "treelevel"=>0,
             "create_date"=>$time,
             "edit_date"=>$time,
+            "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
         $obj_article_indexing->insert($fields_indexing);
         $post_tbn=substr('0'.$_SESSION['id'],-1);
@@ -111,6 +112,7 @@ class user extends Api {
         $fields_indexing=[
             "is_pic"=>0,
             "edit_date"=>$time,
+            "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
         $obj_article_indexing->update($fields_indexing,['postID'=>$article_data['postID']]);
         $post_tbn=substr('0'.$rs_article_post['userID'],-1);
@@ -261,6 +263,7 @@ class user extends Api {
             "edit_date"=>$time,
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+            "is_comment"=>empty($article_data['is_comment'])?0:1,
             "visible"=>-1
         ];
         $obj_article_draft->insert($fields);
@@ -289,6 +292,7 @@ class user extends Api {
             "edit_date"=>$time,
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
+            "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
         $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
         return true;
