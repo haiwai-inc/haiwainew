@@ -14,11 +14,11 @@ const cnt = {
             logout:"登出",
             login:"登錄/註冊",
             admin:"運營管理",
-            editbtn:"寫博客"
+            editbtn:"發博文"
         },
         blog:{
             menu_follow:"關注",
-            menu_recommend:"推薦",
+            menu_recommend:"精選",
             menu_hot:"熱榜",
             index_title_hot:"熱門博主",
             bloggerlist_refresh:"換一批",

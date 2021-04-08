@@ -278,7 +278,11 @@ class blog_tool{
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
                 'count_article'=>1
             ];
+            if($field['name']=="我的文章"){
+                $field['is_default']=1;
+            }
             $field['id']=$this->obj_blog_category->insert($field);
+            $this->obj_blog_category->update(['sort'=>$field['id']],['id'=>$field['id']]);
         }else{
             $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
             $field=$check_blog_category;

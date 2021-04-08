@@ -95,8 +95,11 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $obj_blog_category->insert(['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
-        return true;
+        $categoryID=$obj_blog_category->insert(['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        $obj_blog_category->update(['sort'=>$id],['id'=>$categoryID]);
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -115,7 +118,9 @@ class user extends Api {
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
         $obj_blog_category->update(['name'=>$name],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -129,11 +134,13 @@ class user extends Api {
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $count_blog_category=$obj_blog_category->count(['bloggerID'=>$check_blog_blogger['id']]);
-        if($count_blog_category==1) {$this->error="最后一个文集无法删除";$this->status=false;return false;}
+        $rs_blog_category=$obj_blog_category->getOne(['id','is_default'],['id'=>$id,'bloggerID'=>$check_blog_blogger['id']]);
+        if($rs_blog_category['is_default']==1) {$this->error="默认文集无法删除";$this->status=false;return false;}
         
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -150,7 +157,42 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        return true;
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
+    }
+    
+    /**
+     * 编辑器页
+     * 文集 名字 拍重
+     * @param integer $sort|排序数组  1,2,3,4,5,6,7,8,9,0
+     */
+    public function category_shift($sort){
+        $sort=explode(",",$sort);
+        if(!is_array($sort)){
+            return false;
+        }
+        
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
+        
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getAll("*",['visible'=>1,'bloggerID'=>$check_blog_blogger['id']]);
+        if(!empty($rs_blog_category)){
+            foreach($rs_blog_category as $v){
+                $old_sort[]=$v['sort'];
+            }
+        }
+        $case_query=""; 
+        foreach($sort as $k=>$v){
+            $case_query.="when sort = {$old_sort[$k]} then {$v} ";
+        }
+        
+        $query="UPDATE category SET sort = (case {$case_query} end) WHERE bloggerID = {$check_blog_blogger['id']}";
+        $obj_blog_category->exec($query);
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
