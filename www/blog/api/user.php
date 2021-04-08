@@ -170,10 +170,15 @@ class user extends Api {
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $case_query=""; $count=0;
-        foreach($sort as $v){
-            $case_query.="when sort = {$count} then {$v} ";
-            $count++;
+        $rs_blog_category=$obj_blog_category->getAll("*",['visible'=>1,'bloggerID'=>$check_blog_blogger['id']]);
+        if(!empty($rs_blog_category)){
+            foreach($rs_blog_category as $v){
+                $old_sort[]=$v['sort'];
+            }
+        }
+        $case_query=""; 
+        foreach($sort as $k=>$v){
+            $case_query.="when sort = {$old_sort[$k]} then {$v} ";
         }
         
         $query="UPDATE category SET sort = (case {$case_query} end) WHERE bloggerID = {$check_blog_blogger['id']}";
