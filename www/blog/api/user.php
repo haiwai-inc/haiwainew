@@ -154,6 +154,30 @@ class user extends Api {
     }
     
     /**
+     * 编辑器页
+     * 文集 名字 拍重
+     * @param integer $sort|排序数组  1,2,3,4,5,6,7,8,9
+     */
+    public function category_shift($sort){
+        $sort=explode(",",$sort);
+        
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
+        if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
+        
+        $obj_blog_category=load("blog_category");
+        $case_query=""; $count=0;
+        foreach($sort as $v){
+            $case_query.="when sort = {$count} then {$v} ";
+            $count++;
+        }
+        
+        $query="UPDATE category SET sort = (case {$case_query} end) WHERE bloggerID = {$check_blog_blogger['id']}";
+        $obj_blog_category->exec($query);
+        return true;
+    }
+    
+    /**
      * 二级页面
      * 我关注的人 列表 
      * @param integer $lastID | 分页id
