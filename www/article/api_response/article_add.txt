@@ -9,6 +9,7 @@ $article_data=[
     ],
     "typeID"=>1,
     "draftID"=>1,
+    "is_comment"=>1,
 ];
 $module_data=[
     "add"=>true,
