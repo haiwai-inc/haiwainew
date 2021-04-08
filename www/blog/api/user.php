@@ -97,7 +97,9 @@ class user extends Api {
         
         $categoryID=$obj_blog_category->insert(['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         $obj_blog_category->update(['sort'=>$id],['id'=>$categoryID]);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -116,7 +118,9 @@ class user extends Api {
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
         $obj_blog_category->update(['name'=>$name],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -134,7 +138,9 @@ class user extends Api {
         if($rs_blog_category['is_default']==1) {$this->error="默认文集无法删除";$this->status=false;return false;}
         
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -151,7 +157,8 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        return true;
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
@@ -183,7 +190,9 @@ class user extends Api {
         
         $query="UPDATE category SET sort = (case {$case_query} end) WHERE bloggerID = {$check_blog_blogger['id']}";
         $obj_blog_category->exec($query);
-        return true;
+        
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$check_blog_blogger['id']]);
+        return $rs_blog_category;
     }
     
     /**
