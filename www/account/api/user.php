@@ -499,7 +499,7 @@ class user extends Api {
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
         $obj_account_follow=load("account_follow");
-        $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followerID'=>$followingID]);
+        $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         if(empty($check_account_follow)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
         
         //移除关注列表
