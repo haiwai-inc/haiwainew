@@ -104,7 +104,7 @@
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
-        发布文章{{curentArticle.postID}}
+        发布文章
       </h4>
       <p>
         您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。

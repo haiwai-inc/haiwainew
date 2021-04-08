@@ -17,7 +17,7 @@
                 :key="index"
                 :class="{active:item.id===currentTabId}"
                 >
-                    <div class="flex-fill collections">{{item.name}} ({{item.count_article}})</div>
+                    <div class="flex-fill collections" @click="changeTab(item.id)">{{item.name}} ({{item.count_article}})</div>
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
                             <span v-html="iconmore3v"></span>
@@ -382,6 +382,7 @@ ul li{list-style-type:none;}
     background-color: #f2f8fd;
 }
 .collections{
+    cursor: pointer;
     font-size: 18px;
     padding: 16px ;
 }
