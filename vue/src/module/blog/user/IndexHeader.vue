@@ -77,7 +77,7 @@
         type="primary"
         round 
         simple
-        @click.native="sendQqh(data.id)"
+        @click.native="sendQqh(data)"
         >
           发送
         </n-button>
@@ -130,8 +130,8 @@ export default {
         openModal(){
             this.modals.sendQqhModal=true
         },
-        sendQqh(id){
-            this.send(this.$store.state.user.userinfo.id,id,this.modals.qqhMsgbody);
+        sendQqh(data){
+            this.send(this.$store.state.user.userinfo.id,data.userID,this.modals.qqhMsgbody);
         },
         async send(userID,touserID,msgbody) {
             let user = this.$store.state.user;
