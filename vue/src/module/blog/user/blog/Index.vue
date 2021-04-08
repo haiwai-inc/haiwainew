@@ -23,14 +23,20 @@
                             <span v-html="iconmore3v"></span>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <span @click="openDialog(item)"><el-dropdown-item icon="el-icon-edit">编辑文集名</el-dropdown-item></span>
-                            <el-dropdown-item v-if="index!=0" icon="el-icon-arrow-up">向上移动</el-dropdown-item>
-                            <el-dropdown-item v-if="index<collectionList.length-1" icon="el-icon-arrow-down">向下移动</el-dropdown-item>
+                            <span @click="openDialog(item)">
+                                <el-dropdown-item icon="el-icon-edit">编辑文集名</el-dropdown-item>
+                            </span>
+                            <span @click="category_shift(index,index-1)" v-if="index!=0">
+                                <el-dropdown-item icon="el-icon-arrow-up">向上移动</el-dropdown-item>
+                            </span>
+                            <span @click="category_shift(index,index+1)" v-if="index<collectionList.length-1">
+                                <el-dropdown-item icon="el-icon-arrow-down">向下移动</el-dropdown-item>
+                            </span>
 <!-- 
     删除确认
  -->
                             <el-popconfirm
-                                v-if="collectionList.length>1"
+                                v-if="!item.is_default"
                                 placement="top-end"
                                 confirm-button-text="刪除"
                                 cancel-button-text='取消'
@@ -74,13 +80,23 @@
                <div class="list_item row" v-for="item in articleList" :key="item.id">
                    <div class="col-10">
                        
-                       <h5 style="margin:0;" class="text-truncate">{{item.title}}</h5>
+                       <h5 style="margin:0;" class="text-truncate">{{item.postInfo_postID.title}}</h5>
                        <span class="text-muted" style="font-size:0.8rem">{{item.edit_date*1000|formatDate}}</span>
                        
                    </div>
                    <div class="col-2" style="padding:0">
-                       <el-button type="text" icon="el-icon-edit" @click="$router.push('/blog/my/editor/?id='+item.postID)">编辑</el-button>
-                       <el-button type="text" icon="el-icon-delete">删除</el-button>
+                       <el-button type="text" icon="el-icon-edit" class="mr-2" @click="$router.push('/blog/my/editor/?id='+item.postID)">编辑</el-button>
+                       
+                       <el-popconfirm
+                        placement="top-end"
+                        confirm-button-text="刪除"
+                        cancel-button-text='取消'
+                        :title="'确定删除这篇文章吗？'"
+                        :hide-icon="true"
+                        @confirm="delArticle(item)"
+                        >
+                        <el-button type="text" icon="el-icon-delete" slot="reference">删除</el-button>
+                        </el-popconfirm>
                     </div>
                </div>
             </div>
@@ -135,7 +151,7 @@ export default {
   mounted() {
     blog.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
-        console.log(this.collectionList[0].id,this.$store.state.user.userinfo);
+        console.log(this.collectionList);
         this.changeTab(this.collectionList[0].id)
     })
     
@@ -151,13 +167,14 @@ export default {
     getArticleList(){
         blog.category_article_list(this.currentTabId,0).then(res=>{
           // 需要完善翻頁
-          console.log(res);
+          
           this.articleList = res.data.filter(obj=>obj.visible!=0);
           this.articleList.forEach(item=>{
             if(item.postInfo_postID.title==""){
               item.postInfo_postID.title = this.$t('message').editor.title_ph
             }
           })
+          console.log(this.articleList,res);
           this.loading.article=false;
         })
     },
@@ -203,6 +220,43 @@ export default {
             this.getCategories(this.userID);
           }
         })
+    },
+    category_shift(from,to){
+        let arr = this.collectionList;
+        let e = arr[from];
+        let sort = [];
+        if(this.shiftable){
+            arr.splice(from,1);
+            arr.splice(to,0,e);
+            arr.forEach(item=>{
+                sort.push(item.id)
+            })
+        }
+        this.shiftable = false;
+        blog.category_shift(this.userID,sort.toString()).then(res=>{
+            if(res.status){
+                this.shiftable = true
+            }
+        })
+        console.log(this.collectionList);
+    },
+    delArticle(item){
+        if(item.visible==1 || item.visible==-2){
+        console.log(item.visible);
+          blog.article_delete(item.postID,0).then(res=>{
+            if(res.status){
+              this.getArticleList();
+              this.getCategories(this.userID);
+            }
+          })
+        }
+        if(item.visible==-1){
+          blog.draft_delete(item.id).then(res=>{
+            if(res.status){
+              this.getArticleList();
+            }
+          })
+        }
     },
     getCategories(id){
         blog.category_list(id).then(res=>{
@@ -252,6 +306,7 @@ export default {
         btnDisable:false,
         formTitle:'',
         item:0,
+        shiftable:true,
         form:{
             name:''
         },

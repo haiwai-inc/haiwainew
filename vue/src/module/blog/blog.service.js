@@ -236,6 +236,17 @@ class Blog extends API{
   }
 
   /**
+	 * 调整文集列表排序
+	 * 
+	 * @param number
+	 *          $bloggerID
+	 * @param string $sort=1,2,3,4
+	 */
+	async category_shift(bloggerID,sort){
+    	return await this.sendget("blog/user/category_shift/?bloggerID="+bloggerID+"&sort="+sort)
+	}
+
+  /**
 	 * 返回某文集的文章列表（登录用户）
 	 * 
 	 * @param number
