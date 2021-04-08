@@ -1,57 +1,10 @@
 <template>
-  <div class="container publisher">
+  <div class="publisher">
+    <mini-navbar title="发博文"></mini-navbar>
+    <div class="container">
     <div class="row editorbox">
-      
-      <!-- <div class="col-md-4">
-        <div class="header">
-          <router-link class="navbar-brand" to="/">
-            <haiwai-logo-white></haiwai-logo-white>
-          </router-link>
-        </div>
-        <div class="d-sm-none"> 
-          <el-collapse v-model="activeName" accordion>
-            <el-collapse-item title="日记本" name="1">
-              <div>
-                与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；
-              </div>
-              <div>
-                在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。
-              </div>
-            </el-collapse-item>
-            <el-collapse-item title="飞鸟集" name="2">
-              <div>
-                控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；
-              </div>
-              <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-            </el-collapse-item>
-            <el-collapse-item title="飞猪集" name="3">
-              <div>简化流程：设计简洁直观的操作流程；</div>
-              <div>
-                清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；
-              </div>
-              <div>
-                帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
-        <div class="d-none d-sm-block">
-          <category-list @setwjid="setWJid" :wl="wenjiList" :wjid="wenjiActiveId" :activeid="articleActiveId"></category-list>
-        </div>
-      </div> -->
-      <!-- <div class="col-md-3 menu2 d-none d-sm-block">
-        <category-article-list 
-        @setarticleid="setArtid" 
-        :wjid="wenjiActiveId" 
-        :cats="wenjiList"
-        ref="articlelist"
-        ></category-article-list>
-      </div> -->
-      <!-- <div v-if="articleActiveId==0" class="col-md-7">
-        <p style="line-height:100px"> - 请点击新建文章按钮 <span>或 选择一个要编辑的文章</span></p>
-      </div> -->
-      <div class="col-md-8 editor mx-auto col-12" id="editor_container" ref="editorContainer">
-        <div class="col-12 d-flex mt-3">
+      <div class="col-md-9 editor mx-auto col-12" id="editor_container" ref="editorContainer">
+        <!-- <div class="col-12 d-flex mt-3">
           <div class=" flex-fill"><h5>发表博客文章</h5></div>
           <div class="mr-3 text-muted">所属目录：我的文章</div>
           <el-dropdown trigger="click">
@@ -66,7 +19,7 @@
               <el-dropdown-item divided icon="el-icon-delete">删除文章</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
+        </div> -->
         <div ref="saving" style="font-size:13px;padding-left:8px;">
           <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
           <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
@@ -143,8 +96,11 @@
         
         
       </div>
+      <div class="col-md-3" style="padding-top:75px">
+        所属目录
+      </div>
     </div>
-
+  </div>
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
@@ -198,7 +154,7 @@
 import Editor from '@tinymce/tinymce-vue'
 // import CategoryList from "./components/CategoryList.vue";
 // import CategoryArticleList from "./components/CategoryArticleList";
-
+import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
 import { Collapse, CollapseItem, Tag} from "element-ui";
 import {
@@ -242,6 +198,7 @@ import "tinymce/skins/content/default/content.css"
 export default {
   name:"my-editor",
   components: {
+    MiniNavbar,
     // CategoryList,
     // CategoryArticleList,
     [Button.name]: Button,
@@ -697,8 +654,11 @@ body{
 .editor{
   height:100%
 }
+.container{
+  height: calc(100% - 75px);
+}
 .tox-tinymce{
-  height: calc(100% - 240px) !important;
+  height: calc(100% - 200px) !important;
 }
 .publisher .header {
   background-color: #39b8eb;

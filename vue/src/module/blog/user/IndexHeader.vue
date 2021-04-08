@@ -124,14 +124,14 @@ export default {
             blog.blogger_info(this.bloggerID).then(res=>{
                 this.data = res.data;
                 this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
-                console.log(this.data);
+                console.log(this.data,this.$store.state.user.userinfo);
             })
         },
         openModal(){
             this.modals.sendQqhModal=true
         },
         sendQqh(id){
-            this.send(1,id,this.modals.qqhMsgbody);
+            this.send(this.$store.state.user.userinfo.id,id,this.modals.qqhMsgbody);
         },
         async send(userID,touserID,msgbody) {
             let user = this.$store.state.user;

@@ -7,7 +7,7 @@
       <router-link class="navbar-brand" to="/">
         <img src="/img/logo.png" alt="海外博客" height="32">
       </router-link>
-      <el-popover
+      <!-- <el-popover
         ref="popover1"
         popper-class="popover"
         placement="bottom"
@@ -17,7 +17,7 @@
         <div class="popover-body">
           This is a tips or slogan
         </div>
-      </el-popover>
+      </el-popover> -->
     </template>
     
     <template slot="before-menu"> 
@@ -140,7 +140,7 @@
 <script>
 import { IconPen } from '@/components/Icons'
 import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupInput } from '@/components';
-import { Popover, } from 'element-ui';
+// import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
 import account from '../module/user/service/account';
 import LoginDialog from '../module/user/login/LoginDialog';
@@ -156,7 +156,7 @@ export default {
     DropDown,
     Navbar,
     NavLink,
-    [Popover.name]: Popover,
+    // [Popover.name]: Popover,
     [Switch.name]: Switch,
     [FormGroupInput.name]: FormGroupInput,
     [Button.name]: Button,
