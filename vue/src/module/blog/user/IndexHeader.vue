@@ -41,7 +41,7 @@
                 :type="data.userinfo_userID.is_following?'default':'primary'" 
                 round 
                 simple 
-                @click="$router.push('/blog/user/'+data.bloggerID)"
+                @click="follow"
                 class="editbtn ml-3"
                 size="sm"
                 >
@@ -83,6 +83,7 @@
         </n-button>
       </template>
     </modal>
+    <login-dialog ref="dialog"></login-dialog>
     </div>
 </template>
 <script>
@@ -97,6 +98,8 @@ import {
 } from '@/components';
 import { Input } from 'element-ui';
 import blog from '../blog.service';
+import account from '../../user/service/account';
+import LoginDialog from '../../user/login/LoginDialog';
 
 export default {
     name: 'blog-user-index-header',
@@ -115,6 +118,7 @@ export default {
         [Button.name]: Button,
         [Input.name]: Input,
         Modal,
+        LoginDialog
     },
     mounted:function(){
         this.getInfo();
@@ -128,7 +132,11 @@ export default {
             })
         },
         openModal(){
-            this.modals.sendQqhModal=true
+            if(this.$store.state.user.userinfo.UserID!==undefined){
+                this.modals.sendQqhModal=true
+            }else{
+                this.$refs.dialog.isLogin()
+            }
         },
         sendQqh(data){
             this.send(this.$store.state.user.userinfo.id,data.userID,this.modals.qqhMsgbody);
@@ -150,6 +158,37 @@ export default {
             let isidx = url.indexOf('blog/user')
             if(isidx==-1){
                 this.$router.push('/blog/user/' + this.data.bloggerID);
+            }
+        },
+        following_add(id){console.log(this.$store.state.user.userinfo)
+            if(this.$store.state.user.userinfo.UserID!==undefined){
+                account.following_add(id).then(res=>{
+                if(res.status) {
+                    this.data.userinfo_userID.is_following = 1;
+                }else{
+                    this.$message.error(res.error);
+                }
+                });
+            }else{
+                this.$refs.dialog.isLogin()
+            }
+        },
+        following_delete(id){console.log("remove")
+            if(this.$store.state.user.userinfo.UserID!==undefined){
+                account.following_delete(id).then(res=>{
+                    if(res.status == true) {
+                        this.data.userinfo_userID.is_following = 0;
+                    }else{
+                        this.$message.error(res.error);
+                    }
+                });
+            }
+        },
+        follow(){
+            if(this.data.userinfo_userID.is_following){
+                this.following_delete(this.data.userID)
+            }else{
+                this.following_add(this.data.userID)
             }
         }
     },

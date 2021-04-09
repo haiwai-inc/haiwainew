@@ -20,11 +20,8 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div> -->
-        <div ref="saving" style="font-size:13px;padding-left:8px;">
-          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
-          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
-        </div>
-        <div class="d-flex justify-content-between py-2" ref="titleBox" @click="test()">
+        
+        <div class="d-flex justify-content-between py-2" ref="titleBox">
           <input
             class="editorTitle"
             type="text"
@@ -35,16 +32,18 @@
 
           <!-- 编辑器 -->
           
-          <!-- <div id="summernote"></div> -->
           <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
-        <editor v-if="curentArticle.postInfo_postID.msgbody"
+        <editor 
           :init="editorConfig"
           v-model="curentArticle.postInfo_postID.msgbody"
         />
         
-        
       </div>
       <div class="col-md-3" style="padding-top:75px">
+        <div ref="saving" style="font-size:13px;padding-left:8px;">
+          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
+          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+        </div>
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
         <el-select v-if="wenjiList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
@@ -267,9 +266,6 @@ export default {
     }
   },
   methods: {
-    test(val) {
-      
-    },
     watchModify(val){
       this.watchCount+=1;
       if(this.curentArticle.visible==1 && this.watchCount>2){
@@ -479,6 +475,25 @@ export default {
         }
       })
     },
+    draft_add(){
+      let data={
+        article_data:{
+          title:this.$t('message').editor.title_ph,
+          msgbody:this.curentArticle.postInfo_postID.msgbody,
+          tagname:this.tags,
+          typeID:1,
+          is_comment:1
+        },
+        module_data:{
+          add:true,
+          bloggerID:this.user.userinfo.bloggerID,
+          categoryID:this.curentArticle.categoryID
+        }
+      };
+      this.user.draft_add(data).then(res=>{
+        console.log(res)
+      })
+    },
     draft_update(){
       let data={
         article_data:{
@@ -491,7 +506,7 @@ export default {
         module_data:{
           edit:true,
           bloggerID:this.user.userinfo.bloggerID,
-          categoryID:this.wenjiActiveId
+          categoryID:this.curentArticle.categoryID
         }
       };
       console.log(this.curentArticle,data)
@@ -500,9 +515,17 @@ export default {
       this.user.draft_update(data).then(res=>{
         console.log(res);
         if(res.status){
-          this.$refs.articlelist.getArticleList();
+          // this.$refs.articlelist.getArticleList();
           this.flags.autosaving = false;
           this.flags.autosaved = true;
+        }
+      })
+    },
+    draft_view(id){
+      this.user.draft_view(id).then(res=>{
+        if(res.status){
+          this.curentArticle = res.data;
+          console.log(this.curentArticle)
         }
       })
     },
@@ -590,11 +613,17 @@ export default {
           this.wenjiList = res.status?res.data:[];
           this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
           console.log(this.wenjiList);
-          this.initTabStatus(this.wenjiList)
+          // this.initTabStatus(this.wenjiList)
+       
+          if(this.$route.query.postid){
+            this.getContent({postID:this.$route.query.id})
+          }else if(this.$route.query.draftid){
+            this.draft_view(this.$route.query.draftid)
+          }else{
+            this.curentArticle.categoryID = this.wenjiList[0].id;//草稿默认加到第一目录里
+            this.draft_add();
+          }
         });
-        // 4.3.2021
-        console.log(this.$route.query.id)
-        this.getContent({postID:this.$route.query.id})
       }else{
         this.$router.push('/blog_register');
       }

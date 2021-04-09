@@ -132,7 +132,7 @@
     <template slot="after-menu">
       
     </template>
-    <login-dialog ref="dialog" :redirect="'/blog/editor'"></login-dialog>
+    <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog>
   </navbar>
   
 </template>
@@ -164,7 +164,12 @@ export default {
     IconPen,
     LoginDialog
   },
-  
+  watch:{
+    "$store.state.user.userinfo.id":function(val){
+      console.log(val)
+      this.$forceUpdate();
+    }
+  },
   data(){
     return {
       bodyclass:'',
@@ -247,6 +252,7 @@ export default {
       account.logout().then(res=>{
         if(res.status==true){
           this.$store.state.user.userinfo = {};
+          this.$forceUpdate()
         }
       })
     }

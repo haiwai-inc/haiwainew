@@ -80,12 +80,12 @@
                <div class="list_item row" v-for="item in articleList" :key="item.id">
                    <div class="col-10">
                        
-                       <h5 style="margin:0;" class="text-truncate">{{item.postInfo_postID.title}}</h5>
+                       <h5 style="margin:0;" class="text-truncate">{{item.postInfo_postID.title}}<small>{{item.visible==-2?"已发布文章编辑中...":item.visible==-1?"草稿":''}}</small></h5>
                        <span class="text-muted" style="font-size:0.8rem">{{item.edit_date*1000|formatDate}}</span>
                        
                    </div>
                    <div class="col-2" style="padding:0">
-                       <el-button type="text" icon="el-icon-edit" class="mr-2" @click="$router.push('/blog/my/editor/?id='+item.postID)">编辑</el-button>
+                       <el-button type="text" icon="el-icon-edit" class="mr-2" @click="goeditor(item)">编辑</el-button>
                        
                        <el-popconfirm
                         placement="top-end"
@@ -282,7 +282,12 @@ export default {
         }else{
             this.addCategory()
         }
+    },
+    goeditor(item){
+        let url = item.visible===1?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.id
+        this.$router.push(url)
     }
+    
   },
   data() {
     var checkNameSame = (rule, value, callback) =>{

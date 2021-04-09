@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
       <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
         <router-link :to="'/blog/user/'+data.bloggerID">
@@ -46,6 +47,8 @@
           </div> 
       </div>
     </div>
+    <login-dialog ref="dialog"></login-dialog>
+  </div>
 </template>
 <script>
 import {
@@ -58,6 +61,7 @@ import {
   Button,
 } from '@/components';
 import account from '../../../../user/service/account';
+import LoginDialog from '../../../../user/login/LoginDialog';
 
 export default {
   name: 'bloger-list-item',
@@ -94,10 +98,11 @@ export default {
     IconCheck,
     IconX,
     IconV,
+    LoginDialog
   },
   mounted: function () {
     let userinfor = this.$store.state.user.userinfo
-    this.loginuserID = userinfor?userinfor.userID:-1;
+    this.loginuserID = userinfor?userinfor.UserID:-1;
   },
   methods:{
     following_add(id){
@@ -110,7 +115,8 @@ export default {
           }
         });
       }else{
-        this.$emit('opendialog')
+        // this.$emit('opendialog')
+        this.$refs.dialog.isLogin()
       }
     },
     following_delete(id){
