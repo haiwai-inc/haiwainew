@@ -234,7 +234,7 @@ export default {
       })
     },
     getNewArticle(res,lastID){
-      var bloggerID = res.data.userID;
+      var bloggerID = res.data.bloggerID;
       blog.article_list_recent(bloggerID,lastID).then(res=>{
         console.log(res);
         if(res.status){
