@@ -266,9 +266,8 @@ class user extends Api {
             "is_comment"=>empty($article_data['is_comment'])?0:1,
             "visible"=>-1
         ];
-        $obj_article_draft->insert($fields);
-        
-        return true;
+        $id=$obj_article_draft->insert($fields);
+        return $id;
     }
     
     /**
