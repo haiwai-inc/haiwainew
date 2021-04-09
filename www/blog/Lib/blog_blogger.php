@@ -24,7 +24,7 @@ class blog_blogger extends Model{
 	}
 
 	//获取博客基本信息
-	function get_basic_bloggerinfo($rs,$hashID='id',$nested){
+	function get_basic_bloggerinfo($rs,$hashID='id',$nested=false){
 	    if(!empty($rs)){
 	        //没有bloggerID情况下
 	        if(!empty($nested)){
