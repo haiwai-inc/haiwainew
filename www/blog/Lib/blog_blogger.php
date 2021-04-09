@@ -24,12 +24,33 @@ class blog_blogger extends Model{
 	}
 
 	//获取博客基本信息
-	function get_basic_bloggerinfo($rs,$hashID='id',$user=false){
+	function get_basic_bloggerinfo($rs,$hashID='id',$nested=false){
 	    if(!empty($rs)){
+	        //没有bloggerID情况下
+	        if(!empty($nested)){
+	            foreach($rs as $v){
+	                $tmp_hashID[]=$v[$hashID]['id'];
+	            }
+	            $rs_blog_bloggers=$this->getAll(['id','userID'],['OR'=>['userID'=>$tmp_hashID]]);
+	            if(!empty($rs_blog_bloggers)){
+	                foreach($rs_blog_bloggers as $v){
+	                    $hash_hashID[$v['userID']]=$v['id'];
+	                }
+	            }
+	            if(!empty($hash_hashID)){
+	                foreach($rs as $k=>$v){
+	                    $rs[$k]['bloggerID']=$hash_hashID[$v[$hashID]['id']];
+	                }
+	                $hashID='bloggerID';
+	            }else{
+	                return $rs;
+                }
+	        }
+	        
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
-			
+	        
 	        $rs_blog_bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$tmp_rs_id]]);       
 	        if(!empty($rs_blog_bloggers)){
 	            foreach($rs_blog_bloggers as $v){
@@ -42,9 +63,6 @@ class blog_blogger extends Model{
 	            $item['o_avatar']=$item['background'];
 	            $item['background']=str_replace("{$v[$hashID]}_background","{$item['id']}_background_750_420",$item['background']);
 				$rs[$k]['bloggerinfo_'.$hashID]=$item;
-				if($user){
-					$rs[$k]['userID'] = $item['userID'];
-				}
 	        }
 	    }
 	    
