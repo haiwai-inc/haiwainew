@@ -216,7 +216,9 @@ AppleLogo
           this.$emit('onchange',v)
       },
       setLoginState(res){
-        this.$store.state.user.userinfo = res.data;
+        this.$store.state.user.getUserStatus().then(res=>{
+          this.$store.state.user.userinfo= res.data;
+        });
         if(this.redirect!==''){
           this.$router.push(this.redirect);
           console.log(this.redirect)
