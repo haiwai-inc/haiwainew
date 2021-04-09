@@ -7,7 +7,7 @@
       <h4>{{title}}</h4>
       <el-button v-if="$store.state.user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()"><i class="el-icon-setting"></i> 管理博文目录</el-button>
     </div>
-    <div v-if="data.length===0" class="pl-3">暂无文集</div>
+    <div v-if="data.length===0" class="pl-3">暂无目录</div>
     <div v-if="data.length!==0">
       <collection-list-item 
       v-for="(item,index) in data" 
