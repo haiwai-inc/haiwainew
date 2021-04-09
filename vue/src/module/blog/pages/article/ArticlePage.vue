@@ -13,7 +13,9 @@
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
-              <div style="color:gray;">阅读数：{{articleDetail.data.countinfo_postID.count_read}}</div>
+               <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
+              <div style="color:gray;">阅读 . {{articleDetail.data.countinfo_postID.count_read}}</div>
+             
               <div class="media-icons">
                 <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
                   
@@ -168,6 +170,7 @@
   </div>
 </template>
 <script>
+import {formatDate} from '@/directives/formatDate.js';
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
@@ -395,7 +398,13 @@ export default {
       }
     };
   },
-};
+   filters: {
+    formatDate(time) {
+    var date = new Date(time);
+    return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
+  }
+ };
 </script>
 <style>
 .fontsize0 .content{
