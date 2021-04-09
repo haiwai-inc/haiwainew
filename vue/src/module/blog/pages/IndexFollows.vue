@@ -8,17 +8,17 @@
         <div class="col-sm-4 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
-              <li :class="{active:selectID==-1}" @click="selectItem(-1)"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
+              <li :class="{active:selectItem.followingID==-1}" @click="selectItem(-1)"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
             </ul>
             <ul v-if="authorList.length>0">
               
-              <li :class="{active:selectID==0}" @click="selectItem(0)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
+              <li :class="{active:selectItem.followingID==0}" @click="selectItem(0)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
               <li 
               v-for="(item,index) in authorList" 
               :key="index" 
               class="d-flex align-items-center"
-              :class="{active:selectID==item.followingID}"
-               @click="selectItem(item.followingID)">
+              :class="{active:selectItem.followingID==item.followingID}"
+               @click="selected(item)">
                 <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar>
                 <span class="pl-2 ">{{item.userinfo_followingID.username}}</span>
                 <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
@@ -29,7 +29,7 @@
         </div>
         <div class="col-sm-8 col-12">
           <div v-if="articlelists.length>0">
-            <div v-if="selectID==0">
+            <div v-if="selectItem.followingID==0">
               <article-list-item 
                 v-for="item in articlelists"
                 v-bind:key="item.articleID"
@@ -37,8 +37,8 @@
                 type="0">
               </article-list-item>
             </div>
-            <div v-if="selectID>0">
-              <index-header :bloggerID="selectID"></index-header>
+            <div v-if="selectItem.followingID>0">
+              <index-header :bloggerID="selectItem.bloggerID"></index-header>
               <article-list-item 
                 v-for="item in articlelists"
                 v-bind:key="item.articleID"
@@ -47,7 +47,7 @@
               </article-list-item>
             </div>
           </div>
-          <div v-if="selectID==-1">
+          <div v-if="selectItem.followingID==-1">
             <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item" @opendialog="opendialog()"></bloger-list-item>
           </div>
@@ -92,21 +92,21 @@ export default {
     this.getFollowing();
   },
   methods:{
-    selectItem(idx){
-      this.selectID=idx;
+    selected(item){
+      this.selectItem=item;
       this.getArticleList();
     },
     getFollowing(){
       this.user.my_followering_list(0).then(res=>{
         if(res.status){
-          this.authorList = res.data;
-          this.selectID = this.authorList.length>0?0:-1;
+          this.authorList = res.data;console.log(this.authorList)
+          this.selectItem.followingID = this.authorList.length>0?0:-1;
           this.getArticleList();
         }
       });
     },
     async getArticleList(){
-      let arr = await this.user.following_article_list(this.selectID);
+      let arr = await this.user.following_article_list(this.selectItem.followingID);
       this.articlelists = arr.data;
       console.log(this.articlelists)
     },
@@ -122,7 +122,7 @@ export default {
   data() {
     return {
       user:this.$store.state.user,
-      selectID:0,
+      selectItem:{},
       authorList : [],
       articlelists: [],
       hotBlobbers:[]
