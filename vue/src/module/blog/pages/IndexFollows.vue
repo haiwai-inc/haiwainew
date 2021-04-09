@@ -8,11 +8,11 @@
         <div class="col-sm-4 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
-              <li :class="{active:selectItem.followingID==-1}" @click="selectItem(-1)"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
+              <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
             </ul>
             <ul v-if="authorList.length>0">
               
-              <li :class="{active:selectItem.followingID==0}" @click="selectItem(0)"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
+              <li :class="{active:selectItem.followingID==0}" @click="selected({followingID:0})"><icon-article-bg style="height:42;width:42;fill:#39B8EB"></icon-article-bg><span class="pl-2">全部更新文章</span></li>
               <li 
               v-for="(item,index) in authorList" 
               :key="index" 
