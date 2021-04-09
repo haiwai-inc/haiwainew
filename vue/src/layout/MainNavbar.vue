@@ -132,7 +132,7 @@
     <template slot="after-menu">
       
     </template>
-    <login-dialog ref="dialog" :redirect="'/blog/editor'"></login-dialog>
+    <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog>
   </navbar>
   
 </template>

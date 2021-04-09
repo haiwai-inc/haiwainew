@@ -351,6 +351,15 @@ class User extends API{
     }
 
     /**
+     * 创建草稿
+     * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1),"is_comment":1,} article_data 
+   * @param {add:true,bloggerID:#,categoryID:#} module_data 
+     */
+     async draft_add(data){
+        return await this.sendpost('article/user/draft_add/',data)
+    }
+    
+    /**
      * 快速发布草稿（快速发布已发布的文章草稿）
      * @param {*} draftID 
      */
