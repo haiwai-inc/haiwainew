@@ -9,7 +9,8 @@
     >
         <span>{{item.name}}</span>
     </n-button> -->
-    <n-button
+    <n-button 
+        class="pl-0"
         type="default" 
         link 
         @click="$router.push('/blog/follows')" 
