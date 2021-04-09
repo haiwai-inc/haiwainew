@@ -49,12 +49,11 @@
           </div>
           <div v-if="selectItem.followingID==-1">
             <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
-            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item" @opendialog="opendialog()"></bloger-list-item>
+            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
           </div>
         </div>
       </div>
     </div>
-    <login-dialog ref="dialog"></login-dialog>
   </div>
 </template>
 <script>
@@ -78,7 +77,6 @@ export default {
     IconBloggerBg,
     IndexHeader,
     BlogerListItem,
-    LoginDialog
   },
   watch:{
     '$store.state.user.userinfo':function(){
@@ -115,9 +113,6 @@ export default {
       this.hotBlobbers = arr.data.data
       console.log(this.hotBlobbers)
     },
-    opendialog(){
-      this.$refs.dialog.isLogin()
-    }
   },
   data() {
     return {
