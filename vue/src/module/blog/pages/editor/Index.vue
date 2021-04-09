@@ -41,9 +41,25 @@
           :init="editorConfig"
           v-model="curentArticle.postInfo_postID.msgbody"
         />
-        <div class="py-2">
+        
+        
+      </div>
+      <div class="col-md-3" style="padding-top:75px">
+        <div class="d-flex justify-content-between align-items-center">
+          <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
+        <el-select v-if="wenjiList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
+          <el-option
+            v-for="item in wenjiList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        
+        <div class="py-5">
+          <span>文章标签：</span>
           <el-tag
-            class="mr-2"
+            class="mr-2 mb-2"
             v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
             closable
             :disable-transitions="false"
@@ -62,6 +78,14 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
         </div>
+        <div class="pb-5">
+          可否评论：
+          <el-radio v-model="curentArticle.is_comment" :label="1">是</el-radio>
+          <el-radio v-model="curentArticle.is_comment" :label="0">否</el-radio>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="mt-2 text-muted">注：发表博客文章时请不要提供广告信息或不友好信息，本站保留拒绝的权利。</div>
         <!-- <textarea id="editorText"> -->
         <!-- </textarea>发布按钮显示条件(curentArticle.visible!==1&&curentArticle.postInfo_postID.title!='') -->
         <div ref="saveBox" class="m-2">
@@ -93,14 +117,26 @@
             >
               <icon-plus class="editicon"></icon-plus>保存
             </n-button> -->
-        
-        
-      </div>
-      <div class="col-md-3" style="padding-top:75px">
-        所属目录
       </div>
     </div>
   </div>
+  <el-dialog width="350px" :title="'新建博文目录'" :visible.sync="dialogFormVisible">
+    <el-form :model="categoryForm" :rules="rules" ref="categoryForm">
+        <el-form-item label="" prop="name">
+            <el-input 
+            v-model="categoryForm.name" 
+            autocomplete="off" 
+            maxlength="16" 
+            show-word-limit 
+            placeholder="输入博文目录名">
+            </el-input>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addCategory">确 定</el-button>
+    </div>
+  </el-dialog>
     <!-- Publish Modal -->
     <modal :show.sync="modals.publish" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up" style="padding-top:5px">
@@ -109,7 +145,7 @@
       <p>
         您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。
       </p>
-      <p>
+      <!-- <p>
         <el-tag
       class="mr-2"
   v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
@@ -128,7 +164,7 @@
   @blur="handleInputConfirm"
 >
 </el-input>
-<el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button></p>
+<el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button></p> -->
       <!-- <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button> -->
       <template slot="footer">
         <n-button
@@ -156,7 +192,7 @@ import Editor from '@tinymce/tinymce-vue'
 // import CategoryArticleList from "./components/CategoryArticleList";
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem, Tag} from "element-ui";
+import { Collapse, CollapseItem, Tag, Select, Option, Radio} from "element-ui";
 import {
   IconX,
 } from "@/components/Icons";
@@ -208,6 +244,9 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [Tag.name]:Tag,
+    [Select.name]:Select,
+    [Option.name]:Option,
+    [Radio.name]:Radio,
     // HaiwaiLogoWhite,
     IconX,
     'editor': Editor,
@@ -314,7 +353,27 @@ export default {
         })
       }
     },
-    
+    addCategory(){
+      this.$refs['categoryForm'].validate((valid) => {
+        if (valid) {
+          this.btnDisable = true;
+          blog.category_add(this.categoryForm.name).then(res=>{
+            if(res.status){
+              blog.category_list(this.user.userinfo.bloggerID).then(res=>{
+                this.wenjiList = res.status?res.data:[];
+                this.curentArticle.categoryID = this.wenjiList[0].id
+                this.dialogFormVisible = false
+              })
+            }
+          })
+        }
+      })
+    },
+    openDialog(item){
+        this.categoryForm.name = item?item.name:''
+        this.dialogFormVisible = true
+        console.log()
+    },
     setWJid(id){
       this.wenjiActiveId = id;
       this.articleActiveId = 0;
@@ -385,7 +444,8 @@ export default {
           tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,
-          draftID:this.curentArticle.id
+          draftID:this.curentArticle.id,
+          is_comment:this.curentArticle.is_comment
         },
         module_data:{
           edit:true,
@@ -564,6 +624,14 @@ export default {
   },
 
   data() {
+    var checkNameSame = (rule, value, callback) =>{
+        this.wenjiList.forEach(item=>{
+            if(item.name === value){
+                return callback(new Error('与现有目录名重复'))
+            }
+        })
+        callback()
+    };
     let lang = localStorage.lang ? (localStorage.lang == "cns" ? 'zh_CN' :'zh_TW') : 'zh_CN';
     return {
       user:this.$store.state.user,
@@ -571,6 +639,7 @@ export default {
       wenjiList:[],
       wenjiActiveId: 0,
       articleActiveId: 0,
+      testID:'',
       activeName: "0",
       curentArticle:{postInfo_postID:{title:"",msgbody:""}},
       tabStatus:{},
@@ -591,7 +660,14 @@ export default {
         publish:false,
         autosaving:false,
         autosaved:false,
-      }, 
+      },
+      dialogFormVisible:false,
+      categoryForm:{name:''},
+      rules:{
+        name:[
+          {required: true, message: '请输入目录名称', trigger: 'blur'},
+          { validator:checkNameSame, trigger: 'blur' }]
+      },
       //TinyMCE
       editorConfig:{
         selector: '#editorText',
@@ -655,10 +731,10 @@ body{
   height:100%
 }
 .container{
-  height: calc(100% - 75px);
+  height: calc(100% - 175px);
 }
 .tox-tinymce{
-  height: calc(100% - 200px) !important;
+  height: calc(100% - 70px) !important;
 }
 .publisher .header {
   background-color: #39b8eb;
@@ -722,9 +798,11 @@ body{
 
 .publisher .editorTitle{
   font-size: 30px;
-  padding: 10px;
-  border: 0;
+  padding: 5px 10px;
+  /* border: 1px solid #d3d3d3; */
+  border:0;
   width:100%;
+  border-radius: 5px;
 }
 .publisher input.editorTitle:focus{
   color: #495057;

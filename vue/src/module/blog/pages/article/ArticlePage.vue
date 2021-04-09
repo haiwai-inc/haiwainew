@@ -73,7 +73,7 @@
              :data="articleDetail.data"></previous-next-bar>
             
           </div>
-          <div class="comment">
+          <div class="comment" v-if="articleDetail.data.is_comment">
             <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"

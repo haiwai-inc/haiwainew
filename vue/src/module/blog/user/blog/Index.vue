@@ -312,7 +312,7 @@ export default {
         },
         rules:{
             name:[
-                {required: true, message: '请输入活动名称', trigger: 'blur'},
+                {required: true, message: '请输入目录名称', trigger: 'blur'},
                 { validator:checkNameSame, trigger: 'blur' }]
         },
         tabs:[
@@ -330,27 +330,6 @@ export default {
         authorInfo : {},
         articlelists: [],
         collectionList:[],
-        collectionList0 : [
-            {
-                bloggerID: 1,
-                count_article: 1,
-                id: 1,
-                name: "日记",
-                visible: 1,
-            },{
-                bloggerID: 1,
-                count_article: 1,
-                id: 1,
-                name: "文集1",
-                visible: 1,
-            },{
-                bloggerID: 1,
-                count_article: 1,
-                id: 1,
-                name: "文集2",
-                visible: 1,
-            },
-        ],
     };
   },
   filters: {
