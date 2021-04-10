@@ -233,7 +233,7 @@ color: #235592
     fill:#236e85;
 }
 .hot-blogger .right .description{
-  font-size: small;
+  font-size: medium;
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 1;

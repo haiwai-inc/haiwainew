@@ -5,8 +5,7 @@
         <main-menu type="1"></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-8 col-12">
-          
+        <div class="col-sm-8 col-12"> 
           <div
           v-infinite-scroll="loadArticle"
           infinite-scroll-disabled="disabled"
