@@ -88,7 +88,7 @@
         <!-- <textarea id="editorText"> -->
         <!-- </textarea>发布按钮显示条件(curentArticle.visible!==1&&curentArticle.postInfo_postID.title!='') -->
         <div ref="saveBox" class="m-2">
-          <n-button v-if="curentArticle.postInfo_postID.title!=''"
+          <!-- <n-button v-if="curentArticle.postInfo_postID.title!=''"
             type="primary"
             round
             simple
@@ -96,6 +96,12 @@
             class="editbtn"
           >
             {{curentArticle.visible==-1?'发布文章':'更新文章'}}
+          </n-button> -->
+          <n-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+            发布文章
+          </n-button>
+          <n-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+            发布更新
           </n-button>
           <n-button
             v-if="false"
@@ -144,27 +150,6 @@
       <p>
         您可以添加一些适合的标签，能方便分类检索。<br>文章也更容易让其他用户看到。
       </p>
-      <!-- <p>
-        <el-tag
-      class="mr-2"
-  v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
-  closable
-  :disable-transitions="false"
-  @close="removetag(index)">
-  {{item.name}}
-</el-tag>
-      <el-input
-  class="input-new-tag"
-  v-if="inputVisible"
-  v-model="tag"
-  ref="saveTagInput"
-  size="small"
-  @keyup.enter.native="handleInputConfirm"
-  @blur="handleInputConfirm"
->
-</el-input>
-<el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button></p> -->
-      <!-- <input v-model="tag" type="text"> <n-button class="ml-2" @click="pushtag(tag)" type="default">添加</n-button> -->
       <template slot="footer">
         <n-button
           class="mr-3"
@@ -409,27 +394,28 @@ export default {
     // 发布一篇新文章（草稿=>文章）
     publish(){
       let data={
-          article_data:{
-            title:this.curentArticle.postInfo_postID.title,
-            msgbody:this.curentArticle.postInfo_postID.msgbody,
-            tagname:[],
-            typeID:1,
-            draftID:this.curentArticle.id
-          },
-          module_data:{
-            add:true,
-            bloggerID:this.user.userinfo.bloggerID,
-            categoryID:this.wenjiActiveId
-          }
-        };
-        console.log(data);
-        this.flags.publish = true;
-        this.user.article_add(data).then(res=>{
-          console.log(res);
-          if(res.status){
-            this.published(res);
-          }
-        })
+        article_data:{
+          title:this.curentArticle.postInfo_postID.title,
+          msgbody:this.curentArticle.postInfo_postID.msgbody,
+          tagname:[],
+          typeID:1,
+          draftID:this.curentArticle.id,
+          is_comment:this.curentArticle.is_comment
+        },
+        module_data:{
+          add:true,
+          bloggerID:this.user.userinfo.bloggerID,
+          categoryID:this.wenjiActiveId
+        }
+      };
+      console.log(data);
+      this.flags.publish = true;
+      this.user.article_add(data).then(res=>{
+        console.log(res);
+        if(res.status){
+          this.published(res);
+        }
+      })
     },
     // 更新已发布文章 
     article_update(){
@@ -460,11 +446,11 @@ export default {
     },
     // 发布成后续动作
     published(res){
-      this.$store.state.user.publidhed = res.data;
-      this.$refs.articlelist.getArticleList();
+      // this.$store.state.user.publidhed = res.data;
+      // this.$refs.articlelist.getArticleList();
       this.flags.publish = false;
-      this.modals.publish = false;
-      this.$router.push("/blog/success");
+      // this.modals.publish = false;
+      this.$router.push("/blog/p/"+res.data.postID);
     },
     article_to_draft_by_postID(){
       this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
@@ -478,7 +464,7 @@ export default {
     draft_add(){
       let data={
         article_data:{
-          title:this.$t('message').editor.title_ph,
+          title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
@@ -491,7 +477,8 @@ export default {
         }
       };
       this.user.draft_add(data).then(res=>{
-        console.log(res)
+        console.log(res);
+        this.draft_view(res.data);
       })
     },
     draft_update(){
@@ -501,7 +488,8 @@ export default {
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
-          draftID:this.curentArticle.id
+          draftID:this.curentArticle.id,
+          is_comment:this.curentArticle.is_comment
         },
         module_data:{
           edit:true,
@@ -595,15 +583,6 @@ export default {
 
       input.click();
     },
-    initTabStatus(cats){
-      cats.forEach(item=>{
-        this.tabStatus[item.id]=0
-      })
-      console.log(this.tabStatus)
-    },
-    setTabStatus(cid,aid){
-      this.tabStatus[cid]=aid
-    }
   },
 
   beforeCreate() {
@@ -613,13 +592,20 @@ export default {
           this.wenjiList = res.status?res.data:[];
           this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
           console.log(this.wenjiList);
-          // this.initTabStatus(this.wenjiList)
-       
+         
           if(this.$route.query.postid){
-            this.getContent({postID:this.$route.query.id})
+            // 已发布文章再编辑
+            this.user.article_to_draft_by_postID(this.$route.query.postid).then(res=>{
+              this.curentArticle = res.data;
+              console.log(this.curentArticle);
+            })
           }else if(this.$route.query.draftid){
+            // 草稿再编辑
+            console.log("草稿再编辑");
             this.draft_view(this.$route.query.draftid)
           }else{
+            // 新建草稿
+            console.log("新建草稿");
             this.curentArticle.categoryID = this.wenjiList[0].id;//草稿默认加到第一目录里
             this.draft_add();
           }
@@ -670,7 +656,7 @@ export default {
       articleActiveId: 0,
       testID:'',
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"",msgbody:""}},
+      curentArticle:{postInfo_postID:{title:"",msgbody:""},is_comment:1},
       tabStatus:{},
       watchCount:0,
       tags:[],

@@ -15,7 +15,17 @@
               </span>
                <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
               <div style="color:gray;">阅读 . {{articleDetail.data.countinfo_postID.count_read}}</div>
-             
+             <a class="ml-3" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</a>
+            <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
+              placement="top-end"
+              confirm-button-text='删除'
+              cancel-button-text='取消'
+              title="确定删除这篇文章吗？"
+              :hide-icon="true"
+              @confirm="article_delete(articleDetail.data)"
+            >
+              <a href="javascript:void(0)" slot="reference" class="ml-3" style="color:#39b8eb">删除</a>
+            </el-popconfirm>
               <div class="media-icons">
                 <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
                   
@@ -339,6 +349,17 @@ export default {
       blog.bookmark_delete(item.postID).then(res=>{
         // console.log(res);
         if(res.status)this.articleDetail.data.postInfo_postID.is_bookmark=0;
+      })
+    },
+    gotoEditor(item){
+      let url = '/blog/my/editor/?postid='+item.postID;
+      this.$router.push(url);
+    },
+    article_delete(item){
+      blog.article_delete(item.postID,0).then(res=>{
+        if(res.status){
+          this.$router.push('/blog/')
+        }
       })
     },
     test(){

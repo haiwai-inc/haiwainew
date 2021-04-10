@@ -20,8 +20,8 @@
               <a herf="javascript:void(0)" v-if="data.postInfo_postID.is_bookmark==1" @click="deletBookmark(data.postID)">取消收藏</a>
             </span>
 
-            <a class="ml-3" v-if="data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(data)">编辑</a>
-            <el-popconfirm  v-if="data.userID==$store.state.user.userinfo.UserID"
+            <!-- <a class="ml-3" v-if="data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(data)">编辑</a> -->
+            <!-- <el-popconfirm  v-if="data.userID==$store.state.user.userinfo.UserID"
               placement="top-end"
               confirm-button-text='删除'
               cancel-button-text='取消'
@@ -30,7 +30,7 @@
               @confirm="article_delete(data)"
             >
               <a href="javascript:void(0)" slot="reference" class="ml-3" style="color:#39b8eb">删除</a>
-            </el-popconfirm>
+            </el-popconfirm> -->
           </div>
         </div>
     </div>
@@ -49,6 +49,7 @@
 import {
     IconV
 } from '@/components/Icons';
+import blog from '../../../blog.service'
 
 export default {
   name: 'article-list-item',
@@ -72,14 +73,17 @@ export default {
     deletBookmark(postID){
       this.$emit('delete-bookmark',postID);
     },
-    article_delete(item){
-      console.log("删除功能");
-    },
-    gotoEditor(item){
-      let id = item.visible==1 ? item.postID : item.visible == undefined ? item.postID :item.id ;
-      this.$router.push('/blog/my/editor/?id='+id);
-      console.log(item)
-    }
+    // article_delete(item){
+    //   blog.article_delete(item.postID,0).then(res=>{
+    //     if(res.status){
+    //       this.$forceUpdate()
+    //     }
+    //   })
+    // },
+    // gotoEditor(item){
+    //   let url = '/blog/my/editor/?postid='+item.postID
+    //   this.$router.push(url);
+    // }
   }
    
 };

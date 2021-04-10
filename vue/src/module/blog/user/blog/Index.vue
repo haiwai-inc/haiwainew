@@ -8,7 +8,7 @@
       </div>
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between py-3">
                 <h5>我的博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>
@@ -284,8 +284,8 @@ export default {
         }
     },
     goeditor(item){
-        let url = item.visible===1?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.id
-        this.$router.push(url)
+        let url = item.visible===1?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.id;
+        this.$router.push(url);
     }
     
   },
