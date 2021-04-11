@@ -8,7 +8,7 @@ import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 import VueLazyload from 'vue-lazyload';
 import infiniteScroll from "vue-infinite-scroll";
-import { Loading, Upload, Image, Dialog, Message,Alert,Input, Checkbox, CheckboxGroup, Form, FormItem,Popconfirm,Popover,Button,
+import { Loading, Upload, Image, Dialog, Message,Alert,Input, Checkbox, CheckboxGroup, Form, FormItem,Popconfirm,Popover,Button, Tooltip,
   Dropdown,
   DropdownMenu,
   DropdownItem,} from 'element-ui';
@@ -45,6 +45,7 @@ export default {
     Vue.use(FormItem);
     Vue.use(Popconfirm);
     Vue.use(Popover);
+    Vue.use(Tooltip);
     Vue.use(Dropdown);
     Vue.use(DropdownMenu);
     Vue.use(DropdownItem);

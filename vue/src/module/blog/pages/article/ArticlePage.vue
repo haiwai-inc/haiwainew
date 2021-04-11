@@ -475,7 +475,8 @@ padding: 0 18px;
 .article-page .content{
   padding-top:1rem;
 }
-.article-page .content p img{
+.article-page .content p img,
+.article-page .content p iframe{
   width:85%;
   margin:0 auto;
   display:block;
@@ -492,8 +493,9 @@ padding: 0 18px;
   .article-page .blogger-box{
     width:220px
   }
-  .article-page .content p img{
-  width:100%;
-}
+  .article-page .content p img,
+  .article-page .content p iframe{
+    width:100%;
+  }
 }
 </style>

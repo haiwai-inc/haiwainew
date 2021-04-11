@@ -9,7 +9,7 @@
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
             <div class="d-flex justify-content-between py-3">
-                <h5>我的博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
+                <h5>博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>
                 <li class="d-flex align-items-center li_item" 
@@ -80,8 +80,18 @@
                <div class="list_item row" v-for="item in articleList" :key="item.id">
                    <div class="col-10">
                        
-                       <h5 style="margin:0;" class="text-truncate">{{item.postInfo_postID.title}}<small>{{item.visible==-2?"已发布文章编辑中...":item.visible==-1?"草稿":''}}</small></h5>
-                       <span class="text-muted" style="font-size:0.8rem">{{item.edit_date*1000|formatDate}}</span>
+                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible==-1?'gray':'black'}">
+                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible==1">
+                                <i class="el-icon-document-checked"></i>
+                           </el-tooltip>
+                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.visible==-1">
+                                <i class="el-icon-document" style="color:gray"></i>
+                           </el-tooltip>
+                           <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
+                                <i class="el-icon-document-copy" style="color:gray"></i>
+                           </el-tooltip>
+                           {{item.postInfo_postID.title}}</h5>
+                       <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
                        
                    </div>
                    <div class="col-2" style="padding:0">
@@ -91,8 +101,8 @@
                         placement="top-end"
                         confirm-button-text="刪除"
                         cancel-button-text='取消'
-                        :title="'确定删除这篇文章吗？'"
-                        :hide-icon="true"
+                        :title="item.visible==1?'确定删除这篇文章吗？':item.visible==-1?'确定删除这篇草稿吗？':'此操作会将已发布文章和此文章正在编辑的草稿一并删除。是否继续！！！'"
+                        :hide-icon="item.visible==-2?false:true"
                         @confirm="delArticle(item)"
                         >
                         <el-button type="text" icon="el-icon-delete" slot="reference">删除</el-button>
@@ -250,7 +260,7 @@ export default {
             }
           })
         }
-        if(item.visible==-1){
+        if(item.visible==-1 || item.visible==-2){
           blog.draft_delete(item.id).then(res=>{
             if(res.status){
               this.getArticleList();

@@ -97,21 +97,23 @@
           >
             {{curentArticle.visible==-1?'发布文章':'更新文章'}}
           </n-button> -->
-          <n-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+          <el-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布文章
-          </n-button>
-          <n-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+          </el-button>
+          <el-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布更新
-          </n-button>
-          <n-button
-            v-if="false"
-            type="default"
-            link
-            @click.native="save"
-            class="editbtn"
-          >
-            <icon-x :style="{ fill: 'gray' }"></icon-x>取消发布
-          </n-button>
+          </el-button>
+          <el-popconfirm
+            placement="top-end"
+            confirm-button-text="放弃"
+            cancel-button-text='取消'
+            :title="curentArticle.visible==-1?'您还没有发布这篇文章，放弃草稿将彻底删除此文章。是否放弃？':'放弃编辑，将退回到您上次发布此文章的版本！是否放弃？'"
+            :hide-icon="true"
+            @confirm="draft_delete(curentArticle)"
+            >
+            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{curentArticle.visible==-1?'放弃草稿':'放弃编辑'}}</el-button>
+          </el-popconfirm>
+          
         </div>
           <!-- <n-button 
             type="primary" 
@@ -177,9 +179,9 @@ import Editor from '@tinymce/tinymce-vue'
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
 import { Collapse, CollapseItem, Tag, Select, Option, Radio} from "element-ui";
-import {
-  IconX,
-} from "@/components/Icons";
+// import {
+//   IconX,
+// } from "@/components/Icons";
 import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../blog.service";
 import tinymce from './tinymce/tinymce.min'
@@ -232,7 +234,7 @@ export default {
     [Option.name]:Option,
     [Radio.name]:Radio,
     // HaiwaiLogoWhite,
-    IconX,
+    // IconX,
     'editor': Editor,
   },
   watch:{
@@ -253,11 +255,11 @@ export default {
   methods: {
     watchModify(val){
       this.watchCount+=1;
-      if(this.curentArticle.visible==1 && this.watchCount>2){
-        // 将已发布文章转为草稿
-        this.article_to_draft_by_postID();
+      // if(this.curentArticle.visible==1 && this.watchCount>2){
+      //   // 将已发布文章转为草稿
+      //   this.article_to_draft_by_postID();
 
-      }
+      // }
       if(this.curentArticle.visible!==1 && this.watchCount>2){
         this.autoSave()
       }
@@ -397,7 +399,7 @@ export default {
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
-          tagname:[],
+          tagname:this.tags,
           typeID:1,
           draftID:this.curentArticle.id,
           is_comment:this.curentArticle.is_comment
@@ -456,7 +458,7 @@ export default {
       this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
         console.log(res)
         if(res.status){
-          this.$refs.articlelist.getArticleList();
+          // this.$refs.articlelist.getArticleList();
           this.curentArticle = res.data
         }
       })
@@ -516,6 +518,15 @@ export default {
           console.log(this.curentArticle)
         }
       })
+    },
+    draft_delete(item){
+        
+        blog.draft_delete(item.id).then(res=>{
+          if(res.status){
+            this.$router.push('/blog/my/')
+          }
+        })
+        
     },
     autoSave(){
       clearTimeout(this.timer);
@@ -596,8 +607,15 @@ export default {
           if(this.$route.query.postid){
             // 已发布文章再编辑
             this.user.article_to_draft_by_postID(this.$route.query.postid).then(res=>{
-              this.curentArticle = res.data;
-              console.log(this.curentArticle);
+              if(res.status){
+                this.curentArticle = res.data;
+                // this.draft_view(res.data.id);
+                // console.log(this.curentArticle);
+              }else{
+                this.$message.error(res.error)
+              }
+              
+              
             })
           }else if(this.$route.query.draftid){
             // 草稿再编辑
