@@ -61,7 +61,7 @@ export default {
 </script>
 <style>
 .collection-box{
-  background-color: aliceblue;
+  background-color: #fbfbfb;
   border-radius: 16px;
   padding:18px 0;
 }

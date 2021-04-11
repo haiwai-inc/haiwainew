@@ -4,7 +4,13 @@
         <main-menu type="-1"></main-menu>
       </div>
       <div class="row">
-       <div class="col-sm-8 col-12">   
+       <div class="col-sm-3 d-none d-sm-block">
+            <!-- <user-index-sort :data="sortList"></user-index-sort> -->
+          <div class="collection-list mt-1">
+            <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" title="博文目录"></collection-list>
+          </div>
+        </div>
+       <div class="col-sm-9 col-12">   
             <div class="profile-header mt-2">
              <!-- header start -->  
               <div class="user-avatar d-flex p-3 mb-3" style="background-color:#f6f6f6;border-radius:5px">
@@ -36,12 +42,6 @@
                 <i class="now-ui-icons loader_refresh spin"></i>
             </div>
             <p class="text-center py-4" v-if="noMore">没有更多了</p>
-        </div>
-        <div class="col-sm-4 d-none d-sm-block">
-            <!-- <user-index-sort :data="sortList"></user-index-sort> -->
-          <div class="collection-list mt-3">
-            <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" title="博文目录"></collection-list>
-          </div>
         </div>
       </div>
     </div>
@@ -165,9 +165,10 @@ export default {
     border-bottom: 2px solid #39B8EB;
     font-weight: 600;
 }
-.blog-user-index {
-        background-color: #f6f6f6;
+.avatarbox {
+        cursor: pointer;
 }
+
 .blog-user-index .blog-user-index-des {
         font-size: 0.85rem;
         color: gray;

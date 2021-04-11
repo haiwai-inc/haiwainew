@@ -1,5 +1,5 @@
 <template>
-    <div class="blog-user-index mb-3">
+    <div class="blog-user-index mb-3 col-sm-12 col-12 ">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup"></div>
         </div>
