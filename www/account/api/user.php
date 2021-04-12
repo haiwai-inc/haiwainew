@@ -395,7 +395,7 @@ class user extends Api {
         
         $check_account_qqh=$obj_account_qqh->getOne("*",['id'=>$qqhID]);
         if(empty($check_account_qqh))   {$this->error="此对话不存在";$this->status=false;return false;}
-        if($check_account_qqh['userID']!=$_SESSION['id'] || $check_account_qqh['touserID']!=$_SESSION['id'])    {$this->error="此对话不存在";$this->status=false;return false;}
+        if($check_account_qqh['userID']!=$_SESSION['id'] && $check_account_qqh['touserID']!=$_SESSION['id'])    {$this->error="此对话不存在";$this->status=false;return false;}
         
         //删除悄悄话
         $obj_account_qqh->remove(['id'=>$qqhID]);
