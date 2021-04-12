@@ -440,7 +440,6 @@ export default {
       console.log(this.curentArticle,data)
       this.flags.publish = true;
       this.user.article_update(data).then(res=>{
-        console.log(res);
         if(res.status){
           this.published(res);
         }
@@ -452,14 +451,12 @@ export default {
       // this.$refs.articlelist.getArticleList();
       this.flags.publish = false;
       // this.modals.publish = false;
-      this.$router.push("/blog/p/"+res.data.postID);
+      this.$router.push("/blog/p/"+res.data);
     },
     article_to_draft_by_postID(){
       this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
         console.log(res)
         if(res.status){
-          // this.$refs.articlelist.getArticleList();
-          console.log(res.data);
           this.draft_view(res.data)
         }
       })
@@ -480,7 +477,6 @@ export default {
         }
       };
       this.user.draft_add(data).then(res=>{
-        console.log(res);
         this.draft_view(res.data);
       })
     },
@@ -500,13 +496,10 @@ export default {
           categoryID:this.curentArticle.categoryID
         }
       };
-      console.log(this.curentArticle,data)
       this.flags.autosaving = true;
       this.flags.autosaved = false;
       this.user.draft_update(data).then(res=>{
-        console.log(res);
         if(res.status){
-          // this.$refs.articlelist.getArticleList();
           this.flags.autosaving = false;
           this.flags.autosaved = true;
         }
@@ -516,12 +509,10 @@ export default {
       this.user.draft_view(id).then(res=>{
         if(res.status){
           this.curentArticle = res.data;
-          console.log(this.curentArticle)
         }
       })
     },
     draft_delete(item){
-        
         blog.draft_delete(item.id).then(res=>{
           if(res.status){
             this.$router.push('/blog/my/')
@@ -533,7 +524,6 @@ export default {
       clearTimeout(this.timer);
       if(this.curentArticle.visible!==1){
         this.timer = setTimeout(()=>{
-          console.log(this.curentArticle.id);
           this.draft_update();
         },3000)
       }
