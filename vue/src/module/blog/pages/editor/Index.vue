@@ -407,7 +407,7 @@ export default {
         module_data:{
           add:true,
           bloggerID:this.user.userinfo.bloggerID,
-          categoryID:this.wenjiActiveId
+          categoryID:this.curentArticle.categoryID
         }
       };
       console.log(data);
@@ -434,7 +434,7 @@ export default {
         module_data:{
           edit:true,
           bloggerID:this.user.userinfo.bloggerID,
-          categoryID:this.wenjiActiveId
+          categoryID:this.curentArticle.categoryID
         }
       };
       console.log(this.curentArticle,data)
@@ -599,8 +599,7 @@ export default {
             // 已发布文章再编辑
             this.user.article_to_draft_by_postID(this.$route.query.postid).then(res=>{
               if(res.status){
-                this.curentArticle = res.data;
-                // this.draft_view(res.data.id);
+                this.draft_view(res.data);
                 // console.log(this.curentArticle);
               }else{
                 this.$message.error(res.error)
