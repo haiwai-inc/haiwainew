@@ -8,7 +8,7 @@
       </div>
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
-            <div class="d-flex justify-content-between py-3">
+            <div class="d-flex justify-content-between align-items-center py-3">
                 <h5>博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>

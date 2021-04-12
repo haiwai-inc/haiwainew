@@ -68,7 +68,7 @@ const cns = {
         wenji_update_btn:"修改",
         wenji_update_menu:"修改文集名称",
         wenji_delet_menu:"删除文集",
-        wenji_comfirm_title:"确定删除文集 ",
+        wenji_comfirm_title:"确定删除博文目录 ",
         wenji_comfirm_title1:" 吗？",
         wenji_comfirm_btn:"删除",
         wenji_cancel_btn:"取消",

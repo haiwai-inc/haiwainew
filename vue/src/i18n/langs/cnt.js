@@ -68,7 +68,7 @@ const cnt = {
             wenji_update_btn:"修改",
             wenji_update_menu:"修改文集名稱",
             wenji_delet_menu:"刪除文集",
-            wenji_comfirm_title:"確定删除文集 ",
+            wenji_comfirm_title:"確定删除博文目錄 ",
             wenji_comfirm_title1:" 嗎？",
             wenji_comfirm_btn:"删除",
             wenji_cancel_btn:"取消",
