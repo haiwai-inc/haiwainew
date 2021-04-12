@@ -22,7 +22,7 @@
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                 <br>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
-                <span class="blog-user-index-des ml-4">粉丝：{{data.bloggerinfo_id.count_follower}}</span>
+                <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
             </div>
             <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
                 <n-button  
