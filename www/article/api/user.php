@@ -212,9 +212,9 @@ class user extends Api {
             "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
             "visible"=>-2
         ];
-        $obj_article_draft->insert($fields);
+        $draftID=$obj_article_draft->insert($fields);
         
-        return $this->article_view($rs_article_indexing['postID']);
+        return $this->draft_view($draftID);
     }
     
     /**
