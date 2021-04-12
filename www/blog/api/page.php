@@ -156,6 +156,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
             'order'=>['edit_date'=>'DESC']
