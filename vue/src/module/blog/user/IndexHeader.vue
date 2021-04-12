@@ -1,7 +1,9 @@
 <template>
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
-            <div class="user-bgup"></div>
+            <div class="user-bgup">
+                <span class="name">{{data.bloggerinfo_id.name}}</span>
+            </div>
         </div>
         <div class="user-avatar d-flex py-2">
             <div class="avatarbox" @click="go()">
@@ -226,7 +228,16 @@ export default {
     background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
-    height:100px
+    height:100px;
+    padding-top: 40px;
+    padding-left: 110px;
+}
+.blog-user-index .user-bgup .name{
+    font-size:1.6rem;
+    padding: 6px 10px;
+    color:white;
+    background-color: #4b4b4b60;
+    border-radius: 4px;
 }
 .blog-user-index .user-avatar{
     background-color: #f6f6f6;

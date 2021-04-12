@@ -11,7 +11,8 @@
         </div>
       </div>
       <div class="col-2" v-if="data.postInfo_postID.s_pic!=='' && type=='default'" >
-        <img alt="" v-bind:src="data.postInfo_postID.s_pic"  class="rounded">
+        <div :style="{width:'50px',height:'50px',background: 'url('+data.postInfo_postID.s_pic+')',backgroundSize: 'cover',borderRadius:'5px'}"></div>
+        <!-- <img alt="" v-bind:src="data.postInfo_postID.s_pic"  class="rounded"> -->
       </div>
     </div>
 </template>
