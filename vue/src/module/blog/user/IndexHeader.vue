@@ -228,7 +228,7 @@ export default {
     background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
-    height:100px;
+    height:160px;
     padding-top: 40px;
     padding-left: 110px;
 }
