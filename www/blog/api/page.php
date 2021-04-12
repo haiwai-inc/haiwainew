@@ -239,7 +239,7 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $fields=[
             'visible'=>1,
-            'treelevel'=>1,
+            'treelevel'=>0,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['comment_date'=>'DESC']
@@ -248,6 +248,17 @@ class page extends Api {
             $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
         return $rs_article_indexing;
     }
