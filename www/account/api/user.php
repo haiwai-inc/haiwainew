@@ -360,7 +360,6 @@ class user extends Api {
         $where_account_qqh_post=[
             'limit'=>20,
             'qqhID'=>$qqhID,
-            'visible'=>1,
             'order'=>['id'=>'DESC']
         ];
         if(!empty($lastID)){
@@ -383,6 +382,31 @@ class user extends Api {
         $obj_account_qqh->update($where_account_qqh,['id'=>$qqhID]);
         
         return $rs_account_qqh_post;
+    }
+    
+    /**
+     * 悄悄话页
+     * 悄悄话 删除对话
+     * @param integer $qqhID | 悄悄话对话框ID
+     */
+    public function qqh_delete($qqhID){
+        $obj_account_qqh=load("account_qqh");
+        $obj_account_qqh_post=load("account_qqh_post");
+        
+        $check_account_qqh=$obj_account_qqh->getOne("*",['id'=>$qqhID]);
+        if(empty($check_account_qqh))   {$this->error="此对话不存在";$this->status=false;return false;}
+        if($check_account_qqh['userID']!=$_SESSION['id'] || $check_account_qqh['touserID']!=$_SESSION['id'])    {$this->error="此对话不存在";$this->status=false;return false;}
+        
+        //删除悄悄话
+        $obj_account_qqh->remove(['id'=>$qqhID]);
+        $obj_account_qqh_post->remove(['qqhID'=>$qqhID]);
+        
+        //删除消息列表
+        $obj_account_notification=load("account_notification");
+        $obj_account_notification->remove(['type'=>'qqh','userID'=>$check_account_qqh['userID'],'from_userID'=>$check_account_qqh['touserID']],"notification_".substr('0'.$check_account_qqh['userID'],-1));
+        $obj_account_notification->remove(['type'=>'qqh','userID'=>$check_account_qqh['touserID'],'from_userID'=>$check_account_qqh['userID']],"notification_".substr('0'.$check_account_qqh['touserID'],-1));
+        
+        return true;
     }
     
     /**
