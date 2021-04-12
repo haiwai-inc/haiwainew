@@ -470,13 +470,16 @@ class user extends Api {
      */
     public function following_add($followingID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username','count_follower'],["id"=>$followingID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己关注自己！";$this->status=false;return false;}
         
         $obj_account_follow=load("account_follow");
         $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         if(!empty($check_account_follow)) {$this->error="此用户您已经关注过了";$this->status=false;return false;}
+        
+        //添加粉丝数
+        $obj_account_user->update(['count_follower'=>$check_account_user['count_follower']+1],["id"=>$followingID]);
         
         //添加关注列表
         $id=$obj_account_follow->insert(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
@@ -494,13 +497,16 @@ class user extends Api {
      */
     public function following_delete($followingID){
         $obj_account_user=load("account_user");
-        $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
+        $check_account_user=$obj_account_user->getOne(['id','username','count_follower'],["id"=>$followingID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
         if($check_account_user['id']==$_SESSION['id'])  {$this->error="请不要自己取消关注自己！";$this->status=false;return false;}
         
         $obj_account_follow=load("account_follow");
         $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
         if(empty($check_account_follow)) {$this->error="此用户不在您的关注列表";$this->status=false;return false;}
+        
+        //移除粉丝数
+        $obj_account_user->update(['count_follower'=>$check_account_user['count_follower']-1],["id"=>$followingID]);
         
         //移除关注列表
         $obj_account_follow->remove(['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);

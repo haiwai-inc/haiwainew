@@ -95,7 +95,7 @@ class account_user extends Model{
 	        
 	        
 	        //加入用户信息
-			$rs_account_user = $this->getAll(["id", "username", "avatar", "description", "verified", "status"], ["OR"=>["id"=>$tmp_rs_id]]);
+			$rs_account_user = $this->getAll(["id", "username", "avatar", "description", "verified", "status","count_follower"], ["OR"=>["id"=>$tmp_rs_id]]);
 			if(!empty($rs_account_user)){
 			    foreach($rs_account_user as $v){
 			        $hash_account_user[$v['id']] = $v;

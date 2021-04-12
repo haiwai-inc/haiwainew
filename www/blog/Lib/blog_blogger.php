@@ -12,11 +12,11 @@ class blog_blogger extends Model{
 		//TODO lastid filter
 		$where = ['name, LIKE' => "%$keyword%"];
 		if(empty($for_article)){
-			$blogger_rs  = $this->getList(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], $where);
+			$blogger_rs  = $this->getList(["id", "name", "userID", "background", "description", "count_read", "count_article", "count_buzz", "count_comment"], $where);
 		}
 		else{
 			$where['limit'] = 3;
-			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], $where);
+			$blogger_rs  = $this->getAll(["id", "name", "userID", "background", "description", "count_read", "count_article", "count_buzz", "count_comment"], $where);
 		}
 		$user_obj = load("account_user");
 		$bloggers = $user_obj->get_basic_userinfo($blogger_rs, "userID");
@@ -51,7 +51,7 @@ class blog_blogger extends Model{
 	            $tmp_rs_id[]=$v[$hashID];
 	        }
 	        
-	        $rs_blog_bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_follower", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$tmp_rs_id]]);       
+	        $rs_blog_bloggers = $this->getAll(["id", "name", "userID", "background", "description", "count_read", "count_article", "count_buzz", "count_comment"], ["OR"=>["id"=>$tmp_rs_id]]);       
 	        if(!empty($rs_blog_bloggers)){
 	            foreach($rs_blog_bloggers as $v){
 	                $hash_blog_blogger[$v['id']]=$v;
