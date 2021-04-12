@@ -146,28 +146,31 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页
      * 文章 列表 最新
      * @param integer $bloggerID
      * @param integer $lastID | 最后一个postID
      */
     public function article_list_recent($bloggerID,$lastID=0){
-        if(empty($bloggerID))   {$this->error="此博主不存在";$this->status=false;return false;}
-        
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
-            'bloggerID'=>$bloggerID,
             'order'=>['edit_date'=>'DESC']
         ];
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
+        if(!empty($bloggerID)){
+            $fields['bloggerID']=$bloggerID;
+        }else{
+            $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+            if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
+        }
+        
         $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         
         //ES补全postID信息
@@ -239,7 +242,7 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $fields=[
             'visible'=>1,
-            'treelevel'=>1,
+            'treelevel'=>0,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
             'order'=>['comment_date'=>'DESC']
@@ -248,6 +251,17 @@ class page extends Api {
             $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID"],$fields);
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加文章计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
         
         return $rs_article_indexing;
     }
