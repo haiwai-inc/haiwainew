@@ -146,28 +146,30 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页
      * 文章 列表 最新
      * @param integer $bloggerID
      * @param integer $lastID | 最后一个postID
      */
     public function article_list_recent($bloggerID,$lastID=0){
-        if(empty($bloggerID))   {$this->error="此博主不存在";$this->status=false;return false;}
-        
         $obj_blog_blogger=load("blog_blogger");
-        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
-        if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
             'visible'=>1,
             'limit'=>30,
-            'bloggerID'=>$bloggerID,
             'order'=>['edit_date'=>'DESC']
         ];
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
+        if(!empty($bloggerID)){
+            $fields['bloggerID']=$bloggerID;
+        }else{
+            $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['status'=>1]);
+            if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
+        }
+        
         $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         
         //ES补全postID信息
