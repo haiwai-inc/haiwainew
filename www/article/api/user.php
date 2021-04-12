@@ -87,7 +87,7 @@ class user extends Api {
         }
         
         //显示当前插入信息
-        return $this->article_view($article_data['postID']);
+        return $article_data['postID'];
     }
     
     /**
@@ -142,7 +142,7 @@ class user extends Api {
             $obj_article_draft->remove(['id'=>$article_data['draftID']]);
         }
         
-        return $this->article_view($article_data['postID']);
+        return $article_data['postID'];
     }
     
     /**
@@ -212,9 +212,8 @@ class user extends Api {
             "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
             "visible"=>-2
         ];
-        $obj_article_draft->insert($fields);
-        
-        return $this->article_view($rs_article_indexing['postID']);
+        $draftID=$obj_article_draft->insert($fields);
+        return $draftID;
     }
     
     /**
@@ -266,8 +265,8 @@ class user extends Api {
             "is_comment"=>empty($article_data['is_comment'])?0:1,
             "visible"=>-1
         ];
-        $id=$obj_article_draft->insert($fields);
-        return $id;
+        $draftID=$obj_article_draft->insert($fields);
+        return $draftID;
     }
     
     /**
@@ -294,7 +293,7 @@ class user extends Api {
             "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
         $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
-        return true;
+        return $article_data['draftID'];
     }
     
     /**
@@ -358,7 +357,7 @@ class user extends Api {
             $obj_account_notification->notification_add($check_article_indexing['userID'],'reply',$id,"add");
         }
         
-        return true;
+        return $postID;
     }
     
     /**
@@ -387,7 +386,7 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
         
-        return true;
+        return $article_data['postID'];
     }
     
     /**
@@ -479,13 +478,14 @@ class user extends Api {
         
         //添加文章
         if($rs_article_draft['visible']==-1){
-            $this->article_add($article_data,$module_data);
+            $article_data['postID']=$this->article_add($article_data,$module_data);
         }
         if($rs_article_draft['visible']==-2){
             $article_data['postID']=$rs_article_draft['postID'];
             $this->article_update($article_data,$module_data);
         }
-        return true;
+        
+        return $article_data['postID'];
     }
     
     /**
@@ -503,7 +503,7 @@ class user extends Api {
         $obj_article_timer=load("article_timer");
         $publish_date=times::gettime()+$time;
         $obj_article_draft->update(['publish_date'=>$publish_date,'is_timer'=>!empty($is_timer)?1:0],['id'=>$draftID]);
-        return true;
+        return $draftID;
     }
     
     /**
@@ -518,7 +518,7 @@ class user extends Api {
         if(empty($check_article_indexing)) {$this->error="置顶的文章不存在";$this->status=false;return false;}
         
         $obj_article_indexing->update(['is_sticky'=>!empty($is_sticky)?1:0],['id'=>$check_article_indexing['id']]);
-        return true;
+        return $postID;
     }
     
     /**
@@ -543,7 +543,7 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
         
-        return true;
+        return $postID;
     }
     
     /**
@@ -577,7 +577,7 @@ class user extends Api {
         if(empty($check_article_indexing)) {$this->error="设置私密文章不存在";$this->status=false;return false;}
         
         $obj_article_indexing->update(['is_publish'=>!empty($is_publish)?1:0],['id'=>$check_article_indexing['id']]);
-        return true;
+        return $postID;
     }
     
     /**
@@ -592,7 +592,7 @@ class user extends Api {
         if(empty($check_article_indexing)) {$this->error="禁止评论的文章不存在";$this->status=false;return false;}
         
         $obj_article_indexing->update(['is_comment'=>!empty($is_comment)?1:0],['id'=>$check_article_indexing['id']]);
-        return true;
+        return $postID;
     }
     
     /**
@@ -607,7 +607,7 @@ class user extends Api {
         if(empty($check_article_indexing)) {$this->error="禁止转载的文章不存在";$this->status=false;return false;}
         
         $obj_article_indexing->update(['is_share'=>!empty($is_share)?1:0],['id'=>$check_article_indexing['id']]);
-        return true;
+        return $postID;
     }
     
     /**
