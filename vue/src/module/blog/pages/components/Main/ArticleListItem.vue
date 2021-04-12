@@ -126,6 +126,7 @@ color: #235592
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  word-break: break-all;
 }
 .list-itme .descript:hover{
 color: #646464
