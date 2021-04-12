@@ -30,11 +30,35 @@
             haiwaiClass="haiwaiicon"
             style="padding:0;"
             >
-              <a 
-              class="dropdown-item" 
-              href="#">删除会话</a>
-              <a class="dropdown-item" href="#">加入黑名单</a>
-              <a class="dropdown-item" href="#">举报用户</a>
+              <el-popconfirm 
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                title="确定删除这组悄悄话吗？"
+                :hide-icon="true"
+                @confirm="qqh_delete(item)"
+              >
+                <a href="javascript:void(0)" slot="reference" class="dropdown-item" style="color:gray;">删除会话</a>
+              </el-popconfirm>
+              
+              <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.id:item.userinfo_touserID.id)">加入黑名单</a>
+
+              <el-popover 
+              placement="bottom-start"
+              width="375" 
+              :ref="'report0-'+item.postID"
+              trigger="click">
+                <div>我要举报 <b>{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
+                <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
+                <n-button 
+                type="primary"
+                round 
+                simple
+                :disabled="replybtndisable"
+                @click="report('0',item)"
+                  >举报</n-button>
+                <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
+              </el-popover>
             </drop-down>
             
           </div>
@@ -66,8 +90,7 @@
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
-            <a class="dropdown-item" href="#">加入黑名单</a>
-            <a class="dropdown-item" href="#">举报用户</a>
+            <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(touser.id)">加入黑名单</a>
           </drop-down>
         </div>
       </div>
@@ -138,7 +161,10 @@ export default {
         qqhList:{},
         qqhView:{},
         msgbody:'',
-        user:this.$store.state.user
+        user:this.$store.state.user,
+        report_status:false,
+        replybtndisable:false,
+        reportmsgbody:''
       }
   },
   created: function () {
@@ -195,6 +221,36 @@ export default {
       this.showQqhView(this.msgID);
       this.msgbody='';
       console.log(res);
+    },
+    // 删除悄悄话
+    qqh_delete(item){
+      this.$store.state.user.qqh_delete(item.id).then(res=>{
+        if(res.status){
+          this.qqh_list();
+        }
+      })
+    },
+    //拉黑
+    blockUser(id){
+      this.$store.state.user.blacklist_add(id).then(res=>{
+        console.log(res)
+        if(res.status){
+          this.$message({message:'已加黑名单',type:'success'})
+        }
+      })
+    },
+    //举报
+    report(n,data){
+      let pop = 'report'+n+'-'+data.postID;
+      let id = data.userinfo_userID.id!==this.loginUser.id?data.userinfo_userID.id:data.userinfo_touserID.id;
+      this.$store.state.user.report_add(id,this.reportmsgbody).then(res=>{
+        console.log(res.status);
+        this.report_status = true;
+        setTimeout(()=>{
+          this.report_status = false;
+          this.$refs[`${pop}`].doClose();
+        },2000)
+      })
     }
   },
   filters: {

@@ -268,6 +268,7 @@ class User extends API{
             return false;
         }
     }
+
     /**
      * get qqh view 
      * @param qqhID
@@ -282,6 +283,19 @@ class User extends API{
         }
     }
     
+    /**
+     * 删除 qqh  
+     * @param qqhID
+     */
+    async qqh_delete(qqhID){
+        try{
+            let res = await this.get("account/user/qqh_delete/?qqhID="+qqhID);
+            return res
+        }
+        catch(e){
+            return false;
+        }
+    }
 
     /**
      * 获取我关注的人

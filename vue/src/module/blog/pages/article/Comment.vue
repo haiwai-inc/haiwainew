@@ -18,7 +18,7 @@
                 <el-popover 
                 placement="bottom-start"
                 width="375" 
-                :ref="'report-'+data.postID"
+                :ref="'report0-'+data.postID"
                 trigger="click">
                   <div>我要举报 <b>{{data.userinfo_userID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
                   <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
@@ -27,7 +27,7 @@
                   round 
                   simple
                   :disabled="replybtndisable"
-                  @click="report(data)"
+                  @click="report('0',data)"
                     >举报</n-button
                   >
                   <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
@@ -93,7 +93,22 @@
                       haiwaiClass="haiwaiicon"
                       style="padding:0;"
                     >
-                      <a class="dropdown-item" href="#">举报</a>
+                      <el-popover 
+                      placement="bottom-start"
+                      width="375" 
+                      :ref="'report1-'+r.postID"
+                      trigger="click">
+                        <div>我要举报 <b>{{r.userinfo_userID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
+                        <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
+                        <n-button 
+                        type="primary"
+                        round 
+                        simple
+                        :disabled="replybtndisable"
+                        @click="report('1',r)"
+                          >举报</n-button>
+                        <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
+                      </el-popover>
                       <a class="dropdown-item pl-4" href="javascript:void(0)" @click="blockUser(r.userID)">加入黑名单</a>
                     </drop-down>
                     </span>
@@ -328,11 +343,14 @@ export default {
     blockUser(id){
       this.$store.state.user.blacklist_add(id).then(res=>{
         console.log(res)
+        if(res.status){
+          this.$message({message:'已加黑名单',type:'success'})
+        }
       })
     },
     //举报
-    report(data){
-      let pop = 'report-'+data.postID;
+    report(n,data){
+      let pop = 'report'+n+'-'+data.postID;
       this.$store.state.user.report_add(data.userID,this.reportmsgbody).then(res=>{
         console.log(res.status);
         this.report_status = true;
@@ -340,8 +358,7 @@ export default {
           this.report_status = false;
           this.$refs[`${pop}`].doClose();
         },2000)
-      }
-      )
+      })
     }
   },
   data(){
