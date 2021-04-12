@@ -196,7 +196,7 @@ export default {
     },
     data() {
         return {
-            defaultBackground:'/img/bg5.jpg',
+            defaultBackground:'/img/default_bg.jpg',
             data:{
                 bloggerinfo_id:{
                     background:'',

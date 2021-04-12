@@ -459,7 +459,8 @@ export default {
         console.log(res)
         if(res.status){
           // this.$refs.articlelist.getArticleList();
-          this.curentArticle = res.data
+          console.log(res.data);
+          this.draft_view(res.data)
         }
       })
     },
