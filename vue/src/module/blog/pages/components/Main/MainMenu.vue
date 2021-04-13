@@ -73,7 +73,7 @@ export default {
   font-size: 1.125rem !important;
   font-weight: 500;
   margin-right: 1rem;
-  color: gray;
+  color: #657786;
 }
 .main-menubox span:hover{
   color:black

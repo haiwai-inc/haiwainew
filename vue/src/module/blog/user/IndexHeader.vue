@@ -42,10 +42,11 @@
                 <n-button 
                 :type="data.userinfo_userID.is_following?'simple':'primary'" 
                 round 
+                size="sm"
                 @click="follow"
                 class="editbtn ml-3"
                 >
-                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#eee'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
+                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                 </n-button>
             </div>
         </div>

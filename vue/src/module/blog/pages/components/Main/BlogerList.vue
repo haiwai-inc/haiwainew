@@ -56,7 +56,7 @@ export default {
 </script>
 <style>
 .bolger-box{
-  background-color: aliceblue;
+  background-color: #f6f9fc;
   border-radius: 16px;
   padding:18px 0;
 }

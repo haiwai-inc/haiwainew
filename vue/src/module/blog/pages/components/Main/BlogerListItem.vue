@@ -227,7 +227,11 @@ color: #235592
     margin:0;
 }
 .hot-blogger .right .btn .add{
-    fill:#35abbb;
+        fill: #35abbb;
+        font-size: 15px;
+        border: 1px solid #35abbb;
+        border-radius: 20px;
+        padding: 5px 15px;
 }
 .hot-blogger .right .btn:hover .add{
     fill:#236e85;
