@@ -28,7 +28,7 @@ npm run build
 # 同步修改的文章到搜索引擎
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_search.php
 # 同步博客名和用户名到搜索引擎
-*/5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_blogger.php
+*/5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_blogger.php 
 # 同步标签和文集到搜索引擎
 */5 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/search/Cron/update_category_tag.php
 
@@ -50,7 +50,7 @@ blog/Cron/generate_hot_blogger.php   ->  file_domain
 # elastic search
 search/Cron/init_indexes.php // create and initialize search index for article and article pool
 search/Cron/update_search.php [all] [iteration_number]// update new article from database to es, [all] ignore 15 min limit, [iteration_number] iteration_number*200 = total number indexed
-search/Cron/update_blogger.php  //update blogger and username
+search/Cron/update_blogger.php [minutes] //update blogger and username [minutes] set to large number to fetch all (800000000)
 search/Cron/update_category_tag.php  //update category and tag names
 password: haiwai2020
 
@@ -64,7 +64,7 @@ php www/search/Cron/init_indexes.php haiwai2020
 
 php www/blog/Cron/sync_recommend_post.php
 php www/search/Cron/update_search.php all
-php www/search/Cron/update_blogger.php 
+php www/search/Cron/update_blogger.php 80000000000
 php www/search/Cron/update_category_tag.php 
 
 
