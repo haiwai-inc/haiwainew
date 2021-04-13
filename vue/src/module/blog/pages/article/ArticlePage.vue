@@ -352,7 +352,7 @@ export default {
       })
     },
     gotoEditor(item){
-      let url = '/blog/my/editor/?postid='+item.postID;
+      let url = item.draftID==0?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.draftID;
       this.$router.push(url);
     },
     article_delete(item){
@@ -362,9 +362,6 @@ export default {
         }
       })
     },
-    test(){
-      console.log('ok')
-    }
   },
   data() {
     return {
