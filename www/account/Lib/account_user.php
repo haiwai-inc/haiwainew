@@ -101,10 +101,17 @@ class account_user extends Model{
 			        $hash_account_user[$v['id']] = $v;
 			    }
 			}
+
+			$empty_list = [];
 			
 	        foreach($rs as $k=>$v){
 	            $item=empty($hash_account_user[$v[$hashID]])?[]:$hash_account_user[$v[$hashID]];
-	            
+
+				if(empty($item)) {
+					$empty_list[] = $k;
+					continue;
+				}
+
 	            //首字母
 	            $item['first_letter']=substr(strings::subString($item['username'],1), 0, -3);
 	            
@@ -121,6 +128,9 @@ class account_user extends Model{
 	            $rs[$k]["userinfo_{$hashID}"]=$item;
 			}
 			
+			foreach($empty_list as $k){
+				unset($rs[$k]);
+			}
 	    }
 	    
 	    return $rs;

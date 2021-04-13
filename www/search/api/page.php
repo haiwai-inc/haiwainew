@@ -55,6 +55,7 @@ class page extends Api{
         $blogger_obj = load("blog_blogger");
 
         $categories = $blogger_obj->get_basic_bloggerinfo($categories, "bloggerID");
+        $categories = $tool_obj -> extract_user_id($categories, "bloggerinfo_bloggerID");
         $categories = $user_obj->get_basic_userinfo($categories, "userID");
 
         return $tool_obj->overwrite_highlight($categories);

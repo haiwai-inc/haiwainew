@@ -421,5 +421,6 @@ tinymce.addI18n('zh_CN',{
 "medium" : "中",
 "x-Small" : "小",
 "wide":"宽",
-"narrow":"窄"
+"narrow":"窄",
+"origin":"原图"
 });
