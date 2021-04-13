@@ -48,4 +48,13 @@ class search_tool{
         $articles=$obj_article_indexing->get_article_count($articles);
         return $articles;
     }
+
+
+    public function extract_user_id($items, $field_name){
+        
+        foreach($items as $k => $item){
+            $items[$k]['userID'] = $item[$field_name]['userID'];
+        }
+        return $items;
+    }
 }

@@ -618,13 +618,14 @@ export default {
         media_dimensions:false,
         media_live_embeds:true,
         image_class_list : [
+          {title: 'origin', value:'origin-img'},
           {title: 'wide', value:'wide-img'},
           {title: 'medium', value:'medium-img'},
-          {title: 'narrow', value:'narrow-img'},
+          {title: 'narrow', value:'narrow-img'}
         ],
         image_description:false,
         // media_poster:false,
-        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;}',
+        content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;} .origin-img{max-width:100%; height:auto;}',
         video_template_callback : function(data){
             return "";
         }

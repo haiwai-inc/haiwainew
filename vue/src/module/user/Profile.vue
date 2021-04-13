@@ -474,7 +474,7 @@ export default {
         border-top: 1px solid #ddd;
 }
 .collection-box {
-        background-color: #f0f8ff;
+        background-color: #fbfbfb;
         border-radius: 16px;
         padding: 18px 0;
 }
