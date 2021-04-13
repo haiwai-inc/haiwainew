@@ -24,7 +24,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <span @click="openDialog(item)">
-                                <el-dropdown-item icon="el-icon-edit">编辑文集名</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-edit">编辑目录名</el-dropdown-item>
                             </span>
                             <span @click="category_shift(index,index-1)" v-if="index!=0">
                                 <el-dropdown-item icon="el-icon-arrow-up">向上移动</el-dropdown-item>
