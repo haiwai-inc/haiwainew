@@ -72,6 +72,20 @@ class User extends API{
     }
 
     /**
+     * 获取登录用户profile
+     * 
+     */
+    async user_profile(){
+        try{
+            let res = await this.get("account/user/user_profile/");
+            return res
+        }
+        catch(e){
+            return false;
+        }
+    }
+
+    /**
      * 
      * 获取用户状态
      */

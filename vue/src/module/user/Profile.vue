@@ -188,8 +188,7 @@ export default {
    //  Croppa 
   },
    created(){
-      this.authorInfor = this.$store.state.user.userinfo.userinfo_id
-      
+      this.user_profile();
       this.getBlackList(0);
       this.getBlogProfile();
    },
@@ -400,10 +399,15 @@ export default {
          }).catch(err=>{
 
          });
-    },
-    clickInput(name = "picInput"){
-       this.$refs[name].click();
-    },
+      },
+      clickInput(name = "picInput"){
+         this.$refs[name].click();
+      },
+      async user_profile(){
+         let val = await this.user.user_profile();
+         this.authorInfor = val.status?val.data:null;
+         console.log(this.authorInfor)
+      },
       async getBlackList(lastID){
          let v = await this.user.blacklist_list(lastID);
          if(v.status){
