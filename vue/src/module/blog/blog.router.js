@@ -17,6 +17,10 @@ export default [
         name: 'hot',
         components: { default:resolve => require (['./pages/IndexHot.vue'],resolve), header: MainNavbar},
       },{
+        path: '/blog/new',
+        name: 'new',
+        components: { default:resolve => require (['./pages/IndexNewest.vue'],resolve), header: MainNavbar},
+      },{
         path: '/blog/follows',
         name: 'follows',
         components: { default:resolve => require (['./pages/IndexFollows.vue'],resolve), header: MainNavbar},

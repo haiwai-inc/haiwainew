@@ -34,6 +34,14 @@
     >
         <span>{{$t('message').blog.menu_hot}}</span>
     </n-button>
+    <n-button
+        type="default" 
+        link 
+        @click="$router.push('/blog/new')" 
+        v-bind:class="{active:type==3}"
+    >
+        <span>最新</span>
+    </n-button>
   </div>
 </template>
 <script>
@@ -53,7 +61,8 @@ export default {
       menuitems: [
         {id:'0',name:this.$t('message').blog.menu_follow,link:'/blog/follows'},
         {id:'1',name:this.$t('message').blog.menu_recommend,link:'/blog'},
-        {id:'2',name:this.$t('message').blog.menu_hot,link:'/blog/hot'}
+        {id:'2',name:this.$t('message').blog.menu_hot,link:'/blog/hot'},
+        {id:'3',name:'最新',link:'/blog/new'}
       ]
     }
   }
