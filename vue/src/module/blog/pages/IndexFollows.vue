@@ -143,6 +143,8 @@ export default {
   position: relative;
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
+  font-size: 17px;
+  color: #425466
 }
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;

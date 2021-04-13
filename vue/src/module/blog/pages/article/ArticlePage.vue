@@ -439,7 +439,7 @@ export default {
 }
 /* r1 r2 r3*/
 .article-page .box {
-        background-color: aliceblue;
+        background-color: #f6f9fc;
         border-radius: 16px;
         padding: 10px 0
 }

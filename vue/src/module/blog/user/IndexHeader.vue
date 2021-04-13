@@ -40,14 +40,13 @@
                 </n-button>
                 
                 <n-button 
-                :type="data.userinfo_userID.is_following?'default':'primary'" 
+                :type="data.userinfo_userID.is_following?'simple':'primary'" 
                 round 
-                simple 
+                size="sm"
                 @click="follow"
                 class="editbtn ml-3"
-                size="sm"
                 >
-                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#888888'}:{fill:'#39b8eb'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
+                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                 </n-button>
             </div>
         </div>
@@ -229,15 +228,16 @@ export default {
 }
 .blog-user-index .user-bgup{
     height:160px;
-    padding-top: 40px;
+    padding-top: 102px;
     padding-left: 110px;
 }
 .blog-user-index .user-bgup .name{
     font-size:1.6rem;
     padding: 6px 10px;
     color:white;
-    background-color: #4b4b4b60;
+    text-shadow: 0 0 4px rgb(0 0 0 / 50%);
     border-radius: 4px;
+
 }
 .blog-user-index .user-avatar{
     background-color: #f6f6f6;

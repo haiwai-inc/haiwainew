@@ -145,7 +145,7 @@ export default {
 
 .hot-blogger{
   padding: 12px 18px;
-  border-top:1px solid #ddd;
+  border-top:1px solid #ebeef0;
 }
 .hot-blogger.noborder{
   border-top:0;
@@ -227,7 +227,11 @@ color: #235592
     margin:0;
 }
 .hot-blogger .right .btn .add{
-    fill:#35abbb;
+        fill: #35abbb;
+        font-size: 13px;
+        border: 1px solid #35abbb;
+        border-radius: 20px;
+        padding: 3px 13px;
 }
 .hot-blogger .right .btn:hover .add{
     fill:#236e85;
@@ -238,7 +242,7 @@ color: #235592
   overflow: hidden;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 @media (max-width: 575.98px){
     .list-itme .list-itme-image{

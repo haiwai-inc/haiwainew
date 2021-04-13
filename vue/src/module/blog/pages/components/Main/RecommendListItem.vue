@@ -49,7 +49,7 @@ export default {
 .recommend-list{
   cursor: pointer;
   padding: 12px 18px;
-  border-top:1px solid #ddd;
+  border-top:1px solid #ebeef0;
 }
 .recommend-list:hover{
   background-color:#d9e9f740
