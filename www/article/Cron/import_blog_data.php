@@ -22,6 +22,7 @@ class import_blog_data{
                     $postID_legacy_hot_post=[];
                     foreach($rs_blog_legacy_202005_post as $k=>$v){
                         $lastid=$v['postid'];
+                        echo $lastid."_".$month."\n";
                         
                         //汪老师
                         if($v['blogid']!=69027){
@@ -30,8 +31,6 @@ class import_blog_data{
                         
                         $rs_import_post=$obj_blog_tool->import_post($v);
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
-                        
-                        echo $lastid."_".$month."\n";
                     }
                     
                     //同步ES索引
