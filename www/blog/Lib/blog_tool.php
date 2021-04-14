@@ -80,7 +80,7 @@ class blog_tool{
     
     //article
     function add_to_article($rs){
-        $check_article_indexing=$this->obj_article_indexing->getOne("*",['wxc_postID'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
+        $check_article_indexing=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
         
         if(empty($check_article_indexing)){
             //msg
@@ -92,12 +92,12 @@ class blog_tool{
             $basecode=$postID;
             if($rs['treelevel']!=0){
                 //comment
-                $check_article_indexing_basecode=$this->obj_article_indexing->getOne("*",['wxc_postID'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
+                $check_article_indexing_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
                 $basecode=empty($check_article_indexing_basecode)?0:$check_article_indexing_basecode['postID'];
             }
             $fields_indexing=[
                 "postID"=>$postID,
-                "wxc_postID"=>substr($rs['dateline'],0,10)."_blog_".$rs['postid'],
+                "wxc_basecode"=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode'],
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
                 "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
