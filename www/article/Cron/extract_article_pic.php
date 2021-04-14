@@ -103,7 +103,7 @@ class extract_article_pic{
 $obj = new extract_article_pic();
 $obj->start();
 
-shell_exec("/bin/chown -R www-data:www-data ".DOCUROOT . "/upload/article/pic/blog");
+shell_exec("/bin/chown www-data:www-data ".DOCUROOT . "/upload/article/pic/blog");
 
 
 
