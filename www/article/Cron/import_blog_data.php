@@ -16,7 +16,7 @@ class import_blog_data{
         
         for($i=1;$i<=12;$i++){
             $month=substr('00'.$i,-2);
-            
+            $lastid=0;
             $rs_blog_legacy_202005_post=[];
             while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month}_post") ){
                 $postID_legacy_hot_post=[];
@@ -37,7 +37,6 @@ class import_blog_data{
                 $obj_article_noindex=load("search_article_noindex");
                 $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
             }
-            $rs_blog_legacy_202005_post=true;
         }
     }
 }
