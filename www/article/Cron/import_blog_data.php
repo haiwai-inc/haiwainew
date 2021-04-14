@@ -37,7 +37,7 @@ class import_blog_data{
                 $obj_article_noindex=load("search_article_noindex");
                 $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
             }
-            
+            $rs_blog_legacy_202005_post=true;
         }
     }
 }
