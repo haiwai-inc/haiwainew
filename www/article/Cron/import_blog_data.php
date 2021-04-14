@@ -25,12 +25,20 @@ class import_blog_data{
                     echo $lastid."_".$month."\n";
                     
                     //汪老师
-                    if($v['blogid']!=69027){
-                        continue;
+                    if($v['blogid']==69027){
+                        //查询评论
+                        $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>300,'basecode'=>$v['basecode'],'visible'=>1,'treelevel'=>1],"blog_{$year}{$month}_post");
+                        if(!empty($rs_reply)){
+                            foreach($rs_reply as $vv){
+                                $rs_reply_import_post=$obj_blog_tool->import_post($vv);
+                                $postID_legacy_hot_post[]=$rs_reply_import_post['article_new']['postID'];
+                            }
+                        }
+                        
+                        //主贴
+                        $rs_import_post=$obj_blog_tool->import_post($v);
+                        $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
                     }
-                    
-                    $rs_import_post=$obj_blog_tool->import_post($v);
-                    $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
                 }
                 
                 //同步ES索引
