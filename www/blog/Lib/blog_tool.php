@@ -103,7 +103,7 @@ class blog_tool{
                 "postID"=>$postID,
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
-                "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
+                "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_wxc_basecode['bloggerID']:$rs['blogger_new']['id'],
                 "categoryID"=>empty($rs['category_new']['id'])?0:$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
