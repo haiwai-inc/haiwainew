@@ -5,7 +5,7 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-4 d-none d-sm-block">
+        <div class="col-sm-3 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
               <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
@@ -27,7 +27,7 @@
             
           </div>
         </div>
-        <div class="col-sm-8 col-12">
+        <div class="col-sm-9 col-12">
           <div v-if="articlelists.length>0">
             <div v-if="selectItem.followingID==0">
               <article-list-item 
