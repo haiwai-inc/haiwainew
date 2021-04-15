@@ -81,7 +81,7 @@ class blog_tool{
     
     //article
     function add_to_article($rs){
-        $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
+        $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>substr($rs['dateline'],0,7)."_blog_".$rs['postid']]);
         if(!empty($check_article_indexing_wxc)){
             $check_article_indexing=$this->obj_article_indexing->getOne("*",['postID'=>$check_article_indexing_wxc['postID']]);
         }
@@ -117,8 +117,8 @@ class blog_tool{
             $this->obj_article_indexing_wxc->insert([
                 'postID'=>$fields_indexing['postID'],
                 'basecode'=>$fields_indexing['basecode'],
-                'wxc_postid'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid'],
-                'wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
+                'wxc_postid'=>substr($rs['dateline'],0,7)."_blog_".$rs['postid'],
+                'wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
             
             //post
             $post_tbn=substr('0'.$rs['user_new']['id'],-1);
