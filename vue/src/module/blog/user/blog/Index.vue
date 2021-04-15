@@ -9,7 +9,7 @@
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
             <div class="d-flex justify-content-between align-items-center py-3">
-                <h5>博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
+                <h5>博文管理</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>
                 <li class="d-flex align-items-center li_item" 
