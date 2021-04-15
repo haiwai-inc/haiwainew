@@ -115,7 +115,7 @@ class blog_tool{
             
             //记录文学城旧博客ID
             $this->obj_article_indexing_wxc->insert([
-                'postID'=>$fields_indexing['id'],
+                'postID'=>$fields_indexing['postID'],
                 'basecode'=>$fields_indexing['basecode'],
                 'wxc_postid'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid'],
                 'wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
