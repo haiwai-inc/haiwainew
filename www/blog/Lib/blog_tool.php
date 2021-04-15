@@ -96,7 +96,7 @@ class blog_tool{
             $basecode=$postID;
             if($rs['treelevel']!=0){
                 //comment
-                $check_article_indexing_wxc_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
+                $check_article_indexing_wxc_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
                 $basecode=empty($check_article_indexing_wxc_basecode)?0:$check_article_indexing_wxc_basecode['basecode'];
             }
             $fields_indexing=[
