@@ -215,6 +215,7 @@ class search_article_noindex extends Search
 			}
 			$result = $this->get_by_postIDs($postIDs);
 			foreach($result as $post){
+				if(empty($post['postID'])) continue;
 				$postID_map[$post['postID']] = true;
 			}
             foreach ($articles as $article) {
