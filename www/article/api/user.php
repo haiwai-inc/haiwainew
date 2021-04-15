@@ -18,6 +18,11 @@ class user extends Api {
         $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
+        //草稿检查
+        $obj_article_draft=load("article_draft");
+        $rs_article_draft=$obj_article_draft->getOne(["id"],['postID'=>$rs_article_indexing['postID']]);
+        $rs_article_indexing['draftID']=empty($rs_article_draft)?0:$rs_article_draft['id'];
+        
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
         $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
