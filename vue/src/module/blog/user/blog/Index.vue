@@ -80,16 +80,16 @@
                <div class="list_item row" v-for="item in articleList" :key="item.id">
                    <div class="col-10">
                        
-                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible==-1?'gray':'black'}">
-                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible==1">
+                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible!==-1?'black':'grey'}">
+                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible!==-1">
                                 <i class="el-icon-document-checked"></i>
                            </el-tooltip>
-                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.visible==-1">
+                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.visible===-1">
                                 <i class="el-icon-document" style="color:gray"></i>
                            </el-tooltip>
-                           <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
+                           <!-- <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
                                 <i class="el-icon-document-copy" style="color:gray"></i>
-                           </el-tooltip>
+                           </el-tooltip> -->
                            {{item.postInfo_postID.title}}</h5>
                        <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
                        
@@ -101,7 +101,7 @@
                         placement="top-end"
                         confirm-button-text="刪除"
                         cancel-button-text='取消'
-                        :title="item.visible==1?'确定删除这篇文章吗？':item.visible==-1?'确定删除这篇草稿吗？':'此操作会将已发布文章和此文章正在编辑的草稿一并删除。是否继续！！！'"
+                        :title="item.visible==1?'确定删除这篇文章吗？':item.visible==-1?'确定删除这篇草稿吗？':'此操作会将已发布文章和正在编辑的草稿一并删除。是否继续！！！'"
                         :hide-icon="item.visible==-2?false:true"
                         @confirm="delArticle(item)"
                         >
