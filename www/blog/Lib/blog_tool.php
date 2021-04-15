@@ -90,11 +90,17 @@ class blog_tool{
         
         //导入新wxc博客数据
         if(empty($check_article_indexing)){
+            //查看是否为隐藏
+            $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
+            
+            //查看内容
             $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
             $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
             
+            //获取postID
             $postID=$this->obj_article_post->get_id();
             $basecode=$postID;
+            
             //评论
             if($rs['treelevel']!=0){
                 //获取wxc主贴basecode
@@ -112,6 +118,7 @@ class blog_tool{
                 "edit_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
+                'is_publish'=>$rs_blog_legacy_blogcat_members['visible'],
             ];
             $fields_indexing['id']=$this->obj_article_indexing->insert($fields_indexing);
             
@@ -288,7 +295,8 @@ class blog_tool{
             $field=[
                 "bloggerID"=>$rs['blogger_new']['id'],
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
-                'count_article'=>1
+                'count_article'=>1,
+                'is_publish'=>$rs_blog_legacy_blogcat_members['visible']
             ];
             if($field['name']=="我的文章"){
                 $field['is_default']=1;
