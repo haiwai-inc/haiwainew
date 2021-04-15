@@ -18,20 +18,13 @@
             </div>
             
             <div class="flex-grow-1">
-                <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span><br>
-                <span class="blog-user-index-des">{{data.userinfo_userID.description}} </span>
+                <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span>
+                <span class="blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                 <br>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
-            </div>
-            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button  
-                link 
-                size="sm"
-                >博客设置</n-button>
-            </div>
-            <div class="pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
+                <div class="float-right pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
                 <n-button  
                 link 
                 size="sm"
@@ -50,6 +43,14 @@
                     <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                 </n-button>
             </div>
+            </div>
+            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
+                <n-button  
+                link 
+                size="sm"
+                >博客设置</n-button>
+            </div>
+
         </div>
         
     <!-- Send QQH Modal -->
@@ -229,8 +230,7 @@ export default {
 }
 .blog-user-index .user-bgup{
     height:160px;
-    padding-top: 60px;
-    padding-left: 110px;
+    padding: 60px 30px 0 30px;
     background: -webkit-linear-gradient(top, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%);
     background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%)
 }
@@ -247,10 +247,10 @@ export default {
 }
 .blog-user-index .user-avatar img,
 .blog-user-index .avatar-word{
-    min-width: 90px;
-    width:90px;
-    height: 90px;
-    margin: -30px 10px 10px 10px;
+    min-width: 106px;
+    width:106px;
+    height: 106px;
+    margin: -62px 10px 10px 10px;
     border:2px white solid;
     border-radius: 50%;
 }
@@ -258,13 +258,23 @@ export default {
     font-size: 1.125rem;
     font-weight: 700;
 }
-.blog-user-index .bdescription{font-size:18px}
-.blog-user-index .blog-user-index-des{
-        font-size: 0.9rem;
-        color: gray;
-        max-width: 393px;
-        display: inline-block;
+.blog-user-index .bdescription{
+        font-size: 16px;
+        text-shadow: 0 0 4px rgb(0 0 0 / 50%);
+        padding-left: 90px;
 }
+.blog-user-index .blog-user-index-des{
+        font-size: 1rem;
+        color: gray;
+        display: inline-block;
+        margin-top: 11px;
+}
+.blog-user-index .blog-user-index-des.x{
+         margin-left: 12px;
+         color: black;
+         font-size: 1.1rem;
+}
+        
 .blog-user-index .avatar-word{
     background-color: aliceblue;
     text-align: center;
