@@ -226,10 +226,15 @@ class user extends Api {
      * 文章 草稿 显示
      * @param integer $id | 草稿id
      */
-    public function draft_view($id){
+    public function draft_view($id=0){
+        //如果草稿不为空
         $obj_article_draft=load("article_draft");
-        $check_article_draft=$obj_article_draft->getOne("*",['id'=>$id]);
-        if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
+        if(!empty($id)){
+            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$id]);
+            if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
+        }else{
+            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id']]);
+        }
         
         //格式化草稿结构
         $rs_article_draft=$obj_article_draft->format_draft([$check_article_draft]);
@@ -283,6 +288,15 @@ class user extends Api {
      * @response /article/api_response/draft_update.txt
      */
     public function draft_update($article_data,$module_data){
+        //如果草稿不为空
+        $obj_article_draft=load("article_draft");
+        if(!empty($article_data['draftID'])){
+            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
+            if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
+        }else{
+            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id']]);
+        }
+        
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
         $tagID=$obj_article_tag->draft_tag_add($article_data);
@@ -297,8 +311,16 @@ class user extends Api {
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
             "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
-        $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
-        return $article_data['draftID'];
+        
+        if(!empty($article_data['draftID'])){
+            //未发布编辑草稿
+            $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
+        }else{
+            //编辑草稿
+            $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id']]);
+        }
+        
+        return $check_article_draft['id'];
     }
     
     /**
