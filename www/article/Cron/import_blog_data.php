@@ -25,7 +25,7 @@ class import_blog_data{
                     echo $lastid."_".$month."\n";
                     
                     //汪老师 3453
-                    if($v['blogid']==69027){
+                    if($v['blogid']==69027 && $v['basecode']==211){
                         //查询评论
                         $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>300,'basecode'=>$v['basecode'],'visible'=>1,'treelevel'=>1],"blog_{$year}{$month}_post");
                         if(!empty($rs_reply)){
