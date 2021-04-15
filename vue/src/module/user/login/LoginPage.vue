@@ -378,4 +378,7 @@ display: flex;
 #google-signin-button .abcRioButtonIcon{
 margin-left: 75px;
 }
+input.el-input__inner::placeholder {
+  color: #606266
+}
 </style>
