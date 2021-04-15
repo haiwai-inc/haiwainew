@@ -61,21 +61,29 @@
             class="mr-2 mb-2"
             v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
             closable
+            effect="plain"
             :disable-transitions="false"
             @close="removetag(index)">
             {{item.name}}
           </el-tag>
-          <el-input
+          <el-autocomplete
             class="input-new-tag"
             v-if="inputVisible"
             v-model="tag"
             ref="saveTagInput"
             size="small"
+            placeholder="请输入标签"
+            :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
+            @select="handleSelect"
+            @blur="tag?'':inputVisible=false"
           >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.name }}</div>
+          </template>
+          <el-button slot="append" icon="el-icon-plus" :disabled="tag==''" @click="handleInputConfirm"></el-button>
+          </el-autocomplete>
+          <el-button v-else round class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
         </div>
         <div class="pb-5">
           可否评论：
@@ -178,7 +186,7 @@ import Editor from '@tinymce/tinymce-vue'
 // import CategoryArticleList from "./components/CategoryArticleList";
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem, Tag, Select, Option, Radio} from "element-ui";
+import { Collapse, CollapseItem, Tag, Select, Option, Radio, Autocomplete} from "element-ui";
 // import {
 //   IconX,
 // } from "@/components/Icons";
@@ -233,6 +241,7 @@ export default {
     [Select.name]:Select,
     [Option.name]:Option,
     [Radio.name]:Radio,
+    [Autocomplete.name]: Autocomplete,
     // HaiwaiLogoWhite,
     // IconX,
     'editor': Editor,
@@ -529,13 +538,38 @@ export default {
       }
     },
 // tag 相关
+    hot_tag(){
+      blog.hot_tag().then(res=>{
+        if(res.status){
+          this.hotTags=res.data.data;console.log(this.hotTags)
+        }
+      })
+    },
+    async tagSuggestion(queryString,cb){
+      let results = await this.$store.state.search.get_tags(queryString);
+      console.log(results.data)
+      cb(results.data);// 调用 callback 返回建议列表的数据
+      // var restaurants = this.hotTags;
+      //   var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      //   // 调用 callback 返回建议列表的数据
+      //   cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
     showInput() {
       this.inputVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
-
+    handleSelect(item) {
+      this.tag = item.name;
+      console.log(item);
+      this.handleInputConfirm();
+    },
     handleInputConfirm() {
       let inputValue = this.tag;
       if (inputValue) {
@@ -625,6 +659,7 @@ export default {
   },
 
   created() {
+    this.hot_tag();
     // this.fetchData();
   },
   mounted() {
@@ -669,6 +704,7 @@ export default {
       watchCount:0,
       tags:[],
       tag:'',
+      hotTags:[],
       inputVisible:false,
       modals: {
         addwenji: false,
@@ -902,14 +938,20 @@ body{
   height:80%
 }
 .input-new-tag {
-    width: 120px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
-  .el-dropdown-link {
-    cursor: pointer;
-    color: #39b8eb;
-  }
+  width: 200px;
+  vertical-align: bottom;
+}
+.input-new-tag .el-input-group__append {
+  background-color: #fff;
+  width:36px;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #39b8eb;
+}
 @media (max-width: 575.98px){
   .publisher .menu1{
     height:auto;
