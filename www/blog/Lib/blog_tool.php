@@ -13,6 +13,7 @@ class blog_tool{
         $this->obj_article_tag=load("article_tag");
         $this->obj_article_post=load("article_post");
         $this->obj_article_post_tag=load("article_post_tag");
+        $this->obj_article_indexing_wxc=load("article_indexing_wxc");
         
         //blogger
         $this->obj_blog_blogger=load("blog_blogger");
@@ -80,7 +81,10 @@ class blog_tool{
     
     //article
     function add_to_article($rs){
-        $check_article_indexing=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
+        $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid']]);
+        if(!empty($check_article_indexing_wxc)){
+            $check_article_indexing=$this->obj_article_indexing->getOne("*",['postID'=>$check_article_indexing_wxc['postID']]);
+        }
         
         if(empty($check_article_indexing)){
             //msg
@@ -92,12 +96,11 @@ class blog_tool{
             $basecode=$postID;
             if($rs['treelevel']!=0){
                 //comment
-                $check_article_indexing_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
-                $basecode=empty($check_article_indexing_basecode)?0:$check_article_indexing_basecode['postID'];
+                $check_article_indexing_wxc_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
+                $basecode=empty($check_article_indexing_wxc_basecode)?0:$check_article_indexing_wxc_basecode['basecode'];
             }
             $fields_indexing=[
                 "postID"=>$postID,
-                "wxc_basecode"=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode'],
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
                 "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_basecode['bloggerID']:$rs['blogger_new']['id'],
@@ -109,6 +112,13 @@ class blog_tool{
                 "count_comment"=>$rs['comments'],
             ];
             $fields_indexing['id']=$this->obj_article_indexing->insert($fields_indexing);
+            
+            //记录文学城旧博客ID
+            $this->obj_article_indexing_wxc->insert([
+                'postID'=>$fields_indexing['id'],
+                'basecode'=>$fields_indexing['basecode'],
+                'wxc_postid'=>substr($rs['dateline'],0,10)."_blog_".$rs['postid'],
+                'wxc_basecode'=>substr($rs['dateline'],0,10)."_blog_".$rs['basecode']]);
             
             //post
             $post_tbn=substr('0'.$rs['user_new']['id'],-1);
