@@ -3,7 +3,7 @@
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup">
                 <span class="name">{{data.bloggerinfo_id.name}}</span>
-                <p class="bdescription text-white">{{data.bloggerinfo_id.description}}</p>
+                <p class="bdescription">{{data.bloggerinfo_id.description}}</p>
             </div>
         </div>
         <div class="user-avatar d-flex py-2">
@@ -15,13 +15,15 @@
                 v-if="data.userinfo_userID.avatar" 
                 :src="data.userinfo_userID.avatar" 
                 :alt="data.userinfo_userID.username">
+               
             </div>
             
             <div class="flex-grow-1">
-                <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span>
-                <span class="blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
+
+                <span class="blog-user-index-des x">{{data.userinfo_userID.username}}</span>
                 <br>
+                <span class="blog-user-index-des ">{{data.userinfo_userID.description}} </span><br>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
                 <div class="float-right pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
@@ -229,8 +231,8 @@ export default {
     background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
-    height:160px;
-    padding: 60px 30px 0 30px;
+    height:230px;
+    padding: 106px 30px 0 165px;
     background: -webkit-linear-gradient(top, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%);
     background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%)
 }
@@ -247,9 +249,9 @@ export default {
 }
 .blog-user-index .user-avatar img,
 .blog-user-index .avatar-word{
-    min-width: 106px;
-    width:106px;
-    height: 106px;
+    min-width: 150px;
+    width:150px;
+    height: 150px;
     margin: -62px 10px 10px 10px;
     border:2px white solid;
     border-radius: 50%;
@@ -257,11 +259,13 @@ export default {
 .blog-user-index .blog-user-index-name{
     font-size: 1.125rem;
     font-weight: 700;
+    text-align:center
 }
 .blog-user-index .bdescription{
-        font-size: 16px;
+        font-size: 19px;
+        color: #fff;
         text-shadow: 0 0 4px rgb(0 0 0 / 50%);
-        padding-left: 90px;
+        font-weight: 500;
 }
 .blog-user-index .blog-user-index-des{
         font-size: 1rem;
@@ -270,7 +274,7 @@ export default {
         margin-top: 11px;
 }
 .blog-user-index .blog-user-index-des.x{
-         margin-left: 12px;
+         /*margin-left: 12px;*/
          color: black;
          font-size: 1.1rem;
 }
