@@ -2,7 +2,8 @@
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup">
-                <span class="name">{{data.bloggerinfo_id.name}}</span>
+                <span class="name">{{data.bloggerinfo_id.name}}</span><br>
+                <span class="blog-user-index-des" style="text-shadow: 0 0 4px rgb(255,255,255,0.5);">{{data.bloggerinfo_id.description}} </span>
             </div>
         </div>
         <div class="user-avatar d-flex py-2">
@@ -18,7 +19,7 @@
             
             <div class="flex-grow-1">
                 <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span><br>
-                <span class="blog-user-index-des">{{data.bloggerinfo_id.description}} </span>
+                <span class="blog-user-index-des">{{data.userinfo_userID.description}} </span>
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                 <br>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
@@ -228,16 +229,15 @@ export default {
 }
 .blog-user-index .user-bgup{
     height:160px;
-    padding-top: 102px;
+    padding-top: 80px;
     padding-left: 110px;
 }
 .blog-user-index .user-bgup .name{
     font-size:1.6rem;
-    padding: 6px 10px;
+    padding: 6px 0px;
     color:white;
     text-shadow: 0 0 4px rgb(0 0 0 / 50%);
     border-radius: 4px;
-
 }
 .blog-user-index .user-avatar{
     background-color: #f6f6f6;

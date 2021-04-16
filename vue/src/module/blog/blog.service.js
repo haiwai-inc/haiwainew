@@ -35,7 +35,7 @@ class Blog extends API{
   /**
 	 * 返回热榜博文列表
 	 */
-  async hot_article_list(tagID,lastid){
+  async hot_article_list(tagID){
     return await this.sendget("blog/page/hot_article/?tagID="+tagID);
   }
 
@@ -287,31 +287,10 @@ class Blog extends API{
 	 * 
 	 * @param {文章的postID}
 	 *          postID
+	 * @param {visible=0 为删除} visible
 	 */
   async article_delete(postID,visible){
     return await this.sendget('article/user/article_delete/?postID='+postID+'&visible='+visible)
-  }
-
-  /**
-	 * 新建文集中的草稿
-	 * 
-	 * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)}
-	 *          article_data
-	 * @param {add:true,bloggerID:#,categoryID:#}
-	 *          module_data
-	 */
-  async draft_add(data){
-    return await this.sendpost('article/user/draft_add/',data)
-  }
-
-  /**
-	 * 删除文集中的草稿
-	 * 
-	 * @param {草稿的id}
-	 *          id
-	 */
-  async draft_delete(id){
-    return await this.sendget('article/user/draft_delete/?id='+id)
   }
 
   /**

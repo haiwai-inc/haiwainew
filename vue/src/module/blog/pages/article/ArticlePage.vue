@@ -231,13 +231,16 @@ export default {
       });
     },
     initRecommendProp(res){
-      var arr = res.data.postInfo_postID.tags;
+      var arr = [];console.log(arr)
+      res.data.postInfo_postID.tags.forEach(r=>{
+        arr.push(r.id)
+      });
       this.recommend.props.tags = arr.length>0?arr.toString():''
       this.recommend.props.lastID = 0;
       this.getRecommend()
     },
     getRecommend(){
-      blog.hot_article_list(this.recommend.props.tags,this.recommend.props.lastID).then(res=>{
+      blog.hot_article_list(this.recommend.props.tags).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data

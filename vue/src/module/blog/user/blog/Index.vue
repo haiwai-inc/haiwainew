@@ -9,7 +9,7 @@
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
             <div class="d-flex justify-content-between align-items-center py-3">
-                <h5>博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
+                <h5>博文管理</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>
                 <li class="d-flex align-items-center li_item" 
@@ -90,7 +90,9 @@
                            <!-- <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
                                 <i class="el-icon-document-copy" style="color:gray"></i>
                            </el-tooltip> -->
-                           {{item.postInfo_postID.title}}</h5>
+                           {{item.postInfo_postID.title}}
+                           <small v-if="item.visible===-1">(草稿)</small>
+                        </h5>
                        <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
                        
                    </div>

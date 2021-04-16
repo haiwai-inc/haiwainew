@@ -25,6 +25,7 @@
           <input
             class="editorTitle"
             type="text"
+            autofocus
             v-model="curentArticle.postInfo_postID.title"
             :placeholder="$t('message').editor.title_ph"
           />
@@ -39,24 +40,30 @@
         />
         
       </div>
-      <div class="col-md-3" style="padding-top:75px">
+      <div class="col-md-3" style="padding-top:30px">
+        <div>
+          <el-button type="text" link v-bind:style="{paddingRight:0 }" @click="$router.push('/blog/my/')"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
+        </div>
         <div ref="saving" style="font-size:13px;padding-left:8px;">
           <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
           <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
-        <el-select v-if="wenjiList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
+        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
           <el-option
-            v-for="item in wenjiList"
+            v-for="item in categoryList"
             :key="item.id"
             :label="item.name"
             :value="item.id">
           </el-option>
         </el-select>
         
-        <div class="py-5">
-          <span>文章标签：</span>
+        <div class="py-4">
+          <div class="mb-2">
+            <span>博文标签：</span>
+            <!-- <span class="text-muted" style="font-size:0.85rem">（可多选）</span> -->
+          </div>
           <el-tag
             class="mr-2 mb-2"
             v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
@@ -71,7 +78,6 @@
             v-if="inputVisible"
             v-model="tag"
             ref="saveTagInput"
-            size="small"
             placeholder="请输入标签"
             :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
@@ -81,9 +87,9 @@
           <template slot-scope="{ item }">
             <div class="name">{{ item.name }}</div>
           </template>
-          <el-button slot="append" icon="el-icon-plus" :disabled="tag==''" @click="handleInputConfirm"></el-button>
+          <el-button slot="append" round icon="el-icon-plus" :disabled="tag==''" @click="handleInputConfirm"></el-button>
           </el-autocomplete>
-          <el-button v-else round class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
+          <el-button v-else round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
         </div>
         <div class="pb-5">
           可否评论：
@@ -111,7 +117,7 @@
           <el-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布更新
           </el-button>
-          <el-popconfirm
+          <el-popconfirm v-if="curentArticle.visible==-2"
             placement="top-end"
             confirm-button-text="放弃"
             cancel-button-text='取消'
@@ -121,17 +127,15 @@
             >
             <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{curentArticle.visible==-1?'放弃草稿':'放弃编辑'}}</el-button>
           </el-popconfirm>
-          
-        </div>
-          <!-- <n-button 
-            type="primary" 
+          <el-button  v-if="curentArticle.visible==-1"
             round 
             simple 
-            @click="save"
+            
             class="editbtn"
             >
-              <icon-plus class="editicon"></icon-plus>保存
-            </n-button> -->
+              保存
+          </el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -262,30 +266,19 @@ export default {
     }
   },
   methods: {
-    watchModify(val){
+    watchModify(val){console.log(this.watchCount);
       this.watchCount+=1;
       // if(this.curentArticle.visible==1 && this.watchCount>2){
       //   // 将已发布文章转为草稿
       //   this.article_to_draft_by_postID();
-
       // }
-      if(this.curentArticle.visible!==1 && this.watchCount>2){
+      if(this.curentArticle.draftID!==0 && this.watchCount>=2){
         this.autoSave()
+      };
+      if(this.curentArticle.draftID===0 && this.watchCount>=2){
+        this.draft_add()
       }
     },
-    // async fetchData() {
-    //   let postid = 0;
-    //   if (this.$route.query.postid != undefined) {
-    //     postid = this.$route.query.postid;
-    //     // this.article = await blog.getArticle(blogid);
-    //     this.article = (
-    //       await blog.article_view(postid)
-    //     ).data.postInfo_postID;
-    //     console.log(this.article);
-    //     this.setEditorContent(this.article.msgbody)
-    //     // $("#summernote").summernote("code", this.article.msgbody);
-    //   }
-    // },
 
     //for editor
     toggleEditorDisabled() {
@@ -314,21 +307,6 @@ export default {
       this.uploadFile("image", blobInfo.base64(), success, failure, progress);
     },
 
-    // addArticle() {
-    //   var newarticle = {
-    //     articleId: 9089,
-    //     title: "新建的文章",
-    //     wordCount: 0,
-    //     isPublished: false,
-    //   };
-    //   this.articleList.unshift(newarticle);
-    //   this.changeMenu(this.wenjiActiveId, newarticle.articleId);
-    // },
-    // changeMenu(wid, aid) {
-    //   this.wenjiActiveId = wid;
-    //   this.articleActiveId = aid;
-    // },
-
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
         blog.uploadMedia(file).then(rs=>{
@@ -352,8 +330,8 @@ export default {
           blog.category_add(this.categoryForm.name).then(res=>{
             if(res.status){
               blog.category_list(this.user.userinfo.bloggerID).then(res=>{
-                this.wenjiList = res.status?res.data:[];
-                this.curentArticle.categoryID = this.wenjiList[0].id
+                this.categoryList = res.status?res.data:[];
+                this.curentArticle.categoryID = this.categoryList[0].id
                 this.dialogFormVisible = false
               })
             }
@@ -366,42 +344,42 @@ export default {
         this.dialogFormVisible = true
         console.log()
     },
-    setWJid(id){
-      this.wenjiActiveId = id;
-      this.articleActiveId = 0;
-    },
-    setArtid(e){
-      this.articleActiveId = e.id;
-      this.getContent(e);
-      this.watchCount = 0;
-      // if(this.timer){
-        clearTimeout(this.timer);
-      // }
-      this.flags.autosaved = false;
-    },
+    // setWJid(id){
+    //   this.wenjiActiveId = id;
+    //   this.articleActiveId = 0;
+    // },
+    // setArtid(e){
+    //   this.articleActiveId = e.id;
+    //   this.getContent(e);
+    //   this.watchCount = 0;
+    //   // if(this.timer){
+    //     clearTimeout(this.timer);
+    //   // }
+    //   this.flags.autosaved = false;
+    // },
     // 获取编辑器内容
-    getContent(e){
-      //visible=undefined 一定是已发布文章；
-       e.visible = e.visible==undefined? 1 : e.visible
-      if(e.visible==1){
-      //   this.user.article_to_draft_by_postID(e.postID).then(res=>{
-      //   console.log(res)
-      //   if(res.status){
-      //     this.curentArticle = res.data
-      //   }
-      // })
-        this.user.article_view(e.postID).then(res=>{
-          this.curentArticle=res.data;
-          // this.autoSave();
-          console.log(this.curentArticle)
-        });
-      }else{
-        this.user.draft_view(e.id).then(res=>{
-          this.curentArticle=res.data;
-          console.log(this.curentArticle)
-        })
-      }
-    },
+    // getContent(e){
+    //   //visible=undefined 一定是已发布文章；
+    //    e.visible = e.visible==undefined? 1 : e.visible
+    //   if(e.visible==1){
+    //   //   this.user.article_to_draft_by_postID(e.postID).then(res=>{
+    //   //   console.log(res)
+    //   //   if(res.status){
+    //   //     this.curentArticle = res.data
+    //   //   }
+    //   // })
+    //     this.user.article_view(e.postID).then(res=>{
+    //       this.curentArticle=res.data;
+    //       // this.autoSave();
+    //       console.log(this.curentArticle)
+    //     });
+    //   }else{
+    //     this.user.draft_view(e.id).then(res=>{
+    //       this.curentArticle=res.data;
+    //       console.log(this.curentArticle)
+    //     })
+    //   }
+    // },
     // 发布一篇新文章（草稿=>文章）
     publish(){
       let data={
@@ -410,7 +388,8 @@ export default {
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
-          draftID:this.curentArticle.id,
+          // draftID:this.curentArticle.id,
+          postID:0,
           is_comment:this.curentArticle.is_comment
         },
         module_data:{
@@ -496,7 +475,8 @@ export default {
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
-          draftID:this.curentArticle.id,
+          // draftID:this.curentArticle.id,
+          postID:0,
           is_comment:this.curentArticle.is_comment
         },
         module_data:{
@@ -514,20 +494,28 @@ export default {
         }
       })
     },
-    draft_view(id){
-      this.user.draft_view(id).then(res=>{
+    draft_view(){
+      this.user.draft_view().then(res=>{
         if(res.status){
           this.curentArticle = res.data;
+          this.curentArticle.draftID = res.data.id;
+          this.curentArticle.categoryID = this.curentArticle.categoryID!=0?this.curentArticle.categoryID:this.categoryList[0].id;//草稿默认加到第一目录里
+          console.log(this.curentArticle)
         }
       })
     },
     draft_delete(item){
-        blog.draft_delete(item.id).then(res=>{
-          if(res.status){
-            this.$router.push('/blog/my/')
-          }
-        })
-        
+      this.user.draft_delete(item.postID).then(res=>{
+        if(res.status){
+          this.$router.push('/blog/my/')
+        }
+      })
+    },
+    async article_view(id){
+      let res = await this.user.article_view(id);
+      if(res.status){
+        this.curentArticle = res.data;
+      }console.log(this.curentArticle)
     },
     autoSave(){
       clearTimeout(this.timer);
@@ -538,26 +526,11 @@ export default {
       }
     },
 // tag 相关
-    hot_tag(){
-      blog.hot_tag().then(res=>{
-        if(res.status){
-          this.hotTags=res.data.data;console.log(this.hotTags)
-        }
-      })
-    },
     async tagSuggestion(queryString,cb){
       let results = await this.$store.state.search.get_tags(queryString);
       console.log(results.data)
-      cb(results.data);// 调用 callback 返回建议列表的数据
-      // var restaurants = this.hotTags;
-      //   var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-      //   // 调用 callback 返回建议列表的数据
-      //   cb(results);
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
+      cb(results.data);
+      // 调用 callback 返回建议列表的数据
     },
     showInput() {
       this.inputVisible = true;
@@ -625,42 +598,25 @@ export default {
     this.$store.state.user.getUserStatus().then(r=>{
       if(r.data.bloggerID){
         blog.category_list(r.data.bloggerID).then(res=>{
-          this.wenjiList = res.status?res.data:[];
-          this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
-          console.log(this.wenjiList);
+          this.categoryList = res.status?res.data:[];
+          
+          console.log(this.categoryList);
          
           if(this.$route.query.postid){
             // 已发布文章再编辑
-            this.user.article_to_draft_by_postID(this.$route.query.postid).then(res=>{
-              if(res.status){
-                this.draft_view(res.data);
-                // console.log(this.curentArticle);
-              }else{
-                this.$message.error(res.error)
-              }
-              
-              
-            })
-          }else if(this.$route.query.draftid){
-            // 草稿再编辑
-            console.log("草稿再编辑");
-            this.draft_view(this.$route.query.draftid)
+            this.article_view(this.$route.query.postid)
           }else{
-            // 新建草稿
-            console.log("新建草稿");
-            this.curentArticle.categoryID = this.wenjiList[0].id;//草稿默认加到第一目录里
-            this.draft_add();
+            // 是否有草稿
+            this.draft_view();
           }
         });
-      }else{
+      }else{// 如果没有开通博客
         this.$router.push('/blog_register');
       }
     });
   },
 
   created() {
-    this.hot_tag();
-    // this.fetchData();
   },
   mounted() {
     // this.initEditor();
@@ -683,23 +639,30 @@ export default {
 
   data() {
     var checkNameSame = (rule, value, callback) =>{
-        this.wenjiList.forEach(item=>{
-            if(item.name === value){
-                return callback(new Error('与现有目录名重复'))
-            }
-        })
-        callback()
+      this.categoryList.forEach(item=>{
+        if(item.name === value){
+          return callback(new Error('与现有目录名重复'))
+        }
+      })
+      callback()
     };
     let lang = localStorage.lang ? (localStorage.lang == "cns" ? 'zh_CN' :'zh_TW') : 'zh_CN';
     return {
       user:this.$store.state.user,
       iconmore3v: HaiwaiIcons.iconmore3v,
-      wenjiList:[],
+      categoryList:[],
       wenjiActiveId: 0,
       articleActiveId: 0,
       testID:'',
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"",msgbody:""},is_comment:1},
+      curentArticle:{
+        draftID:0,
+        categoryID:0,
+        postInfo_postID:{
+          title:"",
+          msgbody:"",
+          tags:[]},
+        is_comment:1},
       tabStatus:{},
       watchCount:0,
       tags:[],
@@ -767,7 +730,7 @@ export default {
         // media_poster:false,
         content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;} .origin-img{max-width:100%; height:auto;}',
         video_template_callback : function(data){
-            return "";
+          return "";
         }
       }
     };
@@ -859,10 +822,10 @@ body{
 .publisher .editorTitle{
   font-size: 30px;
   padding: 5px 10px;
-  /* border: 1px solid #d3d3d3; */
-  border:0;
+  border: 1px solid #d3d3d3;
+  /* border:0; */
   width:100%;
-  border-radius: 5px;
+  border-radius: 0px;
 }
 .publisher input.editorTitle:focus{
   color: #495057;
