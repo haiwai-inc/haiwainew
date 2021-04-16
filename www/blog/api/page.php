@@ -116,9 +116,9 @@ class page extends Api {
         $obj_article_noindex=load("search_article_noindex");
         
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache=$obj_memcache->get("blog_hot_article");
+        $rs_memcache=$obj_memcache->get("blog_hot_article_{$tagID}");
         
-        $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
+        $rs=empty($rs_memcache)?[]:$rs_memcache;
         return $rs;
     }
     
