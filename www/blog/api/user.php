@@ -150,6 +150,12 @@ class user extends Api {
         $rs_blog_category=$obj_blog_category->getOne(['id','is_default'],['id'=>$id,'bloggerID'=>$check_blog_blogger['id']]);
         if($rs_blog_category['is_default']==1) {$this->error="默认文集无法删除";$this->status=false;return false;}
         
+        //文集文章转移到默认文集
+        $rs_default_category=$obj_blog_category->getOne(['id'],['is_default'=>1,'bloggerID'=>$check_blog_blogger['id']]);
+        
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_indexing->update(['categoryID'=>$rs_default_category['id']],['categoryID'=>$id,'userID'=>$_SESSION['id'],'bloggerID'=>$check_blog_blogger['id']]);
+        
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
         return true;
