@@ -26,7 +26,7 @@ class import_blog_data{
                     $lastid=$v['postid'];
                     echo $lastid."_".$month."\n";
                     
-                    //汪老师 userID=942857 blogid=69027 basecode=211
+                    //汪老师 userID=942857 blogid=69027 basecode=211   7324
                     if($v['userid']==942857){
                         //主贴
                         $rs_import_post=$obj_blog_tool->import_post($v);
@@ -37,6 +37,7 @@ class import_blog_data{
                         if(!empty($rs_reply)){
                             $postID_legacy_hot_post_reply=[];
                             foreach($rs_reply as $vv){
+                                $vv['date']=substr($v['dateline'],0,7); //=========================主贴时间
                                 $rs_import_post_reply=$obj_blog_tool->import_post($vv);
                                 $postID_legacy_hot_post_reply[]=$rs_import_post_reply['article_new']['postID'];
                                 echo $vv['postid']."_".$month."_reply \n";

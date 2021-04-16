@@ -82,7 +82,7 @@ class blog_tool{
     //article
     function add_to_article($rs){
         //查看是否曾经导入
-        $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>substr($rs['dateline'],0,7)."_blog_".$rs['postid']]);
+        $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>$rs['date']."_blog_".$rs['postid']]);
         if(!empty($check_article_indexing_wxc)){
             //查看原导入数据
             $check_article_indexing=$this->obj_article_indexing->getOne("*",['postID'=>$check_article_indexing_wxc['postID']]);
@@ -103,8 +103,7 @@ class blog_tool{
             
             //评论
             if($rs['treelevel']!=0){
-                //获取wxc主贴basecode
-                $check_article_indexing_wxc_basecode=$this->obj_article_indexing_wxc->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
+                $check_article_indexing_wxc_basecode=$this->obj_article_indexing_wxc->getOne("*",['wxc_basecode'=>$rs['date']."_blog_".$rs['basecode']]);
                 $basecode=empty($check_article_indexing_wxc_basecode)?0:$check_article_indexing_wxc_basecode['basecode'];
             }
             $fields_indexing=[
@@ -126,8 +125,8 @@ class blog_tool{
             $this->obj_article_indexing_wxc->insert([
                 'postID'=>$fields_indexing['postID'],
                 'basecode'=>$fields_indexing['basecode'],
-                'wxc_postid'=>substr($rs['dateline'],0,7)."_blog_".$rs['postid'],
-                'wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
+                'wxc_postid'=>$rs['date']."_blog_".$rs['postid'],
+                'wxc_basecode'=>$rs['date']."_blog_".$rs['basecode']]);
             
             //post
             $post_tbn=substr('0'.$rs['user_new']['id'],-1);
