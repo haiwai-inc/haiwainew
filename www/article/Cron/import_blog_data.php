@@ -18,7 +18,7 @@ class import_blog_data{
             $month=substr('00'.$i,-2);
             $lastid=0;
             $rs_blog_legacy_202005_post=[];
-            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month}_post") ){
+            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month}_post") ){
                 $postID_legacy_hot_post=[];
                 foreach($rs_blog_legacy_202005_post as $k=>$v){
                     $lastid=$v['postid'];
