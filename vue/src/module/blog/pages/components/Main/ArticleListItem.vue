@@ -7,11 +7,11 @@
       </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
-          <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
             <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> --> 
               <router-link :to="'/blog/user/'+data.userID">
                 {{data.userinfo_userID.username}}
               </router-link>
+              <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
           </div>
           <div class="tail-data">
             <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>

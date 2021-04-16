@@ -74,8 +74,8 @@
                <h6 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h6>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
-                  <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
-                  <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
+                  <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:150px;width:150px;text-align:center;font-size:46px;line-height:150px"><b>{{authorInfor.first_letter}}</b></div></span>
+                  <img style="width:150px;height:150px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
                   <input
                      ref="picInput"
                      type="file"

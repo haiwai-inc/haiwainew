@@ -84,8 +84,7 @@ class page extends Api {
         
         $obj_account_user=load("account_user");
         $rs_memcache=$obj_account_user->get_basic_userinfo($rs_memcache,"userID");
-        $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
-        return $rs;
+        return $rs_memcache;
     }
     
     /**
