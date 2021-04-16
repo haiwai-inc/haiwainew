@@ -14,6 +14,8 @@ class import_blog_data{
         $obj_blog_tool->load_all_db();
         $lastid=0;
         
+        $obj_article_noindex=load("search_article_noindex");
+        
         for($i=1;$i<=12;$i++){
             $month=substr('00'.$i,-2);
             $lastid=0;
@@ -31,19 +33,22 @@ class import_blog_data{
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
                         
                         //查询评论
-                        $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>300,'basecode'=>$v['basecode'],'visible'=>1,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month}_post");
+                        $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>300,'basecode'=>$v['basecode'],'visible,!='=>0,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month}_post");
                         if(!empty($rs_reply)){
+                            $postID_legacy_hot_post_reply=[];
                             foreach($rs_reply as $vv){
-                                $rs_reply_import_post=$obj_blog_tool->import_post($vv);
-                                $postID_legacy_hot_post[]=$rs_reply_import_post['article_new']['postID'];
+                                $rs_import_post_reply=$obj_blog_tool->import_post($vv);
+                                $postID_legacy_hot_post_reply[]=$rs_import_post_reply['article_new']['postID'];
                                 echo $vv['postid']."_".$month."_reply \n";
                             }
+                            
+                            //同步ES索引回复
+                            $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post_reply);
                         }
                     }
                 }
                 
-                //同步ES索引
-                $obj_article_noindex=load("search_article_noindex");
+                //同步ES索引主贴
                 $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
             }
         }
