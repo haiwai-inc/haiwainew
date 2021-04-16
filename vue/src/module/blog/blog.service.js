@@ -18,9 +18,13 @@ class Blog extends API{
   async hot_blogger(){
     let res = await this.sendget("blog/page/hot_blogger/");
 	if(res.status){
-		res.data.data.forEach(item=>{
-			item.bloggerID = item.id
-		})
+		for(var item in res.data){
+			res.data[item].bloggerID = res.data[item].id
+		}
+		res.data = Object.values(res.data);
+		// res.data.data.forEach(item=>{
+		// 	item.bloggerID = item.id
+		// })
 	}
 	return res
   }
@@ -39,6 +43,12 @@ class Blog extends API{
     return await this.sendget("blog/page/hot_article/?tagID="+tagID);
   }
 
+  /**
+	 * 正文页返回相关博文列表
+	 */
+  async article_view_related(id){
+	return await this.sendget("blog/page/article_view_related/?id="+id)
+  }
   /**
 	 * 返回博主首页最新列表
 	 */

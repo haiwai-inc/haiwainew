@@ -63,7 +63,7 @@ export default {
     }),
     blog.hot_blogger().then(res=>{
       if(res.status){
-        this.res_bloggerList=res.data.data;
+        this.res_bloggerList=res.data;
         this.bloggerList=this.res_bloggerList;
         this.loading.blogger=false;
       }

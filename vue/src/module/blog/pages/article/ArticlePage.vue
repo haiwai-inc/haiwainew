@@ -231,7 +231,7 @@ export default {
       });
     },
     initRecommendProp(res){
-      var arr = [];console.log(arr)
+      var arr = [];
       res.data.postInfo_postID.tags.forEach(r=>{
         arr.push(r.id)
       });

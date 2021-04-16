@@ -110,8 +110,7 @@ export default {
     },
     async getBloggers(){
       let arr = await blog.hot_blogger();
-      this.hotBlobbers = arr.data.data
-      console.log(this.hotBlobbers)
+      this.hotBlobbers = arr.data;
     },
   },
   data() {

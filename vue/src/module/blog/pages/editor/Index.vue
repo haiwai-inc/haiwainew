@@ -494,8 +494,8 @@ export default {
         }
       })
     },
-    draft_view(){
-      this.user.draft_view().then(res=>{
+    draft_view(id){
+      this.user.draft_view(id).then(res=>{
         if(res.status){
           this.curentArticle = res.data;
           this.curentArticle.draftID = res.data.id;
@@ -607,7 +607,7 @@ export default {
             this.article_view(this.$route.query.postid)
           }else{
             // 是否有草稿
-            this.draft_view();
+            this.draft_view(0);
           }
         });
       }else{// 如果没有开通博客

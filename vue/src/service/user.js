@@ -365,8 +365,8 @@ class User extends API{
      * 返回草稿内容
      * @param number id 
      */
-     async draft_view(){
-        return await this.sendget("article/user/draft_view/")
+     async draft_view(id){
+        return await this.sendget("article/user/draft_view/?id="+id)
     }
         
     /**
