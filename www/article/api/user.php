@@ -263,6 +263,7 @@ class user extends Api {
         $obj_article_draft=load("article_draft");
         $time=times::getTime();
         $fields=[
+            "postID"=>empty($article_data['postID'])?"":$article_data['postID'],
             "typeID"=>empty($article_data['typeID'])?"":$article_data['typeID'],
             "userID"=>$_SESSION['id'],
             "bloggerID"=>empty($module_data['bloggerID'])?0:$module_data['bloggerID'],
