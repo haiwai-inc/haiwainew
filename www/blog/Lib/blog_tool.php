@@ -303,7 +303,11 @@ class blog_tool{
             $field['id']=$this->obj_blog_category->insert($field);
             $this->obj_blog_category->update(['sort'=>$field['id']],['id'=>$field['id']]);
         }else{
-            $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+            //查看是否导入文章
+            $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>$rs['date']."_blog_".$rs['postid']]);
+            if(empty($check_article_indexing_wxc)){
+                $this->obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
+            }
             $field=$check_blog_category;
         }
         
@@ -318,7 +322,11 @@ class blog_tool{
             $field=['name'=>$rs_blog_legacy_blogcat['title']];
             $field['id']=$check_article_tag['id']=$this->obj_article_tag->insert($field);
         }else{
-            $this->obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
+            //查看是否导入文章
+            $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>$rs['date']."_blog_".$rs['postid']]);
+            if(empty($check_article_indexing_wxc)){
+                $this->obj_article_tag->update(['count_article'=>$check_article_tag['count_article']+1],['id'=>$check_article_tag['id']]);
+            }
             $field=$check_article_tag;
         }
         
