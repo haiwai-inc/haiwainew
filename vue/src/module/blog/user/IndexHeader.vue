@@ -20,10 +20,10 @@
             
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
-
-                <span class="blog-user-index-des x">{{data.userinfo_userID.username}}</span>
-                <br>
-                <span class="blog-user-index-des ">{{data.userinfo_userID.description}} </span><br>
+               <div class="row">
+                <span class="col-2 blog-user-index-des name">{{data.userinfo_userID.username}}</span>
+                <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
+                </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
                 <div class="float-right pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
@@ -266,6 +266,7 @@ export default {
         color: #fff;
         text-shadow: 0 0 4px rgb(0 0 0 / 50%);
         font-weight: 500;
+        line-height: 26px;
 }
 .blog-user-index .blog-user-index-des{
         font-size: 1rem;
@@ -274,9 +275,15 @@ export default {
         margin-top: 11px;
 }
 .blog-user-index .blog-user-index-des.x{
-         /*margin-left: 12px;*/
-         color: black;
+         margin: 12px;
+         color: #647685;
          font-size: 1.1rem;
+         padding-left:0;
+}
+.blog-user-index .blog-user-index-des.name{
+         font-size: 1.2rem;
+         color:black;
+         padding-right: 0
 }
         
 .blog-user-index .avatar-word{
