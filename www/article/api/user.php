@@ -18,11 +18,6 @@ class user extends Api {
         $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
-        //草稿检查
-        $obj_article_draft=load("article_draft");
-        $rs_article_draft=$obj_article_draft->getOne(["id"],['postID'=>$rs_article_indexing['postID']]);
-        $rs_article_indexing['draftID']=empty($rs_article_draft)?0:$rs_article_draft['id'];
-        
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
         $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);
@@ -86,10 +81,8 @@ class user extends Api {
         $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
         
         //删除草稿
-        if(!empty($article_data['draftID'])){
-            $obj_article_draft=load("article_draft");
-            $obj_article_draft->remove(['id'=>$article_data['draftID']]);
-        }
+        $obj_article_draft=load("article_draft");
+        $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>$article_data['postID']]);
         
         //显示当前插入信息
         return $article_data['postID'];
@@ -142,10 +135,8 @@ class user extends Api {
         $obj_article_noindex->fetch_and_insert([$rs_article_post['postID']]);
         
         //删除草稿
-        if(!empty($article_data['draftID'])){
-            $obj_article_draft=load("article_draft");
-            $obj_article_draft->remove(['id'=>$article_data['draftID']]);
-        }
+        $obj_article_draft=load("article_draft");
+        $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>$article_data['postID']]);
         
         return $article_data['postID'];
     }
@@ -179,12 +170,12 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 草稿 添加
-     * @param integer $id | 编辑帖子id
+     * @param integer $id | 文章ID
      */
-    public function article_to_draft_by_postID($id){
+    public function article_to_draft($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','categoryID','userID','bloggerID','create_date','edit_date','typeID'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','categoryID','userID','bloggerID','create_date','edit_date','typeID'],['userID'=>$_SESSION['id'],'visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
@@ -193,7 +184,7 @@ class user extends Api {
         $rs_article_indexing=empty($rs_article_indexing)?[]:$rs_article_indexing[0];
         
         $obj_article_draft=load("article_draft");
-        $check_article_draft=$obj_article_draft->getOne(['id'],['postID'=>$id]);
+        $check_article_draft=$obj_article_draft->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$id]);
         if(!empty($check_article_draft)) {$this->error="此草稿已经存在";$this->status=false;return false;}
         
         //字符串tagID
@@ -217,8 +208,8 @@ class user extends Api {
             "msgbody"=>empty($rs_article_indexing['postInfo_postID']['msgbody'])?"":$rs_article_indexing['postInfo_postID']['msgbody'],
             "visible"=>-2
         ];
-        $draftID=$obj_article_draft->insert($fields);
-        return $draftID;
+        $obj_article_draft->insert($fields);
+        return $rs_article_indexing['postID'];
     }
     
     /**
@@ -275,8 +266,8 @@ class user extends Api {
             "is_comment"=>empty($article_data['is_comment'])?0:1,
             "visible"=>-1
         ];
-        $draftID=$obj_article_draft->insert($fields);
-        return $draftID;
+        $obj_article_draft->insert($fields);
+        return $article_data['postID'];
     }
     
     /**
@@ -469,11 +460,11 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 发布 
-     * @param integer $draftID | 文章的draftID
+     * @param integer $id | 文章ID
      */
-    public function draft_to_article_by_draftID($draftID){
+    public function draft_to_article($id){
         $obj_article_draft=load("article_draft");
-        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$id]);
         if(empty($rs_article_draft)) {$this->error="发布的文章不存在";$this->status=false;return false;}
         
         //获取标签名字 "1,2" -> ["标签1","标签2"]
@@ -484,7 +475,6 @@ class user extends Api {
             'msgbody'=>$rs_article_draft['msgbody'],
             'tagname'=>$tagname,
             "typeID"=>$rs_article_draft['typeID'],
-            "draftID"=>$rs_article_draft['id'],
         ];
         $module_data=[
             "add"=>true,
@@ -507,19 +497,19 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 定时 添加
-     * @param integer $draftID | 文章的draftID
+     * @param integer $postID | 文章的postID 
      * @param integer $is_timer | 1开 0关
      * @param integer $time | 延时 3600秒
      */
-    public function article_timer($draftID,$is_timer,$time){
+    public function article_timer($postID,$is_timer,$time){
         $obj_article_draft=load("article_draft");
-        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        $rs_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($rs_article_draft)) {$this->error="发布的文章不存在";$this->status=false;return false;}
         
         $obj_article_timer=load("article_timer");
         $publish_date=times::gettime()+$time;
-        $obj_article_draft->update(['publish_date'=>$publish_date,'is_timer'=>!empty($is_timer)?1:0],['id'=>$draftID]);
-        return $draftID;
+        $obj_article_draft->update(['publish_date'=>$publish_date,'is_timer'=>!empty($is_timer)?1:0],['userID'=>$_SESSION['id'],'postID'=>$postID]);
+        return $postID;
     }
     
     /**
@@ -565,19 +555,19 @@ class user extends Api {
     /**
      * 编辑器页
      * 草稿 移动 文集
-     * @param integer $draftID | 草稿的id
+     * @param integer $postID | 文章的id
      * @param integer $categoryID | 文集的id
      */
-    public function draft_shift_category($draftID,$categoryID){
+    public function draft_shift_category($postID,$categoryID){
         $obj_article_draft=load("article_draft");
-        $check_article_draft=$obj_article_draft->getOne(['id'],['userID'=>$_SESSION['id'],'id'=>$draftID]);
+        $check_article_draft=$obj_article_draft->getOne(['id'],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         if(empty($check_article_draft)) {$this->error="移动的草稿不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
         $check_blog_category=$obj_blog_category->getOne(["id"],['id'=>$categoryID]);
         if(empty($check_article_indexing)) {$this->error="移动的文集不存在";$this->status=false;return false;}
         
-        $obj_article_draft->update(['categoryID'=>$categoryID],['id'=>$draftID]);
+        $obj_article_draft->update(['categoryID'=>$categoryID],['userID'=>$_SESSION['id'],'postID'=>$postID]);
         return true;
     }
     

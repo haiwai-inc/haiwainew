@@ -24,7 +24,6 @@ class publish_article_timer{
                     'msgbody'=>$v['msgbody'],
                     'tagname'=>$tagname,
                     "typeID"=>$v['typeID'],
-                    "draftID"=>$v['id'],
                 ];
                 $module_data=[
                     "add"=>true,
@@ -63,10 +62,8 @@ class publish_article_timer{
                 $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
                 
                 //删除草稿
-                if(!empty($article_data['draftID'])){
-                    $obj_article_draft=load("article_draft");
-                    $obj_article_draft->remove(['id'=>$article_data['draftID']]);
-                }
+                $obj_article_draft=load("article_draft");
+                $obj_article_draft->remove(['postID'=>$article_data['postID']]);
             }
         }
     }
