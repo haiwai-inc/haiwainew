@@ -10,7 +10,7 @@
             <div class="avatarbox" @click="go()">
                 <div 
                 v-if="!data.userinfo_userID.avatar" 
-                class="avatar-word" :style="{height:'90px',width:'90px',lineHeight:'90px'}">{{data.userinfo_userID.first_letter.toUpperCase()}}</div>
+                class="avatar-word" :style="{height:'150px',width:'150px',lineHeight:'150px'}">{{data.userinfo_userID.first_letter.toUpperCase()}}</div>
                 <img 
                 v-if="data.userinfo_userID.avatar" 
                 :src="data.userinfo_userID.avatar" 
@@ -20,12 +20,12 @@
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row">
-                <span class="col blog-user-index-des name">{{data.userinfo_userID.username}}</span>
+                <span class="col blog-user-index-des name">{{data.userinfo_userID.username}}<icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V></span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
-                <div class="float-right pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
+                <div class="float-right pr-4" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
                 <n-button  
                 link 
                 size="sm"
@@ -239,7 +239,30 @@ export default {
     font-size:1.6rem;
     padding: 6px 0;
     color:white;
-    text-shadow: 0 0 4px rgb(0 0 0 / 50%);
+ text-shadow: 1px 1px 0 #0000001a,
+    -1px 1px 0 #0000001a,
+    1px -1px 0 #0000001a,
+    -1px -1px 0 #0000001a,
+    0px 1px 0 #0000001a,
+    0px -1px 0 #0000001a,
+    -1px 0px 0 #0000001a,
+    1px 0px 0 #0000001a,
+    2px 2px 0 #0000001a,
+    -2px 2px 0 #0000001a,
+    2px -2px 0 #0000001a,
+    -2px -2px 0 #0000001a,
+    0px 2px 0 #0000001a,
+    0px -2px 0 #0000001a,
+    -2px 0px 0 #0000001a,
+    2px 0px 0 #0000001a,
+    1px 2px 0 #0000001a,
+    -1px 2px 0 #0000001a,
+    1px -2px 0 #0000001a,
+    -1px -2px 0 #0000001a,
+    2px 1px 0 #0000001a,
+    -2px 1px 0 #0000001a,
+    2px -1px 0 #0000001a,
+    -2px -1px 0 #0000001a;
     border-radius: 4px;
 }
 .blog-user-index .user-avatar{
