@@ -24,8 +24,8 @@ class import_blog_data{
                     $lastid=$v['postid'];
                     echo $lastid."_".$month."\n";
                     
-                    //汪老师 3453
-                    if($v['basecode']==211){
+                    //汪老师 userID=942857 blogid=69027 basecode=211
+                    if($v['userid']==942857){
                         //主贴
                         $rs_import_post=$obj_blog_tool->import_post($v);
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
