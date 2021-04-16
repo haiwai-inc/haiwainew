@@ -240,7 +240,7 @@ export default {
       this.getRecommend()
     },
     getRecommend(){
-      blog.hot_article_list(this.recommend.props.tags).then(res=>{
+      blog.article_list_tag(this.recommend.props.tags).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data

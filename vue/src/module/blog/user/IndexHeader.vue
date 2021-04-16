@@ -1,6 +1,6 @@
 <template>
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
-        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
+        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
             <div class="user-bgup">
                 <span class="name">{{data.bloggerinfo_id.name}}</span>
                 <p class="bdescription">{{data.bloggerinfo_id.description}}</p>

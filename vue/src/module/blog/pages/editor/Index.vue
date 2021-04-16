@@ -272,14 +272,13 @@ export default {
       //   // 将已发布文章转为草稿
       //   this.article_to_draft_by_postID();
       // }
-      if(this.curentArticle.draftID!==0 && this.watchCount>=2){
+      if(this.curentArticle.visible!==1 && this.watchCount>2){
         this.autoSave()
       };
-      if(this.curentArticle.draftID===0 && this.watchCount>=2){
+      if((this.curentArticle.visible===1 || this.curentArticle.visible===undefined) && this.watchCount>2){
         this.draft_add()
-      }
+      };
     },
-
     //for editor
     toggleEditorDisabled() {
       this.editorDisabled = !this.editorDisabled;
@@ -455,6 +454,7 @@ export default {
           title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
+          postID:this.curentArticle.postID,
           typeID:1,
           is_comment:1
         },
@@ -599,8 +599,6 @@ export default {
       if(r.data.bloggerID){
         blog.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
-          
-          console.log(this.categoryList);
          
           if(this.$route.query.postid){
             // 已发布文章再编辑
@@ -656,13 +654,14 @@ export default {
       testID:'',
       activeName: "0",
       curentArticle:{
-        draftID:0,
+        postID:0,
         categoryID:0,
         postInfo_postID:{
           title:"",
           msgbody:"",
           tags:[]},
-        is_comment:1},
+        is_comment:1
+      },
       tabStatus:{},
       watchCount:0,
       tags:[],

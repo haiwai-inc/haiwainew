@@ -49,6 +49,9 @@ class Blog extends API{
   async article_view_related(id){
 	return await this.sendget("blog/page/article_view_related/?id="+id)
   }
+  async article_list_tag(id){
+	return await this.sendget("blog/page/article_list_tag/?tagID="+id)
+  }
   /**
 	 * 返回博主首页最新列表
 	 */
@@ -236,7 +239,7 @@ class Blog extends API{
   }
 
   /**
-	 * 返回文集列表
+	 * 返回文集列表(游客)
 	 * 
 	 * @param number
 	 *          $bloggerID

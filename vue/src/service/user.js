@@ -432,6 +432,15 @@ class User extends API{
         return await this.sendget('article/user/article_share/?postID='+postID+'&is_share='+val)
     }
 
+  /**
+	 * 返回文集列表(作者)
+	 * 
+	 * @param number
+	 *          $bloggerID
+	 */
+   async category_list(bloggerID){
+    return await this.sendget("blog/user/category_list/?bloggerID="+bloggerID)
+  }
     /**
      * 定时发布
      * @param {*} draftID

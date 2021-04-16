@@ -78,8 +78,7 @@
             infinite-scroll-disabled="noMore"
             infinite-scroll-distance="50">
                <div class="list_item row" v-for="item in articleList" :key="item.id">
-                   <div class="col-10">
-                       
+                   <div class="col-10" @click="$router.push(item.visible===-1?'/blog/my/editor':'/blog/p/'+item.postID)">
                        <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible!==-1?'black':'grey'}">
                            <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible!==-1">
                                 <i class="el-icon-document-checked"></i>
@@ -161,7 +160,7 @@ export default {
     RegistBlog,
   },
   mounted() {
-    blog.category_list(this.userID).then(res=>{
+    this.$store.state.user.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
         console.log(this.collectionList);
         this.changeTab(this.collectionList[0].id)
@@ -295,8 +294,9 @@ export default {
             this.addCategory()
         }
     },
-    goeditor(item){
-        let url = item.visible===1?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.id;
+    goeditor(item){console.log(item)
+        let url = '/blog/my/editor/'
+        url+=item.visible===-1?'':'?postid='+item.postID;
         this.$router.push(url);
     }
     
