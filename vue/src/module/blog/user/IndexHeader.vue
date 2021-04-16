@@ -21,7 +21,7 @@
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row">
-                <span class="col-2 blog-user-index-des name">{{data.userinfo_userID.username}}</span>
+                <span class="col blog-user-index-des name">{{data.userinfo_userID.username}}</span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
@@ -275,15 +275,17 @@ export default {
         margin-top: 11px;
 }
 .blog-user-index .blog-user-index-des.x{
-         margin: 12px;
+         margin: 15px 15px 15px 0;
          color: #647685;
          font-size: 1.1rem;
          padding-left:0;
 }
 .blog-user-index .blog-user-index-des.name{
-         font-size: 1.2rem;
+         font-size: 1.4rem;
          color:black;
-         padding-right: 0
+         padding-right: 0;
+         font-weight:400;
+         margin:12px 0 12px 0
 }
         
 .blog-user-index .avatar-word{
