@@ -102,11 +102,11 @@ class account_user extends Model{
 			    }
 			}
 
-			$empty_list = [];
-			
+			$empty_list=[];
 	        foreach($rs as $k=>$v){
 	            $item=empty($hash_account_user[$v[$hashID]])?[]:$hash_account_user[$v[$hashID]];
 
+	            //移除无用户帖
 				if(empty($item)) {
 					$empty_list[] = $k;
 					continue;
@@ -131,6 +131,8 @@ class account_user extends Model{
 			foreach($empty_list as $k){
 				unset($rs[$k]);
 			}
+			
+			$rs = array_values($rs);
 	    }
 	    
 	    return $rs;

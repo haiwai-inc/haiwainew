@@ -116,9 +116,9 @@ class page extends Api {
         $obj_article_noindex=load("search_article_noindex");
         
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache=$obj_memcache->get("blog_hot_article");
+        $rs_memcache=$obj_memcache->get("blog_hot_article_{$tagID}");
         
-        $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
+        $rs=empty($rs_memcache)?[]:$rs_memcache;
         return $rs;
     }
     
@@ -470,7 +470,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页 
      * 文集 列表
      * @param integer $bloggerID | 博主ID
      */
@@ -480,7 +480,7 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['is_publish'=>1,'order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     

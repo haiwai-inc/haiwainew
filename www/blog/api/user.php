@@ -82,6 +82,21 @@ class user extends Api {
     }
     
     /**
+     * 编辑器页
+     * 文集 列表
+     * @param integer $bloggerID | 博主ID
+     */
+    public function category_list($bloggerID){
+        $obj_blog_blogger=load("blog_blogger");
+        $rs_blog_blogger=$obj_blog_blogger->getOne(['id','userID'],['id'=>$bloggerID,'status'=>1]);
+        if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
+        
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        return $rs_blog_category;
+    }
+    
+    /**
      * 博客主页 编辑器页 
      * 文集 添加
      * @param integer $name|文集名
@@ -134,6 +149,12 @@ class user extends Api {
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','is_default'],['id'=>$id,'bloggerID'=>$check_blog_blogger['id']]);
         if($rs_blog_category['is_default']==1) {$this->error="默认文集无法删除";$this->status=false;return false;}
+        
+        //文集文章转移到默认文集
+        $rs_default_category=$obj_blog_category->getOne(['id'],['is_default'=>1,'bloggerID'=>$check_blog_blogger['id']]);
+        
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_indexing->update(['categoryID'=>$rs_default_category['id']],['categoryID'=>$id,'userID'=>$_SESSION['id'],'bloggerID'=>$check_blog_blogger['id']]);
         
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
