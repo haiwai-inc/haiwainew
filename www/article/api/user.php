@@ -340,6 +340,7 @@ class user extends Api {
             "treelevel"=>$check_article_indexing['treelevel']+1,
             "create_date"=>$time,
             "edit_date"=>$time,
+            "is_pic"=>-1,
         ];
         $obj_article_indexing->insert($fields_indexing);
         $post_tbn=substr('0'.$_SESSION['id'],-1);
