@@ -62,12 +62,7 @@ class blog_tool{
             $rs['blogger_new']=$this->add_to_blogger($rs);
             
             //tag
-            if($rs['blogcat_id']!=0){
-                $rs['tag_new'][]=$this->add_to_tag($rs['blogcat_id']);
-            }
-            if($rs['parent_id']!=0){
-                $rs['tag_new'][]=$this->add_to_tag($rs['parent_id']);
-            }
+            $rs['tag_new'][]=$this->add_to_tag($rs);
             
             //category
             $rs['category_new']=$this->add_to_category($rs);
@@ -314,7 +309,14 @@ class blog_tool{
         return $field;
     }
     
-    function add_to_tag($blogcat_id){
+    function add_to_tag($rs){
+        if($rs['blogcat_id']!=0){
+            $blogcat_id=$rs['blogcat_id'];
+        }
+        if($rs['parent_id']!=0){
+            $blogcat_id=$rs['parent_id'];
+        }
+        
         $rs_blog_legacy_blogcat=$this->obj_blog_legacy_blogcat->getOne("*",['blogcat_id'=>$blogcat_id]);
         
         $check_article_tag=$this->obj_article_tag->getOne("*",['name'=>$rs_blog_legacy_blogcat['title']]);
