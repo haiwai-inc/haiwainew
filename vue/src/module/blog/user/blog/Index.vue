@@ -17,7 +17,7 @@
                 :key="index"
                 :class="{active:item.id===currentTabId}"
                 >
-                    <div class="flex-fill collections" @click="changeTab(item.id)">{{item.name}} ({{item.count_article}})</div>
+                    <div class="flex-fill collections" @click="changeTab(item.id)">{{item.name}} ({{item.count_article}})<span class="ml-2 text-muted" v-if="!item.is_publish">-隐</span></div>
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
                             <span v-html="iconmore3v"></span>
