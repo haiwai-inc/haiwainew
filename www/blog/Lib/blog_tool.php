@@ -81,35 +81,44 @@ class blog_tool{
     
     //article
     function add_to_article($rs){
+        //查看是否曾经导入
         $check_article_indexing_wxc=$this->obj_article_indexing_wxc->getOne('*',['wxc_postid'=>substr($rs['dateline'],0,7)."_blog_".$rs['postid']]);
         if(!empty($check_article_indexing_wxc)){
+            //查看原导入数据
             $check_article_indexing=$this->obj_article_indexing->getOne("*",['postID'=>$check_article_indexing_wxc['postID']]);
         }
         
+        //导入新wxc博客数据
         if(empty($check_article_indexing)){
-            //msg
+            //查看是否为隐藏
+            $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
+            
+            //查看内容
             $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
             $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
             
-            //indexing
+            //获取postID
             $postID=$this->obj_article_post->get_id();
             $basecode=$postID;
+            
+            //评论
             if($rs['treelevel']!=0){
-                //comment
-                $check_article_indexing_wxc_basecode=$this->obj_article_indexing->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
+                //获取wxc主贴basecode
+                $check_article_indexing_wxc_basecode=$this->obj_article_indexing_wxc->getOne("*",['wxc_basecode'=>substr($rs['dateline'],0,7)."_blog_".$rs['basecode']]);
                 $basecode=empty($check_article_indexing_wxc_basecode)?0:$check_article_indexing_wxc_basecode['basecode'];
             }
             $fields_indexing=[
                 "postID"=>$postID,
                 "basecode"=>$basecode,
                 "userID"=>$rs['user_new']['id'],
-                "bloggerID"=>empty($rs['blogger_new']['id'])?$check_article_indexing_wxc_basecode['bloggerID']:$rs['blogger_new']['id'],
+                "bloggerID"=>empty($rs['blogger_new']['id'])?0:$rs['blogger_new']['id'],
                 "categoryID"=>empty($rs['category_new']['id'])?0:$rs['category_new']['id'],
                 "treelevel"=>$rs['treelevel'],
                 "create_date"=>strtotime($rs['dateline']),
                 "edit_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
+                'is_publish'=>$rs_blog_legacy_blogcat_members['visible'],
             ];
             $fields_indexing['id']=$this->obj_article_indexing->insert($fields_indexing);
             
@@ -286,7 +295,8 @@ class blog_tool{
             $field=[
                 "bloggerID"=>$rs['blogger_new']['id'],
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
-                'count_article'=>1
+                'count_article'=>1,
+                'is_publish'=>$rs_blog_legacy_blogcat_members['visible']
             ];
             if($field['name']=="我的文章"){
                 $field['is_default']=1;

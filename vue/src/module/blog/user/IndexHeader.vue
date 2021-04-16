@@ -2,8 +2,8 @@
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
         <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
             <div class="user-bgup">
-                <span class="name">{{data.bloggerinfo_id.name}}</span><br>
-                <span class="blog-user-index-des" style="text-shadow: 0 0 4px rgb(255,255,255,0.5);">{{data.bloggerinfo_id.description}} </span>
+                <span class="name">{{data.bloggerinfo_id.name}}</span>
+                <p class="bdescription">{{data.bloggerinfo_id.description}}</p>
             </div>
         </div>
         <div class="user-avatar d-flex py-2">
@@ -18,20 +18,14 @@
             </div>
             
             <div class="flex-grow-1">
-                <span class="blog-user-index-name">{{data.userinfo_userID.username}}</span><br>
-                <span class="blog-user-index-des">{{data.userinfo_userID.description}} </span>
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
-                <br>
+               <div class="row">
+                <span class="col blog-user-index-des name">{{data.userinfo_userID.username}}</span>
+                <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
+                </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
-            </div>
-            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button  
-                link 
-                size="sm"
-                >博客设置</n-button>
-            </div>
-            <div class="pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
+                <div class="float-right pr-3" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
                 <n-button  
                 link 
                 size="sm"
@@ -50,6 +44,14 @@
                     <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                 </n-button>
             </div>
+            </div>
+            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
+                <n-button  
+                link 
+                size="sm"
+                >博客设置</n-button>
+            </div>
+
         </div>
         
     <!-- Send QQH Modal -->
@@ -228,13 +230,14 @@ export default {
     background-color: #fbfbfb
 }
 .blog-user-index .user-bgup{
-    height:160px;
-    padding-top: 80px;
-    padding-left: 110px;
+    height:230px;
+    padding: 106px 30px 0 165px;
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(0,0,0,0.3) 100%)
 }
 .blog-user-index .user-bgup .name{
     font-size:1.6rem;
-    padding: 6px 0px;
+    padding: 6px 0;
     color:white;
     text-shadow: 0 0 4px rgb(0 0 0 / 50%);
     border-radius: 4px;
@@ -244,23 +247,45 @@ export default {
 }
 .blog-user-index .user-avatar img,
 .blog-user-index .avatar-word{
-    min-width: 90px;
-    width:90px;
-    height: 90px;
-    margin: -30px 10px 10px 10px;
+    min-width: 150px;
+    width:150px;
+    height: 150px;
+    margin: -62px 10px 10px 10px;
     border:2px white solid;
     border-radius: 50%;
 }
 .blog-user-index .blog-user-index-name{
     font-size: 1.125rem;
     font-weight: 700;
+    text-align:center
+}
+.blog-user-index .bdescription{
+        font-size: 19px;
+        color: #fff;
+        text-shadow: 0 0 4px rgb(0 0 0 / 50%);
+        font-weight: 500;
+        line-height: 26px;
 }
 .blog-user-index .blog-user-index-des{
-        font-size: 0.9rem;
+        font-size: 1rem;
         color: gray;
-        max-width: 393px;
         display: inline-block;
+        margin-top: 11px;
 }
+.blog-user-index .blog-user-index-des.x{
+         margin: 15px 15px 15px 0;
+         color: #647685;
+         font-size: 1.1rem;
+         padding-left:0;
+}
+.blog-user-index .blog-user-index-des.name{
+         font-size: 1.4rem;
+         color:black;
+         padding-right: 0;
+         font-weight:400;
+         margin:12px 0 12px 0
+}
+        
 .blog-user-index .avatar-word{
     background-color: aliceblue;
     text-align: center;

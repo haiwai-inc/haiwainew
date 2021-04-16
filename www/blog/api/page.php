@@ -304,11 +304,6 @@ class page extends Api {
         $obj_count_tool=load("count_tool");
         $obj_count_tool->add_article($id);
         
-        //草稿检查
-        $obj_article_draft=load("article_draft");
-        $rs_article_draft=$obj_article_draft->getOne(["id"],['postID'=>$rs_article_indexing['postID']]);
-        $rs_article_indexing['draftID']=empty($rs_article_draft)?0:$rs_article_draft['id'];
-        
         //更新关注时间缓存
         if(!empty($_SESSION['id'])){
             $obj_account_follow=load("account_follow");
