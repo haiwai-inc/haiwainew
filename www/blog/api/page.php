@@ -470,7 +470,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页 
      * 文集 列表
      * @param integer $bloggerID | 博主ID
      */
@@ -480,7 +480,7 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['is_publish'=>1,'order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
