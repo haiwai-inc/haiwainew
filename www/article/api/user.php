@@ -224,17 +224,13 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 草稿 显示
-     * @param integer $id | 草稿id
+     * @param integer $id | 文章ID
      */
-    public function draft_view($id=0){
+    public function draft_view($id){
         //如果草稿不为空
         $obj_article_draft=load("article_draft");
-        if(!empty($id)){
-            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$id]);
-            if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
-        }else{
-            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id']]);
-        }
+        $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$id]);
+        if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
         
         //格式化草稿结构
         $rs_article_draft=$obj_article_draft->format_draft([$check_article_draft]);
@@ -256,15 +252,18 @@ class user extends Api {
      * @response /article/api_response/draft_add.txt
      */
     public function draft_add($article_data="",$module_data=""){
+        $obj_article_draft=load("article_draft");
+        $check_article_draft=$obj_article_draft->getOne("*",['postID'=>$article_data['postID'],'userID'=>$_SESSION['id']]);
+        if(empty($check_article_draft)) {$this->error="已创建草稿";$this->status=false;return false;}
+        
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
         $tagID=$obj_article_tag->draft_tag_add($article_data);
         
-        $obj_article_draft=load("article_draft");
         $time=times::getTime();
         $fields=[
-            "postID"=>empty($article_data['postID'])?"":$article_data['postID'],
-            "typeID"=>empty($article_data['typeID'])?"":$article_data['typeID'],
+            "postID"=>empty($article_data['postID'])?0:$article_data['postID'],
+            "typeID"=>empty($article_data['typeID'])?1:$article_data['typeID'],
             "userID"=>$_SESSION['id'],
             "bloggerID"=>empty($module_data['bloggerID'])?0:$module_data['bloggerID'],
             "categoryID"=>empty($module_data['categoryID'])?0:$module_data['categoryID'],
@@ -291,12 +290,8 @@ class user extends Api {
     public function draft_update($article_data,$module_data){
         //如果草稿不为空
         $obj_article_draft=load("article_draft");
-        if(!empty($article_data['draftID'])){
-            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
-            if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
-        }else{
-            $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id']]);
-        }
+        $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$article_data['postID']]);
+        if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
         
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
@@ -313,25 +308,18 @@ class user extends Api {
             "is_comment"=>empty($article_data['is_comment'])?0:1,
         ];
         
-        if(!empty($article_data['draftID'])){
-            //未发布编辑草稿
-            $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'id'=>$article_data['draftID']]);
-        }else{
-            //编辑草稿
-            $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id']]);
-        }
-        
+        $obj_article_draft->update($fields,['bloggerID'=>$module_data['bloggerID'],'userID'=>$_SESSION['id'],'postID'=>$article_data['postID']]);
         return $check_article_draft['id'];
     }
     
     /**
      * 编辑器页
      * 文章 草稿 删除
-     * @param obj $id | 草稿的id
+     * @param obj $id | 文章ID
     */
     public function draft_delete($id){
         $obj_article_draft=load("article_draft");
-        $obj_article_draft->remove(['id'=>$id]);
+        $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>$id]);
         
         return true;
     }
