@@ -485,12 +485,15 @@ export default {
         padding: 12px 18px;
         border-bottom: 1px solid #f0f0f0;
         cursor: pointer;
+        color:#5b7083
 }
 .left-nav-item .name {
-  font-size: 1rem;
-  font-weight: 600
+  font-size: 1.2rem;
+  font-weight: 600;
+
 }
-.left-nav-item:hover{color: #39b8eb;
+.left-nav-item:hover{
+        color: #39b8eb;
         fill: #39b8eb
 }
 
