@@ -1,6 +1,6 @@
 <template>
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
-        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')'}">
+        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
             <div class="user-bgup">
                 <span class="name">{{data.bloggerinfo_id.name}}</span>
                 <p class="bdescription">{{data.bloggerinfo_id.description}}</p>
@@ -20,7 +20,7 @@
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row">
-                <span class="col blog-user-index-des name">{{data.userinfo_userID.username}}<icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V></span>
+                <span class="col blog-user-index-des name"><icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>{{data.userinfo_userID.username}}</span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
@@ -95,6 +95,7 @@ import {
     IconPen,
     IconMail,
     IconPlus,
+    IconV
 } from '@/components/Icons';
 import {
     Button,
@@ -119,6 +120,7 @@ export default {
         IconPen,
         IconMail,
         IconPlus,
+        IconV,
         [Button.name]: Button,
         [Input.name]: Input,
         Modal,

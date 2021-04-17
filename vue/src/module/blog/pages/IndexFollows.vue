@@ -20,6 +20,7 @@
               :class="{active:selectItem.followingID==item.followingID}"
                @click="selected(item)">
                 <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar>
+                 <icon-V class="text-primary lable" v-if="item.userinfo_followingID.is_hot_blogger"></icon-V>
                 <span class="pl-2 ">{{item.userinfo_followingID.username}}</span>
                 <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
               </li>
@@ -57,6 +58,9 @@
   </div>
 </template>
 <script>
+import {
+    IconV
+} from '@/components/Icons';
 import MainMenu from './components/Main/MainMenu';
 import ArticleListItem from './components/Main/ArticleListItem';
 import Avatar from  './components/Main/Avatar';
@@ -77,6 +81,7 @@ export default {
     IconBloggerBg,
     IndexHeader,
     BlogerListItem,
+    IconV
   },
   watch:{
     '$store.state.user.userinfo':function(){
@@ -144,6 +149,12 @@ export default {
   cursor: pointer;
   font-size: 17px;
   color: #425466
+}
+.followed-blogger svg.text-primary.lable {
+        position: absolute;
+        margin-left: 25px;
+        margin-top: -46px;
+        transform: rotate(34deg)
 }
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;
