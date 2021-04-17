@@ -163,8 +163,9 @@ color: #235592
 .hot-blogger-avatar .avatar-word, .small .avatar-word{
     border-radius: 50%;
     background-color: #eeeeee;
-    
+    line-height: 48px;
     text-align: center;
+    line-heigh: 48px;
     font-weight: 500;
 }
 .hot-blogger-avatar .lable{
@@ -198,6 +199,8 @@ color: #235592
 .hot-blogger-avatar img{
   min-width:48px;
   height:48px;
+  box-shadow: rgb(0 0 0 / 2%) 0px 0px 2px inset;
+
 }
 .small img{
     width:36px;
