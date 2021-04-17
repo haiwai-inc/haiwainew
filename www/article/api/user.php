@@ -245,7 +245,7 @@ class user extends Api {
     public function draft_add($article_data="",$module_data=""){
         $obj_article_draft=load("article_draft");
         $check_article_draft=$obj_article_draft->getOne("*",['postID'=>$article_data['postID'],'userID'=>$_SESSION['id']]);
-        if(empty($check_article_draft)) {$this->error="已创建草稿";$this->status=false;return false;}
+        if(!empty($check_article_draft)) {$this->error="已创建草稿";$this->status=false;return false;}
         
         //添加草稿 tag
         $obj_article_tag=load("article_tag");
