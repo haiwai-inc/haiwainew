@@ -264,7 +264,7 @@ class user extends Api {
             "title"=>empty($article_data['title'])?"":$article_data['title'],
             "msgbody"=>empty($article_data['msgbody'])?"":$article_data['msgbody'],
             "is_comment"=>empty($article_data['is_comment'])?0:1,
-            "visible"=>-1
+            "visible"=>empty($article_data['postID'])?-1:-2,
         ];
         $obj_article_draft->insert($fields);
         return $article_data['postID'];
