@@ -175,10 +175,18 @@ color: #235592
   position: absolute;
   margin-left: 25px;
 }
+
+.small .lable{
+        position: absolute;
+        margin-left: 20px;
+        margin-top: -14px;
+        transform: rotate(33deg)
+ 
+}
 .hot-blogger-avatar .lable {
         position: absolute;
         margin-left: 28px;
-        margin-top: -12px;
+        margin-top: -14px;
         transform: rotate(27deg)
 }
 .hot-blogger-avatar{

@@ -153,7 +153,7 @@ export default {
 .followed-blogger svg.text-primary.lable {
         position: absolute;
         margin-left: 25px;
-        margin-top: -44px;
+        margin-top: -46px;
         transform: rotate(34deg)
 }
 .followed-blogger li.active, .followed-blogger li:hover{
