@@ -23,6 +23,7 @@
         
         <div class="d-flex justify-content-between py-2" ref="titleBox">
           <input
+            ref="editor_title"
             class="editorTitle"
             type="text"
             autofocus
@@ -115,9 +116,7 @@
           </el-popconfirm>
           <el-button v-if="curentArticle.postID==0"
             round 
-            simple 
             @click="draft_update"
-            class="editbtn"
             >
               保存草稿
           </el-button>
@@ -125,6 +124,18 @@
             <span v-if="flags.autosaving" class="text-muted">{{$t('message').editor.autosaving}}</span> 
             <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
           </div>
+          <el-popconfirm v-if="curentArticle.postID==0"
+            placement="top-end"
+            confirm-button-text="清空"
+            cancel-button-text='取消'
+            :title="'您要清空草稿的标题和内容吗？'"
+            :hide-icon="true"
+            @confirm="draft_refresh()"
+            >
+            <el-button round type="text"  slot="reference">
+              清空草稿内容
+            </el-button>
+          </el-popconfirm>
         </div>
       </div>
     </div>
@@ -464,6 +475,7 @@ export default {
           this.curentArticle.isDraft = false;
           this.article_view(id);
         }
+          this.$refs['editor_title'].focus();
       })
     },
     draft_delete(item){
@@ -472,6 +484,10 @@ export default {
           this.$router.push('/blog/my/')
         }
       })
+    },
+    draft_refresh(){
+      this.curentArticle.postInfo_postID.title='';
+      this.curentArticle.postInfo_postID.msgbody='';
     },
     async article_view(id){
       let res = await this.user.article_view(id);
@@ -562,10 +578,6 @@ export default {
         blog.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
           this.draft_view(this.$route.query.postid);
-          // if(!this.draft_view(this.$route.query.postid?this.$route.query.postid:0)){
-          //   this.article_view(this.$route.query.postid)
-          // }
-          
         });
       }else{// 如果没有开通博客
         this.$router.push('/blog_register');

@@ -243,17 +243,15 @@ export default {
         console.log(this.collectionList);
     },
     delArticle(item){
-        if(item.visible==1 || item.visible==-2){
-        console.log(item.visible);
+        if(item.postID!==0){
           blog.article_delete(item.postID,0).then(res=>{
             if(res.status){
               this.getArticleList();
               this.getCategories(this.userID);
             }
           })
-        }
-        if(item.visible==-1 || item.visible==-2){
-          blog.draft_delete(item.id).then(res=>{
+        }else{
+          this.$store.state.user.draft_delete(item.postID).then(res=>{
             if(res.status){
               this.getArticleList();
             }
@@ -287,10 +285,9 @@ export default {
     },
     goeditor(item){console.log(item)
         let url = '/blog/my/editor/'
-        url+=item.visible===-1?'':'?postid='+item.postID;
+        url+=item.postID===0?'':'?postid='+item.postID;
         this.$router.push(url);
     }
-    
   },
   data() {
     var checkNameSame = (rule, value, callback) =>{
