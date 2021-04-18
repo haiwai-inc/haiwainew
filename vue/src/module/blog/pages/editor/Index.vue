@@ -119,7 +119,7 @@
             @click="draft_update"
             class="editbtn"
             >
-              保存
+              保存草稿
           </el-button>
           <div ref="saving" style="font-size:13px;padding-left:8px;display:inline">
             <span v-if="flags.autosaving" class="text-muted">{{$t('message').editor.autosaving}}</span> 
