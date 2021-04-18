@@ -133,7 +133,7 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['id,!='=>$id,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $obj_blog_category->update(['name'=>$name],['is_publish'=>$is_publish,'bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
+        $obj_blog_category->update(['name'=>$name,'is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
         return true;
     }
