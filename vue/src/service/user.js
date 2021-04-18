@@ -376,7 +376,7 @@ class User extends API{
      *          postID
      */
     async draft_delete(postID){
-        return await this.sendget('article/user/draft_delete/?postID='+postID)
+        return await this.sendget('article/user/draft_delete/?id='+postID)
     }
 
     /**

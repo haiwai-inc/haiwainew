@@ -44,10 +44,7 @@
         <div>
           <el-button type="text" link v-bind:style="{paddingRight:0 }" @click="$router.push('/blog/my/')"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
         </div>
-        <div ref="saving" style="font-size:13px;padding-left:8px;">
-          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
-          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
-        </div>
+        
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
         <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
@@ -99,25 +96,14 @@
       </div>
       <div class="col-12">
         <div class="mt-2 text-muted">注：发表博客文章时请不要提供广告信息或不友好信息，本站保留拒绝的权利。</div>
-        <!-- <textarea id="editorText"> -->
-        <!-- </textarea>发布按钮显示条件(curentArticle.visible!==1&&curentArticle.postInfo_postID.title!='') -->
-        <div ref="saveBox" class="m-2">
-          <!-- <n-button v-if="curentArticle.postInfo_postID.title!=''"
-            type="primary"
-            round
-            simple
-            @click.native="modals.publish=true"
-            class="editbtn"
-          >
-            {{curentArticle.visible==-1?'发布文章':'更新文章'}}
-          </n-button> -->
-          <el-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+        <div ref="saveBox" class="m-2" v-if="curentArticle.isDraft">
+          <el-button v-if="curentArticle.postID==0" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布文章
           </el-button>
-          <el-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+          <el-button v-if="curentArticle.postID!==0" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布更新
           </el-button>
-          <el-popconfirm v-if="curentArticle.visible==-2"
+          <el-popconfirm v-if="curentArticle.postID!==0"
             placement="top-end"
             confirm-button-text="放弃"
             cancel-button-text='取消'
@@ -125,16 +111,20 @@
             :hide-icon="true"
             @confirm="draft_delete(curentArticle)"
             >
-            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{curentArticle.visible==-1?'放弃草稿':'放弃编辑'}}</el-button>
+            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{'放弃编辑'}}</el-button>
           </el-popconfirm>
-          <el-button  v-if="curentArticle.visible==-1"
+          <el-button v-if="curentArticle.postID==0"
             round 
             simple 
-            
+            @click="draft_update"
             class="editbtn"
             >
               保存
           </el-button>
+          <div ref="saving" style="font-size:13px;padding-left:8px;display:inline">
+            <span v-if="flags.autosaving" class="text-muted">{{$t('message').editor.autosaving}}</span> 
+            <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -266,16 +256,18 @@ export default {
     }
   },
   methods: {
-    watchModify(val){console.log(this.watchCount);
-      this.watchCount+=1;
+    watchModify(val){
+      this.watchCount+=1;console.log(this.watchCount);
       // if(this.curentArticle.visible==1 && this.watchCount>2){
       //   // 将已发布文章转为草稿
       //   this.article_to_draft_by_postID();
       // }
-      if(this.curentArticle.visible!==1 && this.watchCount>2){
+      if(this.curentArticle.isDraft && this.watchCount>2){
+        console.log("草稿")
         this.autoSave()
       };
-      if((this.curentArticle.visible===1 || this.curentArticle.visible===undefined) && this.watchCount>2){
+      if(!this.curentArticle.isDraft && this.watchCount>2){
+        console.log("非草稿")
         this.draft_add()
       };
     },
@@ -343,42 +335,7 @@ export default {
         this.dialogFormVisible = true
         console.log()
     },
-    // setWJid(id){
-    //   this.wenjiActiveId = id;
-    //   this.articleActiveId = 0;
-    // },
-    // setArtid(e){
-    //   this.articleActiveId = e.id;
-    //   this.getContent(e);
-    //   this.watchCount = 0;
-    //   // if(this.timer){
-    //     clearTimeout(this.timer);
-    //   // }
-    //   this.flags.autosaved = false;
-    // },
-    // 获取编辑器内容
-    // getContent(e){
-    //   //visible=undefined 一定是已发布文章；
-    //    e.visible = e.visible==undefined? 1 : e.visible
-    //   if(e.visible==1){
-    //   //   this.user.article_to_draft_by_postID(e.postID).then(res=>{
-    //   //   console.log(res)
-    //   //   if(res.status){
-    //   //     this.curentArticle = res.data
-    //   //   }
-    //   // })
-    //     this.user.article_view(e.postID).then(res=>{
-    //       this.curentArticle=res.data;
-    //       // this.autoSave();
-    //       console.log(this.curentArticle)
-    //     });
-    //   }else{
-    //     this.user.draft_view(e.id).then(res=>{
-    //       this.curentArticle=res.data;
-    //       console.log(this.curentArticle)
-    //     })
-    //   }
-    // },
+    
     // 发布一篇新文章（草稿=>文章）
     publish(){
       let data={
@@ -464,7 +421,7 @@ export default {
           categoryID:this.curentArticle.categoryID
         }
       };
-      this.user.draft_add(data).then(res=>{
+      this.user.draft_add(data).then(res=>{console.log(res.data)
         this.draft_view(res.data);
       })
     },
@@ -476,7 +433,7 @@ export default {
           tagname:this.tags,
           typeID:1,
           // draftID:this.curentArticle.id,
-          postID:0,
+          postID:this.curentArticle.postID,
           is_comment:this.curentArticle.is_comment
         },
         module_data:{
@@ -494,13 +451,18 @@ export default {
         }
       })
     },
-    draft_view(id){
+    draft_view(postid){
+      let id = postid?postid:0
       this.user.draft_view(id).then(res=>{
         if(res.status){
           this.curentArticle = res.data;
-          this.curentArticle.draftID = res.data.id;
+          // this.curentArticle.draftID = res.data.id;
           this.curentArticle.categoryID = this.curentArticle.categoryID!=0?this.curentArticle.categoryID:this.categoryList[0].id;//草稿默认加到第一目录里
-          console.log(this.curentArticle)
+          this.curentArticle.isDraft = true;
+          console.log(this.curentArticle,id)
+        }else{
+          this.curentArticle.isDraft = false;
+          this.article_view(id);
         }
       })
     },
@@ -599,14 +561,11 @@ export default {
       if(r.data.bloggerID){
         blog.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
-         
-          if(this.$route.query.postid){
-            // 已发布文章再编辑
-            this.article_view(this.$route.query.postid)
-          }else{
-            // 是否有草稿
-            this.draft_view(0);
-          }
+          this.draft_view(this.$route.query.postid);
+          // if(!this.draft_view(this.$route.query.postid?this.$route.query.postid:0)){
+          //   this.article_view(this.$route.query.postid)
+          // }
+          
         });
       }else{// 如果没有开通博客
         this.$router.push('/blog_register');
@@ -651,9 +610,9 @@ export default {
       categoryList:[],
       wenjiActiveId: 0,
       articleActiveId: 0,
-      testID:'',
       activeName: "0",
       curentArticle:{
+        isDraft:true,
         postID:0,
         categoryID:0,
         postInfo_postID:{
@@ -872,8 +831,8 @@ body{
 }
 
 .publisher h1, h2, h3, h4, h5, h6 {
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  /* text-transform: uppercase; */
+  letter-spacing: 2px;
 }
 
 .publisher h1, .h1 {

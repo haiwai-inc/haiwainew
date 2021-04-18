@@ -355,7 +355,7 @@ export default {
       })
     },
     gotoEditor(item){
-      let url = item.draftID==0?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.draftID;
+      let url = '/blog/my/editor/?postid='+item.postID;
       this.$router.push(url);
     },
     article_delete(item){

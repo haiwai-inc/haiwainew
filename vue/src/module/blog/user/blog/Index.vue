@@ -32,9 +32,7 @@
                             <span @click="category_shift(index,index+1)" v-if="index<collectionList.length-1">
                                 <el-dropdown-item icon="el-icon-arrow-down">向下移动</el-dropdown-item>
                             </span>
-<!-- 
-    删除确认
- -->
+<!--  删除确认  -->
                             <el-popconfirm
                                 v-if="!item.is_default"
                                 placement="top-end"
@@ -45,7 +43,6 @@
                                 @confirm="category_delete(item)"
                             >
                                 <a href="javascript:void(0)" slot="reference">
-
                                     <el-dropdown-item divided icon="el-icon-delete">
                                         {{$t('message').editor.wenji_delet_menu}}
                                     </el-dropdown-item>
@@ -55,10 +52,7 @@
                     </el-dropdown>
                 </li>
             </ul>
-            <!-- <user-index-sort :data="sortList"></user-index-sort> -->
-            <!-- <div class="collection-list mt-3">
-                <collection-list v-bind:data="collectionList" :userdata="false" title="文集"></collection-list>
-            </div> -->
+            
         </div>
         <div class="col-sm-9 col-12">
             <div></div>
@@ -78,19 +72,16 @@
             infinite-scroll-disabled="noMore"
             infinite-scroll-distance="50">
                <div class="list_item row" v-for="item in articleList" :key="item.id">
-                   <div class="col-10" @click="$router.push(item.visible===-1?'/blog/my/editor':'/blog/p/'+item.postID)">
-                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible!==-1?'black':'grey'}">
-                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible!==-1">
+                   <div class="col-10" @click="$router.push(item.postID===0?'/blog/my/editor':'/blog/p/'+item.postID)">
+                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.postID!==0?'black':'grey'}">
+                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.postID!==0">
                                 <i class="el-icon-document-checked"></i>
                            </el-tooltip>
-                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.visible===-1">
+                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.postID===0">
                                 <i class="el-icon-document" style="color:gray"></i>
                            </el-tooltip>
-                           <!-- <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
-                                <i class="el-icon-document-copy" style="color:gray"></i>
-                           </el-tooltip> -->
                            {{item.postInfo_postID.title}}
-                           <small v-if="item.visible===-1">(草稿)</small>
+                           <small v-if="item.postID===0">(草稿)</small>
                         </h5>
                        <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
                        
@@ -102,8 +93,8 @@
                         placement="top-end"
                         confirm-button-text="刪除"
                         cancel-button-text='取消'
-                        :title="item.visible==1?'确定删除这篇文章吗？':item.visible==-1?'确定删除这篇草稿吗？':'此操作会将已发布文章和正在编辑的草稿一并删除。是否继续！！！'"
-                        :hide-icon="item.visible==-2?false:true"
+                        :title="item.postID!==0?'确定删除这篇文章吗？':'确定删除这篇草稿吗？'"
+                        :hide-icon="true"
                         @confirm="delArticle(item)"
                         >
                         <el-button type="text" icon="el-icon-delete" slot="reference">删除</el-button>
