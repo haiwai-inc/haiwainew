@@ -100,8 +100,9 @@ class user extends Api {
      * 博客主页 编辑器页 
      * 文集 添加
      * @param integer $name|文集名
+     * @param integer $is_publish|是否隐藏1,0
      */
-    public function category_add($name){
+    public function category_add($name,$is_publish){
         $obj_blog_blogger=load("blog_blogger");
         $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
@@ -110,7 +111,7 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $categoryID=$obj_blog_category->insert(['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        $categoryID=$obj_blog_category->insert(['is_publish'=>$is_publish,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         $obj_blog_category->update(['sort'=>$categoryID],['id'=>$categoryID]);
         
         return true;
@@ -121,8 +122,9 @@ class user extends Api {
      * 文集 修改
      * @param integer $name|文集名
      * @param integer $id|文集id
+     * @param integer $is_publish|是否隐藏1,0
      */
-    public function category_update($name,$id){
+    public function category_update($name,$id,$is_publish){
         $obj_blog_blogger=load("blog_blogger");
         $check_blog_blogger=$obj_blog_blogger->getOne("*",['userID'=>$_SESSION['id']]);
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
@@ -131,7 +133,7 @@ class user extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['id,!='=>$id,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
         
-        $obj_blog_category->update(['name'=>$name],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
+        $obj_blog_category->update(['name'=>$name,'is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
         return true;
     }
