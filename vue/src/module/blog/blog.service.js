@@ -202,22 +202,21 @@ class Blog extends API{
 
   /**
 	 * 
-	 * @param String
-	 *          $name:文集名称
+	 * @param String  $name:文集名称
+	 * @param Number $is_publish: 1-公开；0-隐藏
 	 */
-  async category_add(name){
-    return await this.sendget("/blog/user/category_add/?name="+name)
+  async category_add(name,is_publish){
+    return await this.sendget("/blog/user/category_add/?name="+name+"&is_publish="+is_publish)
   }
 
   /**
 	 * 
-	 * @param String
-	 *          $name:文集名称
-	 * @param Number
-	 *          id ：文集id
+	 * @param String  $name:文集名称
+	 * @param Number $is_publish: 1-公开；0-隐藏
+	 * @param Number  $id ：文集id
 	 */
-  async category_update(name,id){
-    return await this.sendget("/blog/user/category_update/?name="+name+"&id="+id)
+  async category_update(name,is_publish,id){
+    return await this.sendget("/blog/user/category_update/?name="+name+"&is_publish="+is_publish+"&id="+id)
   }
 
   /**

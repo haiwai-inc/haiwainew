@@ -24,7 +24,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <span @click="openDialog(item)">
-                                <el-dropdown-item icon="el-icon-edit">编辑目录名</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-setting">目录设置</el-dropdown-item>
                             </span>
                             <span @click="category_shift(index,index-1)" v-if="index!=0">
                                 <el-dropdown-item icon="el-icon-arrow-up">向上移动</el-dropdown-item>
@@ -121,6 +121,8 @@
                     placeholder="输入博文目录名">
                     </el-input>
                 </el-form-item>
+                <el-radio v-model="form.is_publish" :label="1">公开目录</el-radio>
+                <el-radio v-model="form.is_publish" :label="0">隐藏目录</el-radio>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -130,7 +132,7 @@
     </div>
 </template>
 <script>
-// import MainMenu from '../../pages/components/Main/MainMenu.vue';
+import {  Radio } from "element-ui";
 // import ArticleListItem from '../../pages/components/Main/ArticleListItem.vue';
 import UserIndexSort from '../../pages/components/Main/UserIndexSort.vue';
 // import CollectionList from '../../pages/components/Main/CollectionList.vue';
@@ -144,10 +146,7 @@ import blog from '../../blog.service';
 export default {
   name: 'blog-user-index',
   components: {
-    // MainMenu,
-    // ArticleListItem,
-    // CollectionList,
-    // IndexHeader,
+    [Radio.name]:Radio,
     RegistBlog,
   },
   mounted() {
@@ -195,7 +194,7 @@ export default {
             console.log(valid)
             if (valid) {
                 this.btnDisable = true;
-                blog.category_add(this.form.name).then(res=>{
+                blog.category_add(this.form.name,this.form.is_publish).then(res=>{
                     console.log(res);
                     if(res.status){
                         this.getCategories(this.userID);
@@ -208,7 +207,7 @@ export default {
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.btnDisable = true;
-            blog.category_update(this.form.name,item.id).then(res=>{
+            blog.category_update(this.form.name,this.form.is_publish,item.id).then(res=>{
               if(res.status){
                 this.getCategories(this.userID);
               }
@@ -259,20 +258,22 @@ export default {
         }
     },
     getCategories(id){
-        blog.category_list(id).then(res=>{
+        this.$store.state.user.category_list(id).then(res=>{
           console.log(res);
           if(res.status){
             this.collectionList = res.data;
           }
           this.btnDisable = false;
           this.form.name = '';
+          this.form.is_publish = 1;
           this.dialogFormVisible = false;
         })
       },
     openDialog(item){
         this.item = item
-        this.formTitle = item?"修改目录名":"新建博文目录" ;
+        this.formTitle = item?"目录设置":"新建博文目录" ;
         this.form.name = item?item.name:''
+        this.form.is_publish = item?item.is_publish:1
         this.dialogFormVisible = true
         console.log(this.item)
     },
@@ -291,11 +292,13 @@ export default {
   },
   data() {
     var checkNameSame = (rule, value, callback) =>{
-        this.collectionList.forEach(item=>{
-            if(item.name === value){
-                return callback(new Error('与现有目录名重复'))
-            }
-        })
+        if(this.item==0){
+            this.collectionList.forEach(item=>{
+                if(item.name === value){
+                    return callback(new Error('与现有目录名重复'))
+                }
+            })
+        }
         callback()
     }
     return {
@@ -313,7 +316,8 @@ export default {
         item:0,
         shiftable:true,
         form:{
-            name:''
+            name:'',
+            is_publish:1
         },
         rules:{
             name:[

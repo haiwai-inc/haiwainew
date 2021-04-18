@@ -114,10 +114,7 @@
             >
             <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{'放弃编辑'}}</el-button>
           </el-popconfirm>
-          <el-button v-if="curentArticle.postID==0"
-            round 
-            @click="draft_update"
-            >
+          <el-button v-if="curentArticle.postID==0" round @click="draft_update">
               保存草稿
           </el-button>
           <div ref="saving" style="font-size:13px;padding-left:8px;display:inline">
@@ -475,7 +472,7 @@ export default {
           this.curentArticle.isDraft = false;
           this.article_view(id);
         }
-          this.$refs['editor_title'].focus();
+        this.$refs['editor_title'].focus();
       })
     },
     draft_delete(item){
@@ -578,7 +575,8 @@ export default {
         blog.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
           this.draft_view(this.$route.query.postid);
-        });
+          }
+        );
       }else{// 如果没有开通博客
         this.$router.push('/blog_register');
       }
