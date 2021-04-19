@@ -52,10 +52,10 @@ class publish_article_timer{
                 ];
                 $obj_article_post->insert($fields_post,"post_{$post_tbn}");
                 
-                //转文章为博客类型
+                //添加文章为博客类型
                 if($article_data['typeID']==1){
                     $obj_blog_blogger=load("blog_blogger");
-                    $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
+                    $obj_blog_blogger->add_blog_article($article_data['postID'],$module_data);
                 }
                 
                 //同步ES索引
