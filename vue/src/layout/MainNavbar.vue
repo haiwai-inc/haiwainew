@@ -70,7 +70,9 @@
           rel="tooltip"
           title="消息"
           data-placement="bottom"
-          href="/notices">
+          href="javascript:void(0)"
+          @click="$router.push('/notices?id=0')"
+          >
           <div class="noticealert" v-if="$store.state.user.notice.totall"></div>
           <i class="now-ui-icons ui-1_bell-53"></i>
           <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
@@ -87,10 +89,6 @@
         <nav-link to="/admin" v-if="$store.state.user.userinfo.auth_group==2">
           <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.admin}}
         </nav-link>
-        <nav-link to="/profile">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.profile}}
-        </nav-link>
-        <hr class="mb-1 mt-1">
         <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.auth_group==2">
         <nav-link :to="'/blog/user/'+$store.state.user.userinfo.bloggerID">
           <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myindex}}
@@ -99,19 +97,23 @@
         <nav-link to="/bookmark">
           <i class="now-ui-icons location_bookmark"></i> {{$t('message').topnav.myfavorite}}
         </nav-link>
-        <nav-link to="/notices">
+        <nav-link to="/notices?id=1">
           <i class="now-ui-icons ui-2_chat-round"></i> {{$t('message').topnav.mycomment}}
         </nav-link>
-        <nav-link to="/notices">
+        <nav-link to="/notices?id=2">
           <i class="now-ui-icons ui-1_email-85"></i> {{$t('message').topnav.myqqh}}
         </nav-link>
-         <nav-link to="/notices">
+         <nav-link to="/notices?id=3">
           <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myfuns}}
         </nav-link>
-         <nav-link to="/notices">
+         <nav-link to="/notices?id=4">
           <i class="now-ui-icons ui-2_favourite-28"></i> {{$t('message').topnav.likeme}}
         </nav-link>
         <hr class="mb-2 mt-1">
+        <nav-link to="/profile/?id=1">
+          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.profile}}
+        </nav-link>
+        <hr class="mb-1 mt-1">
         <a href="javascript:void(0)" @click="logout" class="dropdown-item">
           <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> {{$t('message').topnav.logout}}
         </a>

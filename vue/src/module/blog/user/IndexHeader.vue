@@ -1,9 +1,12 @@
 <template>
     <div class="blog-user-index mb-3 col-sm-12 col-12 ">
-        <div class="user-bg" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
-            <div class="user-bgup">
+        <div class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
+            <div class="user-bgup flex-fill">
                 <span class="name">{{data.bloggerinfo_id.name}}</span>
                 <p class="bdescription">{{data.bloggerinfo_id.description}}</p>
+            </div>
+            <div class="pr-3 pt-auto" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
+                <n-button @click="$router.push('/profile/?id=0')" size="sm">博客设置</n-button>
             </div>
         </div>
         <div class="user-avatar d-flex py-2">
@@ -26,30 +29,27 @@
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
                 <div class="float-right pr-4" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
-                <n-button  
-                link 
-                size="sm"
-                @click="openModal()"
-                >
-                    <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.9rem;">发悄悄话</span>
-                </n-button>
-                
-                <n-button 
-                :type="data.userinfo_userID.is_following?'simple':'primary'" 
-                round 
-                size="sm"
-                @click="follow"
-                class="editbtn ml-3"
-                >
-                    <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
-                </n-button>
-            </div>
+                    <n-button  
+                    link 
+                    size="sm"
+                    @click="openModal()"
+                    >
+                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.9rem;">发悄悄话</span>
+                    </n-button>
+                    
+                    <n-button 
+                    :type="data.userinfo_userID.is_following?'simple':'primary'" 
+                    round 
+                    size="sm"
+                    @click="follow"
+                    class="editbtn ml-3"
+                    >
+                        <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
+                    </n-button>
+                </div>
             </div>
             <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button  
-                link 
-                size="sm"
-                >博客设置</n-button>
+                <n-button size="sm" @click="$router.push('/profile/?id=1')">账号设置</n-button>
             </div>
 
         </div>

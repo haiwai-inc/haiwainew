@@ -190,6 +190,7 @@ export default {
    //  Croppa 
   },
    created(){
+      this.menuId = Number(this.$route.query.id);
       this.user_profile();
       this.getBlackList(0);
       this.getBlogProfile();
@@ -263,7 +264,7 @@ export default {
   },
   methods:{
       toggleShow() {
-            this.show = !this.show;
+         this.show = !this.show;
       },
       initForm(){
          this.signupForm={

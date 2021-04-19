@@ -76,11 +76,6 @@ import icons from "@/components/Icons/Icons";
  */
 export default {
   name: "notices",
-  mounted:function(){
-    // this.getUnreadCount();
-    this.allNoticeCount();
-    this.showAllNotice();
-  },
   data() {
     return {
       user:this.$store.state.user,
@@ -132,7 +127,19 @@ export default {
     NoticeQqh,
     NoticeLike,
   },
-  computed: {},
+  watch:{
+    "$route.query.id":function(val){
+      this.activeId = Number(val);
+    }
+  },
+  mounted:function(){
+    // this.getUnreadCount();
+    this.allNoticeCount();
+    this.showAllNotice();
+  },
+  created(){
+    this.activeId = Number(this.$route.query.id);
+  },
   beforeDestroy() {
     this.notification_unread_clear("")
   },
