@@ -52,7 +52,7 @@
           <el-option
             v-for="item in categoryList"
             :key="item.id"
-            :label="item.name"
+            :label="item.is_publish?item.name:item.name+' (隐)'"
             :value="item.id">
           </el-option>
         </el-select>
@@ -148,6 +148,8 @@
             placeholder="输入博文目录名">
             </el-input>
         </el-form-item>
+        <el-radio v-model="categoryForm.is_publish" :label="1">公开目录</el-radio>
+        <el-radio v-model="categoryForm.is_publish" :label="0">隐藏目录</el-radio>
     </el-form>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -326,9 +328,9 @@ export default {
       this.$refs['categoryForm'].validate((valid) => {
         if (valid) {
           this.btnDisable = true;
-          blog.category_add(this.categoryForm.name).then(res=>{
+          blog.category_add(this.categoryForm.name,this.categoryForm.is_publish).then(res=>{
             if(res.status){
-              blog.category_list(this.user.userinfo.bloggerID).then(res=>{
+              this.$store.state.user.category_list(this.user.userinfo.bloggerID).then(res=>{
                 this.categoryList = res.status?res.data:[];
                 this.curentArticle.categoryID = this.categoryList[0].id
                 this.dialogFormVisible = false
@@ -572,8 +574,9 @@ export default {
   beforeCreate() {
     this.$store.state.user.getUserStatus().then(r=>{
       if(r.data.bloggerID){
-        blog.category_list(r.data.bloggerID).then(res=>{
+        this.$store.state.user.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
+          console.log(this.categoryList);
           this.draft_view(this.$route.query.postid);
           }
         );
@@ -652,7 +655,7 @@ export default {
         autosaved:false,
       },
       dialogFormVisible:false,
-      categoryForm:{name:''},
+      categoryForm:{name:'',is_publish:1},
       rules:{
         name:[
           {required: true, message: '请输入目录名称', trigger: 'blur'},
