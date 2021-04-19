@@ -73,7 +73,7 @@ class user extends Api {
         //转文章为博客类型
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
+            $obj_blog_blogger->add_blog_article($article_data,$module_data);
         }
         
         //同步ES索引
@@ -127,7 +127,7 @@ class user extends Api {
         //修改博客类型文章
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
+            $obj_blog_blogger->update_blog_article($article_data['postID'],$module_data);
         }
         
         //同步ES索引
@@ -155,10 +155,11 @@ class user extends Api {
         $time=times::gettime();
         $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
         
-        //同步文集数
-        $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
-        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']-1],['id'=>$rs_article_indexing['categoryID']]);
+        //同步博客数据
+        if($rs_article_indexing['typeID']==1){
+            $obj_blog_blogger=load("blog_blogger");
+            $obj_blog_blogger->delete_blog_article($rs_article_indexing);
+        }
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
@@ -232,6 +233,20 @@ class user extends Api {
         $rs_article_draft=empty($rs_article_draft)?[]:$rs_article_draft[0];
         
         return $rs_article_draft;
+    }
+    
+    /**
+     * 编辑器页
+     * 文章 查看
+     * @param integer $id | 主贴postID
+     */
+    public function draft_check($id){
+        //如果草稿不为空
+        $obj_article_draft=load("article_draft");
+        $check_article_draft=$obj_article_draft->getOne("*",['userID'=>$_SESSION['id'],'postID'=>$id]);
+        if(empty($check_article_draft)) {$this->error="此文章草稿不存在";$this->status=false;return false;}
+        
+        return true;
     }
     
     /**
