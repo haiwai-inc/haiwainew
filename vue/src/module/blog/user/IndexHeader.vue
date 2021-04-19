@@ -23,7 +23,7 @@
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row">
-                <span class="col blog-user-index-des name"><icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>{{data.userinfo_userID.username}}</span>
+                <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>{{data.userinfo_userID.username}}</span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>

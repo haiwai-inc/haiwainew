@@ -155,6 +155,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
@@ -201,6 +202,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
@@ -240,6 +242,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'treelevel'=>0,
             'limit'=>30,
@@ -281,8 +284,11 @@ class page extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //未公开
+        if(empty($_SESSION['id']) || (empty($rs_article_indexing['is_publish']) && $rs_article_indexing['userID']!=$_SESSION['id']))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -322,7 +328,7 @@ class page extends Api {
         
         //原帖信息
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'is_publish'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){
             return $rs;
         }
@@ -340,12 +346,12 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $fields['postID,<']=$rs_article_indexing['postID'];
         $fields['order']=['postID'=>'DESC'];
-        $rs_article['previous']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,<'=>$rs_article_indexing['postID'],"order"=>['postID'=>'DESC']]);
+        $rs_article['previous']=$obj_article_indexing->getOne("*",['is_publish'=>1,'treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,<'=>$rs_article_indexing['postID'],"order"=>['postID'=>'DESC']]);
         
         //下一篇
         $fields['postID,>']=$rs_article_indexing['postID'];
         $fields['order']=['postID'=>'ASC'];
-        $rs_article['next']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
+        $rs_article['next']=$obj_article_indexing->getOne("*",['is_publish'=>1,'treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
         
         //上下文信息
         $obj_article_noindex=load("search_article_noindex");
@@ -448,11 +454,11 @@ class page extends Api {
      */
     public function article_view_recent($id){
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'treelevel'=>0,'postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne("*",['is_publish'=>1,'visible'=>1,'treelevel'=>0,'postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
         
         //作者最新文章
-        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
+        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['is_publish'=>1,'postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -497,6 +503,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
