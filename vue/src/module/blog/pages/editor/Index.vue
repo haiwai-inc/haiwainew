@@ -48,7 +48,7 @@
         
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
-        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
+        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="watchModify">
           <el-option
             v-for="item in categoryList"
             :key="item.id"
@@ -91,8 +91,8 @@
         </div>
         <div class="pb-5">
           可否评论：
-          <el-radio v-model="curentArticle.is_comment" :label="1">是</el-radio>
-          <el-radio v-model="curentArticle.is_comment" :label="0">否</el-radio>
+          <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
+          <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
       </div>
       <div class="col-12">
@@ -141,11 +141,11 @@
     <el-form :model="categoryForm" :rules="rules" ref="categoryForm">
         <el-form-item label="" prop="name">
             <el-input 
-            v-model="categoryForm.name" 
-            autocomplete="off" 
-            maxlength="16" 
-            show-word-limit 
-            placeholder="输入博文目录名">
+              v-model="categoryForm.name" 
+              autocomplete="off" 
+              maxlength="16" 
+              show-word-limit 
+              placeholder="输入博文目录名">
             </el-input>
         </el-form-item>
         <el-radio v-model="categoryForm.is_publish" :label="1">公开目录</el-radio>
@@ -255,14 +255,14 @@ export default {
       this.tags = []
       this.curentArticle.postInfo_postID.tags.forEach(item=>{
         this.tags.push(item.name)
-      })
-      console.log(val)
+      });
+      this.watchModify(val);
     },
     'curentArticle.postInfo_postID.title':function(val){
-      this.watchModify(val)
+      this.watchModify(val);
     },
     'curentArticle.postInfo_postID.msgbody':function(val){
-      this.watchModify(val)
+      this.watchModify(val);
     }
   },
   methods: {
@@ -272,11 +272,11 @@ export default {
       //   // 将已发布文章转为草稿
       //   this.article_to_draft_by_postID();
       // }
-      if(this.curentArticle.isDraft && this.watchCount>2){
+      if(this.curentArticle.isDraft && this.watchCount>3){
         console.log("草稿")
         this.autoSave()
       };
-      if(!this.curentArticle.isDraft && this.watchCount>2){
+      if(!this.curentArticle.isDraft && this.watchCount>3){
         console.log("非草稿")
         this.draft_add()
       };
@@ -423,7 +423,7 @@ export default {
           tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,
-          is_comment:1
+          is_comment:this.curentArticle.is_comment
         },
         module_data:{
           add:true,
@@ -576,6 +576,7 @@ export default {
       if(r.data.bloggerID){
         this.$store.state.user.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
+          this.curentArticle.categoryID = this.categoryList[0].id
           console.log(this.categoryList);
           this.draft_view(this.$route.query.postid);
           }
