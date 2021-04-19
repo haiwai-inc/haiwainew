@@ -9,7 +9,6 @@
     border-radius: $border-radius-small;
     padding: $padding-btn-vertical $padding-btn-horizontal;
     cursor: pointer;
-
     @include btn-styles($default-color, $default-states-color);
 
     &:hover,
@@ -87,7 +86,9 @@
 .btn-warning { @include btn-styles($warning-color, $warning-states-color); }
 .btn-danger  { @include btn-styles($danger-color, $danger-states-color); }
 .btn-neutral { @include btn-styles($white-color, $white-color); }
-
+.btn-round.btn-primary {
+  box-shadow: rgb(0 0 0 / 8%) 0px 4px 4px;
+}
 .btn-round{
     border-width: $border-thin;
     border-radius: $btn-round-radius !important;
