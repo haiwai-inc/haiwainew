@@ -356,7 +356,8 @@ export default {
           typeID:1,
           // draftID:this.curentArticle.id,
           postID:0,
-          is_comment:this.curentArticle.is_comment
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           add:true,
@@ -383,7 +384,8 @@ export default {
           postID:this.curentArticle.postID,
           typeID:1,
           draftID:this.curentArticle.id,
-          is_comment:this.curentArticle.is_comment
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           edit:true,
@@ -423,7 +425,8 @@ export default {
           tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,
-          is_comment:this.curentArticle.is_comment
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           add:true,
@@ -444,7 +447,8 @@ export default {
           typeID:1,
           // draftID:this.curentArticle.id,
           postID:this.curentArticle.postID,
-          is_comment:this.curentArticle.is_comment
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           edit:true,
