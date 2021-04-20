@@ -18,9 +18,13 @@ class Blog extends API{
   async hot_blogger(){
     let res = await this.sendget("blog/page/hot_blogger/");
 	if(res.status){
-		res.data.data.forEach(item=>{
-			item.bloggerID = item.id
-		})
+		for(var item in res.data){
+			res.data[item].bloggerID = res.data[item].id
+		}
+		res.data = Object.values(res.data);
+		// res.data.data.forEach(item=>{
+		// 	item.bloggerID = item.id
+		// })
 	}
 	return res
   }
@@ -35,10 +39,19 @@ class Blog extends API{
   /**
 	 * 返回热榜博文列表
 	 */
-  async hot_article_list(tagID,lastid){
+  async hot_article_list(tagID){
     return await this.sendget("blog/page/hot_article/?tagID="+tagID);
   }
 
+  /**
+	 * 正文页返回相关博文列表
+	 */
+  async article_view_related(id){
+	return await this.sendget("blog/page/article_view_related/?id="+id)
+  }
+  async article_list_tag(id){
+	return await this.sendget("blog/page/article_list_tag/?tagID="+id)
+  }
   /**
 	 * 返回博主首页最新列表
 	 */
@@ -189,22 +202,21 @@ class Blog extends API{
 
   /**
 	 * 
-	 * @param String
-	 *          $name:文集名称
+	 * @param String  $name:文集名称
+	 * @param Number $is_publish: 1-公开；0-隐藏
 	 */
-  async category_add(name){
-    return await this.sendget("/blog/user/category_add/?name="+name)
+  async category_add(name,is_publish){
+    return await this.sendget("/blog/user/category_add/?name="+name+"&is_publish="+is_publish)
   }
 
   /**
 	 * 
-	 * @param String
-	 *          $name:文集名称
-	 * @param Number
-	 *          id ：文集id
+	 * @param String  $name:文集名称
+	 * @param Number $is_publish: 1-公开；0-隐藏
+	 * @param Number  $id ：文集id
 	 */
-  async category_update(name,id){
-    return await this.sendget("/blog/user/category_update/?name="+name+"&id="+id)
+  async category_update(name,is_publish,id){
+    return await this.sendget("/blog/user/category_update/?name="+name+"&is_publish="+is_publish+"&id="+id)
   }
 
   /**
@@ -226,7 +238,7 @@ class Blog extends API{
   }
 
   /**
-	 * 返回文集列表
+	 * 返回文集列表(游客)
 	 * 
 	 * @param number
 	 *          $bloggerID
@@ -287,31 +299,10 @@ class Blog extends API{
 	 * 
 	 * @param {文章的postID}
 	 *          postID
+	 * @param {visible=0 为删除} visible
 	 */
   async article_delete(postID,visible){
     return await this.sendget('article/user/article_delete/?postID='+postID+'&visible='+visible)
-  }
-
-  /**
-	 * 新建文集中的草稿
-	 * 
-	 * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)}
-	 *          article_data
-	 * @param {add:true,bloggerID:#,categoryID:#}
-	 *          module_data
-	 */
-  async draft_add(data){
-    return await this.sendpost('article/user/draft_add/',data)
-  }
-
-  /**
-	 * 删除文集中的草稿
-	 * 
-	 * @param {草稿的id}
-	 *          id
-	 */
-  async draft_delete(id){
-    return await this.sendget('article/user/draft_delete/?id='+id)
   }
 
   /**

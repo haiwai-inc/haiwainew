@@ -31,7 +31,7 @@ class page extends Api {
     /**
      * 二级页面 
      * 推荐 文章
-     * @param integer $lastID | 最后一个id
+     * @param integer $lastID | 最后一个postID
      * @param integer $limit | 分页数
      */
     public function recommend_article($lastID=0,$limit=30){
@@ -43,7 +43,7 @@ class page extends Api {
             'order'=>['id'=>'DESC']
         ];
         if(!empty($lastID)){
-            $fields['id,<']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         
         $rs_blog_recommend=$obj_blog_recommend->getAll("*",$fields);
@@ -84,8 +84,7 @@ class page extends Api {
         
         $obj_account_user=load("account_user");
         $rs_memcache=$obj_account_user->get_basic_userinfo($rs_memcache,"userID");
-        $rs=['status'=>true,'error'=>"",'data'=>$rs_memcache];
-        return $rs;
+        return $rs_memcache;
     }
     
     /**
@@ -117,9 +116,9 @@ class page extends Api {
         $obj_article_noindex=load("search_article_noindex");
         
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache=$obj_memcache->get("blog_hot_article");
+        $rs_memcache=$obj_memcache->get("blog_hot_article_{$tagID}");
         
-        $rs=empty($rs_memcache[$tagID])?[]:$rs_memcache[$tagID];
+        $rs=empty($rs_memcache)?[]:$rs_memcache;
         return $rs;
     }
     
@@ -156,6 +155,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
@@ -202,6 +202,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'limit'=>30,
             'bloggerID'=>$bloggerID,
@@ -241,6 +242,7 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'treelevel'=>0,
             'limit'=>30,
@@ -282,8 +284,11 @@ class page extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish'],['visible'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //未公开
+        if(empty($_SESSION['id']) || (empty($rs_article_indexing['is_publish']) && $rs_article_indexing['userID']!=$_SESSION['id']))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -304,11 +309,6 @@ class page extends Api {
         $obj_count_tool=load("count_tool");
         $obj_count_tool->add_article($id);
         
-        //草稿检查
-        $obj_article_draft=load("article_draft");
-        $rs_article_draft=$obj_article_draft->getOne(["id"],['postID'=>$rs_article_indexing['postID']]);
-        $rs_article_indexing['draftID']=empty($rs_article_draft)?0:$rs_article_draft['id'];
-        
         //更新关注时间缓存
         if(!empty($_SESSION['id'])){
             $obj_account_follow=load("account_follow");
@@ -328,7 +328,7 @@ class page extends Api {
         
         //原帖信息
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'is_publish'=>1,'postID'=>$id]);
         if(empty($rs_article_indexing)){
             return $rs;
         }
@@ -346,12 +346,12 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $fields['postID,<']=$rs_article_indexing['postID'];
         $fields['order']=['postID'=>'DESC'];
-        $rs_article['previous']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,<'=>$rs_article_indexing['postID'],"order"=>['postID'=>'DESC']]);
+        $rs_article['previous']=$obj_article_indexing->getOne("*",['is_publish'=>1,'treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,<'=>$rs_article_indexing['postID'],"order"=>['postID'=>'DESC']]);
         
         //下一篇
         $fields['postID,>']=$rs_article_indexing['postID'];
         $fields['order']=['postID'=>'ASC'];
-        $rs_article['next']=$obj_article_indexing->getOne("*",['treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
+        $rs_article['next']=$obj_article_indexing->getOne("*",['is_publish'=>1,'treelevel'=>0,'visible'=>1,'userID'=>$rs_article_indexing['userID'],'categoryID'=>$rs_blog_category['id'],'postID,>'=>$rs_article_indexing['postID'],"order"=>['postID'=>'ASC']]);
         
         //上下文信息
         $obj_article_noindex=load("search_article_noindex");
@@ -454,11 +454,11 @@ class page extends Api {
      */
     public function article_view_recent($id){
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'treelevel'=>0,'postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne("*",['is_publish'=>1,'visible'=>1,'treelevel'=>0,'postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="此文章不存在";$this->status=false;return false;}
         
         //作者最新文章
-        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
+        $rs_article_indexing=$obj_article_indexing->getAll(['id','postID'],['is_publish'=>1,'postID,!='=>$check_article_indexing['postID'],'order'=>['postID'=>"DESC"],'limit'=>5,'visible'=>1,'treelevel'=>0,'userID'=>$check_article_indexing['userID']]);
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -476,7 +476,7 @@ class page extends Api {
     }
     
     /**
-     * 博客主页 编辑器页
+     * 博客主页 
      * 文集 列表
      * @param integer $bloggerID | 博主ID
      */
@@ -486,7 +486,7 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['is_publish'=>1,'order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
@@ -494,7 +494,7 @@ class page extends Api {
      * 博客主页 
      * 文集 文章列表
      * @param integer $id | 文集ID
-     * @param integer $lastID | 最后文章ID
+     * @param integer $lastID | 最后文章postID
      */
     public function category_article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
@@ -503,14 +503,16 @@ class page extends Api {
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'is_publish'=>1,
             'visible'=>1,
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
+            'limit'=>30,
             "order"=>['id'=>"DESC"],
         ];
         if(!empty($lastID)){
-            $fields['id,<']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
         

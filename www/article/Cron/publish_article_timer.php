@@ -24,7 +24,6 @@ class publish_article_timer{
                     'msgbody'=>$v['msgbody'],
                     'tagname'=>$tagname,
                     "typeID"=>$v['typeID'],
-                    "draftID"=>$v['id'],
                 ];
                 $module_data=[
                     "add"=>true,
@@ -53,20 +52,18 @@ class publish_article_timer{
                 ];
                 $obj_article_post->insert($fields_post,"post_{$post_tbn}");
                 
-                //转文章为博客类型
+                //添加文章为博客类型
                 if($article_data['typeID']==1){
                     $obj_blog_blogger=load("blog_blogger");
-                    $obj_blog_blogger->to_blog_article($article_data['postID'],$module_data);
+                    $obj_blog_blogger->add_blog_article($article_data,$module_data);
                 }
                 
                 //同步ES索引
                 $obj_article_noindex->fetch_and_insert([$article_data['postID']]);
                 
                 //删除草稿
-                if(!empty($article_data['draftID'])){
-                    $obj_article_draft=load("article_draft");
-                    $obj_article_draft->remove(['id'=>$article_data['draftID']]);
-                }
+                $obj_article_draft=load("article_draft");
+                $obj_article_draft->remove(['postID'=>$article_data['postID']]);
             }
         }
     }

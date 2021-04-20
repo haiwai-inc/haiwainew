@@ -336,14 +336,6 @@ class User extends API{
     }
 
     /**
-     * 返回草稿内容
-     * @param number id 
-     */
-    async draft_view(id){
-    return await this.sendget("article/user/draft_view/?id="+id)
-    }
-    
-    /**
      * 发布新博客文章
      * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1)} article_data 
      * @param {add:true,bloggerID:#,categoryID:#} module_data 
@@ -368,7 +360,32 @@ class User extends API{
      async article_update(data){
         return await this.sendpost('article/user/article_update/',data)
     }
-  
+
+    /**
+     * 返回是否有草稿
+     * @param number id - postID
+     */
+     async draft_check(postID){
+        return await this.sendget("article/user/draft_check/?id="+postID)
+    }
+    /**
+     * 返回草稿内容
+     * @param number id - postID
+     */
+     async draft_view(id){
+        return await this.sendget("article/user/draft_view/?id="+id)
+    }
+        
+    /**
+     * 删除文集中的草稿
+     * 
+     * @param {postID}
+     *          postID
+     */
+    async draft_delete(postID){
+        return await this.sendget('article/user/draft_delete/?id='+postID)
+    }
+
     /**
      * 草稿自动保存
      * @param {title:'文章标题',msgbody:'文章内容',tagname:[tag1,tag2],typeID:1(bolg模块为1),draftID:0} article_data 
@@ -422,6 +439,15 @@ class User extends API{
         return await this.sendget('article/user/article_share/?postID='+postID+'&is_share='+val)
     }
 
+  /**
+	 * 返回文集列表(作者)
+	 * 
+	 * @param number
+	 *          $bloggerID
+	 */
+   async category_list(bloggerID){
+    return await this.sendget("blog/user/category_list/?bloggerID="+bloggerID)
+  }
     /**
      * 定时发布
      * @param {*} draftID

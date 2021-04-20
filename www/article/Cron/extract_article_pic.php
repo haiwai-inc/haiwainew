@@ -12,7 +12,7 @@ class extract_article_pic{
         $this->obj_account_user=load("account_user");
         
         $lastid=0;
-        while( $rs_article_indexing = $this->obj_article_indexing->getAll("*",['treelevel'=>0,'is_pic'=>0,'order'=>['postID'=>'ASC'],'limit'=>20,'postID,>'=>$lastid,'visible'=>1]) ){
+        while( $rs_article_indexing = $this->obj_article_indexing->getAll("*",['is_pic'=>0,'order'=>['postID'=>'ASC'],'limit'=>20,'postID,>'=>$lastid,'visible'=>1]) ){
             $postID_article_indexing=[];
             foreach($rs_article_indexing as $k=>$v){
                 $postID_article_indexing[]=$v['postID'];

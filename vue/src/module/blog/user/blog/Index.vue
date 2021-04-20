@@ -9,7 +9,7 @@
       <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
         <div class="col-sm-3 d-none d-sm-block">
             <div class="d-flex justify-content-between align-items-center py-3">
-                <h5>博文目录</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
+                <h5>博文管理</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
             <ul>
                 <li class="d-flex align-items-center li_item" 
@@ -17,14 +17,14 @@
                 :key="index"
                 :class="{active:item.id===currentTabId}"
                 >
-                    <div class="flex-fill collections" @click="changeTab(item.id)">{{item.name}} ({{item.count_article}})</div>
+                    <div class="flex-fill collections" @click="changeTab(item.id)">{{item.name}} ({{item.count_article}})<span class="ml-2 text-muted" v-if="!item.is_publish">-隐</span></div>
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
                             <span v-html="iconmore3v"></span>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <span @click="openDialog(item)">
-                                <el-dropdown-item icon="el-icon-edit">编辑目录名</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-setting">目录设置</el-dropdown-item>
                             </span>
                             <span @click="category_shift(index,index-1)" v-if="index!=0">
                                 <el-dropdown-item icon="el-icon-arrow-up">向上移动</el-dropdown-item>
@@ -32,9 +32,7 @@
                             <span @click="category_shift(index,index+1)" v-if="index<collectionList.length-1">
                                 <el-dropdown-item icon="el-icon-arrow-down">向下移动</el-dropdown-item>
                             </span>
-<!-- 
-    删除确认
- -->
+<!--  删除确认  -->
                             <el-popconfirm
                                 v-if="!item.is_default"
                                 placement="top-end"
@@ -45,7 +43,6 @@
                                 @confirm="category_delete(item)"
                             >
                                 <a href="javascript:void(0)" slot="reference">
-
                                     <el-dropdown-item divided icon="el-icon-delete">
                                         {{$t('message').editor.wenji_delet_menu}}
                                     </el-dropdown-item>
@@ -55,10 +52,7 @@
                     </el-dropdown>
                 </li>
             </ul>
-            <!-- <user-index-sort :data="sortList"></user-index-sort> -->
-            <!-- <div class="collection-list mt-3">
-                <collection-list v-bind:data="collectionList" :userdata="false" title="文集"></collection-list>
-            </div> -->
+            
         </div>
         <div class="col-sm-9 col-12">
             <div></div>
@@ -73,24 +67,22 @@
                 </li>
             </ul>
             </div> -->
-            <div v-if="articleList.length>0"
+            <div 
             v-infinite-scroll="getArticleList"
             infinite-scroll-disabled="noMore"
             infinite-scroll-distance="50">
                <div class="list_item row" v-for="item in articleList" :key="item.id">
-                   <div class="col-10">
-                       
-                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.visible!==-1?'black':'grey'}">
-                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.visible!==-1">
+                   <div class="col-10" @click="$router.push(item.postID===0?'/blog/my/editor':'/blog/p/'+item.postID)">
+                       <h5 style="margin:0;" class="text-truncate" :style="{color:item.postID!==0?'black':'grey'}">
+                           <el-tooltip content="已发布的博文" placement="top"  effect="light" v-if="item.postID!==0">
                                 <i class="el-icon-document-checked"></i>
                            </el-tooltip>
-                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.visible===-1">
+                           <el-tooltip content="未发布的草稿" placement="top"  effect="light" v-if="item.postID===0">
                                 <i class="el-icon-document" style="color:gray"></i>
                            </el-tooltip>
-                           <!-- <el-tooltip content="已发布的博文再编辑状态，在发布更新之前不影响已发布的文章" placement="top"  effect="light" v-if="item.visible==-2">
-                                <i class="el-icon-document-copy" style="color:gray"></i>
-                           </el-tooltip> -->
-                           {{item.postInfo_postID.title}}</h5>
+                           {{item.postInfo_postID.title}}
+                           <small v-if="item.postID===0">(草稿)</small>
+                        </h5>
                        <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
                        
                    </div>
@@ -101,8 +93,8 @@
                         placement="top-end"
                         confirm-button-text="刪除"
                         cancel-button-text='取消'
-                        :title="item.visible==1?'确定删除这篇文章吗？':item.visible==-1?'确定删除这篇草稿吗？':'此操作会将已发布文章和正在编辑的草稿一并删除。是否继续！！！'"
-                        :hide-icon="item.visible==-2?false:true"
+                        :title="item.postID!==0?'确定删除这篇文章吗？':'确定删除这篇草稿吗？'"
+                        :hide-icon="true"
                         @confirm="delArticle(item)"
                         >
                         <el-button type="text" icon="el-icon-delete" slot="reference">删除</el-button>
@@ -129,6 +121,8 @@
                     placeholder="输入博文目录名">
                     </el-input>
                 </el-form-item>
+                <el-radio v-model="form.is_publish" :label="1">公开目录</el-radio>
+                <el-radio v-model="form.is_publish" :label="0">隐藏目录</el-radio>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -138,7 +132,7 @@
     </div>
 </template>
 <script>
-// import MainMenu from '../../pages/components/Main/MainMenu.vue';
+import {  Radio } from "element-ui";
 // import ArticleListItem from '../../pages/components/Main/ArticleListItem.vue';
 import UserIndexSort from '../../pages/components/Main/UserIndexSort.vue';
 // import CollectionList from '../../pages/components/Main/CollectionList.vue';
@@ -152,14 +146,11 @@ import blog from '../../blog.service';
 export default {
   name: 'blog-user-index',
   components: {
-    // MainMenu,
-    // ArticleListItem,
-    // CollectionList,
-    // IndexHeader,
+    [Radio.name]:Radio,
     RegistBlog,
   },
   mounted() {
-    blog.category_list(this.userID).then(res=>{
+    this.$store.state.user.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
         console.log(this.collectionList);
         this.changeTab(this.collectionList[0].id)
@@ -171,31 +162,36 @@ export default {
     changeTab(id){
         this.currentTabId = id;
         this.lastID.article = 0;
-        this.articlelists = [];
+        this.articleList = [];
         this.getArticleList();
     },
     getArticleList(){
-        blog.category_article_list(this.currentTabId,0).then(res=>{
+        this.loading.article=true;
+        blog.category_article_list(this.currentTabId,this.lastID.article).then(res=>{
           // 需要完善翻頁
-          
-          this.articleList = res.data.filter(obj=>obj.visible!=0);
-          this.articleList.forEach(item=>{
-            if(item.postInfo_postID.title==""){
-              item.postInfo_postID.title = this.$t('message').editor.title_ph
-            }
-          })
-          console.log(this.articleList,res);
-          this.loading.article=false;
+          this.getList(res);console.log(res)
+        //   this.articleList = res.data.filter(obj=>obj.visible!=0);
+        //   this.articleList.forEach(item=>{
+        //     if(item.postInfo_postID.title==""){
+        //       item.postInfo_postID.title = this.$t('message').editor.title_ph
+        //     }
+        //   })
+
         })
     },
     getList(res){
         if(res.status){
-            let arr = res.data;
+            let arr = res.data.filter(obj=>obj.visible!=0);;
             this.noMore = arr.length<30 ? true : false;
-            this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
-            this.articlelists = this.articlelists.concat(arr) ;
+            this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
+            this.articleList = this.articleList.concat(arr) ;
             this.loading.article=false;
             console.log(arr);
+            this.articleList.forEach(item=>{
+                if(item.postInfo_postID.title==""){
+                    item.postInfo_postID.title = this.$t('message').editor.title_ph
+                }
+            })
         }
     },
     addCategory(){
@@ -203,7 +199,7 @@ export default {
             console.log(valid)
             if (valid) {
                 this.btnDisable = true;
-                blog.category_add(this.form.name).then(res=>{
+                blog.category_add(this.form.name,this.form.is_publish).then(res=>{
                     console.log(res);
                     if(res.status){
                         this.getCategories(this.userID);
@@ -216,7 +212,7 @@ export default {
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.btnDisable = true;
-            blog.category_update(this.form.name,item.id).then(res=>{
+            blog.category_update(this.form.name,this.form.is_publish,item.id).then(res=>{
               if(res.status){
                 this.getCategories(this.userID);
               }
@@ -251,17 +247,15 @@ export default {
         console.log(this.collectionList);
     },
     delArticle(item){
-        if(item.visible==1 || item.visible==-2){
-        console.log(item.visible);
+        if(item.postID!==0){
           blog.article_delete(item.postID,0).then(res=>{
             if(res.status){
               this.getArticleList();
               this.getCategories(this.userID);
             }
           })
-        }
-        if(item.visible==-1 || item.visible==-2){
-          blog.draft_delete(item.id).then(res=>{
+        }else{
+          this.$store.state.user.draft_delete(item.postID).then(res=>{
             if(res.status){
               this.getArticleList();
             }
@@ -269,20 +263,22 @@ export default {
         }
     },
     getCategories(id){
-        blog.category_list(id).then(res=>{
+        this.$store.state.user.category_list(id).then(res=>{
           console.log(res);
           if(res.status){
             this.collectionList = res.data;
           }
           this.btnDisable = false;
           this.form.name = '';
+          this.form.is_publish = 1;
           this.dialogFormVisible = false;
         })
       },
     openDialog(item){
         this.item = item
-        this.formTitle = item?"修改目录名":"新建博文目录" ;
+        this.formTitle = item?"目录设置":"新建博文目录" ;
         this.form.name = item?item.name:''
+        this.form.is_publish = item?item.is_publish:1
         this.dialogFormVisible = true
         console.log(this.item)
     },
@@ -293,19 +289,21 @@ export default {
             this.addCategory()
         }
     },
-    goeditor(item){
-        let url = item.visible===1?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.id;
+    goeditor(item){console.log(item)
+        let url = '/blog/my/editor/'
+        url+=item.postID===0?'':'?postid='+item.postID;
         this.$router.push(url);
     }
-    
   },
   data() {
     var checkNameSame = (rule, value, callback) =>{
-        this.collectionList.forEach(item=>{
-            if(item.name === value){
-                return callback(new Error('与现有目录名重复'))
-            }
-        })
+        if(this.item==0){
+            this.collectionList.forEach(item=>{
+                if(item.name === value){
+                    return callback(new Error('与现有目录名重复'))
+                }
+            })
+        }
         callback()
     }
     return {
@@ -323,7 +321,8 @@ export default {
         item:0,
         shiftable:true,
         form:{
-            name:''
+            name:'',
+            is_publish:1
         },
         rules:{
             name:[

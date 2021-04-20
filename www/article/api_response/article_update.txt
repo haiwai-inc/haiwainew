@@ -9,11 +9,10 @@ $article_data=[
     ],
     "postID"=>144816,
     "typeID"=>1,
-    "draftID"=>1,
     "is_comment"=>1,
+    'is_publish'=>1,
 ];
 $module_data=[
-    "edit"=>true,
     "bloggerID"=>3,
     "categoryID"=>1,
 ];

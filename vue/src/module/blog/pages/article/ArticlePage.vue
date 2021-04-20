@@ -5,10 +5,11 @@
         <main-menu ></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-8 col-12" v-if="showpage">
-          <div v-if="!articleDetail.status" class="text-center text-warning">{{articleDetail.error}}</div>
-          <div v-if="articleDetail.status">
-            <h4>{{articleDetail.data.postInfo_postID.title}}</h4>
+        <div v-if="!articleDetail.status" class="text-center text-warning mb-4"><h4>{{articleDetail.error}}</h4></div>
+        <div class="col-sm-8 col-12" v-if="articleDetail.status">
+          
+          <div>
+            <h4>{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.is_publish===0" class="text-muted">（隐）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
@@ -112,7 +113,7 @@
           </div>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
-        <div class="col-sm-4 d-none d-sm-block" v-if="showpage">
+        <div class="col-sm-4 d-none d-sm-block" v-if="articleDetail.status">
          <!-- r1 -->
             <div class="box my-3">
               <span class="blogger-box">
@@ -216,28 +217,31 @@ export default {
   },
   methods:{
     article_view(){
-      this.showpage = false;
       this.showcomment = false;
       let postid = this.$route.params.id
       blog.article_view(postid).then(res=>{
         this.articleDetail = res;console.log(res);
-        let descrip = res.data.postInfo_postID.msgbody
-        this.shareItem.title = res.data.postInfo_postID.title;
-        this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
-        this.showpage = true;
-        this.initRecommendProp(res);
-        this.getNewArticle(res,0);
-        this.getComment();
+        if(res.status){
+          let descrip = res.data.postInfo_postID.msgbody
+          this.shareItem.title = res.data.postInfo_postID.title;
+          this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
+          this.initRecommendProp(res);
+          this.getNewArticle(res,0);
+          this.getComment();
+        }
       });
     },
     initRecommendProp(res){
-      var arr = res.data.postInfo_postID.tags;
+      var arr = [];
+      res.data.postInfo_postID.tags.forEach(r=>{
+        arr.push(r.id)
+      });
       this.recommend.props.tags = arr.length>0?arr.toString():''
       this.recommend.props.lastID = 0;
       this.getRecommend()
     },
     getRecommend(){
-      blog.hot_article_list(this.recommend.props.tags,this.recommend.props.lastID).then(res=>{
+      blog.article_list_tag(this.recommend.props.tags).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data
@@ -352,7 +356,7 @@ export default {
       })
     },
     gotoEditor(item){
-      let url = item.draftID==0?'/blog/my/editor/?postid='+item.postID:'/blog/my/editor/?draftid='+item.draftID;
+      let url = '/blog/my/editor/?postid='+item.postID;
       this.$router.push(url);
     },
     article_delete(item){
@@ -369,7 +373,6 @@ export default {
       icons:icons,
       loginuserID:-1,
       showcomment:false,
-      showpage:false,
       articleDetail: {},
       comment:[],
       replymsgbody:"",

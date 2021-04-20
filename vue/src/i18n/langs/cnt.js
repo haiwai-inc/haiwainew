@@ -36,7 +36,7 @@ const cnt = {
             menu_accout:"賬號設置",
             menu_blacklist:"黑名單",
             blog_title:"博客設置",
-            blog_bgimg_btn:"修改博客頭像背景",
+            blog_bgimg_btn:"修改博客背景",
             blog_name:"博客名",
             blog_name_ph:"博客名",
             blog_descript:"博客簡介",

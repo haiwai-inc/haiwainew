@@ -23,8 +23,10 @@
         
         <div class="d-flex justify-content-between py-2" ref="titleBox">
           <input
+            ref="editor_title"
             class="editorTitle"
             type="text"
+            autofocus
             v-model="curentArticle.postInfo_postID.title"
             :placeholder="$t('message').editor.title_ph"
           />
@@ -39,71 +41,70 @@
         />
         
       </div>
-      <div class="col-md-3" style="padding-top:75px">
-        <div ref="saving" style="font-size:13px;padding-left:8px;">
-          <span v-if="flags.autosaving">{{$t('message').editor.autosaving}}</span> 
-          <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+      <div class="col-md-3" style="padding-top:30px">
+        <div>
+          <el-button type="text" link v-bind:style="{paddingRight:0 }" @click="$router.push('/blog/my/')"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
         </div>
+        
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
-        <el-select v-if="wenjiList.length>0" v-model="curentArticle.categoryID" placeholder="请选择">
+        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="watchModify">
           <el-option
-            v-for="item in wenjiList"
+            v-for="item in categoryList"
             :key="item.id"
-            :label="item.name"
+            :label="item.is_publish?item.name:item.name+' (隐)'"
             :value="item.id">
           </el-option>
         </el-select>
         
-        <div class="py-5">
-          <span>文章标签：</span>
+        <div class="py-4">
+          <div class="mb-2">
+            <span>博文标签：</span>
+            <!-- <span class="text-muted" style="font-size:0.85rem">（可多选）</span> -->
+          </div>
           <el-tag
             class="mr-2 mb-2"
             v-for="(item,index) in curentArticle.postInfo_postID.tags" :key="item.id"
             closable
+            effect="plain"
             :disable-transitions="false"
             @close="removetag(index)">
             {{item.name}}
           </el-tag>
-          <el-input
+          <el-autocomplete
             class="input-new-tag"
             v-if="inputVisible"
             v-model="tag"
             ref="saveTagInput"
-            size="small"
+            placeholder="请输入标签"
+            :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
+            @select="handleSelect"
+            @blur="tag?'':inputVisible=false"
           >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加新标签</el-button>
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.name }}</div>
+          </template>
+          <el-button slot="append" round icon="el-icon-plus" :disabled="tag==''" @click="handleInputConfirm"></el-button>
+          </el-autocomplete>
+          <el-button v-else round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
         </div>
         <div class="pb-5">
           可否评论：
-          <el-radio v-model="curentArticle.is_comment" :label="1">是</el-radio>
-          <el-radio v-model="curentArticle.is_comment" :label="0">否</el-radio>
+          <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
+          <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
       </div>
       <div class="col-12">
         <div class="mt-2 text-muted">注：发表博客文章时请不要提供广告信息或不友好信息，本站保留拒绝的权利。</div>
-        <!-- <textarea id="editorText"> -->
-        <!-- </textarea>发布按钮显示条件(curentArticle.visible!==1&&curentArticle.postInfo_postID.title!='') -->
-        <div ref="saveBox" class="m-2">
-          <!-- <n-button v-if="curentArticle.postInfo_postID.title!=''"
-            type="primary"
-            round
-            simple
-            @click.native="modals.publish=true"
-            class="editbtn"
-          >
-            {{curentArticle.visible==-1?'发布文章':'更新文章'}}
-          </n-button> -->
-          <el-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+        <div ref="saveBox" class="m-2" v-if="curentArticle.isDraft">
+          <el-button v-if="curentArticle.postID==0" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布文章
           </el-button>
-          <el-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
+          <el-button v-if="curentArticle.postID!==0" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
             发布更新
           </el-button>
-          <el-popconfirm
+          <el-popconfirm v-if="curentArticle.postID!==0"
             placement="top-end"
             confirm-button-text="放弃"
             cancel-button-text='取消'
@@ -111,19 +112,28 @@
             :hide-icon="true"
             @confirm="draft_delete(curentArticle)"
             >
-            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{curentArticle.visible==-1?'放弃草稿':'放弃编辑'}}</el-button>
+            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{'放弃编辑'}}</el-button>
           </el-popconfirm>
-          
-        </div>
-          <!-- <n-button 
-            type="primary" 
-            round 
-            simple 
-            @click="save"
-            class="editbtn"
+          <el-button v-if="curentArticle.postID==0" round @click="draft_update">
+              保存草稿
+          </el-button>
+          <div ref="saving" style="font-size:13px;padding-left:8px;display:inline">
+            <span v-if="flags.autosaving" class="text-muted">{{$t('message').editor.autosaving}}</span> 
+            <span v-if="flags.autosaved" class="text-success">{{$t('message').editor.autosaved}}</span>
+          </div>
+          <el-popconfirm v-if="curentArticle.postID==0"
+            placement="top-end"
+            confirm-button-text="清空"
+            cancel-button-text='取消'
+            :title="'您要清空草稿的标题和内容吗？'"
+            :hide-icon="true"
+            @confirm="draft_refresh()"
             >
-              <icon-plus class="editicon"></icon-plus>保存
-            </n-button> -->
+            <el-button round type="text"  slot="reference">
+              清空草稿内容
+            </el-button>
+          </el-popconfirm>
+        </div>
       </div>
     </div>
   </div>
@@ -131,13 +141,15 @@
     <el-form :model="categoryForm" :rules="rules" ref="categoryForm">
         <el-form-item label="" prop="name">
             <el-input 
-            v-model="categoryForm.name" 
-            autocomplete="off" 
-            maxlength="16" 
-            show-word-limit 
-            placeholder="输入博文目录名">
+              v-model="categoryForm.name" 
+              autocomplete="off" 
+              maxlength="16" 
+              show-word-limit 
+              placeholder="输入博文目录名">
             </el-input>
         </el-form-item>
+        <el-radio v-model="categoryForm.is_publish" :label="1">公开目录</el-radio>
+        <el-radio v-model="categoryForm.is_publish" :label="0">隐藏目录</el-radio>
     </el-form>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -178,7 +190,7 @@ import Editor from '@tinymce/tinymce-vue'
 // import CategoryArticleList from "./components/CategoryArticleList";
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem, Tag, Select, Option, Radio} from "element-ui";
+import { Collapse, CollapseItem, Tag, Select, Option, Radio, Autocomplete} from "element-ui";
 // import {
 //   IconX,
 // } from "@/components/Icons";
@@ -233,6 +245,7 @@ export default {
     [Select.name]:Select,
     [Option.name]:Option,
     [Radio.name]:Radio,
+    [Autocomplete.name]: Autocomplete,
     // HaiwaiLogoWhite,
     // IconX,
     'editor': Editor,
@@ -242,42 +255,29 @@ export default {
       this.tags = []
       this.curentArticle.postInfo_postID.tags.forEach(item=>{
         this.tags.push(item.name)
-      })
-      console.log(val)
+      });
+      this.watchModify(val);
     },
     'curentArticle.postInfo_postID.title':function(val){
-      this.watchModify(val)
+      this.watchModify(val);
     },
     'curentArticle.postInfo_postID.msgbody':function(val){
-      this.watchModify(val)
+      this.watchModify(val);
     }
   },
   methods: {
     watchModify(val){
-      this.watchCount+=1;
-      // if(this.curentArticle.visible==1 && this.watchCount>2){
-      //   // 将已发布文章转为草稿
-      //   this.article_to_draft_by_postID();
-
-      // }
-      if(this.curentArticle.visible!==1 && this.watchCount>2){
+      this.watchCount+=1;console.log(this.watchCount);
+      this.changeCategory(val);
+      if(this.curentArticle.isDraft && this.watchCount>3){
+        console.log("草稿")
         this.autoSave()
-      }
+      };
+      if(!this.curentArticle.isDraft && this.watchCount>3){
+        console.log("非草稿")
+        this.draft_add()
+      };
     },
-    // async fetchData() {
-    //   let postid = 0;
-    //   if (this.$route.query.postid != undefined) {
-    //     postid = this.$route.query.postid;
-    //     // this.article = await blog.getArticle(blogid);
-    //     this.article = (
-    //       await blog.article_view(postid)
-    //     ).data.postInfo_postID;
-    //     console.log(this.article);
-    //     this.setEditorContent(this.article.msgbody)
-    //     // $("#summernote").summernote("code", this.article.msgbody);
-    //   }
-    // },
-
     //for editor
     toggleEditorDisabled() {
       this.editorDisabled = !this.editorDisabled;
@@ -305,21 +305,6 @@ export default {
       this.uploadFile("image", blobInfo.base64(), success, failure, progress);
     },
 
-    // addArticle() {
-    //   var newarticle = {
-    //     articleId: 9089,
-    //     title: "新建的文章",
-    //     wordCount: 0,
-    //     isPublished: false,
-    //   };
-    //   this.articleList.unshift(newarticle);
-    //   this.changeMenu(this.wenjiActiveId, newarticle.articleId);
-    // },
-    // changeMenu(wid, aid) {
-    //   this.wenjiActiveId = wid;
-    //   this.articleActiveId = aid;
-    // },
-
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
         blog.uploadMedia(file).then(rs=>{
@@ -340,15 +325,23 @@ export default {
       this.$refs['categoryForm'].validate((valid) => {
         if (valid) {
           this.btnDisable = true;
-          blog.category_add(this.categoryForm.name).then(res=>{
+          blog.category_add(this.categoryForm.name,this.categoryForm.is_publish).then(res=>{
             if(res.status){
-              blog.category_list(this.user.userinfo.bloggerID).then(res=>{
-                this.wenjiList = res.status?res.data:[];
-                this.curentArticle.categoryID = this.wenjiList[0].id
+              this.$store.state.user.category_list(this.user.userinfo.bloggerID).then(res=>{
+                this.categoryList = res.status?res.data:[];
+                this.curentArticle.categoryID = this.categoryList[0].id
                 this.dialogFormVisible = false
               })
             }
           })
+        }
+      })
+    },
+    changeCategory(val){
+      this.categoryList.forEach(item=>{
+        if(item.id==val){
+          this.curentArticle.is_publish = item.is_publish;
+          console.log(this.curentArticle.is_publish,item.is_publish)
         }
       })
     },
@@ -357,42 +350,7 @@ export default {
         this.dialogFormVisible = true
         console.log()
     },
-    setWJid(id){
-      this.wenjiActiveId = id;
-      this.articleActiveId = 0;
-    },
-    setArtid(e){
-      this.articleActiveId = e.id;
-      this.getContent(e);
-      this.watchCount = 0;
-      // if(this.timer){
-        clearTimeout(this.timer);
-      // }
-      this.flags.autosaved = false;
-    },
-    // 获取编辑器内容
-    getContent(e){
-      //visible=undefined 一定是已发布文章；
-       e.visible = e.visible==undefined? 1 : e.visible
-      if(e.visible==1){
-      //   this.user.article_to_draft_by_postID(e.postID).then(res=>{
-      //   console.log(res)
-      //   if(res.status){
-      //     this.curentArticle = res.data
-      //   }
-      // })
-        this.user.article_view(e.postID).then(res=>{
-          this.curentArticle=res.data;
-          // this.autoSave();
-          console.log(this.curentArticle)
-        });
-      }else{
-        this.user.draft_view(e.id).then(res=>{
-          this.curentArticle=res.data;
-          console.log(this.curentArticle)
-        })
-      }
-    },
+    
     // 发布一篇新文章（草稿=>文章）
     publish(){
       let data={
@@ -401,8 +359,10 @@ export default {
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
-          draftID:this.curentArticle.id,
-          is_comment:this.curentArticle.is_comment
+          // draftID:this.curentArticle.id,
+          postID:0,
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           add:true,
@@ -429,7 +389,8 @@ export default {
           postID:this.curentArticle.postID,
           typeID:1,
           draftID:this.curentArticle.id,
-          is_comment:this.curentArticle.is_comment
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           edit:true,
@@ -453,22 +414,16 @@ export default {
       // this.modals.publish = false;
       this.$router.push("/blog/p/"+res.data);
     },
-    article_to_draft_by_postID(){
-      this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
-        console.log(res)
-        if(res.status){
-          this.draft_view(res.data)
-        }
-      })
-    },
     draft_add(){
       let data={
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
+          postID:this.curentArticle.postID,
           typeID:1,
-          is_comment:1
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           add:true,
@@ -476,7 +431,7 @@ export default {
           categoryID:this.curentArticle.categoryID
         }
       };
-      this.user.draft_add(data).then(res=>{
+      this.user.draft_add(data).then(res=>{console.log(res.data)
         this.draft_view(res.data);
       })
     },
@@ -487,8 +442,10 @@ export default {
           msgbody:this.curentArticle.postInfo_postID.msgbody,
           tagname:this.tags,
           typeID:1,
-          draftID:this.curentArticle.id,
-          is_comment:this.curentArticle.is_comment
+          // draftID:this.curentArticle.id,
+          postID:this.curentArticle.postID,
+          is_comment:this.curentArticle.is_comment,
+          is_publish:this.curentArticle.is_publish
         },
         module_data:{
           edit:true,
@@ -505,20 +462,37 @@ export default {
         }
       })
     },
-    draft_view(id){
+    draft_view(postid){
+      let id = postid?postid:0
       this.user.draft_view(id).then(res=>{
         if(res.status){
           this.curentArticle = res.data;
+          // this.curentArticle.draftID = res.data.id;
+          this.curentArticle.categoryID = this.curentArticle.categoryID!=0?this.curentArticle.categoryID:this.categoryList[0].id;//草稿默认加到第一目录里
+          this.curentArticle.isDraft = true;
+        }else{
+          this.curentArticle.isDraft = false;
+          this.article_view(id);
         }
+        this.$refs['editor_title'].focus();
       })
     },
     draft_delete(item){
-        blog.draft_delete(item.id).then(res=>{
-          if(res.status){
-            this.$router.push('/blog/my/')
-          }
-        })
-        
+      this.user.draft_delete(item.postID).then(res=>{
+        if(res.status){
+          this.$router.push('/blog/my/')
+        }
+      })
+    },
+    draft_refresh(){
+      this.curentArticle.postInfo_postID.title='';
+      this.curentArticle.postInfo_postID.msgbody='';
+    },
+    async article_view(id){
+      let res = await this.user.article_view(id);
+      if(res.status){
+        this.curentArticle = res.data;
+      }console.log(this.curentArticle)
     },
     autoSave(){
       clearTimeout(this.timer);
@@ -529,13 +503,23 @@ export default {
       }
     },
 // tag 相关
+    async tagSuggestion(queryString,cb){
+      let results = await this.$store.state.search.get_tags(queryString);
+      console.log(results.data)
+      cb(results.data);
+      // 调用 callback 返回建议列表的数据
+    },
     showInput() {
       this.inputVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
-
+    handleSelect(item) {
+      this.tag = item.name;
+      console.log(item);
+      this.handleInputConfirm();
+    },
     handleInputConfirm() {
       let inputValue = this.tag;
       if (inputValue) {
@@ -590,42 +574,19 @@ export default {
   beforeCreate() {
     this.$store.state.user.getUserStatus().then(r=>{
       if(r.data.bloggerID){
-        blog.category_list(r.data.bloggerID).then(res=>{
-          this.wenjiList = res.status?res.data:[];
-          this.wenjiActiveId = this.wenjiList.length>0?this.wenjiList[0].id:0;
-          console.log(this.wenjiList);
-         
-          if(this.$route.query.postid){
-            // 已发布文章再编辑
-            this.user.article_to_draft_by_postID(this.$route.query.postid).then(res=>{
-              if(res.status){
-                this.draft_view(res.data);
-                // console.log(this.curentArticle);
-              }else{
-                this.$message.error(res.error)
-              }
-              
-              
-            })
-          }else if(this.$route.query.draftid){
-            // 草稿再编辑
-            console.log("草稿再编辑");
-            this.draft_view(this.$route.query.draftid)
-          }else{
-            // 新建草稿
-            console.log("新建草稿");
-            this.curentArticle.categoryID = this.wenjiList[0].id;//草稿默认加到第一目录里
-            this.draft_add();
+        this.$store.state.user.category_list(r.data.bloggerID).then(res=>{
+          this.categoryList = res.status?res.data:[];
+          this.curentArticle.categoryID = this.categoryList[0].id;
+          this.draft_view(this.$route.query.postid);
           }
-        });
-      }else{
+        );
+      }else{// 如果没有开通博客
         this.$router.push('/blog_register');
       }
     });
   },
 
   created() {
-    // this.fetchData();
   },
   mounted() {
     // this.initEditor();
@@ -648,27 +609,36 @@ export default {
 
   data() {
     var checkNameSame = (rule, value, callback) =>{
-        this.wenjiList.forEach(item=>{
-            if(item.name === value){
-                return callback(new Error('与现有目录名重复'))
-            }
-        })
-        callback()
+      this.categoryList.forEach(item=>{
+        if(item.name === value){
+          return callback(new Error('与现有目录名重复'))
+        }
+      })
+      callback()
     };
     let lang = localStorage.lang ? (localStorage.lang == "cns" ? 'zh_CN' :'zh_TW') : 'zh_CN';
     return {
       user:this.$store.state.user,
       iconmore3v: HaiwaiIcons.iconmore3v,
-      wenjiList:[],
+      categoryList:[],
       wenjiActiveId: 0,
       articleActiveId: 0,
-      testID:'',
       activeName: "0",
-      curentArticle:{postInfo_postID:{title:"",msgbody:""},is_comment:1},
+      curentArticle:{
+        isDraft:true,
+        postID:0,
+        categoryID:0,
+        postInfo_postID:{
+          title:"",
+          msgbody:"",
+          tags:[]},
+        is_comment:1
+      },
       tabStatus:{},
       watchCount:0,
       tags:[],
       tag:'',
+      hotTags:[],
       inputVisible:false,
       modals: {
         addwenji: false,
@@ -685,7 +655,7 @@ export default {
         autosaved:false,
       },
       dialogFormVisible:false,
-      categoryForm:{name:''},
+      categoryForm:{name:'',is_publish:1},
       rules:{
         name:[
           {required: true, message: '请输入目录名称', trigger: 'blur'},
@@ -731,7 +701,7 @@ export default {
         // media_poster:false,
         content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;} .origin-img{max-width:100%; height:auto;}',
         video_template_callback : function(data){
-            return "";
+          return "";
         }
       }
     };
@@ -823,10 +793,10 @@ body{
 .publisher .editorTitle{
   font-size: 30px;
   padding: 5px 10px;
-  /* border: 1px solid #d3d3d3; */
-  border:0;
+  border: 1px solid #d3d3d3;
+  /* border:0; */
   width:100%;
-  border-radius: 5px;
+  border-radius: 0px;
 }
 .publisher input.editorTitle:focus{
   color: #495057;
@@ -874,8 +844,8 @@ body{
 }
 
 .publisher h1, h2, h3, h4, h5, h6 {
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  /* text-transform: uppercase; */
+  letter-spacing: 2px;
 }
 
 .publisher h1, .h1 {
@@ -902,14 +872,20 @@ body{
   height:80%
 }
 .input-new-tag {
-    width: 120px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
-  .el-dropdown-link {
-    cursor: pointer;
-    color: #39b8eb;
-  }
+  width: 200px;
+  vertical-align: bottom;
+}
+.input-new-tag .el-input-group__append {
+  background-color: #fff;
+  width:36px;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #39b8eb;
+}
 @media (max-width: 575.98px){
   .publisher .menu1{
     height:auto;

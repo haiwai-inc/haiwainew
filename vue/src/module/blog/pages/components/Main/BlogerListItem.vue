@@ -163,8 +163,9 @@ color: #235592
 .hot-blogger-avatar .avatar-word, .small .avatar-word{
     border-radius: 50%;
     background-color: #eeeeee;
-    
+    line-height: 48px;
     text-align: center;
+    line-heigh: 48px;
     font-weight: 500;
 }
 .hot-blogger-avatar .lable{
@@ -175,11 +176,19 @@ color: #235592
   position: absolute;
   margin-left: 25px;
 }
-.hot-blogger-avatar .avatar-word{
-    width:48px;
-    height:48px;
-    line-height: 48px;
-    font-size: 1.25rem;
+
+.small .lable{
+        position: absolute;
+        margin-left: 20px;
+        margin-top: -14px;
+        transform: rotate(33deg)
+ 
+}
+.hot-blogger-avatar .lable {
+        position: absolute;
+        margin-left: 28px;
+        margin-top: -14px;
+        transform: rotate(27deg)
 }
 .hot-blogger-avatar{
   width:48px;
@@ -190,6 +199,8 @@ color: #235592
 .hot-blogger-avatar img{
   min-width:48px;
   height:48px;
+  box-shadow: rgb(0 0 0 / 2%) 0px 0px 2px inset;
+
 }
 .small img{
     width:36px;
@@ -228,10 +239,10 @@ color: #235592
 }
 .hot-blogger .right .btn .add{
         fill: #35abbb;
-        font-size: 13px;
-        border: 1px solid #35abbb;
+        font-size: 16px;
         border-radius: 20px;
         padding: 3px 13px;
+        font-weight: 600;
 }
 .hot-blogger .right .btn:hover .add{
     fill:#236e85;

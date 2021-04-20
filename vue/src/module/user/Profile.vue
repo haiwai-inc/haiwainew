@@ -4,32 +4,34 @@
       <main-menu type="-1"></main-menu>
     </div>
       <div class="row">
-         <div class="col-sm-4 left-top-nav">
-            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between">
-               <div class="name" >
+         <div class="col-sm-3 left-top-nav">
+            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between"  :style="menuId===0?{color:'#39b8eb', fill: '#39b8eb', background: '#aliceblue'}:''">
+               <div class="name">
                   <icon-blog-set></icon-blog-set>
                   {{$t('message').setting.menu_bolg}}
                </div>
             </div>
-            <div @click="menuId=1" class="left-nav-item d-flex justify-content-between">
+            <div @click="menuId=1" class="left-nav-item d-flex justify-content-between"
+            :style="menuId===1?{color:'#39b8eb', fill: '#39b8eb'}:''">
                <div class="name">
                   <icon-account-set></icon-account-set>
                   {{$t('message').setting.menu_accout}}
                </div>
             </div>
-            <div @click="menuId=2" class="left-nav-item d-flex justify-content-between">
+            <div @click="menuId=2" class="left-nav-item d-flex justify-content-between"
+            :style="menuId===2?{color:'#39b8eb', fill: '#39b8eb'}:''">
                <div class="name">
                   <icon-black-list></icon-black-list>
                   {{$t('message').setting.menu_blacklist}}
                </div>
             </div>
          </div>
-         <div class="col-sm-8 col-12">
+         <div class="col-sm-9 col-12">
             <div v-if="menuId===0 && $store.state.user.bloggerID==0">
                <regist-blog></regist-blog>
             </div>
             <div v-if="menuId===0 && $store.state.user.bloggerID!=0">
-               <h6 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h6>
+               <h5 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h5>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
                      <div class="user-bgup"></div>
@@ -69,11 +71,11 @@
                <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
-               <h6 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h6>
+               <h5 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h5>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
-                  <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:100px;width:100px;text-align:center;font-size:46px;line-height:100px"><b>{{authorInfor.first_letter}}</b></div></span>
-                  <img style="width:100px;height:100px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
+                  <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:150px;width:150px;text-align:center;font-size:46px;line-height:150px"><b>{{authorInfor.first_letter}}</b></div></span>
+                  <img style="width:150px;height:150px;border-radius:50%" :src="authorInfor.avatar" v-if="authorInfor.avatar">
                   <input
                      ref="picInput"
                      type="file"
@@ -135,7 +137,7 @@
                <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
             </div>
             <div v-if="menuId===2">
-               <h6 class="border-bottom pb-3">{{$t('message').setting.black_title}}</h6>
+               <h5 class="border-bottom pb-3">{{$t('message').setting.black_title}}</h5>
                <div class="box my-3">
                   <div v-for="(item,index) in blackList" :key="index" class=" blacklist align-self-center col-12 no-gutters">
                      <div class="d-flex align-self-center">
@@ -188,6 +190,7 @@ export default {
    //  Croppa 
   },
    created(){
+      this.menuId = Number(this.$route.query.id);
       this.user_profile();
       this.getBlackList(0);
       this.getBlogProfile();
@@ -261,7 +264,7 @@ export default {
   },
   methods:{
       toggleShow() {
-            this.show = !this.show;
+         this.show = !this.show;
       },
       initForm(){
          this.signupForm={
@@ -462,6 +465,7 @@ export default {
       }
 
   }
+
 };
 </script>
 
@@ -482,12 +486,15 @@ export default {
         padding: 12px 18px;
         border-bottom: 1px solid #f0f0f0;
         cursor: pointer;
+        color:#5b7083
 }
 .left-nav-item .name {
-  font-size: 1rem;
-  font-weight: 600
+  font-size: 1.2rem;
+  font-weight: 600;
+
 }
-.left-nav-item:hover{color: #39b8eb;
+.left-nav-item:hover{
+        color: #39b8eb;
         fill: #39b8eb
 }
 

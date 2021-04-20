@@ -5,7 +5,7 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-4 d-none d-sm-block">
+        <div class="col-sm-3 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
               <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
@@ -20,6 +20,7 @@
               :class="{active:selectItem.followingID==item.followingID}"
                @click="selected(item)">
                 <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar>
+                 <icon-V class="text-primary lable" v-if="item.userinfo_followingID.is_hot_blogger"></icon-V>
                 <span class="pl-2 ">{{item.userinfo_followingID.username}}</span>
                 <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
               </li>
@@ -27,7 +28,7 @@
             
           </div>
         </div>
-        <div class="col-sm-8 col-12">
+        <div class="col-sm-9 col-12">
           <div v-if="articlelists.length>0">
             <div v-if="selectItem.followingID==0">
               <article-list-item 
@@ -57,6 +58,9 @@
   </div>
 </template>
 <script>
+import {
+    IconV
+} from '@/components/Icons';
 import MainMenu from './components/Main/MainMenu';
 import ArticleListItem from './components/Main/ArticleListItem';
 import Avatar from  './components/Main/Avatar';
@@ -77,6 +81,7 @@ export default {
     IconBloggerBg,
     IndexHeader,
     BlogerListItem,
+    IconV
   },
   watch:{
     '$store.state.user.userinfo':function(){
@@ -110,8 +115,7 @@ export default {
     },
     async getBloggers(){
       let arr = await blog.hot_blogger();
-      this.hotBlobbers = arr.data.data
-      console.log(this.hotBlobbers)
+      this.hotBlobbers = arr.data;
     },
   },
   data() {
@@ -145,6 +149,12 @@ export default {
   cursor: pointer;
   font-size: 17px;
   color: #425466
+}
+.followed-blogger svg.text-primary.lable {
+        position: absolute;
+        margin-left: 25px;
+        margin-top: -46px;
+        transform: rotate(34deg)
 }
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;
