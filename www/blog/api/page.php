@@ -159,7 +159,7 @@ class page extends Api {
             'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
-            'order'=>['edit_date'=>'DESC']
+            'order'=>['create_date'=>'DESC']
         ];
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
@@ -288,7 +288,7 @@ class page extends Api {
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //未公开
-        if(empty($_SESSION['id']) || (empty($rs_article_indexing['is_publish']) && $rs_article_indexing['userID']!=$_SESSION['id']))  {$this->error="此文章不存在";$this->status=false;return false;}
+        //if(empty($_SESSION['id']) || (empty($rs_article_indexing['is_publish']) && $rs_article_indexing['userID']!=$_SESSION['id']))  {$this->error="此文章不存在";$this->status=false;return false;}
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");

@@ -140,7 +140,7 @@ export default {
         {
           id: 3,
           icon:icons.notice,
-          title: "文集",
+          title: "目录",
           noticeList: [],
           unread: "",
         },
