@@ -159,7 +159,7 @@ class page extends Api {
             'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
-            'order'=>['edit_date'=>'DESC']
+            'order'=>['create_date'=>'DESC']
         ];
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
