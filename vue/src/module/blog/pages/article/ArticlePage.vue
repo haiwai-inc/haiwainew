@@ -5,10 +5,11 @@
         <main-menu ></main-menu>
       </div>
       <div class="row">
-        <div class="col-sm-8 col-12">
-          <div v-if="!articleDetail.status" class="text-center text-warning mb-4"><h4>{{articleDetail.error}}</h4></div>
-          <div v-if="articleDetail.status">
-            <h4>{{articleDetail.data.postInfo_postID.title}}</h4>
+        <div v-if="!articleDetail.status" class="text-center text-warning mb-4"><h4>{{articleDetail.error}}</h4></div>
+        <div class="col-sm-8 col-12" v-if="articleDetail.status">
+          
+          <div>
+            <h4>{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.is_publish===0" class="text-muted">（隐）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>

@@ -268,10 +268,7 @@ export default {
   methods: {
     watchModify(val){
       this.watchCount+=1;console.log(this.watchCount);
-      // if(this.curentArticle.visible==1 && this.watchCount>2){
-      //   // 将已发布文章转为草稿
-      //   this.article_to_draft_by_postID();
-      // }
+      this.changeCategory(val);
       if(this.curentArticle.isDraft && this.watchCount>3){
         console.log("草稿")
         this.autoSave()
@@ -337,6 +334,14 @@ export default {
               })
             }
           })
+        }
+      })
+    },
+    changeCategory(val){
+      this.categoryList.forEach(item=>{
+        if(item.id==val){
+          this.curentArticle.is_publish = item.is_publish;
+          console.log(this.curentArticle.is_publish,item.is_publish)
         }
       })
     },
