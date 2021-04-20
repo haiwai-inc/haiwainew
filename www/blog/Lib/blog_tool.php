@@ -290,7 +290,7 @@ class blog_tool{
                 "bloggerID"=>$rs['blogger_new']['id'],
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
                 'count_article'=>1,
-                'is_publish'=>$rs_blog_legacy_blogcat_members['visible']
+                'is_publish'=>empty($rs_blog_legacy_blogcat_members['visible'])?0:1
             ];
             if($field['name']=="我的文章"){
                 $field['is_default']=1;
