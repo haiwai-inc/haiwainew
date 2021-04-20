@@ -31,7 +31,7 @@ class page extends Api {
     /**
      * 二级页面 
      * 推荐 文章
-     * @param integer $lastID | 最后一个id
+     * @param integer $lastID | 最后一个postID
      * @param integer $limit | 分页数
      */
     public function recommend_article($lastID=0,$limit=30){
@@ -43,7 +43,7 @@ class page extends Api {
             'order'=>['id'=>'DESC']
         ];
         if(!empty($lastID)){
-            $fields['id,<']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         
         $rs_blog_recommend=$obj_blog_recommend->getAll("*",$fields);
