@@ -759,9 +759,9 @@
       editor.dom.setAttrib(insertedElm, 'data-mce-id', null);
       if (isFigure(insertedElm)) {
         var figure = splitTextBlock(editor, insertedElm);
-        editor.selection.select(figure);
+        // editor.selection.select(figure);
       } else {
-        editor.selection.select(insertedElm);
+        // editor.selection.select(insertedElm);
       }
     };
     var syncSrcAttr = function (editor, image) {
