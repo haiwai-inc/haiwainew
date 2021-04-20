@@ -69,7 +69,7 @@ export default {
     "$route.params.id":function(val){
         this.userID = this.$route.params.id;
         this.articlelists = [];
-        this.loadArticle(this.currentTabId);
+        this.loadArticle();
         blog.category_list(this.userID).then(res=>{
             this.collectionList=res.data;
             this.$forceUpdate();
@@ -80,7 +80,7 @@ export default {
     }
   },
   created () {
-    this.loadArticle(this.currentTabId);
+    this.loadArticle();
     blog.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
         console.log(res,this.token);
@@ -94,20 +94,20 @@ export default {
         this.currentTabId = id;
         this.lastID.article = 0;
         this.articlelists = [];
-        this.loadArticle(this.currentTabId);
+        this.loadArticle();
       },
       loadArticle(id){
-        if(id==0){
+        if(this.currentTabId==0){
             blog.article_list_recent(this.userID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
         };
-        if(id==1){
+        if(this.currentTabId==1){
             blog.article_list_hot(this.userID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
         };
-        if(id==2){
+        if(this.currentTabId==2){
             blog.article_list_comment(this.userID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
@@ -117,7 +117,7 @@ export default {
             if(res.status){
                 let arr = res.data;
                 this.noMore = arr.length<30 ? true : false;
-                this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
+                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].id ;
                 this.articlelists = this.articlelists.concat(arr) ;
                 this.loading.article=false;
                 console.log(arr,this.lastID,this.noMore);

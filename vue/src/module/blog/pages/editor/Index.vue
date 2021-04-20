@@ -470,7 +470,6 @@ export default {
           // this.curentArticle.draftID = res.data.id;
           this.curentArticle.categoryID = this.curentArticle.categoryID!=0?this.curentArticle.categoryID:this.categoryList[0].id;//草稿默认加到第一目录里
           this.curentArticle.isDraft = true;
-          console.log(this.curentArticle,id)
         }else{
           this.curentArticle.isDraft = false;
           this.article_view(id);
@@ -577,8 +576,7 @@ export default {
       if(r.data.bloggerID){
         this.$store.state.user.category_list(r.data.bloggerID).then(res=>{
           this.categoryList = res.status?res.data:[];
-          this.curentArticle.categoryID = this.categoryList[0].id
-          console.log(this.categoryList);
+          this.curentArticle.categoryID = this.categoryList[0].id;
           this.draft_view(this.$route.query.postid);
           }
         );
