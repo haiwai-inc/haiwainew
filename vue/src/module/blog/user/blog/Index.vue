@@ -67,7 +67,7 @@
                 </li>
             </ul>
             </div> -->
-            <div v-if="articleList.length>0"
+            <div 
             v-infinite-scroll="getArticleList"
             infinite-scroll-disabled="noMore"
             infinite-scroll-distance="50">
@@ -162,31 +162,36 @@ export default {
     changeTab(id){
         this.currentTabId = id;
         this.lastID.article = 0;
-        this.articlelists = [];
+        this.articleList = [];
         this.getArticleList();
     },
     getArticleList(){
-        blog.category_article_list(this.currentTabId,0).then(res=>{
+        this.loading.article=true;
+        blog.category_article_list(this.currentTabId,this.lastID.article).then(res=>{
           // 需要完善翻頁
-          
-          this.articleList = res.data.filter(obj=>obj.visible!=0);
-          this.articleList.forEach(item=>{
-            if(item.postInfo_postID.title==""){
-              item.postInfo_postID.title = this.$t('message').editor.title_ph
-            }
-          })
-          console.log(this.articleList,res);
-          this.loading.article=false;
+          this.getList(res);console.log(res)
+        //   this.articleList = res.data.filter(obj=>obj.visible!=0);
+        //   this.articleList.forEach(item=>{
+        //     if(item.postInfo_postID.title==""){
+        //       item.postInfo_postID.title = this.$t('message').editor.title_ph
+        //     }
+        //   })
+
         })
     },
     getList(res){
         if(res.status){
-            let arr = res.data;
+            let arr = res.data.filter(obj=>obj.visible!=0);;
             this.noMore = arr.length<30 ? true : false;
-            this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
-            this.articlelists = this.articlelists.concat(arr) ;
+            this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
+            this.articleList = this.articleList.concat(arr) ;
             this.loading.article=false;
             console.log(arr);
+            this.articleList.forEach(item=>{
+                if(item.postInfo_postID.title==""){
+                    item.postInfo_postID.title = this.$t('message').editor.title_ph
+                }
+            })
         }
     },
     addCategory(){

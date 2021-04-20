@@ -80,7 +80,7 @@ export default {
     }
   },
   created () {
-    this.loadArticle();
+    // this.loadArticle();
     blog.category_list(this.userID).then(res=>{
         this.collectionList=res.data;
         console.log(res,this.token);
@@ -96,7 +96,7 @@ export default {
         this.articlelists = [];
         this.loadArticle();
       },
-      loadArticle(id){
+      loadArticle(){
         if(this.currentTabId==0){
             blog.article_list_recent(this.userID,this.lastID.article).then(res=>{
                 this.getList(res);
@@ -117,7 +117,7 @@ export default {
             if(res.status){
                 let arr = res.data;
                 this.noMore = arr.length<30 ? true : false;
-                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].id ;
+                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
                 this.articlelists = this.articlelists.concat(arr) ;
                 this.loading.article=false;
                 console.log(arr,this.lastID,this.noMore);

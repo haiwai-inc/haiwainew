@@ -10,8 +10,11 @@ $blog_category = load("blog_category");
 $first_update_time = 0;
 $iter = 0;
 $total = 0;
+
+// 更新标签
 while(true){    
     $tags = $article_tag->getAll("*", ["limit"=>[$iter*200,200]]);
+    
     if(count($tags)==0){
         break;
     }
@@ -23,6 +26,8 @@ while(true){
 
 $iter = 0;
 $total = 0;
+
+// 更新文集
 while(true){    
     $categories = $blog_category->getAll("*", ["limit"=>[$iter*200,200]]);
     if(count($categories)==0){

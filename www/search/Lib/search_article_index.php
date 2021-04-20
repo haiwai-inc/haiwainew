@@ -96,6 +96,9 @@ class search_article_index extends Search
 				  },
 				  "visible": { 
 					"type": "integer"
+				  },
+				  "is_publish":{
+					"type": "integer"
 				  }
 				}
 			  }
@@ -223,6 +226,7 @@ class search_article_index extends Search
 			"msgbody" => $article['msgbody'],
 			"tags"    => $article['tags'],
 			"visible" => $article['visible'],
+			"is_publish" => $article['is_publish'],
 			"create_date"    => $this-> get_time_string($article['create_date']),
 			"edit_date"    => $this-> get_time_string($article['edit_date']),
 			"buzz_date"    => $this-> get_time_string($article['buzz_date']),
@@ -270,6 +274,7 @@ class search_article_index extends Search
                     "edit_date"    => $this-> get_time_string($article['edit_date']),
                     "buzz_date"    => $this-> get_time_string($article['buzz_date']),
 					"visible" => $article['visible'],
+					"is_publish" => $article['is_publish'],
 					"count_read"=>$article['count_read'],
 					"count_buzz"=>$article['count_buzz'],
 					"pic" => $article['pic'],
@@ -314,7 +319,8 @@ class search_article_index extends Search
 			
 			$query["should"] =[$this->object(array("match" => array("title"=>$keyword))),$this->object(array("match" => array("msgbody"=>$keyword)))];
 			$query["must_not"]=array(
-				$this->object(array("term" => array("visible"=>0)))
+				$this->object(array("term" => array("visible"=>0))),
+				$this->object(array("term" => array("is_publish"=>0)))
 			);
 
 			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc") ,"postID"=>array("order"=>"desc"),"edit_date"=>array("order"=>"desc")))];

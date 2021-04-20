@@ -754,14 +754,15 @@
       }, data);
       editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
       editor.focus();
-      editor.selection.setContent(elm.outerHTML);
+      console.log(elm.outerHTML);
+      editor.selection.setContent(elm.outerHTML + "<br>");
       var insertedElm = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
       editor.dom.setAttrib(insertedElm, 'data-mce-id', null);
       if (isFigure(insertedElm)) {
         var figure = splitTextBlock(editor, insertedElm);
-        editor.selection.select(figure);
+        // editor.selection.select(figure);
       } else {
-        editor.selection.select(insertedElm);
+        // editor.selection.select(insertedElm);
       }
     };
     var syncSrcAttr = function (editor, image) {
@@ -788,16 +789,19 @@
       if (isFigure(image.parentNode)) {
         var figure = image.parentNode;
         splitTextBlock(editor, figure);
-        editor.selection.select(image.parentNode);
+        // editor.selection.select(image.parentNode);
+        console.log("haha")
       } else {
-        editor.selection.select(image);
+        // editor.selection.select(image);
         waitLoadImage(editor, data, image);
+        console.log("hehe")
       }
     };
     var insertOrUpdateImage = function (editor, partialData) {
       var image = getSelectedImage(editor);
       if (image) {
         var selectedImageData = read(function (css) {
+          // console.log("haha");
           return normalizeCss(editor, css);
         }, image);
         var data = __assign(__assign({}, selectedImageData), partialData);
@@ -807,6 +811,7 @@
           deleteImage(editor, image);
         }
       } else if (partialData.src) {
+        console.log("hihi")
         insertImageAtCaret(editor, __assign(__assign({}, defaultData()), partialData));
       }
     };

@@ -29,7 +29,7 @@
             </div>
             <div
             v-infinite-scroll="loadArticle"
-            infinite-scroll-disabled="noMore"
+            infinite-scroll-disabled="disabled"
             infinite-scroll-distance="50">
                 <article-list-item 
                 v-for="item in articlelists"
@@ -72,13 +72,13 @@ export default {
     blog.category_list(this.userID).then(res=>{
       this.collectionList=res.data;
       console.log(res.data);
-      this.loadArticle(this.catID);
+      this.loadArticle();
     })
   },
   watch:{
     '$route.params.catid':function(val){
       console.log(val)
-      this.loadArticle(val)
+      this.loadArticle()
     }
   },
   methods:{
@@ -88,34 +88,26 @@ export default {
         this.articlelists = [];
         this.loadArticle(this.currentTabId);
       },
-      loadArticle(id){
+      loadArticle(){
         this.loading.article=true;
-        blog.pubcat_article_list(id,0).then(res=>{
-          if(res.status){
-            this.articlelists=res.data
-            this.loading.article=false;
-          }
-          if(this.articlelists.length<30){
-            this.noMore=true;
-          }else{
-            this.noMore=false;
-          }
+        blog.pubcat_article_list(this.catID,this.lastID.article).then(res=>{
+          this.getList(res);
         })
         this.collectionList.forEach(item=>{
-          if(item.id==id){
+          if(item.id==this.catID){
             this.currentCat=item
           }
         })
       },
       getList(res){
-            if(res.status){
-                let arr = res.data;
-                this.noMore = arr.length<30 ? true : false;
-                this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
-                this.articlelists = this.articlelists.concat(arr) ;
-                this.loading.article=false;
-                // console.log(arr,this.lastID,this.noMore);
-            }
+        if(res.status){
+          let arr = res.data;
+          this.noMore = arr.length<30 ? true : false;
+          this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
+          this.articlelists = this.articlelists.concat(arr) ;
+          this.loading.article=false;
+          // console.log(arr,this.lastID,this.noMore);
+        }
       },
       getBloggerInfo(){
         blog.blogger_info(this.userID).then(res=>{

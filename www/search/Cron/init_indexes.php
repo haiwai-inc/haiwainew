@@ -12,6 +12,7 @@ if (count($argv) < 2) {
         exit;
     }
 }
+
 $target = "all";
 if (count($argv) > 2) {
     $target = $argv[2];
