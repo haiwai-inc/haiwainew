@@ -55,7 +55,7 @@ class publish_article_timer{
                 //添加文章为博客类型
                 if($article_data['typeID']==1){
                     $obj_blog_blogger=load("blog_blogger");
-                    $obj_blog_blogger->add_blog_article($article_data['postID'],$module_data);
+                    $obj_blog_blogger->add_blog_article($article_data,$module_data);
                 }
                 
                 //同步ES索引

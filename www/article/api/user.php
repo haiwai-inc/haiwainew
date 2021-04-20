@@ -129,7 +129,7 @@ class user extends Api {
         //修改博客类型文章
         if($article_data['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->update_blog_article($article_data['postID'],$module_data);
+            $obj_blog_blogger->update_blog_article($article_data,$module_data);
         }
         
         //同步ES索引
