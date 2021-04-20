@@ -67,6 +67,23 @@ export default {
       return this.loading.article || this.noMore
     }
   },
+  mounted() {
+    // this.initEditor();
+    var source = new EventSource("/sse.php", { withCredentials: true });
+    source.onopen = function (event) {
+      console.log(event);
+    };
+    source.onclose = function (event){
+      console.log(event);
+    }
+    source.onerror = function (event) {
+      console.log(event);
+    // handle error event
+    };
+    source.onmessage = function (message){
+      console.log(message)
+    };
+  },
   created () {
     this.getBloggerInfo();
     blog.category_list(this.userID).then(res=>{
