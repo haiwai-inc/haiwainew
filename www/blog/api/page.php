@@ -494,7 +494,7 @@ class page extends Api {
      * 博客主页 
      * 文集 文章列表
      * @param integer $id | 文集ID
-     * @param integer $lastID | 最后文章ID
+     * @param integer $lastID | 最后文章postID
      */
     public function category_article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
@@ -508,10 +508,11 @@ class page extends Api {
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
+            'limit'=>30,
             "order"=>['id'=>"DESC"],
         ];
         if(!empty($lastID)){
-            $fields['id,<']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
         
