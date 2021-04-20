@@ -239,7 +239,7 @@ color: #235592
 }
 .hot-blogger .right .btn .add{
         fill: #35abbb;
-        font-size: 16px;
+        font-size: 18px;
         border-radius: 20px;
         padding: 3px 13px;
         font-weight: 600;
