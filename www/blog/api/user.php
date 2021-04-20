@@ -287,19 +287,12 @@ class user extends Api {
      * 编辑器页
      * 文章 列表
      * @param integer $id | 文集ID
-     * @param String $lastID|普通文章postID,草稿文章id
+     * @param String $lastID|文章postID
      */
-    public function article_list($id,$lastID=""){
+    public function article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>$id]);
         if(empty($rs_blog_category)) {$this->error="此文集不存在";$this->status=false;return false;}
-        
-        //分页
-        if(!empty($lastID)){
-            $lastID=explode(",",$lastID);
-            $article_lastID=$lastID[0];
-            $draft_lastID=$lastID[1];
-        }
         
         //文章
         $obj_article_indexing=load("article_indexing");
@@ -310,8 +303,8 @@ class user extends Api {
             "order"=>['is_sticky'=>'DESC','id'=>"DESC"],
             "limit"=>30
         ];
-        if(!empty($article_lastID)){
-            $fields['id,<']=$article_lastID;
+        if(!empty($lastID)){
+            $fields['id,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll('*',$fields);
         
@@ -334,8 +327,8 @@ class user extends Api {
             "order"=>['id'=>"DESC"],
             "limit"=>30
         ];
-        if(!empty($draft_lastID)){
-            $fields['id,<']=$draft_lastID;
+        if(!empty($lastID)){
+            $fields['postID,<']=$lastID;
         }
         $rs_article_draft=$obj_article_draft->getAll("*",$fields);
         
