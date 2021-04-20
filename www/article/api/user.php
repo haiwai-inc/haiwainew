@@ -83,7 +83,7 @@ class user extends Api {
         
         //删除草稿
         $obj_article_draft=load("article_draft");
-        $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>$article_data['postID']]);
+        $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>0]);
         
         //显示当前插入信息
         return $article_data['postID'];
