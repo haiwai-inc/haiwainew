@@ -177,7 +177,7 @@ tinymce.addI18n('zh_CN',{
 "Paste as text": "\u7c98\u8d34\u4e3a\u6587\u672c",
 "Preview": "\u9884\u89c8",
 "Print...": "\u6253\u5370...",
-"Save": "\u4fdd\u5b58",
+"Save": "\u63d2\u5165",
 "Find": "\u67e5\u627e",
 "Replace with": "\u66ff\u6362\u4e3a",
 "Replace": "\u66ff\u6362",
