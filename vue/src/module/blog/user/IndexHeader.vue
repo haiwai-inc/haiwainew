@@ -3,7 +3,7 @@
         <div class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
             <div class="user-bgup flex-fill">
                 <span class="name">{{data.bloggerinfo_id.name}}</span>
-                <p class="bdescription">{{data.bloggerinfo_id.description}}</p>
+                <p class="bdescription" v-html="data.bloggerinfo_id.description"></p>
             </div>
             <div class="pr-3 pt-auto" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
                 <n-button @click="$router.push('/profile/?id=0')" size="sm">博客设置</n-button>
