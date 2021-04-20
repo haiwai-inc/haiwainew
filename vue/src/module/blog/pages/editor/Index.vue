@@ -414,14 +414,6 @@ export default {
       // this.modals.publish = false;
       this.$router.push("/blog/p/"+res.data);
     },
-    article_to_draft_by_postID(){
-      this.user.article_to_draft_by_postID(this.curentArticle.postID).then(res=>{
-        console.log(res)
-        if(res.status){
-          this.draft_view(res.data)
-        }
-      })
-    },
     draft_add(){
       let data={
         article_data:{
