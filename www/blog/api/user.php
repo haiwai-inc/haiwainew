@@ -304,7 +304,7 @@ class user extends Api {
             "limit"=>30
         ];
         if(!empty($lastID)){
-            $fields['id,<']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll('*',$fields);
         
