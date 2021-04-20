@@ -64,6 +64,9 @@ class search_category  extends Search{
 				  },
 				  "visible":{
 					"type": "integer"
+				  },
+				  "is_publish":{
+					"type": "integer"
 				  }
 				}
 			  }
@@ -106,7 +109,8 @@ class search_category  extends Search{
 			$should = [$this->object(array("match" => array("name"=>$keyword)))];
 			$query["should"] =$should;
 			$query["must_not"]=array(
-				$this->object(array("term" => array("status"=>0)))
+				$this->object(array("term" => array("status"=>0))),
+				$this->object(array("term" => array("is_publish"=>0)))
 			);
 
 			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "id"=>array("order" =>"desc")))];
@@ -179,7 +183,8 @@ class search_category  extends Search{
             "bloggerID"=>$category['bloggerID'],
             // "userID"=>$category['userID'],
             "name"=>$category['name'],
-            "visible"=>$category['visible']
+            "visible"=>$category['visible'],
+            "is_publish"=>$category['is_publish']
         ];
     }
 

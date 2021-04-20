@@ -754,7 +754,8 @@
       }, data);
       editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
       editor.focus();
-      editor.selection.setContent(elm.outerHTML);
+      console.log(elm.outerHTML);
+      editor.selection.setContent(elm.outerHTML + "<br>");
       var insertedElm = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
       editor.dom.setAttrib(insertedElm, 'data-mce-id', null);
       if (isFigure(insertedElm)) {

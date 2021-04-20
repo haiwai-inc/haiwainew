@@ -14,6 +14,7 @@ $total = 0;
 // 更新标签
 while(true){    
     $tags = $article_tag->getAll("*", ["limit"=>[$iter*200,200]]);
+    
     if(count($tags)==0){
         break;
     }
