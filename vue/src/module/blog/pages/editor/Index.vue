@@ -590,21 +590,6 @@ export default {
   },
   mounted() {
     // this.initEditor();
-    var source = new EventSource("/sse.php", { withCredentials: true });
-    source.onopen = function (event) {
-      console.log(event);
-    };
-    source.onclose = function (event){
-      console.log(event);
-    }
-    source.onerror = function (event) {
-      console.log(event);
-    // handle error event
-    };
-    source.onmessage = function (message){
-      console.log(message)
-    };
-    import('./langs/zh_CN.js');
   },
 
   data() {
