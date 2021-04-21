@@ -197,7 +197,7 @@ class blog_tool{
             $obj_account_user_auth=load("account_user_auth");
             $check_account_user_auth=$obj_account_user_auth->getOne(['id'],['login_source'=>"wxc",'login_data'=>$rs_account_legacy_user['username']]);
             if(empty($check_account_user_auth)){
-                $obj_account_user_auth->insert(['userID'=>$rs['userid'],'login_source'=>'wxc','login_data'=>$rs_legacy_user_passwd_new['username'],'login_token'=>$rs_legacy_user_passwd_new['password']]);
+                $obj_account_user_auth->insert(['userID'=>$fields['id'],'login_source'=>'wxc','login_data'=>$rs_legacy_user_passwd_new['username'],'login_token'=>$rs_legacy_user_passwd_new['password']]);
             }
             
             //老用户头像拉到本地处理
