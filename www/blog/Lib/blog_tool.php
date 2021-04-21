@@ -313,16 +313,16 @@ class blog_tool{
         $field=[];
         if(!empty($rs['blogcat_id'])){
             $blogcat_id=$rs['blogcat_id'];
-            $field[]=$this->tag_add($blogcat_id);
+            $field[]=$this->tag_add($blogcat_id,$rs);
         }
         if(!empty($rs['parent_id'])){
             $blogcat_id=$rs['parent_id'];
-            $field[]=$this->tag_add($blogcat_id);
+            $field[]=$this->tag_add($blogcat_id,$rs);
         }
         return $field;
     }
     
-    private function tag_add($blogcat_id){
+    private function tag_add($blogcat_id,$rs){
         $rs_blog_legacy_blogcat=$this->obj_blog_legacy_blogcat->getOne("*",['blogcat_id'=>$blogcat_id]);
         $check_article_tag=$this->obj_article_tag->getOne("*",['name'=>$rs_blog_legacy_blogcat['title']]);
         if(empty($check_article_tag)){
