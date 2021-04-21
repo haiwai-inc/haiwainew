@@ -80,8 +80,8 @@ export default {
       console.log(event);
     // handle error event
     };
-    source.onmessage = function (message){
-      console.log(message)
+    source.onmessage = function (news){
+      console.log(news)
     };
   },
   created () {
