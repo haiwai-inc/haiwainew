@@ -279,10 +279,11 @@ export default {
             account.user_password_update(this.signupForm).then(res=>{
                console.log(res);
                if(res.status){
-               this.initForm();
+                  this.$message({message:'修改成功',type:'success'})
+                  this.initForm();
                }else{
-               this.signErr = res.error;
-               this.signupForm.submitDisable = true;
+                  this.signErr = res.error;
+                  this.signupForm.submitDisable = true;
                }
             })
          } else {
@@ -435,16 +436,10 @@ export default {
             console.log(res)
             if(res.status){
                this.getBlogProfile();
-               this.err.bloggername.flag = false
-               this.flag.blog=true;
-               setTimeout(()=>{
-                  this.flag.blog=false;
-               },3000)
+               this.$message({message:'修改成功',type:'success'});
             }else{
-               this.err.bloggername.msg = res.error
-               this.err.bloggername.flag = true
+               this.$message({message:res.error,type:'error'})
             }
-            this.err.bloggername.msg = res.error
          })
       },
       user_profile_update(){
@@ -452,20 +447,19 @@ export default {
             this.err.username.flag=false;
             this.user.user_profile_update(this.authorInfor.username,this.authorInfor.description).then(res=>{
                console.log(res)
-               if(!res.status){
-                  this.err.username.flag=true;
-                  this.err.username.msg = res.error
+               if(res.status){
+                  this.$message({message:'修改成功',type:'success'})
+               }else{
+                  this.$message({message:res.error,type:'error'})
                }
             })
          }else{
-            this.err.username.flag=true;
-            this.err.username.msg = this.$t('message').setting.accout_name_err
-         }
-         
+            this.$message({message:this.$t('message').setting.accout_name_err,type:'error'})
+            // this.err.username.flag=true;
+            // this.err.username.msg = this.$t('message').setting.accout_name_err
+         }  
       }
-
-  }
-
+   }
 };
 </script>
 
