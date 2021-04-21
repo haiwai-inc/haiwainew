@@ -9,23 +9,23 @@
       <div class="row" v-if="$route.params.id!=0">
       <index-header :bloggerID="Number($route.params.id)"></index-header>
        <div class="col-sm-3 d-none d-sm-block">
+        <div class="hotblog profile-header mt-2 mb-3 border-bottom">
+              <ul class="flex-column nav justify-content-center">
+                  <li class="col nav-item text-left px-0" v-for="(item,index) in this.tabs" :key="index">
+                      <a 
+                      class="nav-link" 
+                      :class="{active:currentTabId==item.id}" 
+                      href="#"
+                      @click="changeTab(item.id)">{{item.text}}</a>
+                  </li>
+              </ul>
+          </div>
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
             <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录"></collection-list>
           </div>
         </div>
-       <div class="col-sm-9 col-12">
-            <div class="profile-header mt-2 mb-3 border-bottom">
-            <ul class="nav justify-content-center">
-                <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
-                    <a 
-                    class="nav-link" 
-                    :class="{active:currentTabId==item.id}" 
-                    href="#"
-                    @click="changeTab(item.id)">{{item.text}}</a>
-                </li>
-            </ul>
-            </div>
+       <div class="col-sm-9 col-12 mt-3">
             <div
             v-infinite-scroll="loadArticle"
             infinite-scroll-disabled="noMore"
@@ -143,6 +143,7 @@ export default {
         tabs:[
             {
                 id:0,
+                icon:'<i class="now-ui-icons files_single-copy-04"></i>',
                 text:'最新博文',
             },{
                 id:1,
@@ -161,11 +162,13 @@ export default {
 </script>
 <style>
 .profile-header .nav-link{
-    color:#657786  
+    color:#657786;
+    font-size:20px
 }
 .profile-header .nav-link.active {
-    color: #1D1D1D;
-    border-bottom: 2px solid #39B8EB;
+    color: #0e94cc;
+    border-left: 2px solid #39B8EB;
     font-weight: 600;
+    background: #38b9e014;
 }
 </style>
