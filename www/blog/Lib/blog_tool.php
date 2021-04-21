@@ -62,7 +62,7 @@ class blog_tool{
             $rs['blogger_new']=$this->add_to_blogger($rs);
             
             //tag
-            $rs['tag_new'][]=$this->add_to_tag($rs);
+            $rs['tag_new']=$this->add_to_tag($rs);
             
             //category
             $rs['category_new']=$this->add_to_category($rs);
@@ -313,11 +313,11 @@ class blog_tool{
         $field=[];
         if(!empty($rs['blogcat_id'])){
             $blogcat_id=$rs['blogcat_id'];
-            $field=$this->tag_add($blogcat_id);
+            $field[]=$this->tag_add($blogcat_id);
         }
         if(!empty($rs['parent_id'])){
             $blogcat_id=$rs['parent_id'];
-            $field=$this->tag_add($blogcat_id);
+            $field[]=$this->tag_add($blogcat_id);
         }
         return $field;
     }
