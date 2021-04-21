@@ -27,14 +27,14 @@ class import_blog_data{
                     echo $lastid."_".$month."\n";
                     
                     //汪老师 userID=942857 blogid=69027 basecode=211   7324
-                    if($v['userid']==1071782){
+                    if($v['userid']==659595){
                         //主贴
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
                         $rs_import_post=$obj_blog_tool->import_post($v);
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
                         
                         //查询评论
-                        $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>300,'basecode'=>$v['basecode'],'visible,!='=>0,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month}_post");
+                        $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>100,'basecode'=>$v['basecode'],'visible,!='=>0,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month}_post");
                         if(!empty($rs_reply)){
                             $postID_legacy_hot_post_reply=[];
                             foreach($rs_reply as $vv){

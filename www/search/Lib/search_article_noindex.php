@@ -221,9 +221,9 @@ class search_article_noindex extends Search
             foreach ($articles as $article) {
                 $article_formatted = [
                     "postID"  => $article['postID'],
-                    "title"   => $article['title'],
-                    "msgbody" => $article['msgbody_origin'],
-                    "pic"     => $article['pic'],
+                    "title"   => empty($article['title'])?"":$article['title'],
+                    "msgbody" => empty($article['msgbody_origin'])?"":$article['msgbody_origin'],
+                    "pic"     => empty($article['pic'])?"":$article['pic'],
                     "buzz"    => $article['buzz'],
                     "tags"    => $article['tags'],
                 ];
