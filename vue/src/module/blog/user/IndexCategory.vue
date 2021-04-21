@@ -67,27 +67,6 @@ export default {
       return this.loading.article || this.noMore
     }
   },
-  mounted() {
-    // this.initEditor();
-    var source = new EventSource("/sse.php", { withCredentials: true });
-    source.onopen = function (event) {
-      console.log(event);
-    };
-    source.onclose = function (event){
-      console.log(event);
-    }
-    source.onerror = function (event) {
-      console.log(event);
-    // handle error event
-    };
-    source.onmessage = function (news){
-      console.log(news)
-    };
-    source.addEventListener('news', function (event) {
-        console.log(event.data);
-        // source.close(); // disconnect stream
-    }, false);
-  },
   created () {
     this.getBloggerInfo();
     blog.category_list(this.userID).then(res=>{
@@ -174,12 +153,7 @@ export default {
     color:#657786;
     font-size:18px 
 }
-.profile-header .nav-link.active {
-    color: #1D1D1D;
-    border-bottom: 2px solid #39B8EB;
-    font-weight: 600;
-    font-size:18px
-}
+
 .avatarbox {
         cursor: pointer;
 }

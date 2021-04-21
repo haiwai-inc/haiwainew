@@ -174,6 +174,7 @@ export default {
   },
   data(){
     return {
+      source : new EventSource("/sse.php", { withCredentials: true }),
       bodyclass:'',
       langswitch: localStorage.lang?localStorage.lang=='cns'?true:false:true,
       keyword: '',
@@ -259,15 +260,36 @@ export default {
       })
     }
   },
+  beforeCreate(){
+    // var source = new EventSource("/sse.php", { withCredentials: true });
+    // source.onopen = function (event) {
+    //   console.log(event);
+    // };
+    // source.onclose = function (event){
+    //   console.log(event);
+    // }
+    // source.onerror = function (event) {
+    //   console.log(event);
+    // // handle error event
+    // };
+    // source.onmessage = function (news){
+    //   console.log(news)
+    // };
+    this.source.addEventListener('data', function (event) {
+        console.log(event.data);
+        // source.close(); // disconnect stream
+    }, false);
+  },
   created: function () {
     this.bodyclass = document.querySelector('body').classList.value;
-  },
-  beforeCreate(){
   },
   mounted() {
     this.translatePage();
     this.s_t(this.langswitch);
-  }
+  },
+  destroyed() {
+    this.source.close();
+  },
 };
 </script>
 
