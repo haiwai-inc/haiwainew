@@ -310,15 +310,20 @@ class blog_tool{
     }
     
     function add_to_tag($rs){
-        if($rs['blogcat_id']!=0){
+        $field=[];
+        if(!empty($rs['blogcat_id'])){
             $blogcat_id=$rs['blogcat_id'];
+            $field=$this->tag_add($blogcat_id);
         }
-        if($rs['parent_id']!=0){
+        if(!empty($rs['parent_id'])){
             $blogcat_id=$rs['parent_id'];
+            $field=$this->tag_add($blogcat_id);
         }
-        
+        return $field;
+    }
+    
+    private function tag_add($blogcat_id){
         $rs_blog_legacy_blogcat=$this->obj_blog_legacy_blogcat->getOne("*",['blogcat_id'=>$blogcat_id]);
-        
         $check_article_tag=$this->obj_article_tag->getOne("*",['name'=>$rs_blog_legacy_blogcat['title']]);
         if(empty($check_article_tag)){
             $field=['name'=>$rs_blog_legacy_blogcat['title']];
@@ -331,7 +336,6 @@ class blog_tool{
             }
             $field=$check_article_tag;
         }
-        
         return $field;
     }
 }
