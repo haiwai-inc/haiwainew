@@ -174,12 +174,7 @@ export default {
     color:#657786;
     font-size:18px 
 }
-.profile-header .nav-link.active {
-    color: #1D1D1D;
-    border-bottom: 2px solid #39B8EB;
-    font-weight: 600;
-    font-size:18px
-}
+
 .avatarbox {
         cursor: pointer;
 }
