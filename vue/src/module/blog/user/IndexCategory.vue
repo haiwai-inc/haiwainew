@@ -83,6 +83,10 @@ export default {
     source.onmessage = function (news){
       console.log(news)
     };
+    source.addEventListener('news', function (event) {
+        console.log(event.data);
+        // source.close(); // disconnect stream
+    }, false);
   },
   created () {
     this.getBloggerInfo();
