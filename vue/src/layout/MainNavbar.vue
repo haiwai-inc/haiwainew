@@ -125,11 +125,12 @@
         type="primary" 
         round 
         simple 
-        @click="$refs.dialog.isLogin()"
+        @click="$router.push('/blog/my/editor/')"
         class="editbtn">
           <icon-pen class="editicon"></icon-pen>{{$t('message').topnav.editbtn}}
         </n-button>
       </li>
+      <!-- @click="$refs.dialog.isLogin()" -->
     </template>
     <template slot="after-menu">
       

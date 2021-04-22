@@ -589,6 +589,7 @@ export default {
   created() {
   },
   mounted() {
+    console.log(this.$route.redirect)
     // this.initEditor();
   },
 

@@ -100,17 +100,17 @@ import account from "../service/account";
 export default {
 name: 'login-page',
 props:{
-redirect:{type:String,default:""}
+  redirect:{type:String,default:""}
 },
 components: {
-[Button.name]: Button,
-[Checkbox.name]: Checkbox,
-[FormGroupInput.name]: FormGroupInput,
-[Dialog.name]:Dialog,
-WxcLogoGreen,
-// FacebookLogo,
-// LineLogo,
-// AppleLogo
+  [Button.name]: Button,
+  [Checkbox.name]: Checkbox,
+  [FormGroupInput.name]: FormGroupInput,
+  [Dialog.name]:Dialog,
+  WxcLogoGreen,
+  // FacebookLogo,
+  // LineLogo,
+  // AppleLogo
 },
   data() {
     var validateMail =(rule,value,callback)=>{
@@ -219,12 +219,11 @@ WxcLogoGreen,
         this.$store.state.user.getUserStatus().then(res=>{
           this.$store.state.user.userinfo= res.data;
         });
-        if(this.redirect!==''){
-          this.$router.push(this.redirect);
-          console.log(this.redirect)
+    console.log("$route.query.redirect:"+this.$route.query.redirect);
+        if(this.$route.query.redirect){
+          this.$router.push(this.$route.query.redirect);
         }else{
           this.$emit('closedialog')
-          console.log(this.redirect)
         }
         // localStorage.setItem('loginState', res.state);
       },
