@@ -105,7 +105,7 @@ class blog_blogger extends Model{
 	    $obj_blog_category=load("blog_category");
 	    
 	    //是否为公开文章
-	    if(!empty($article_data['is_publish'])){
+	    //if(!empty($article_data['is_publish'])){
 	        //同步文集计数
 	        //老目录-1
 	        $check_old_article_indexing=$obj_article_indexing->getOne(['postID','categoryID'],['postID'=>$article_data['postID']]);
@@ -115,7 +115,7 @@ class blog_blogger extends Model{
 	        //新目录+1
 	        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
 	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
-	    }
+	    //}
 	       
 	    //修改索引表
 	    $obj_article_indexing->update(['bloggerID'=>$module_data['bloggerID'],'categoryID'=>$module_data['categoryID']],['postID'=>$article_data['postID']]);
