@@ -43,7 +43,7 @@
           
           <div id="google-signin-button" class="mb-3"></div>
             
-          <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
+          <!-- <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
           <facebook-logo></facebook-logo> Facebook 账号登录
           </n-button>
 
@@ -52,7 +52,7 @@
           </n-button>
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="appleLogin()">
           <apple-logo></apple-logo> Apple 账号登录
-          </n-button>
+          </n-button> -->
           <!-- <div id="appleid-signin"></div> -->
           
           <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
@@ -65,7 +65,7 @@
       prop="username"
       label=""
     >
-      <el-input v-model="wxcForm.username"  placeholder="文学城用户名"></el-input>
+      <el-input v-model="wxcForm.username" autofocuse placeholder="文学城用户名"></el-input>
     </el-form-item>
     <el-form-item 
       label="" 
@@ -90,9 +90,9 @@ FormGroupInput,
 import {
 //WxcLogoWhite,
 WxcLogoGreen,
-FacebookLogo,
-LineLogo,
-AppleLogo
+// FacebookLogo,
+// LineLogo,
+// AppleLogo
 } from '@/components/Icons';
 import {Dialog} from "element-ui"
 import account from "../service/account";
@@ -108,9 +108,9 @@ components: {
 [FormGroupInput.name]: FormGroupInput,
 [Dialog.name]:Dialog,
 WxcLogoGreen,
-FacebookLogo,
-LineLogo,
-AppleLogo
+// FacebookLogo,
+// LineLogo,
+// AppleLogo
 },
   data() {
     var validateMail =(rule,value,callback)=>{

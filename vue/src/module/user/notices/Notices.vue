@@ -15,8 +15,16 @@
       </div>
       <div class="col-sm-8 col-12">
         <div v-if="activeId === 0">
-          <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)">
-            <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar>
+          <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)" id="avatar" style="cursor:pointer">
+            <div v-if="!item.userinfo_from_userID.avatar" class="avatar-word" :style="{height:'48px',width:'48px',lineHeight:'48px',minWidth:'48px'}">{{item.userinfo_from_userID.first_letter}}</div>
+            <img 
+            :style="{height:'48px',minWidth:'48px'}"
+            v-if="item.userinfo_from_userID.avatar" 
+            v-bind:alt="item.userinfo_from_userID.username" 
+            class="rounded-circle" 
+            v-bind:src="item.userinfo_from_userID.avatar" 
+            >
+            <!-- <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar> -->
             <div class="pl-2">
               <!-- <span class="name">{{item.userinfo_from_userID.username}}</span> -->
               <span class="wrap">{{item.msgbody}}</span>
@@ -56,7 +64,7 @@ import LeftNavItem from "../../blog/pages/components/Main/LeftNavItem";
 import NoticeComment from "./NoticeComment";
 import NoticeFollow from "./NoticeFollow";
 import NoticeQqh from "./NoticeQqh";
-import Avatar from "../../blog/pages/components/Main/Avatar";
+// import Avatar from "../../blog/pages/components/Main/Avatar";
 import NoticeLike from './NoticeLike.vue';
 import icons from "@/components/Icons/Icons";
 // import {DropDown} from "@/components"
@@ -121,7 +129,7 @@ export default {
     LeftNavItem,
     MainMenu,
     // ArticleListItem,
-    Avatar,
+    // Avatar,
     NoticeComment,
     NoticeFollow,
     NoticeQqh,
@@ -172,8 +180,8 @@ export default {
       }
     },
     gotoDetail(e){
-      if(e.type=="follower"){
-        this.$router.push('blog/user/'+e.from_userID)
+      if(e.type=="follow"){
+        this.activeId=3
       }
       if(e.type=="qqh"){
         this.activeId=2
@@ -188,6 +196,12 @@ export default {
 .noticeItem{
   padding: 1rem;
   border-bottom: aliceblue 1px solid;
+}
+#avatar .avatar-word{
+    border-radius: 50%;
+    background-color: aliceblue;
+    text-align: center;
+    font-weight: 500;
 }
 @media (max-width: 575.98px) {
   .left-top-nav .name svg,
