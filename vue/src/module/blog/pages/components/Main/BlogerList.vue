@@ -34,7 +34,7 @@ export default {
         this.hotBloggerList.count = n*10;
       }
       this.hotBloggerList.data = this.data.slice(this.hotBloggerList.currentList,this.hotBloggerList.count);
-      console.log(this.hotBloggerList.data,this.data,this.hotBloggerList.currentList)
+      // console.log(this.hotBloggerList.data,this.data,this.hotBloggerList.currentList)
     }
   },
   data(){

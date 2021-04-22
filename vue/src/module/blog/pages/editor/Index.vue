@@ -80,7 +80,6 @@
             :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
             @select="handleSelect"
-            @blur="tag?'':inputVisible=false"
           >
           <template slot-scope="{ item }">
             <div class="name">{{ item.name }}</div>
@@ -533,8 +532,8 @@ export default {
       this.curentArticle.postInfo_postID.tags.splice(index,1);
     },
     pushtag(val){
-      let o={name:val}
-      this.curentArticle.postInfo_postID.tags.push(o);
+      let t={name:val}
+      this.curentArticle.postInfo_postID.tags.push(t);
       this.tag='';
     },
     beforeDestroy() {
