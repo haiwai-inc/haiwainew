@@ -98,7 +98,9 @@
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
-          <div v-if="comment.length>0">
+          <div v-infinite-scroll="getComment"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50" v-if="comment.length>0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
