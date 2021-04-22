@@ -113,6 +113,7 @@
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
               <i class="now-ui-icons loader_refresh spin"></i>{{loading.comment}}
           </div>
+          <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="getComment">加载更多评论</p>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="articleDetail.status">
@@ -290,7 +291,7 @@ export default {
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
         let r = res.data;
         this.comment = this.comment.concat(r);
-        this.lastID = r.length>0?this.comment[r.length-1].postID:0;
+        this.lastID = r.length>0?r[r.length-1].postID:0;
         if(r.length<20){
           this.noMore = true;
         }
