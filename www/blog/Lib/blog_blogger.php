@@ -72,12 +72,12 @@ class blog_blogger extends Model{
 	//添加文章为博客类型
 	function add_blog_article($article_data,$module_data){
 	    //是否为公开文章
-	    if(!empty($article_data['is_publish'])){
+	    //if(!empty($article_data['is_publish'])){
 	        //同步文集计数
 	        $obj_blog_category=load("blog_category");
 	        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
 	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
-	    }
+	    //}
 	    
 	    //修改索引表
 	    $obj_article_indexing=load("article_indexing");
@@ -101,18 +101,23 @@ class blog_blogger extends Model{
 	
 	//添加博客文章
 	function update_blog_article($article_data,$module_data){
+	    $obj_article_indexing=load("article_indexing");
+	    $obj_blog_category=load("blog_category");
+	    
 	    //是否为公开文章
 	    if(!empty($article_data['is_publish'])){
 	        //同步文集计数
-	        $obj_blog_category=load("blog_category");
+	        $check_old_article_indexing=$obj_article_indexing->getOne(['postID','categoryID'],['postID'=>$article_data['postID']]);
+	        $check_old_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$check_old_article_indexing['categoryID']]);
+	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']-1],['id'=>$check_old_blog_category['id']]);
+	        
 	        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
 	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
 	    }
-	    
+	       
 	    //修改索引表
-	    $obj_article_indexing=load("article_indexing");
 	    $obj_article_indexing->update(['bloggerID'=>$module_data['bloggerID'],'categoryID'=>$module_data['categoryID']],['postID'=>$article_data['postID']]);
-	    
+	       
 	    //修改博主信息
 	    $time=times::getTime();
 	    $check_blogger=$this->getOne('*',['id'=>$module_data['bloggerID']]);
@@ -132,7 +137,7 @@ class blog_blogger extends Model{
 	//删除博客文章操作
 	function delete_blog_article($rs_article_indexing){
 	    //是否为隐藏目录
-	    if(!empty($rs_article_indexing['is_publish'])){
+	    //if(!empty($rs_article_indexing['is_publish'])){
 	        $obj_blog_category=load("blog_category");
 	        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
 	        
@@ -142,9 +147,10 @@ class blog_blogger extends Model{
 	        //同步博客计数
 	        $rs_blog_blogger=$this->getOne("*",['id'=>$rs_article_indexing['bloggerID']]);
 	        $this->update(['count_article'=>$rs_blog_blogger['count_article']-1],['id'=>$rs_article_indexing['bloggerID']]);
-	    }
-	    
+	    //}
 	}
+	
+	
 	
 	
 	
