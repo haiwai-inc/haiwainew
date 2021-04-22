@@ -243,7 +243,7 @@ export default {
     },
 
     async doSearch(k,tag){
-      this.$router.push({path:'/search',query:{keyword:k,tag:tag}});
+      this.$router.push({path:'/search/',query:{keyword:k,tag:tag}});
     },
 
     setFontSize(size){

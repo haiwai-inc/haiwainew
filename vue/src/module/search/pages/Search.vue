@@ -67,7 +67,10 @@
             @click="tagChange(item.id)">{{item.name}}</el-button>
           </div>
           <span v-if="search.tag_articles.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <span v-if="search.tag_articles.data.length>0">
+          <div v-if="search.tag_articles.data.length>0"
+          v-infinite-scroll="infiniteGet"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50">
             <article-list-item
               v-for="item in search.tag_articles.data"
               v-bind:key="item.postID"
@@ -75,19 +78,31 @@
               type="0"
             >
             </article-list-item>
-          </span>
+          </div>
+          <div class="text-center py-5" v-if="loading.tag_articles"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
+          </div>
+          <p class="text-center py-4" v-if="noMore.tag_articles">没有更多了</p>
         </div>
         <!-- 文集 -->
         <div v-if="activeId === 3">
           <span v-if="search.categories.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <span v-if="search.categories.data.length>0">
+          <div v-if="search.categories.data.length>0"
+          v-infinite-scroll="infiniteGet"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50">
             <div style="padding:10px 0;border-bottom:#eee 1px solid" v-for="(item,index) in search.categories.data" :key="index">
               <div style="font-weight:700;font-size:1.3rem;padding-bottom:5px" v-html="item.name"></div>
               <div class="d-flex"><avatar :data="item.userinfo_userID" :imgHeight="18" class="mr-2"></avatar>
               <span style="margin-top:2px">{{item.userinfo_userID.username}}</span></div>
               <span style="color:gray;font-size:0.85rem">{{item.bloggerinfo_bloggerID.count_article}} 篇文章，博客访问：{{item.bloggerinfo_bloggerID.count_read}}</span> 
             </div>
-          </span>
+          </div>
+
+          <div class="text-center py-5" v-if="loading.categories"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
+          </div>
+          <p class="text-center py-4" v-if="noMore.categories">没有更多了</p>
         </div>
       </div>
     </div>
@@ -166,6 +181,7 @@ export default {
       this.activeId==1 ? this.loading.blogger || this.noMore.blogger:
       this.activeId==2 ? this.loading.tag_articles || this.noMore.tag_articles:
       this.loading.categories || this.noMore.categories;
+      console.log(status);
       return status;
     }
   },
@@ -190,10 +206,23 @@ export default {
       this.get_bloggers(k,0,'all',0);
       this.get_tags(k);
       this.get_categories(k,0);
-      this.get_all_tag_articles();
     },
     nomoreStatus(rl){
       return rl<30?true:false
+    },
+    infiniteGet(){
+      if (this.activeId==0) {
+        this.get_articles(this.keyword,this.lastScore.article);
+      } 
+      if (this.activeId==1){
+        this.get_bloggers(this.keyword,this.lastScore.blogger,'all',0);
+      }
+      if(this.activeId==2){
+        this.get_all_tag_articles()
+      }
+      if(this.activeId==3){
+        this.get_categories(this.keyword,this.lastScore.categories);
+      }
     },
     async get_articles(k,lastScore){
       // this.loading.article = true;
@@ -231,28 +260,48 @@ export default {
     },
     async get_tags(k){
       this.search.tag = await this.search.get_tags(k);
+      console.log(this.search.tag)
+      this.get_all_tag_articles();
     },
     async get_all_tag_articles(){
       this.search.tag.data.forEach(t=>{
         this.tagres.push(t.id)
-      })
-      this.get_tags_articles(this.tagres,0);
+      });console.log("get tag")
+      this.get_tags_articles(this.tagres,this.lastScore.tag_articles);
         console.log(this.search.tag_articles)
     },
     async get_tags_articles(tags,lastScore){
-      this.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
+      if (lastScore==0){
+        this.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
+        let rl = this.search.tag_articles.data;
+        this.lastScore.tag_articles = rl.length>0?rl[rl.length-1]._score:0;
+        this.noMore.tag_articles = this.nomoreStatus(rl.length);
+      }else{
+        let r = await this.search.search_tag_articles(tags,lastScore);
+        let arr = r.data;
+        this.search.tag_articles.data = this.search.tag_articles.data.concat(arr);
+        let data = this.search.tag_articles.data;
+        this.lastScore.tag_articles = data.length>0?data[data.length-1]._score:0;
+        this.noMore.tag_articles = this.nomoreStatus(arr.length);
+      }
     },
     async get_categories(k,lastScore){
       this.search.categories = await this.search.search_categories(k,lastScore);
-    },
-    infiniteGet(){
-      if (this.activeId==0) {
-        this.get_articles(this.keyword,this.lastScore.article);
-      } 
-      if (this.activeId==1){
-        this.get_bloggers(this.keyword,this.lastScore.blogger,'all',0);
+      if(lastScore==0){
+        this.search.categories = await this.search.search_categories(k,lastScore);
+        let rl = this.search.categories.data;
+        this.lastScore.categories = rl.length>0?rl[rl.length-1]._score:0;
+        this.noMore.categories = this.nomoreStatus(rl.length);
+      }else{
+        let r = await this.search.search_categories(k,lastScore);
+        let arr = r.data;
+        this.search.categories.data = this.search.blogger.data.concat(arr);
+        let data = this.search.categories.data;
+        this.lastScore.categories = data.length>0?data[data.length-1]._score:0;
+        this.noMore.categories = this.nomoreStatus(arr.length);
       }
-    }
+      this.loading.categories = false;
+    },
   },
   created() {
     this.keyword = this.$route.query.keyword
