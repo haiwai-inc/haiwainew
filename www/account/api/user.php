@@ -670,10 +670,6 @@ class user extends Api {
         $obj_account_user=load("account_user");
         $rs_account_notification=$obj_account_user->get_basic_userinfo($rs_account_notification,"from_userID");
         
-        //添加博客信息
-        $obj_blog_blogger=load("blog_blogger");
-        $rs_account_notification=$obj_blog_blogger->get_basic_bloggerinfo($rs_account_notification,"from_userID",true);
-        
         return $rs_account_notification;
     }
     
