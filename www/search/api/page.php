@@ -70,6 +70,12 @@ class page extends Api{
      */
     public function tags($keyword){
         $tag_obj = load("search_tag");
+        
+        if(empty($keyword)){
+            $default_tag=conf("search.default_tag");
+            return $default_tag;
+        }
+        
         return $tag_obj->search_by_name($keyword);
     }
 

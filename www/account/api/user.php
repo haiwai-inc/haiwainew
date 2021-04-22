@@ -669,7 +669,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_account_notification=$obj_account_user->get_basic_userinfo($rs_account_notification,"from_userID");
-        
         return $rs_account_notification;
     }
     
