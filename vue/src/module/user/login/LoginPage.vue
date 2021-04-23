@@ -73,6 +73,7 @@
     >
       <el-input type="password" placeholder="文学城密码" v-model="wxcForm.password" autocomplete="off"></el-input>
     </el-form-item>
+    <div style="color:#f56c6c;text-align:center" v-if="loginErr.status">{{loginErr.msg}}</div>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <n-button link @click="dialogFormVisible = false">取 消</n-button>
@@ -292,6 +293,7 @@ components: {
                   this.setLoginState(res);
                 }else{
                   this.loginForm.submitDisable = false;
+                  this.$message.error(res.error);
                 }
                 this.loginErrFormat(res);
               })
@@ -304,6 +306,7 @@ components: {
                   this.setLoginState(res);
                 }else{
                   this.wxcForm.submitDisable = false;
+                  this.$message.error(res.error);
                 }
                 this.loginErrFormat(res);
               })
