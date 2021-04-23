@@ -133,28 +133,28 @@ export default {
       data: [
         {
           id: 0,
-          icon:icons.notice,
+          icon:icons.article,
           title: "文章",
           noticeList: [],
           unread: "",
         },
         {
           id: 1,
-          icon:icons.notice,
+          icon:icons.blog,
           title: "博客",
           noticeList: [],
           unread: "",
         },
         {
           id: 2,
-          icon:icons.notice,
+          icon:icons.tag,
           title: "标签",
           noticeList: [],
           unread: "",
         },
         {
           id: 3,
-          icon:icons.notice,
+          icon:icons.collection,
           title: "目录",
           noticeList: [],
           unread: "",
