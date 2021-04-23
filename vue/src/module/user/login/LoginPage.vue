@@ -200,16 +200,16 @@ components: {
         'onsuccess': this.onGoogleSignIn,
         'onfailure': this.onGoogleFailure,
       });
-    AppleID.auth.init({
-        clientId : 'serviceid.haiwai.blog',
-        scope : 'email',
-        redirectURI : 'http://local.haiwai.com:8080/login',
-        state:"abc",
-        usePopup : true,
-        // response_mode: "query" //or false defaults to false
-    });
-    
-    this.lineSignin();
+    // AppleID.auth.init({
+    //     clientId : 'serviceid.haiwai.blog',
+    //     scope : 'email',
+    //     redirectURI : 'http://local.haiwai.com:8080/login',
+    //     state:"abc",
+    //     usePopup : true,
+    //     // response_mode: "query" //or false defaults to false
+    // });
+    console.log(this.$route.path)
+    // this.lineSignin();
   },
   methods:{
       isShowLogin(v){
@@ -222,10 +222,11 @@ components: {
     console.log("$route.query.redirect:"+this.$route.query.redirect);
         if(this.$route.query.redirect){
           this.$router.push(this.$route.query.redirect);
+        }else if(this.$route.path=="/login"){
+          this.$router.push('/');
         }else{
           this.$emit('closedialog')
         }
-        // localStorage.setItem('loginState', res.state);
       },
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile();
