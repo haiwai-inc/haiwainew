@@ -260,15 +260,13 @@ export default {
     },
     async get_tags(k){
       this.search.tag = await this.search.get_tags(k);
-      console.log(this.search.tag)
       this.get_all_tag_articles();
     },
     async get_all_tag_articles(){
       this.search.tag.data.forEach(t=>{
         this.tagres.push(t.id)
-      });console.log("get tag")
+      });
       this.get_tags_articles(this.tagres,this.lastScore.tag_articles);
-        console.log(this.search.tag_articles)
     },
     async get_tags_articles(tags,lastScore){
       if (lastScore==0){
@@ -284,6 +282,7 @@ export default {
         this.lastScore.tag_articles = data.length>0?data[data.length-1]._score:0;
         this.noMore.tag_articles = this.nomoreStatus(arr.length);
       }
+      console.log(tags,lastScore);
     },
     async get_categories(k,lastScore){
       this.search.categories = await this.search.search_categories(k,lastScore);
