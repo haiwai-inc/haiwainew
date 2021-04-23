@@ -309,7 +309,7 @@ export default {
   border-radius: 20px;
 }
 .el-select .el-input {
-    width: 90px;
+    width: 80px;
   }
 .input-with-select .el-input-group__prepend {
     background-color: #fff;
