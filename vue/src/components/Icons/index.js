@@ -47,6 +47,8 @@ import IconSchedule from './IconSchedule.vue';
 import IconScheduled from './IconScheduled.vue';
 import IconCollected from './IconCollected.vue';
 import IconBloggerBg from './IconBloggerBg.vue';
+import IconBlog from './IconBlog.vue';
+import IconCollection from './IconCollection.vue';
 
 
 
@@ -99,6 +101,8 @@ export {
   CopyLogo,
   WechatLogo,
   IconCollected,
-  IconBloggerBg
+  IconBloggerBg,
+  IconBlog,
+  IconCollection
 
 };
