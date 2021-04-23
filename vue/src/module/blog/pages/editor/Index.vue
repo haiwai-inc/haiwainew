@@ -189,7 +189,7 @@ import Editor from '@tinymce/tinymce-vue'
 // import CategoryArticleList from "./components/CategoryArticleList";
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem, Tag, Select, Option, Radio, Autocomplete} from "element-ui";
+import { Collapse, CollapseItem, Tag, Radio, Autocomplete} from "element-ui";
 // import {
 //   IconX,
 // } from "@/components/Icons";
@@ -241,8 +241,8 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [Tag.name]:Tag,
-    [Select.name]:Select,
-    [Option.name]:Option,
+    // [Select.name]:Select,
+    // [Option.name]:Option,
     [Radio.name]:Radio,
     [Autocomplete.name]: Autocomplete,
     // HaiwaiLogoWhite,

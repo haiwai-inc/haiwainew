@@ -56,7 +56,7 @@
         </div>
         <!-- 标签 -->
         <div v-if="activeId === 2">
-          <div v-if="search.tag.data.length!==0">
+          <div class="mb-4" v-if="search.tag.data.length!==0">
             <b>相关标签</b><div class="w-100"></div>
             <el-button class="search_tag"
             size="mini" 
@@ -141,7 +141,7 @@ export default {
         {
           id: 1,
           icon:icons.notice,
-          title: "用户",
+          title: "博客",
           noticeList: [],
           unread: "",
         },
@@ -304,12 +304,14 @@ export default {
     },
   },
   created() {
-    this.keyword = this.$route.query.keyword
+    this.keyword = this.$route.query.keyword;
+    this.activeId = Number(this.$route.query.tab);
     this.doSearch(this.keyword);
   },
   watch:{
     $route(){
-      this.keyword = this.$route.query.keyword
+      this.keyword = this.$route.query.keyword;
+      this.activeId = Number(this.$route.query.tab);
       this.doSearch(this.keyword);
     }
   }

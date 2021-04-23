@@ -14,8 +14,7 @@
   >
     <slot name="title">
       <a
-        class="dropdown-toggle nav-link"
-        :class="{ 'no-caret': hideArrow }"
+        class="dropdown-toggle nav-link text-truncate"
         data-toggle="dropdown"
       >
           <img v-if="data.avatar"

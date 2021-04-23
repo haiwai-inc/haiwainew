@@ -36,13 +36,22 @@
             <div class="name">{{ item.name }}</div>
           </template>
         </el-autocomplete> -->
-        <fg-input style="margin:0;"
+        <!-- <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
           :placeholder="$t('message').topnav.seachplaceholder"
           v-model="keyword"
           @keyup.enter.native="onSubmit"
         >
-        </fg-input>
+        </fg-input> -->
+        <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" @keyup.enter.native="onSubmit">
+          <el-select v-model="select" slot="prepend" placeholder="请选择">
+            <el-option label="文章" value="0"></el-option>
+            <el-option label="博客" value="1"></el-option>
+            <el-option label="标签" value="2"></el-option>
+            <el-option label="目录" value="3"></el-option>
+          </el-select>
+          <el-button slot="append" icon="el-icon-search" @click="onSubmit"></el-button>
+        </el-input>
       </div>
     </template>
     <template slot="navbar-menu">     
@@ -183,6 +192,7 @@ export default {
       stopDOM : ["BR","TIME","IMG","CANVAS","SCRIPT"],
       currentEncoding : true,
       targetEncoding : true,
+      select: '0'
     };
   },
   methods:{
@@ -240,11 +250,11 @@ export default {
       this.translatePage()
     },
     onSubmit(){
-      this.doSearch(this.keyword,0);
+      this.doSearch(this.keyword,this.select);
     },
 
-    async doSearch(k,tag){
-      this.$router.push({path:'/search/',query:{keyword:k,tag:tag}});
+    async doSearch(k,tab){
+      this.$router.push({path:'/search/',query:{keyword:k,tab:tab}});
     },
 
     setFontSize(size){
@@ -297,6 +307,20 @@ export default {
 <style>
 .el-input__inner{
   border-radius: 20px;
+}
+.el-select .el-input {
+    width: 90px;
+  }
+.input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
+.el-input-group__append{
+  border-top-right-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+}
+.el-input-group__prepend {
+  border-top-left-radius: 24px !important;
+  border-bottom-left-radius: 24px !important;
 }
 .editicon{
   fill:#32caf9;
