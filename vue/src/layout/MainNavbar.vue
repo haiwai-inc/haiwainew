@@ -43,7 +43,7 @@
           @keyup.enter.native="onSubmit"
         >
         </fg-input> -->
-        <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select" @keyup.enter.native="onSubmit">
+        <el-input :placeholder="$t('message').topnav.seachplaceholder" v-model="keyword" class="input-with-select" @keyup.enter.native="onSubmit">
           <el-select v-model="select" slot="prepend" placeholder="请选择">
             <el-option label="文章" value="0"></el-option>
             <el-option label="博客" value="1"></el-option>
