@@ -59,7 +59,7 @@
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
           </n-button>  -->
         </div>
-<el-dialog title="文学城用户登录" width="350px" :visible.sync="dialogFormVisible">
+<el-dialog title="文学城用户登录" width="350px" :visible.sync="dialogFormVisible" append-to-body>
   <el-form :model="wxcForm" :rules="wxcrules" ref="wxcForm" label-width="10px">
     <el-form-item
       prop="username"
