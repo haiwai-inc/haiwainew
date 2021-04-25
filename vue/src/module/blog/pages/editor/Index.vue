@@ -588,6 +588,7 @@ export default {
   created() {
   },
   mounted() {
+    document.documentElement.setAttribute("class", "");
     console.log(this.$route.redirect)
     // this.initEditor();
   },

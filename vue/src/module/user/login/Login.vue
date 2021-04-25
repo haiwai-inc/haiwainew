@@ -60,6 +60,7 @@ export default {
     }else{
       this.showPage="login"
     }
+    document.documentElement.setAttribute("class", "");
   },
   data() {
     return {
