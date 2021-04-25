@@ -21,7 +21,11 @@
     </template>
     
     <template slot="before-menu"> 
-      <div style="max-width:500px;padding:0 18px;">
+      
+    </template>
+    <template slot="navbar-menu">
+      <div class="searchbar mr-3">
+      <!-- <div style="max-width:500px;padding:0 18px;"> -->
         <!-- <el-autocomplete
           class="inline-input"
           v-model="keyword"
@@ -53,8 +57,6 @@
           <el-button slot="append" icon="el-icon-search" @click="onSubmit"></el-button>
         </el-input>
       </div>
-    </template>
-    <template slot="navbar-menu">     
       <drop-down v-if="!($route.path.indexOf('/blog/p/'))"
         class="nav-item dropdown"
         icon="now-ui-icons text_caps-small"
@@ -140,11 +142,12 @@
         </n-button>
       </li>
       <!-- @click="$refs.dialog.isLogin()" -->
+      
     </template>
     <template slot="after-menu">
       
     </template>
-    <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog>
+    <!-- <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog> -->
   </navbar>
   
 </template>
@@ -155,7 +158,7 @@ import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupIn
 // import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
 import account from '../module/user/service/account';
-import LoginDialog from '../module/user/login/LoginDialog';
+// import LoginDialog from '../module/user/login/LoginDialog';
 
 export default {
   name: 'main-navbar',
@@ -174,7 +177,7 @@ export default {
     [Button.name]: Button,
     // [Autocomplete.name]: Autocomplete,
     IconPen,
-    LoginDialog
+    // LoginDialog
   },
   watch:{
     "$store.state.user.userinfo.id":function(val){
@@ -308,9 +311,9 @@ export default {
 .el-input__inner{
   border-radius: 20px;
 }
-.el-select .el-input {
-    width: 80px;
-  }
+.searchbar .el-select .el-input {
+  width: 80px;
+}
 .input-with-select .el-input-group__prepend {
     background-color: #fff;
   }
@@ -329,7 +332,7 @@ export default {
   height:20px;
 }
 .switchbtn{
-  margin:12px 35px;
+  margin:12px 20px;
 }
 .noticealert{
   position: absolute;
