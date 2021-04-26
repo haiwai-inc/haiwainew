@@ -89,7 +89,7 @@
           <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
         </a> 
       </li>
-      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">{{$t('message').topnav.login}}</router-link></div>
+      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><nav-link to="/login">{{$t('message').topnav.login}}</nav-link></div>
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
@@ -310,6 +310,9 @@ export default {
 <style>
 .el-input__inner{
   border-radius: 20px;
+}
+.searchbar{
+  padding-top:3px;
 }
 .searchbar .el-select .el-input {
   width: 80px;
