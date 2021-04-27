@@ -17,9 +17,15 @@
       <div class='align-self-center right pl-2 flex-grow-1'> 
           <div class="d-flex align-self-center justify-content-between">
               <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-                <router-link :to="'/blog/user/'+curent_data.bloggerID">{{curent_data.userinfo_userID.username}}
+                <router-link :to="'/blog/user/'+curent_data.bloggerID">
+                <span v-if="usertype!=='search'">{{curent_data.userinfo_userID.username}}</span>
+                <span v-if="usertype==='search'" class="text-muted">
+                  <span v-html="curent_data.username" style="color:#14171a;"></span>
+                  <span style="font-size:24px;font-weight:300;padding:0 14px">|</span>博客名：<span v-html="curent_data.name"></span>
+                </span>
                 </router-link>
               </div>
+              
               <div>
                   <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(curent_data.userID)">
                       <div class="d-flex justify-content-end align-items-end add">

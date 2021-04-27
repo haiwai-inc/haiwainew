@@ -47,7 +47,7 @@
             <bloger-list-item 
             v-for="(item,index) in search.blogger.data" 
             v-bind:key="index" 
-            :data="item"></bloger-list-item>
+            :data="item" :usertype="'search'"></bloger-list-item>
           </div>
           <div class="text-center py-5" v-if="loading.blogger"><!-- loader -->
             <i class="now-ui-icons loader_refresh spin"></i>
