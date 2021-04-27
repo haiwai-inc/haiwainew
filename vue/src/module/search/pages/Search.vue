@@ -256,6 +256,7 @@ export default {
         this.lastScore.blogger = data.length>0?data[data.length-1]._score:0;
         this.noMore.blogger = this.nomoreStatus(arr.length);
       }
+      console.log(this.search.blogger.data);
       this.loading.blogger = false;
     },
     async get_tags(k){

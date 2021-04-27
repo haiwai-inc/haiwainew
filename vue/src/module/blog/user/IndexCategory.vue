@@ -20,9 +20,9 @@
                    <!-- <span class="blog-user-index-des ml-4">阅读.10853(假数据)</span> -->
                  </div>
                  <div>
-                  <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
+                  <!-- <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
                     <span style=" fill:#39B8EB;" v-html="icons.share"></span>
-                 </button>
+                 </button> -->
                  </div>
               </div>
              <!-- header end -->

@@ -2,31 +2,31 @@
   <div>
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
       <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
-        <router-link :to="'/blog/user/'+data.bloggerID">
-        <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>
+        <router-link :to="'/blog/user/'+curent_data.bloggerID">
+        <icon-V class="text-primary lable" v-if="curent_data.userinfo_userID.is_hot_blogger"></icon-V>
         <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
-          <div v-if="!data.userinfo_userID.avatar" class="avatar-word">{{data.userinfo_userID.first_letter}}</div>
+          <div v-if="!curent_data.userinfo_userID.avatar" class="avatar-word">{{curent_data.userinfo_userID.first_letter}}</div>
           <img 
-            v-if="data.userinfo_userID.avatar" 
-            v-bind:alt="data.userinfo_userID.username" 
+            v-if="curent_data.userinfo_userID.avatar" 
+            v-bind:alt="curent_data.userinfo_userID.username" 
             class="rounded-circle" 
-            v-bind:src="data.userinfo_userID.avatar" 
+            v-bind:src="curent_data.userinfo_userID.avatar" 
             >
         </router-link>
       </div>
       <div class='align-self-center right pl-2 flex-grow-1'> 
           <div class="d-flex align-self-center justify-content-between">
               <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-                <router-link :to="'/blog/user/'+data.bloggerID">{{data.userinfo_userID.username}}
+                <router-link :to="'/blog/user/'+curent_data.bloggerID">{{curent_data.userinfo_userID.username}}
                 </router-link>
               </div>
               <div>
-                  <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(data.userID)">
+                  <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(curent_data.userID)">
                       <div class="d-flex justify-content-end align-items-end add">
                           <icon-plus></icon-plus>
                           {{$t('message').blog.blogger_follow}}
                       </div></a>
-                  <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(data.userID)">
+                  <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(curent_data.userID)">
                       <span class="cancel-text text-danger">
                           <div class="d-flex justify-content-end align-items-end">
                             <icon-x :style="{fill:'#FF3636'}"></icon-x>
@@ -42,8 +42,8 @@
                   </a>
               </div>
           </div>
-          <div id="description" class="description" :title="data.description">
-            {{data.description}}
+          <div id="description" class="description" :title="curent_data.description">
+            {{curent_data.description}}
           </div> 
       </div>
     </div>
@@ -90,7 +90,8 @@ export default {
         is_hot_blogger:Number,
         is_following:Number
       }
-    }
+    },
+    usertype:String
   },
   components: {
     [Button.name]: Button,
@@ -100,9 +101,12 @@ export default {
     IconV,
     LoginDialog
   },
-  mounted: function () {
+  created: function () {
     let userinfor = this.$store.state.user.userinfo
     this.loginuserID = userinfor?userinfor.UserID:-1;
+    if(this.usertype=="follower"){
+      this.curent_data.userinfo_userID = this.data.userinfo_followerID
+    }
   },
   methods:{
     following_add(id){
