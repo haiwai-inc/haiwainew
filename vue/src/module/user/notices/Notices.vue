@@ -4,7 +4,7 @@
       <main-menu type="-1"></main-menu>
     </div>
     <div class="row">
-      <div class="col-sm-4 left-top-nav">
+      <div class="col-sm-3 left-top-nav">
         <left-nav-item
           v-for="(item, index) in data"
           :key="index"
@@ -13,7 +13,7 @@
           v-on:which-active="whichActive"
         ></left-nav-item>
       </div>
-      <div class="col-sm-8 col-12">
+      <div class="col-sm-9 col-12">
         <div v-if="activeId === 0">
           <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)" id="avatar" style="cursor:pointer">
             <div v-if="!item.userinfo_from_userID.avatar" class="avatar-word" :style="{height:'48px',width:'48px',lineHeight:'48px',minWidth:'48px'}">{{item.userinfo_from_userID.first_letter}}</div>

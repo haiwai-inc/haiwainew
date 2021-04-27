@@ -5,21 +5,21 @@
     </div>
       <div class="row">
          <div class="col-sm-3 left-top-nav">
-            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between"  :style="menuId===0?{color:'#39b8eb', fill: '#39b8eb', background: '#aliceblue'}:''">
+            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between"  :style="menuId===0?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-blog-set></icon-blog-set>
                   {{$t('message').setting.menu_bolg}}
                </div>
             </div>
             <div @click="menuId=1" class="left-nav-item d-flex justify-content-between"
-            :style="menuId===1?{color:'#39b8eb', fill: '#39b8eb'}:''">
+            :style="menuId===1?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-account-set></icon-account-set>
                   {{$t('message').setting.menu_accout}}
                </div>
             </div>
             <div @click="menuId=2" class="left-nav-item d-flex justify-content-between"
-            :style="menuId===2?{color:'#39b8eb', fill: '#39b8eb'}:''">
+            :style="menuId===2?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-black-list></icon-black-list>
                   {{$t('message').setting.menu_blacklist}}
