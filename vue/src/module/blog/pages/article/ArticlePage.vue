@@ -111,7 +111,7 @@
               ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
-              <i class="now-ui-icons loader_refresh spin"></i>{{loading.comment}}
+              <i class="now-ui-icons loader_refresh spin"></i>
           </div>
           <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="getComment">加载更多评论</p>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
