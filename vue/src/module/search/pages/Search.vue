@@ -4,7 +4,7 @@
       <main-menu type="-1"></main-menu>
     </div>
     <div class="row">
-      <div class="col-sm-4 left-top-nav">
+      <div class="col-sm-3 left-top-nav">
         <left-nav-item
           v-for="(item, index) in data"
           :key="index"
@@ -16,7 +16,7 @@
         <div class="mt-3 px-3">孙悟空的文集</div>
         <div class="mt-2 px-3">川普</div> -->
       </div>
-      <div class="col-sm-8 col-12">
+      <div class="col-sm-9 col-12">
         <!-- 文章 -->
         <div v-if="activeId === 0">
           <span v-if="search.article.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>

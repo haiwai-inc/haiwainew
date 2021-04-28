@@ -126,9 +126,10 @@ class page extends Api {
      * 文章详情页侧栏
      * 文章 列表 标签
      * @param integer $tagID | 标签ID,标签ID,标签ID
-     * @param integer $lastID | postID
+     * @param integer $postID | 排重复的postID
+     * @param integer $lastID | 最后一个postID
      */
-    public function article_list_tag($tagID,$lastID=0){
+    public function article_list_tag($tagID,$postID=0,$lastID=0){
         //ES搜索tag
         $obj_article_index=load("search_article_index");
         $rs_article_index=$obj_article_index->search_tags([$tagID],$lastID,["postID"=>array("order"=>"desc")]);
@@ -141,6 +142,16 @@ class page extends Api {
         $obj_article_indexing=load("article_indexing");
         $rs_article_index=$obj_article_indexing->get_article_count($rs_article_index);
         
+        //排重
+        if(!empty($rs_article_index) && !empty($postID)){
+            foreach($rs_article_index as $k=>$v){
+                if($v['postID']==$postID){
+                    unset($rs_article_index[$k]);
+                }
+            }
+            $rs_article_index=array_values($rs_article_index);
+        }
+        
         return $rs_article_index;
     }
     
@@ -148,9 +159,10 @@ class page extends Api {
      * 博客主页
      * 文章 列表 最新
      * @param integer $bloggerID
+     * @param integer $postID | 排重postID
      * @param integer $lastID | 最后一个postID
      */
-    public function article_list_recent($bloggerID,$lastID=0){
+    public function article_list_recent($bloggerID,$postID=0,$lastID=0){
         $obj_blog_blogger=load("blog_blogger");
         
         $obj_article_indexing=load("article_indexing");
@@ -183,6 +195,16 @@ class page extends Api {
         
         //添加文章计数信息
         $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
+        //排重
+        if(!empty($rs_article_indexing) && !empty($postID)){
+            foreach($rs_article_indexing as $k=>$v){
+                if($v['postID']==$postID){
+                    unset($rs_article_indexing[$k]);
+                }
+            }
+            $rs_article_indexing=array_values($rs_article_indexing);
+        }
         
         return $rs_article_indexing;
     }
