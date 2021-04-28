@@ -168,7 +168,7 @@
             <div class="box my-3" v-if="recommend.articles.length>0">
                <div class="title  d-flex justify-content-between">
                   <h5>相关推荐</h5>
-                  <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
+                  <!-- <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button> -->
                </div>
                <span v-for="(item,index) in recommend.articles" :key="index">
                  <recommend-list-item :data="item" v-if="index<10"></recommend-list-item>
@@ -221,7 +221,7 @@ export default {
   methods:{
     article_view(){
       this.showcomment = false;
-      let postid = this.$route.params.id
+      let postid = this.$route.params.id ;
       blog.article_view(postid).then(res=>{
         this.articleDetail = res;console.log(res);
         if(res.status){
@@ -229,7 +229,7 @@ export default {
           this.shareItem.title = res.data.postInfo_postID.title;
           this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
           this.initRecommendProp(res);
-          this.getNewArticle(res,0);
+          this.getRecentArticle(res,0);
           this.getComment();
         }
       });
@@ -244,7 +244,8 @@ export default {
       this.getRecommend()
     },
     getRecommend(){
-      blog.article_list_tag(this.recommend.props.tags).then(res=>{
+      let postID = this.$route.params.id;
+      blog.article_list_tag(this.recommend.props.tags,postID).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data
@@ -253,9 +254,10 @@ export default {
         }
       })
     },
-    getNewArticle(res,lastID){
+    getRecentArticle(res,lastID){
+      let postID = this.$route.params.id;
       var bloggerID = res.data.bloggerID;
-      blog.article_list_recent(bloggerID,lastID).then(res=>{
+      blog.article_list_recent(bloggerID,lastID,postID).then(res=>{
         console.log(res);
         if(res.status){
           this.recommend.authorArticle = res.data

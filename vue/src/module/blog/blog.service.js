@@ -49,14 +49,18 @@ class Blog extends API{
   async article_view_related(id){
 	return await this.sendget("blog/page/article_view_related/?id="+id)
   }
-  async article_list_tag(id){
-	return await this.sendget("blog/page/article_list_tag/?tagID="+id)
+
+  /**
+   * 正文页相关推荐
+   */
+  async article_list_tag(id,postID){
+	return await this.sendget("blog/page/article_list_tag/?tagID="+id+"&postID="+postID)
   }
   /**
 	 * 返回博主首页最新列表
 	 */
-  async article_list_recent(bloggerID,lastid){
-    return await this.sendget("blog/page/article_list_recent/?bloggerID="+bloggerID+"&lastID="+lastid);
+  async article_list_recent(bloggerID,lastid,postID){
+    return await this.sendget("blog/page/article_list_recent/?bloggerID="+bloggerID+"&lastID="+lastid+"&postID="+postID);
   }
 
   /**
