@@ -250,8 +250,8 @@ color: #235592
 .hot-blogger .right .btn .add{
         fill: #35abbb;
         font-size: 1rem;
-        border-radius: 20px;
-        padding: 3px 13px;
+        /* border-radius: 20px;
+        padding: 3px 13px; */
 }
 .hot-blogger .right .btn:hover .add{
     fill:#236e85;

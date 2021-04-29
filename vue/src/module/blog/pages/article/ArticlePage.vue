@@ -14,19 +14,7 @@
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
-               <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
-              <div style="color:gray;">阅读 . {{articleDetail.data.countinfo_postID.count_read}}</div>
-             <a class="ml-3" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</a>
-            <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
-              placement="top-end"
-              confirm-button-text='删除'
-              cancel-button-text='取消'
-              title="确定删除这篇文章吗？"
-              :hide-icon="true"
-              @confirm="article_delete(articleDetail.data)"
-            >
-              <a href="javascript:void(0)" slot="reference" class="ml-3" style="color:#39b8eb">删除</a>
-            </el-popconfirm>
+               
               <div class="media-icons">
                 <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
                   
@@ -76,6 +64,21 @@
                 </el-popover>
               
               </div>
+            </div>
+            <div class="d-flex align-items-center">
+              <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
+              <div style="color:gray;" class="ml-3">阅读: {{articleDetail.data.countinfo_postID.count_read}}</div>
+              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</el-button>
+              <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                title="确定删除这篇文章吗？"
+                :hide-icon="true"
+                @confirm="article_delete(articleDetail.data)"
+              >
+                <el-button type="text" icon="el-icon-delete" slot="reference" class="ml-3" style="color:#39b8eb">删除</el-button>
+              </el-popconfirm>
             </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
               <!-- blog 正文 -->
