@@ -23,6 +23,14 @@ class account_notification extends Model{
 	        }
 	    }
 	    if($type=="reply"){
+	        //查询主贴ID
+	        $obj_article_indexing=load("article_indexing");
+	        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','treelevel'],['postID'=>$typeID]);
+	        if($rs_article_indexing['treelevel']==2){
+	            $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','treelevel'],['postID'=>$rs_article_indexing['basecode']]);
+	        }
+	        $typeID=$rs_article_indexing['basecode'];
+	        
 	        $obj_article_post=load("article_post");
 	        $rs_article_post=$obj_article_post->getOne(['title'],['id'=>$typeID],"post_".substr('0'.$userID,-1));
 	        if($msgtype=="add"){
