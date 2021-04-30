@@ -75,19 +75,21 @@
         @input="s_t"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
-        <a
-          class="nav-link"
-          style="margin-top:3px;z-index:1000"
-          rel="tooltip"
-          title="消息"
-          data-placement="bottom"
-          href="javascript:void(0)"
-          @click="$router.push('/notices?id=0')"
-          >
-          <div class="noticealert" v-if="$store.state.user.notice.totall"></div>
-          <i class="now-ui-icons ui-1_bell-53"></i>
-          <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
-        </a> 
+        <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="10" class="badge-item">
+          <a
+            class="nav-link"
+            style="margin-top:3px;z-index:1000"
+            rel="tooltip"
+            title="消息"
+            data-placement="bottom"
+            href="javascript:void(0)"
+            @click="$router.push('/notices?id=0')"
+            >
+            <!-- <div class="noticealert" v-if="$store.state.user.notice.totall"></div> -->
+            <i class="now-ui-icons ui-1_bell-53"></i>
+            <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
+          </a> 
+        </el-badge>
       </li>
       <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><nav-link to="/login">{{$t('message').topnav.login}}</nav-link></div>
       <profile-drop-down
@@ -322,6 +324,10 @@ export default {
 }
 .switchbtn{
   margin:12px 20px;
+}
+.badge-item .el-badge__content.is-fixed{
+  top:12px;
+  right:20px;
 }
 .noticealert{
   position: absolute;

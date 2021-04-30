@@ -170,6 +170,7 @@ export default {
     },
     async notification_unread_clear(type){
       let n = await this.user.notification_unread_clear(type);
+      this.allNoticeCount();
       console.log(n);
     },
     async showAllNotice(){
