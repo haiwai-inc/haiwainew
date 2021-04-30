@@ -29,10 +29,10 @@ class account_notification extends Model{
 	        if($rs_article_indexing['treelevel']==2){
 	            $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','treelevel'],['postID'=>$rs_article_indexing['basecode']]);
 	        }
-	        $typeID=$rs_article_indexing['basecode'];
+	        $id=$rs_article_indexing['basecode'];
 	        
 	        $obj_article_post=load("article_post");
-	        $rs_article_post=$obj_article_post->getOne(['title'],['id'=>$typeID],"post_".substr('0'.$userID,-1));
+	        $rs_article_post=$obj_article_post->getOne(['title'],['id'=>$id],"post_".substr('0'.$userID,-1));
 	        if($msgtype=="add"){
 	            $msgbody=$rs_account_user['username']." 评论了您的文章: ". $rs_article_post['title'];
 	        }
