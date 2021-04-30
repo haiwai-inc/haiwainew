@@ -272,7 +272,12 @@ class blog_tool{
         
         //小图保存
         if(!empty($rs_image)){
-            $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+            if(!empty($rs_blog_legacy_blogger['blog_pic'])){
+                $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
+            }else{
+                picture::saveImg($old_blog_pic,$path,"{$filename}_750_420");
+            }
+            
             $this->obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
         }
         
