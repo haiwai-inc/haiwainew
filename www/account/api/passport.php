@@ -75,8 +75,8 @@ class passport extends Api {
      * 用户 文学城 到 海外
      * @param string $token|文学城用户token
      */
-    public function user_login_wxc_to_haiwai($haiwai_token=""){
-        if(empty($haiwai_token))   {$this->error="错误";$this->status=false;return false;}
+    public function user_login_wxc_to_haiwai($token=""){
+        if(empty($token))   {$this->error="错误";$this->status=false;return false;}
         
         //文学城带入登录/注册
         if(empty($_SESSION['UserID']) ){
