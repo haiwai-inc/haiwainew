@@ -292,7 +292,7 @@ class user extends Api {
     public function article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>$id]);
-        if(empty($rs_blog_category)) {$this->error="此文集不存在";$this->status=false;return false;}
+        if(empty($rs_blog_category)) {$this->error="此目录不存在";$this->status=false;return false;}
         
         //文章
         $obj_article_indexing=load("article_indexing");
