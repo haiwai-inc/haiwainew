@@ -81,10 +81,10 @@ class passport extends Api {
         //文学城带入登录/注册
         if(empty($_SESSION['UserID']) ){
             $obj_memcache = func_initMemcached('cache02');
-            $userID=$obj_memcache->get($token);
-            if(!empty($userID)){
+            $wxc_userID=$obj_memcache->get($token);
+            if(!empty($wxc_userID)){
                 $obj_account_user_login=load("account_user_login");
-                $rs_account_user=$obj_account_user_login->wxc_to_haiwai_login($userID);
+                $rs_account_user=$obj_account_user_login->wxc_to_haiwai_login($wxc_userID);
                 if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
             }
         }
