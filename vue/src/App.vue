@@ -14,10 +14,6 @@ export default {};
 html{
   font-size: 16px;
 }
-@media (min-width: 768px){
-  .container {
-      max-width: 768px !important;
-  }
-}
+
 
 </style>
