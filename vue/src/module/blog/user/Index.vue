@@ -16,15 +16,15 @@
         </div>
        <div class="col-sm-9 col-12">
             <div class="profile-header mt-2 mb-3 border-bottom">
-            <ul class="nav justify-content-center">
-                <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
-                    <a 
-                    class="nav-link" 
-                    :class="{active:currentTabId==item.id}" 
-                    href="#"
-                    @click="changeTab(item.id)">{{item.text}}</a>
-                </li>
-            </ul>
+                <ul class="nav justify-content-center">
+                    <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
+                        <a 
+                        class="nav-link" 
+                        :class="{active:currentTabId==item.id}" 
+                        href="#"
+                        @click="changeTab(item.id)">{{item.text}}</a>
+                    </li>
+                </ul>
             </div>
             <div
             v-infinite-scroll="loadArticle"

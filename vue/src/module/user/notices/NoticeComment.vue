@@ -1,8 +1,8 @@
 <template>
     <div>  
-        <h6 class="font-weight-normal pb-3">
+        <!-- <h6 class="font-weight-normal pb-3">
           我收到的评论
-        </h6>
+        </h6> -->
         <div v-if="comments.status">
         <div v-for="item in comments.data" :key="item.id">
             <h5 

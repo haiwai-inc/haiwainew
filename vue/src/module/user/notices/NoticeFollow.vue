@@ -1,8 +1,8 @@
 <template>
     <div v-if="this.follows.authorList.length>0">
-        <h6 @click="getfollower"
+        <!-- <h6 @click="getfollower"
         class="pb-2 font-weight-normal"
-        >{{follows.title}}</h6>
+        >{{follows.title}}</h6> -->
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item" :usertype="'follower'"></bloger-list-item>
     </div>
 </template>

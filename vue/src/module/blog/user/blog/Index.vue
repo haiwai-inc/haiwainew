@@ -128,7 +128,7 @@
             <div class="text-center py-5" v-if="loading.article"><!-- loader -->
                 <i class="now-ui-icons loader_refresh spin"></i>
             </div>
-            <p class="text-center py-4" v-if="noMore">没有更多了</p>
+            <p class="text-center py-4" v-if="noMore">没有更多文章了</p>
         </div>
         
       </div>

@@ -4,7 +4,7 @@
       <main-menu type="-1"></main-menu>
     </div>
     <div class="row">
-      <div class="col-sm-3 left-top-nav">
+      <div class="col-sm-3 left-top-nav d-none d-sm-block">
         <left-nav-item
           v-for="(item, index) in data"
           :key="index"
@@ -12,6 +12,19 @@
           :activeId="activeId"
           v-on:which-active="whichActive"
         ></left-nav-item>
+      </div>
+      <div class="d-block d-sm-none p-3">
+        消息类型：
+        <el-select v-model="activeId" placeholder="请选择" @change="whichActive(activeId)">
+                <el-option
+                v-for="item in data"
+                :key="item.id"
+                :label="item.title"
+                :value="item.id">
+                <span style="float: left">{{ item.title }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread }}</span>
+                </el-option>
+            </el-select>
       </div>
       <div class="col-sm-9 col-12">
         <div v-if="activeId === 0">
@@ -204,14 +217,12 @@ export default {
     text-align: center;
     font-weight: 500;
 }
-@media (max-width: 575.98px) {
-  .left-top-nav .name svg,
-  .left-top-nav .descrip {
+@media (max-width: 768px) {
+  .left-top-nav .name svg{
     display: none;
   }
-  .left-top-nav {
-    display: flex;
-    justify-content: space-between;
+  .left-top-nav{
+    padding:12px 0;
   }
 }
 </style>
