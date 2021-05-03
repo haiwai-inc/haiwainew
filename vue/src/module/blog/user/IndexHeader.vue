@@ -34,7 +34,7 @@
                     size="sm"
                     @click="openModal()"
                     >
-                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:1.0rem;">发悄悄话</span>
+                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:1rem;">发悄悄话</span>
                     </n-button>
                     
                     <n-button 
@@ -331,8 +331,10 @@ export default {
 
     }
 .blog-user-index .qqh {
-    margin: 10px 58px 10px -18px;
-}
+        margin: 10px;
+        width: 100%;
+        float: left
+ }       
 .blog-user-index .user-avatar img,
 .blog-user-index .avatar-word{
         min-width: 60px;
@@ -343,7 +345,7 @@ export default {
         border-radius: 50%;
     }
 .blog-user-index .editbtn {
-        color: #888888e6!important;
+
         border-color: #888888e6!important;
 }
 .blog-user-index  .row.textgroup{
