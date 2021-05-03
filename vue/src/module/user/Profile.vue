@@ -31,7 +31,7 @@
                <regist-blog></regist-blog>
             </div>
             <div v-if="menuId===0 && $store.state.user.bloggerID!=0">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.blog_title}}</h5>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
                      <div class="user-bgup"></div>
@@ -71,7 +71,7 @@
                <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.accout_title}}</h5>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:150px;width:150px;text-align:center;font-size:46px;line-height:150px"><b>{{authorInfor.first_letter}}</b></div></span>
@@ -137,7 +137,7 @@
                <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
             </div>
             <div v-if="menuId===2">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.black_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.black_title}}</h5>
                <div class="box my-3">
                   <div v-for="(item,index) in blackList" :key="index" class=" blacklist align-self-center col-12 no-gutters">
                      <div class="d-flex align-self-center">
