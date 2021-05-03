@@ -5,8 +5,8 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
-        <div class="d-block d-sm-none w-100 p-3 d-flex justify-content-between">
-          <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
+        <div class="d-block d-sm-none w-100 p-3 d-flex">
+          <!-- <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
             <el-option :key="-1" :label="'请选择'" :value='-1'></el-option>
             <el-option :key='0' :label="'全部更新文章'" :value='0'>
             </el-option>
@@ -18,8 +18,20 @@
             <span style="float: left;color:black">{{ item.userinfo_followingID.username }} <span class="text-muted">的文章</span></span>
             <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
             </el-option>
-          </el-select>
-          <el-button v-if="authorList.length>0" type="text" icon="el-icon-plus" @click="changeID(-1)">添加关注</el-button>
+          </el-select> -->
+          <div class="flex-grow-1 mobile-avatar" style="overflow-x:auto;overflow-y:hidden">
+            <ul style="white-space:nowrap;display:block;overflow:auto;padding-inline-start:0px">
+              <li v-for="item in authorList" 
+              style="list-style:none;display:inline-block;margin-left:10px;padding-top:6px;vertical-align:top"
+              :key="item.id" @click="$router.push('/blog/user/'+item.bloggerID)">
+                <!-- <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar> -->
+                <el-avatar v-if="item.userinfo_followingID.avatar" :src="item.userinfo_followingID.avatar" :size="50"></el-avatar>
+                <el-avatar v-if="!item.userinfo_followingID.avatar" :size="50">{{item.userinfo_followingID.first_letter}}</el-avatar>
+                 <icon-V class="text-primary lable" v-if="item.userinfo_followingID.is_hot_blogger"></icon-V>
+              </li>
+            </ul>
+          </div>
+          <el-button v-if="authorList.length>0" circle @click="changeID(-1)" class="ml-3"><i class="el-icon-plus"></i><br><span style="font-size:8px">添加关注</span></el-button>
         </div>
         <div class="col-sm-3 d-none d-sm-block">
           <div class="followed-blogger">
@@ -176,10 +188,21 @@ export default {
   color: #425466
 }
 .followed-blogger svg.text-primary.lable {
-        position: absolute;
-        margin-left: 25px;
-        margin-top: -46px;
-        transform: rotate(34deg)
+  position: absolute;
+  margin-left: 25px;
+  margin-top: -46px;
+  transform: rotate(34deg)
+}
+.mobile-avatar{
+  margin: 0;
+  height:60px;
+  box-shadow: -8px 0px 5px -5px #ececec inset;
+}
+.mobile-avatar svg {
+  /* position: absolute; */
+  margin-left: -18px;
+  margin-top: -86px;
+  transform: rotate(34deg)
 }
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;
