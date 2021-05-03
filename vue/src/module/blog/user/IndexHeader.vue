@@ -22,19 +22,19 @@
             
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
-               <div class="row">
+               <div class="row textgroup">
                 <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>{{data.userinfo_userID.username}}</span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
                 </div>
                 <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
                 <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
-                <div class="float-right pr-4" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
+                <div class="float-right pr-4 qqh" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
                     <n-button  
                     link 
                     size="sm"
                     @click="openModal()"
                     >
-                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:0.9rem;">发悄悄话</span>
+                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:1.0rem;">发悄悄话</span>
                     </n-button>
                     
                     <n-button 
@@ -308,8 +308,7 @@ export default {
          padding-right: 0;
          font-weight:400;
          margin:12px 0 12px 0
-}
-        
+}       
 .blog-user-index .avatar-word{
     background-color: aliceblue;
     text-align: center;
@@ -318,17 +317,40 @@ export default {
     line-height: 90px;
 }
 @media (max-width: 767.98px) {
-    .blog-user-index .user-avatar img,
-    .blog-user-index .avatar-word{
+     .blog-user-index .bdescription,
+     .blog-user-index .blog-user-index-des.x{
+     display:none
+     }
+.blog-user-index .user-bgup {
+        background: no-repeat;
+        padding: 20px 10px;
+        height: 20vw;
+}
+.blog-user-index.user-bg.d-flex{
+    background-image: no;
+
+    }
+.blog-user-index .qqh {
+    margin: 10px 58px 10px -18px;
+}
+.blog-user-index .user-avatar img,
+.blog-user-index .avatar-word{
         min-width: 60px;
         width:60px;
         height: 60px;
-        margin: -30px 10px 10px 10px;
+        margin: -7px 10px 10px 10px;
         border:2px white solid;
         border-radius: 50%;
     }
-    .blog-user-index{
+.blog-user-index .editbtn {
+        color: #888888e6!important;
+        border-color: #888888e6!important;
+}
+.blog-user-index  .row.textgroup{
+    flex-wrap: inherit
+}
+.blog-user-index{
         padding: 0 !important;
-    }
+}
 }
 </style>
