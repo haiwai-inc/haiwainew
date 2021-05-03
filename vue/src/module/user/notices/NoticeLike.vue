@@ -1,6 +1,17 @@
 <template>
     <div>
-        <!-- <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的赞</h6> -->
+        <h6 class="pb-3 font-weight-normal" @click="getlike">我收到的赞</h6>
+          <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative">
+             <div class="col-12 pt-4 col-md-8"><img src="/img/like.png" class="logo"></div>
+             <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
+                <div class="row featurette ">
+                   <div class="mt-5 col-md-12 m torder-md-2">
+                      <h5 class="featurette-heading">如果有人给您的文章点赞</h5>
+                      <p class="lead text-dark">您就可以在<br>“我收到的赞”里看到他的名字<br>和她点赞的文章</p>
+                   </div>
+                </div>
+             </div>
+          </div>
           <article-list-item
             v-for="item in articlelists"
             v-bind:key="item.postID"
