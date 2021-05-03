@@ -16,15 +16,15 @@
       <div class="d-block d-sm-none p-3">
         消息类型：
         <el-select v-model="activeId" placeholder="请选择" @change="whichActive(activeId)">
-                <el-option
-                v-for="item in data"
-                :key="item.id"
-                :label="item.title"
-                :value="item.id">
-                <span style="float: left">{{ item.title }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread }}</span>
-                </el-option>
-            </el-select>
+            <el-option
+            v-for="item in data"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+            <span style="float: left">{{ item.title }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread }}</span>
+            </el-option>
+        </el-select>
       </div>
       <div class="col-sm-9 col-12">
         <div v-if="activeId === 0">

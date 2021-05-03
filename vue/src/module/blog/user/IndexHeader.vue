@@ -317,4 +317,18 @@ export default {
     font-size: 36px;
     line-height: 90px;
 }
+@media (max-width: 767.98px) {
+    .blog-user-index .user-avatar img,
+    .blog-user-index .avatar-word{
+        min-width: 60px;
+        width:60px;
+        height: 60px;
+        margin: -30px 10px 10px 10px;
+        border:2px white solid;
+        border-radius: 50%;
+    }
+    .blog-user-index{
+        padding: 0 !important;
+    }
+}
 </style>

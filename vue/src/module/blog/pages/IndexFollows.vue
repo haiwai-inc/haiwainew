@@ -5,10 +5,26 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
+        <div class="d-block d-sm-none w-100 p-3 d-flex justify-content-between">
+          <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
+            <el-option :key="-1" :label="'请选择'" :value='-1'></el-option>
+            <el-option :key='0' :label="'全部更新文章'" :value='0'>
+            </el-option>
+            <el-option
+            v-for="(item,index) in authorList"
+            :key="item.id"
+            :label="item.userinfo_followingID.username"
+            :value="index+1">
+            <span style="float: left;color:black">{{ item.userinfo_followingID.username }} <span class="text-muted">的文章</span></span>
+            <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
+            </el-option>
+          </el-select>
+          <el-button v-if="authorList.length>0" type="text" icon="el-icon-plus" @click="changeID(-1)">添加关注</el-button>
+        </div>
         <div class="col-sm-3 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
-              <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
+              <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">添加关注</span></li>
             </ul>
             <ul v-if="authorList.length>0">
               
@@ -48,10 +64,10 @@
               </article-list-item>
             </div>
           </div>
-          <div v-if="selectItem.followingID==-1">
+          <template v-if="selectItem.followingID==-1">
             <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -95,7 +111,15 @@ export default {
     this.getFollowing();
   },
   methods:{
-    selected(item){
+    changeID(id){
+      if(id>0){
+        this.selectItem = this.authorList[id-1]
+      }else{
+        this.selectItem = {followingID:id};
+        this.selectID = id;
+      }
+    },
+    selected(item){console.log(item);
       this.selectItem=item;
       this.getArticleList();
     },
@@ -124,7 +148,8 @@ export default {
       selectItem:{},
       authorList : [],
       articlelists: [],
-      hotBlobbers:[]
+      hotBlobbers:[],
+      selectID:0
     };
   },
 };
