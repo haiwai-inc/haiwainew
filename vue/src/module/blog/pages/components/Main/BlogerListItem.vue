@@ -147,6 +147,11 @@ export default {
       error:'',
       curent_data:this.data
     }
+  },
+  watch:{
+    data(val){
+      this.curent_data = val
+    }
   }
 }
 
