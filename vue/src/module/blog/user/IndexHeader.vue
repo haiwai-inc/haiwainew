@@ -38,13 +38,13 @@
                     </n-button>
                     
                     <n-button 
-                    :type="data.userinfo_userID.is_following?'simple':'primary'" 
+                    :type="data.userinfo_userID.is_following?'text':'primary'" 
                     round 
                     size="sm"
                     @click="follow"
                     class="editbtn ml-3"
                     >
-                        <icon-plus :style="data.userinfo_userID.is_following?{fill:'#aba7a7'}:{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
+                        <icon-plus :style="{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
                     </n-button>
                 </div>
             </div>
@@ -345,8 +345,7 @@ export default {
         border-radius: 50%;
     }
 .blog-user-index .editbtn {
-
-        border-color: #888888e6!important;
+    border-color: #888888e6!important;
 }
 .blog-user-index  .row.textgroup{
     flex-wrap: inherit
