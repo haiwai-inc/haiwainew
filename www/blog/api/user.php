@@ -272,6 +272,7 @@ class user extends Api {
             'order'=>['id'=>'DESC'],
             'treelevel'=>0,
             'visible'=>1,
+            'limit'=>30,
             'OR'=>['userID'=>$followingID_account_follow]
         ];
         if(!empty($lastID)){
