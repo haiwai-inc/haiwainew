@@ -242,11 +242,13 @@ class user extends Api {
      * 二级页面
      * 关注 文章 列表
      * @param integer $followingID | 关注人的ID
+     * @param integer $lastID | 最后一个postID
      */
-    public function following_article_list($followingID=0){
+    public function following_article_list($followingID=0,$lastID=0){
         $obj_account_follow=load("account_follow");
         $obj_account_user=load("account_user");
         
+        //全部列表
         if(!empty($followingID)){
             $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
             if(empty($check_account_user))  {$this->error="此关注用户已不存在";$this->status=false;return false;}
@@ -254,7 +256,9 @@ class user extends Api {
             $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
             if(empty($check_account_follow)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
             $followingID_account_follow[]=$followingID;
-        }else{
+        }
+        //关注人列表
+        else{
             $check_account_follow=$obj_account_follow->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,'followerID'=>$_SESSION['id']]);
             if(empty($check_account_follow))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
             foreach($check_account_follow as $v){
@@ -264,7 +268,16 @@ class user extends Api {
         
         //索引表
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
+        $fields=[
+            'order'=>['id'=>'DESC'],
+            'treelevel'=>0,
+            'visible'=>1,
+            'OR'=>['userID'=>$followingID_account_follow]
+        ];
+        if(!empty($lastID)){
+            $fields['postID,>']=$lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);      
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
