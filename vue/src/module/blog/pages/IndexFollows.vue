@@ -5,10 +5,38 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
+        <div class="d-block d-sm-none w-100 p-3 d-flex">
+          <!-- <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
+            <el-option :key="-1" :label="'请选择'" :value='-1'></el-option>
+            <el-option :key='0' :label="'全部更新文章'" :value='0'>
+            </el-option>
+            <el-option
+            v-for="(item,index) in authorList"
+            :key="item.id"
+            :label="item.userinfo_followingID.username"
+            :value="index+1">
+            <span style="float: left;color:black">{{ item.userinfo_followingID.username }} <span class="text-muted">的文章</span></span>
+            <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
+            </el-option>
+          </el-select> -->
+          <div class="flex-grow-1 mobile-avatar" style="overflow-x:auto;overflow-y:hidden">
+            <ul style="white-space:nowrap;display:block;overflow:auto;padding-inline-start:0px">
+              <li v-for="item in authorList" 
+              style="list-style:none;display:inline-block;margin-left:10px;padding-top:6px;vertical-align:top"
+              :key="item.id" @click="$router.push('/blog/user/'+item.bloggerID)">
+                <!-- <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar> -->
+                <el-avatar v-if="item.userinfo_followingID.avatar" :src="item.userinfo_followingID.avatar" :size="50"></el-avatar>
+                <el-avatar v-if="!item.userinfo_followingID.avatar" :size="50">{{item.userinfo_followingID.first_letter}}</el-avatar>
+                 <icon-V class="text-primary lable" v-if="item.userinfo_followingID.is_hot_blogger"></icon-V>
+              </li>
+            </ul>
+          </div>
+          <el-button v-if="authorList.length>0" circle @click="changeID(-1)" class="ml-3"><i class="el-icon-plus"></i><br><span style="font-size:8px">添加关注</span></el-button>
+        </div>
         <div class="col-sm-3 d-none d-sm-block">
           <div class="followed-blogger">
             <ul style="margin-bottom:0">
-              <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">海外名博</span></li>
+              <li :class="{active:selectItem.followingID==-1}" @click="selected({followingID:-1})"><icon-blogger-bg style="height:42;width:42;fill:#39B8EB"></icon-blogger-bg><span class="pl-2">添加关注</span></li>
             </ul>
             <ul v-if="authorList.length>0">
               
@@ -29,6 +57,10 @@
           </div>
         </div>
         <div class="col-sm-9 col-12">
+         <template>
+            <div class="text-center my-3" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧</div>
+            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
+          </template>
           <div v-if="articlelists.length>0">
             <div v-if="selectItem.followingID==0">
               <article-list-item 
@@ -48,10 +80,10 @@
               </article-list-item>
             </div>
           </div>
-          <div v-if="selectItem.followingID==-1">
-            <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
+          <template v-if="selectItem.followingID==-1">
+            <div class="text-center my-3" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -95,7 +127,15 @@ export default {
     this.getFollowing();
   },
   methods:{
-    selected(item){
+    changeID(id){
+      if(id>0){
+        this.selectItem = this.authorList[id-1]
+      }else{
+        this.selectItem = {followingID:id};
+        this.selectID = id;
+      }
+    },
+    selected(item){console.log(item);
       this.selectItem=item;
       this.getArticleList();
     },
@@ -124,7 +164,8 @@ export default {
       selectItem:{},
       authorList : [],
       articlelists: [],
-      hotBlobbers:[]
+      hotBlobbers:[],
+      selectID:0
     };
   },
 };
@@ -151,10 +192,21 @@ export default {
   color: #425466
 }
 .followed-blogger svg.text-primary.lable {
-        position: absolute;
-        margin-left: 25px;
-        margin-top: -46px;
-        transform: rotate(34deg)
+  position: absolute;
+  margin-left: 25px;
+  margin-top: -46px;
+  transform: rotate(34deg)
+}
+.mobile-avatar{
+  margin: 0;
+  height:60px;
+  box-shadow: -8px 0px 5px -5px #ececec inset;
+}
+.mobile-avatar svg {
+  /* position: absolute; */
+  margin-left: -18px;
+  margin-top: -86px;
+  transform: rotate(34deg)
 }
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;

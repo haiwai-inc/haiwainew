@@ -75,14 +75,16 @@ class passport extends Api {
      * 用户 文学城 到 海外
      * @param string $token|文学城用户token
      */
-    public function user_login_wxc_to_haiwai($haiwai_token=""){
+    public function user_login_wxc_to_haiwai($token=""){
+        if(empty($token))   {$this->error="错误";$this->status=false;return false;}
+        
         //文学城带入登录/注册
-        if(empty($_SESSION['UserID'])){
+        if(empty($_SESSION['UserID']) ){
             $obj_memcache = func_initMemcached('cache02');
-            $userID=$obj_memcache->get($token);
-            if(!empty($userID)){
+            $wxc_userID=$obj_memcache->get($token);
+            if(!empty($wxc_userID)){
                 $obj_account_user_login=load("account_user_login");
-                $rs_account_user=$obj_account_user_login->wxc_to_haiwai_login($userID);
+                $rs_account_user=$obj_account_user_login->wxc_to_haiwai_login($wxc_userID);
                 if(empty($rs_account_user['status']))   {$this->error=$rs_account_user['error'];$this->status=false;return false;}
             }
         }

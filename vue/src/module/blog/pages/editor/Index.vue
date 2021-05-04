@@ -80,7 +80,6 @@
             :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
             @select="handleSelect"
-            @blur="tag?'':inputVisible=false"
           >
           <template slot-scope="{ item }">
             <div class="name">{{ item.name }}</div>
@@ -190,7 +189,7 @@ import Editor from '@tinymce/tinymce-vue'
 // import CategoryArticleList from "./components/CategoryArticleList";
 import MiniNavbar from "../../../../layout/MiniNavbar";
 import { Button, Modal, FormGroupInput } from "@/components";
-import { Collapse, CollapseItem, Tag, Select, Option, Radio, Autocomplete} from "element-ui";
+import { Collapse, CollapseItem, Tag, Radio, Autocomplete} from "element-ui";
 // import {
 //   IconX,
 // } from "@/components/Icons";
@@ -242,8 +241,8 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [Tag.name]:Tag,
-    [Select.name]:Select,
-    [Option.name]:Option,
+    // [Select.name]:Select,
+    // [Option.name]:Option,
     [Radio.name]:Radio,
     [Autocomplete.name]: Autocomplete,
     // HaiwaiLogoWhite,
@@ -533,8 +532,8 @@ export default {
       this.curentArticle.postInfo_postID.tags.splice(index,1);
     },
     pushtag(val){
-      let o={name:val}
-      this.curentArticle.postInfo_postID.tags.push(o);
+      let t={name:val}
+      this.curentArticle.postInfo_postID.tags.push(t);
       this.tag='';
     },
     beforeDestroy() {
@@ -589,6 +588,8 @@ export default {
   created() {
   },
   mounted() {
+    document.documentElement.setAttribute("class", "");
+    console.log(this.$route.redirect)
     // this.initEditor();
   },
 

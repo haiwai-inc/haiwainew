@@ -62,7 +62,7 @@ class blog_tool{
             $rs['blogger_new']=$this->add_to_blogger($rs);
             
             //tag
-            $rs['tag_new'][]=$this->add_to_tag($rs);
+            $rs['tag_new']=$this->add_to_tag($rs);
             
             //category
             $rs['category_new']=$this->add_to_category($rs);
@@ -197,7 +197,7 @@ class blog_tool{
             $obj_account_user_auth=load("account_user_auth");
             $check_account_user_auth=$obj_account_user_auth->getOne(['id'],['login_source'=>"wxc",'login_data'=>$rs_account_legacy_user['username']]);
             if(empty($check_account_user_auth)){
-                $obj_account_user_auth->insert(['userID'=>$rs['userid'],'login_source'=>'wxc','login_data'=>$rs_legacy_user_passwd_new['username'],'login_token'=>$rs_legacy_user_passwd_new['password']]);
+                $obj_account_user_auth->insert(['userID'=>$fields['id'],'login_source'=>'wxc','login_data'=>$rs_legacy_user_passwd_new['username'],'login_token'=>$rs_legacy_user_passwd_new['password']]);
             }
             
             //老用户头像拉到本地处理
@@ -253,21 +253,32 @@ class blog_tool{
         //保存博客背景图片到本地
         if(!empty($rs_blog_legacy_blogger['blog_pic'])){
             $old_blog_pic="https://cdn.wenxuecity.com/{$rs_blog_legacy_blogger['blog_pic']}";
-            
-            //save image
-            $dir="/upload/blog/background/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
-            $path=DOCUROOT.$dir;
-            if (!file_exists($path)) {
-                mkdir($path, 0777, true);
+        }else{
+            if(!empty($rs_blog_legacy_blogger['template'])){
+                $template=explode("/",$rs_blog_legacy_blogger['template'])[1];
+            }else{
+                $template="1_6";
             }
-            $filename=$fields['id']."_background";
-            $rs_image=picture::saveImg($old_blog_pic,$path,$filename);
-            
-            //小图保存
-            if(!empty($rs_image)){
+            $old_blog_pic="https://www.wenxuecity.com/blog/images/templates/{$template}/wallpaper.jpg";
+        }
+        //save image
+        $dir="/upload/blog/background/".substr('0000'.$fields['id'],-2)."/".substr('0000'.$fields['id'],-4,-2);
+        $path=DOCUROOT.$dir;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $filename=$fields['id']."_background";
+        $rs_image=picture::saveImg($old_blog_pic,$path,$filename);
+        
+        //小图保存
+        if(!empty($rs_image)){
+            if(!empty($rs_blog_legacy_blogger['blog_pic'])){
                 $this->obj_account_user->cutPic("{$path}/{$rs_image}","{$filename}_750_420",750,420);
-                $this->obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
+            }else{
+                picture::saveImg($old_blog_pic,$path,"{$filename}_750_420");
             }
+            
+            $this->obj_blog_blogger->update(['background'=>"{$dir}/{$rs_image}"],['id'=>$fields['id']]);
         }
         
         return $fields;
@@ -310,15 +321,20 @@ class blog_tool{
     }
     
     function add_to_tag($rs){
-        if($rs['blogcat_id']!=0){
+        $field=[];
+        if(!empty($rs['blogcat_id'])){
             $blogcat_id=$rs['blogcat_id'];
+            $field[]=$this->tag_add($blogcat_id,$rs);
         }
-        if($rs['parent_id']!=0){
+        if(!empty($rs['parent_id'])){
             $blogcat_id=$rs['parent_id'];
+            $field[]=$this->tag_add($blogcat_id,$rs);
         }
-        
+        return $field;
+    }
+    
+    private function tag_add($blogcat_id,$rs){
         $rs_blog_legacy_blogcat=$this->obj_blog_legacy_blogcat->getOne("*",['blogcat_id'=>$blogcat_id]);
-        
         $check_article_tag=$this->obj_article_tag->getOne("*",['name'=>$rs_blog_legacy_blogcat['title']]);
         if(empty($check_article_tag)){
             $field=['name'=>$rs_blog_legacy_blogcat['title']];
@@ -331,7 +347,6 @@ class blog_tool{
             }
             $field=$check_article_tag;
         }
-        
         return $field;
     }
 }

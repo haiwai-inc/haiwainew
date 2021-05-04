@@ -3,15 +3,46 @@
       <!-- <div>
         <main-menu type="-1"></main-menu>
       </div> -->
-      <div v-if="$store.state.user.userinfo.bloggerID==0">
-          <regist-blog></regist-blog>
-      </div>
-      <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
+        <div v-if="$store.state.user.userinfo.bloggerID==0">
+            <regist-blog></regist-blog>
+        </div>
+        <div class="row mt-4" v-if="$store.state.user.userinfo.bloggerID!=0">
+            
+        <div class="w-100 d-sm-none p-3" style="border-bottom:1px solid #ccc">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>博文管理</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
+            </div>
+            博文目录：<el-select v-model="currentTabId" placeholder="请选择" @change="changeTab(currentTabId)">
+                <el-option
+                v-for="item in collectionList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                <span style="float: left">{{ item.name }}<span class="ml-2 text-muted" v-if="!item.is_publish">-隐</span></span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.count_article }}</span>
+                </el-option>
+            </el-select>
+            <el-button type="text" class="ml-3" @click="show_setting=!show_setting">
+                设置
+                <i class="el-icon-arrow-up el-icon--right" v-if="show_setting"></i>
+                <i class="el-icon-arrow-down el-icon--right" v-if="!show_setting"></i>
+            </el-button>
+            <div v-if="show_setting" class="pt-3">
+                <left-bar 
+                :currentTabId='currentTabId' 
+                :collectionList='collectionList'
+                @changetab="changeTab"
+                @opendialog="openDialog"
+                @shift="category_shift"
+                @delete="category_delete"></left-bar>
+            </div>
+            
+        </div>
         <div class="col-sm-3 d-none d-sm-block">
             <div class="d-flex justify-content-between align-items-center py-3">
                 <h5>博文管理</h5><a href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</a>
             </div>
-            <ul>
+            <!-- <ul>
                 <li class="d-flex align-items-center li_item" 
                 v-for="(item,index) in collectionList" 
                 :key="index"
@@ -32,7 +63,6 @@
                             <span @click="category_shift(index,index+1)" v-if="index<collectionList.length-1">
                                 <el-dropdown-item icon="el-icon-arrow-down">向下移动</el-dropdown-item>
                             </span>
-<!--  删除确认  -->
                             <el-popconfirm
                                 v-if="!item.is_default"
                                 placement="top-end"
@@ -51,24 +81,17 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </li>
-            </ul>
-            
+            </ul> -->
+            <left-bar 
+            :currentTabId='currentTabId' 
+            :collectionList='collectionList'
+            @changetab="changeTab"
+            @opendialog="openDialog"
+            @shift="category_shift"
+            @delete="category_delete"></left-bar>
         </div>
         <div class="col-sm-9 col-12">
-            <div></div>
-            <!-- <div class="profile-header mt-2 mb-3">
-            <ul class="nav justify-content-center">
-                <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
-                    <a 
-                    class="nav-link" 
-                    :class="{active:currentTabId==item.id}" 
-                    href="#"
-                    @click="changeTab(item.id)">{{item.text}}</a>
-                </li>
-            </ul>
-            </div> -->
-            <div 
-            v-infinite-scroll="getArticleList"
+            <div v-infinite-scroll="getArticleList"
             infinite-scroll-disabled="noMore"
             infinite-scroll-distance="50">
                <div class="list_item row" v-for="item in articleList" :key="item.id">
@@ -105,7 +128,7 @@
             <div class="text-center py-5" v-if="loading.article"><!-- loader -->
                 <i class="now-ui-icons loader_refresh spin"></i>
             </div>
-            <p class="text-center py-4" v-if="noMore">没有更多了</p>
+            <p class="text-center py-4" v-if="noMore">没有更多文章了</p>
         </div>
         
       </div>
@@ -142,12 +165,14 @@ import HaiwaiIcons from "@/components/Icons/Icons";
 import {formatDate} from '@/directives/formatDate.js';
 
 import blog from '../../blog.service';
+import LeftBar from './LeftBar.vue';
 
 export default {
   name: 'blog-user-index',
   components: {
     [Radio.name]:Radio,
     RegistBlog,
+    LeftBar,
   },
   mounted() {
     this.$store.state.user.category_list(this.userID).then(res=>{
@@ -164,6 +189,7 @@ export default {
         this.lastID.article = 0;
         this.articleList = [];
         this.getArticleList();
+        console.log(id)
     },
     getArticleList(){
         this.loading.article=true;
@@ -227,7 +253,9 @@ export default {
           }
         })
     },
-    category_shift(from,to){
+    category_shift(item){
+        var from = item[0];
+        var to = item[1];
         let arr = this.collectionList;
         let e = arr[from];
         let sort = [];
@@ -329,18 +357,7 @@ export default {
                 {required: true, message: '请输入目录名称', trigger: 'blur'},
                 { validator:checkNameSame, trigger: 'blur' }]
         },
-        tabs:[
-            {
-                id:0,
-                text:'最新博文',
-            },{
-                id:1,
-                text:'最热博文',
-            },{
-                id:2,
-                text:'新评博文',
-            }
-        ],
+        show_setting:false,
         authorInfo : {},
         articlelists: [],
         collectionList:[],

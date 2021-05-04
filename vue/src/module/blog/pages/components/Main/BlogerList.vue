@@ -2,7 +2,7 @@
   <div class="bolger-box">
     <div class="blogger-title d-flex justify-content-between">
       <h5 class="font-weight-bold">{{title}}</h5>
-      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh()"><i class="now-ui-icons arrows-1_refresh-69"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
+      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh(Math.ceil(Math.random()*10))"><i class="now-ui-icons arrows-1_refresh-69"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
     </div>
     <bloger-list-item 
     v-for="(item,index) in hotBloggerList.data" 
@@ -26,16 +26,15 @@ export default {
     BlogerListItem
   },
   methods:{
-    refresh(){
-      this.hotBloggerList.currentList += 10;
-      this.hotBloggerList.count += 10;
+    refresh(n){
+      this.$forceUpdate();
+      this.hotBloggerList.currentList += n*10;
+      this.hotBloggerList.count = this.hotBloggerList.currentList+10;
       if(this.hotBloggerList.count>this.data.length){
         this.hotBloggerList.currentList = 0;
         this.hotBloggerList.count = 10;
       }
       this.hotBloggerList.data = this.data.slice(this.hotBloggerList.currentList,this.hotBloggerList.count);
-
-      console.log(this.hotBloggerList.data,this.data,this.hotBloggerList.currentList)
     }
   },
   data(){
@@ -43,12 +42,13 @@ export default {
       hotBloggerList:{
         currentList:0,
         count:10,
-        data:Array
+        data:[]
       }
     }
   },
-  created () {
-    this.hotBloggerList.data = this.data.slice(this.hotBloggerList.currentList,this.hotBloggerList.count)
+  mounted() {
+    // this.hotBloggerList.data = this.data.slice(this.hotBloggerList.currentList,this.hotBloggerList.count);
+    this.refresh(Math.ceil(Math.random()*10));
   }
   
 };

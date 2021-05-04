@@ -9,9 +9,9 @@
           <div class="name">
             <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> -->
             <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V> 
-              <router-link :to="'/blog/user/'+data.userID">
-                {{data.userinfo_userID.username}}
-              </router-link>
+            
+            {{data.userinfo_userID.username}}
+            
           </div>
           <div class="tail-data">
             <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>

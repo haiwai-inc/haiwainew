@@ -83,7 +83,7 @@ class user extends Api {
     
     /**
      * 编辑器页
-     * 文集 列表
+     * 目录 列表
      * @param integer $bloggerID | 博主ID
      */
     public function category_list($bloggerID){
@@ -98,8 +98,8 @@ class user extends Api {
     
     /**
      * 博客主页 编辑器页 
-     * 文集 添加
-     * @param integer $name|文集名
+     * 目录 添加
+     * @param integer $name|目录名
      * @param integer $is_publish|是否隐藏1,0
      */
     public function category_add($name,$is_publish){
@@ -109,7 +109,7 @@ class user extends Api {
         
         $obj_blog_category=load("blog_category");
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
-        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        if(!empty($check_blog_category))    {$this->error="此目录名称已存在";$this->status=false;return false;}
         
         $categoryID=$obj_blog_category->insert(['is_publish'=>$is_publish,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         $obj_blog_category->update(['sort'=>$categoryID],['id'=>$categoryID]);
@@ -119,9 +119,9 @@ class user extends Api {
     
     /**
      * 编辑器页 
-     * 文集 修改
-     * @param integer $name|文集名
-     * @param integer $id|文集id
+     * 目录 修改
+     * @param integer $name|目录名
+     * @param integer $id|目录id
      * @param integer $is_publish|是否隐藏1,0
      */
     public function category_update($name,$id,$is_publish){
@@ -131,7 +131,7 @@ class user extends Api {
         
         $obj_blog_category=load("blog_category");
         $check_blog_category=$obj_blog_category->getOne("*",['id,!='=>$id,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
-        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        if(!empty($check_blog_category))    {$this->error="此目录名称已存在";$this->status=false;return false;}
         
         $obj_blog_category->update(['name'=>$name,'is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
@@ -140,8 +140,8 @@ class user extends Api {
     
     /**
      * 编辑器页 
-     * 文集 删除
-     * @param integer $id|文集id
+     * 目录 删除
+     * @param integer $id|目录id
      */
     public function category_delete($id){
         $obj_blog_blogger=load("blog_blogger");
@@ -150,9 +150,9 @@ class user extends Api {
         
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','is_default'],['id'=>$id,'bloggerID'=>$check_blog_blogger['id']]);
-        if($rs_blog_category['is_default']==1) {$this->error="默认文集无法删除";$this->status=false;return false;}
+        if($rs_blog_category['is_default']==1) {$this->error="默认目录无法删除";$this->status=false;return false;}
         
-        //文集文章转移到默认文集
+        //目录文章转移到默认目录
         $rs_default_category=$obj_blog_category->getOne(['id'],['is_default'=>1,'bloggerID'=>$check_blog_blogger['id']]);
         
         $obj_article_indexing=load("article_indexing");
@@ -165,8 +165,8 @@ class user extends Api {
     
     /**
      * 编辑器页
-     * 文集 名字 拍重
-     * @param integer $name|文集名
+     * 目录 名字 拍重
+     * @param integer $name|目录名
      */
     public function category_name_check($name){
         $obj_blog_blogger=load("blog_blogger");
@@ -175,14 +175,14 @@ class user extends Api {
         
         $obj_blog_category=load("blog_category");
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
-        if(!empty($check_blog_category))    {$this->error="此文集名称已存在";$this->status=false;return false;}
+        if(!empty($check_blog_category))    {$this->error="此目录名称已存在";$this->status=false;return false;}
         
         return true;
     }
     
     /**
      * 编辑器页
-     * 文集 名字 拍重
+     * 目录 名字 拍重
      * @param integer $sort|排序数组  1,2,3,4,5,6,7,8,9,0
      */
     public function category_shift($sort){
@@ -242,11 +242,13 @@ class user extends Api {
      * 二级页面
      * 关注 文章 列表
      * @param integer $followingID | 关注人的ID
+     * @param integer $lastID | 最后一个postID
      */
-    public function following_article_list($followingID=0){
+    public function following_article_list($followingID=0,$lastID=0){
         $obj_account_follow=load("account_follow");
         $obj_account_user=load("account_user");
         
+        //全部列表
         if(!empty($followingID)){
             $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$followingID,"status"=>1]);
             if(empty($check_account_user))  {$this->error="此关注用户已不存在";$this->status=false;return false;}
@@ -254,7 +256,9 @@ class user extends Api {
             $check_account_follow=$obj_account_follow->getOne(['id'],['followerID'=>$_SESSION['id'],'followingID'=>$followingID]);
             if(empty($check_account_follow)) {$this->error="此用户未在您的关注列表";$this->status=false;return false;}
             $followingID_account_follow[]=$followingID;
-        }else{
+        }
+        //关注人列表
+        else{
             $check_account_follow=$obj_account_follow->getAll("*",['order'=>['id'=>'DESC'],'limit'=>50,'followerID'=>$_SESSION['id']]);
             if(empty($check_account_follow))  {$this->error="你还未关注任何用户";$this->status=false;return false;}
             foreach($check_account_follow as $v){
@@ -264,7 +268,17 @@ class user extends Api {
         
         //索引表
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);
+        $fields=[
+            'order'=>['id'=>'DESC'],
+            'treelevel'=>0,
+            'visible'=>1,
+            'limit'=>30,
+            'OR'=>['userID'=>$followingID_account_follow]
+        ];
+        if(!empty($lastID)){
+            $fields['postID,>']=$lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],$fields);      
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
@@ -286,13 +300,13 @@ class user extends Api {
     /**
      * 编辑器页
      * 文章 列表
-     * @param integer $id | 文集ID
+     * @param integer $id | 目录ID
      * @param String $lastID|文章postID
      */
     public function article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
         $rs_blog_category=$obj_blog_category->getOne(['id','bloggerID'],['id'=>$id]);
-        if(empty($rs_blog_category)) {$this->error="此文集不存在";$this->status=false;return false;}
+        if(empty($rs_blog_category)) {$this->error="此目录不存在";$this->status=false;return false;}
         
         //文章
         $obj_article_indexing=load("article_indexing");

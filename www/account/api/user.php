@@ -620,13 +620,22 @@ class user extends Api {
      * 消息 未读 计数
      */
     public function notification_unread_count(){
-        $obj_account_notification=load("account_notification");
-        $tbn=substr('0'.$_SESSION['id'],-1);
-        $rs['reply']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'reply'],"notification_".$tbn);
-        $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
-        $rs['follow']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follow'],"notification_".$tbn);
-        $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
-        $rs['totall']=$rs['reply']+$rs['qqh']+$rs['follow']+$rs['buzz'];
+        
+        //缓存
+        $obj_memcache=func_initMemcached('cache01');
+        $rs=$obj_memcache->get("{$_SESSION['id']}_notification_unread_count");
+        
+        if(empty($rs)){
+            $obj_account_notification=load("account_notification");
+            $tbn=substr('0'.$_SESSION['id'],-1);
+            $rs['reply']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'reply'],"notification_".$tbn);
+            $rs['qqh']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'qqh'],"notification_".$tbn);
+            $rs['follow']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follow'],"notification_".$tbn);
+            $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
+            $rs['totall']=$rs['reply']+$rs['qqh']+$rs['follow']+$rs['buzz'];
+            $obj_memcache->set("{$_SESSION['id']}_notification_unread_count",$rs,60);
+        }
+        
         return $rs;
     }
     
@@ -666,7 +675,6 @@ class user extends Api {
         //添加用户信息
         $obj_account_user=load("account_user");
         $rs_account_notification=$obj_account_user->get_basic_userinfo($rs_account_notification,"from_userID");
-        
         return $rs_account_notification;
     }
     

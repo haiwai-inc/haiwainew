@@ -5,21 +5,21 @@
     </div>
       <div class="row">
          <div class="col-sm-3 left-top-nav">
-            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between"  :style="menuId===0?{color:'#39b8eb', fill: '#39b8eb', background: '#aliceblue'}:''">
+            <div  @click="menuId=0" class="left-nav-item d-flex justify-content-between"  :style="menuId===0?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-blog-set></icon-blog-set>
                   {{$t('message').setting.menu_bolg}}
                </div>
             </div>
             <div @click="menuId=1" class="left-nav-item d-flex justify-content-between"
-            :style="menuId===1?{color:'#39b8eb', fill: '#39b8eb'}:''">
+            :style="menuId===1?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-account-set></icon-account-set>
                   {{$t('message').setting.menu_accout}}
                </div>
             </div>
             <div @click="menuId=2" class="left-nav-item d-flex justify-content-between"
-            :style="menuId===2?{color:'#39b8eb', fill: '#39b8eb'}:''">
+            :style="menuId===2?{color:'#39b8eb', fill: '#39b8eb', background: 'aliceblue'}:''">
                <div class="name">
                   <icon-black-list></icon-black-list>
                   {{$t('message').setting.menu_blacklist}}
@@ -31,7 +31,7 @@
                <regist-blog></regist-blog>
             </div>
             <div v-if="menuId===0 && $store.state.user.bloggerID!=0">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.blog_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.blog_title}}</h5>
                <div class="blog-user-index">
                   <div class="user-bg" :style="'background-image: url('+blogProfile.background+');'">
                      <div class="user-bgup"></div>
@@ -71,7 +71,7 @@
                <button class="btn btn-round btn-primary" @click="saveBlogProfile">{{$t('message').setting.blog_save_btn}}</button>
             </div>
             <div v-if="menuId===1 && authorInfor">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.accout_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.accout_title}}</h5>
                <div class="d-flex" style="border-bottom:#eee 1px solid;padding:1rem 0">
                   <!-- <avatar :data="authorInfor" :imgHeight="100"></avatar> -->
                   <span><div v-if="!authorInfor.avatar" class="rounded-circle avatar" style="text-transform: uppercase;background-color:aliceblue;display: inline-block;height:150px;width:150px;text-align:center;font-size:46px;line-height:150px"><b>{{authorInfor.first_letter}}</b></div></span>
@@ -137,7 +137,7 @@
                <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
             </div>
             <div v-if="menuId===2">
-               <h5 class="border-bottom pb-3">{{$t('message').setting.black_title}}</h5>
+               <h5 class="border-bottom py-3">{{$t('message').setting.black_title}}</h5>
                <div class="box my-3">
                   <div v-for="(item,index) in blackList" :key="index" class=" blacklist align-self-center col-12 no-gutters">
                      <div class="d-flex align-self-center">
@@ -279,10 +279,11 @@ export default {
             account.user_password_update(this.signupForm).then(res=>{
                console.log(res);
                if(res.status){
-               this.initForm();
+                  this.$message({message:'修改成功',type:'success'})
+                  this.initForm();
                }else{
-               this.signErr = res.error;
-               this.signupForm.submitDisable = true;
+                  this.signErr = res.error;
+                  this.signupForm.submitDisable = true;
                }
             })
          } else {
@@ -435,16 +436,10 @@ export default {
             console.log(res)
             if(res.status){
                this.getBlogProfile();
-               this.err.bloggername.flag = false
-               this.flag.blog=true;
-               setTimeout(()=>{
-                  this.flag.blog=false;
-               },3000)
+               this.$message({message:'修改成功',type:'success'});
             }else{
-               this.err.bloggername.msg = res.error
-               this.err.bloggername.flag = true
+               this.$message({message:res.error,type:'error'})
             }
-            this.err.bloggername.msg = res.error
          })
       },
       user_profile_update(){
@@ -452,20 +447,19 @@ export default {
             this.err.username.flag=false;
             this.user.user_profile_update(this.authorInfor.username,this.authorInfor.description).then(res=>{
                console.log(res)
-               if(!res.status){
-                  this.err.username.flag=true;
-                  this.err.username.msg = res.error
+               if(res.status){
+                  this.$message({message:'修改成功',type:'success'})
+               }else{
+                  this.$message({message:res.error,type:'error'})
                }
             })
          }else{
-            this.err.username.flag=true;
-            this.err.username.msg = this.$t('message').setting.accout_name_err
-         }
-         
+            this.$message({message:this.$t('message').setting.accout_name_err,type:'error'})
+            // this.err.username.flag=true;
+            // this.err.username.msg = this.$t('message').setting.accout_name_err
+         }  
       }
-
-  }
-
+   }
 };
 </script>
 

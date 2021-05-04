@@ -21,7 +21,11 @@
     </template>
     
     <template slot="before-menu"> 
-      <div style="max-width:500px;padding:0 18px;">
+      
+    </template>
+    <template slot="navbar-menu">
+      <div class="searchbar mr-3">
+      <!-- <div style="max-width:500px;padding:0 18px;"> -->
         <!-- <el-autocomplete
           class="inline-input"
           v-model="keyword"
@@ -36,16 +40,23 @@
             <div class="name">{{ item.name }}</div>
           </template>
         </el-autocomplete> -->
-        <fg-input style="margin:0;"
+        <!-- <fg-input style="margin:0;"
           addon-left-icon="now-ui-icons ui-1_zoom-bold"
           :placeholder="$t('message').topnav.seachplaceholder"
           v-model="keyword"
           @keyup.enter.native="onSubmit"
         >
-        </fg-input>
+        </fg-input> -->
+        <el-input :placeholder="$t('message').topnav.seachplaceholder" v-model="keyword" class="input-with-select" @keyup.enter.native="onSubmit">
+          <el-select v-model="select" slot="prepend" placeholder="请选择">
+            <el-option label="文章" value="0"></el-option>
+            <el-option label="博客" value="1"></el-option>
+            <el-option label="标签" value="2"></el-option>
+            <el-option label="目录" value="3"></el-option>
+          </el-select>
+          <el-button slot="append" icon="el-icon-search" @click="onSubmit"></el-button>
+        </el-input>
       </div>
-    </template>
-    <template slot="navbar-menu">     
       <drop-down v-if="!($route.path.indexOf('/blog/p/'))"
         class="nav-item dropdown"
         icon="now-ui-icons text_caps-small"
@@ -64,21 +75,23 @@
         @input="s_t"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
-        <a
-          class="nav-link"
-          style="margin-top:3px;z-index:1000"
-          rel="tooltip"
-          title="消息"
-          data-placement="bottom"
-          href="javascript:void(0)"
-          @click="$router.push('/notices?id=0')"
-          >
-          <div class="noticealert" v-if="$store.state.user.notice.totall"></div>
-          <i class="now-ui-icons ui-1_bell-53"></i>
-          <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
-        </a> 
+        <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="10" class="badge-item">
+          <a
+            class="nav-link"
+            style="margin-top:3px;z-index:1000"
+            rel="tooltip"
+            title="消息"
+            data-placement="bottom"
+            href="javascript:void(0)"
+            @click="$router.push('/notices?id=0')"
+            >
+            <!-- <div class="noticealert" v-if="$store.state.user.notice.totall"></div> -->
+            <i class="now-ui-icons ui-1_bell-53"></i>
+            <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
+          </a> 
+        </el-badge>
       </li>
-      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">{{$t('message').topnav.login}}</router-link></div>
+      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><nav-link to="/login">{{$t('message').topnav.login}}</nav-link></div>
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
@@ -125,16 +138,18 @@
         type="primary" 
         round 
         simple 
-        @click="$refs.dialog.isLogin()"
+        @click="$router.push('/blog/my/editor/')"
         class="editbtn">
           <icon-pen class="editicon"></icon-pen>{{$t('message').topnav.editbtn}}
         </n-button>
       </li>
+      <!-- @click="$refs.dialog.isLogin()" -->
+      
     </template>
     <template slot="after-menu">
       
     </template>
-    <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog>
+    <!-- <login-dialog ref="dialog" :redirect="'/blog/my/editor/'"></login-dialog> -->
   </navbar>
   
 </template>
@@ -145,7 +160,7 @@ import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupIn
 // import { Popover, } from 'element-ui';
 import blog from '../module/blog/blog.service.js';
 import account from '../module/user/service/account';
-import LoginDialog from '../module/user/login/LoginDialog';
+// import LoginDialog from '../module/user/login/LoginDialog';
 
 export default {
   name: 'main-navbar',
@@ -164,11 +179,10 @@ export default {
     [Button.name]: Button,
     // [Autocomplete.name]: Autocomplete,
     IconPen,
-    LoginDialog
+    // LoginDialog
   },
   watch:{
     "$store.state.user.userinfo.id":function(val){
-      console.log(val)
       this.$forceUpdate();
     }
   },
@@ -181,6 +195,8 @@ export default {
       stopDOM : ["BR","TIME","IMG","CANVAS","SCRIPT"],
       currentEncoding : true,
       targetEncoding : true,
+      select: '0',
+      unread_count:setInterval(this.notification_unread_count,10000)
     };
   },
   methods:{
@@ -238,11 +254,11 @@ export default {
       this.translatePage()
     },
     onSubmit(){
-      this.doSearch(this.keyword,0);
+      this.doSearch(this.keyword,this.select);
     },
 
-    async doSearch(k,tag){
-      this.$router.push({path:'/search',query:{keyword:k,tag:tag}});
+    async doSearch(k,tab){
+      this.$router.push({path:'/search/',query:{keyword:k,tab:tab}});
     },
 
     setFontSize(size){
@@ -250,6 +266,10 @@ export default {
       let cls = this.bodyclass + ' fontsize'+size;
       document.querySelector('body').setAttribute('class',cls);
     },
+    notification_unread_count(){
+      this.$store.state.user.notification_unread_count()
+    },
+
     logout(){
       account.logout().then(res=>{
         if(res.status==true){
@@ -259,21 +279,42 @@ export default {
       })
     }
   },
+  beforeCreate(){
+    
+  },
   created: function () {
     this.bodyclass = document.querySelector('body').classList.value;
-  },
-  beforeCreate(){
   },
   mounted() {
     this.translatePage();
     this.s_t(this.langswitch);
-  }
+  },
+  destroyed() {
+    clearInterval(this.unread_count);
+  },
 };
 </script>
 
 <style>
 .el-input__inner{
   border-radius: 20px;
+}
+.searchbar{
+  padding-top:3px;
+}
+.searchbar .el-select .el-input {
+  width: 80px;
+}
+.input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
+.el-input-group__append{
+  border-top-right-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+}
+.el-input-group__prepend {
+  border-top-left-radius: 24px !important;
+  border-bottom-left-radius: 24px !important;
 }
 .editicon{
   fill:#32caf9;
@@ -282,7 +323,11 @@ export default {
   height:20px;
 }
 .switchbtn{
-  margin:12px 35px;
+  margin:12px 20px;
+}
+.badge-item .el-badge__content.is-fixed{
+  top:12px;
+  right:20px;
 }
 .noticealert{
   position: absolute;

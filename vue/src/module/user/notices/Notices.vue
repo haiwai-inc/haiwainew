@@ -4,7 +4,7 @@
       <main-menu type="-1"></main-menu>
     </div>
     <div class="row">
-      <div class="col-sm-4 left-top-nav">
+      <div class="col-sm-3 left-top-nav d-none d-sm-block">
         <left-nav-item
           v-for="(item, index) in data"
           :key="index"
@@ -13,10 +13,31 @@
           v-on:which-active="whichActive"
         ></left-nav-item>
       </div>
-      <div class="col-sm-8 col-12">
+      <div class="d-block d-sm-none p-3">
+        消息类型：
+        <el-select v-model="activeId" placeholder="请选择" @change="whichActive(activeId)">
+            <el-option
+            v-for="item in data"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id">
+            <span style="float: left">{{ item.title }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread }}</span>
+            </el-option>
+        </el-select>
+      </div>
+      <div class="col-sm-9 col-12">
         <div v-if="activeId === 0">
-          <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)">
-            <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar>
+          <div class="d-flex align-items-center noticeItem" v-for="(item,index) in allNoticeList" :key="index" @click="gotoDetail(item)" id="avatar" style="cursor:pointer">
+            <div v-if="!item.userinfo_from_userID.avatar" class="avatar-word" :style="{height:'48px',width:'48px',lineHeight:'48px',minWidth:'48px'}">{{item.userinfo_from_userID.first_letter}}</div>
+            <img 
+            :style="{height:'48px',minWidth:'48px'}"
+            v-if="item.userinfo_from_userID.avatar" 
+            v-bind:alt="item.userinfo_from_userID.username" 
+            class="rounded-circle" 
+            v-bind:src="item.userinfo_from_userID.avatar" 
+            >
+            <!-- <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar> -->
             <div class="pl-2">
               <!-- <span class="name">{{item.userinfo_from_userID.username}}</span> -->
               <span class="wrap">{{item.msgbody}}</span>
@@ -56,7 +77,7 @@ import LeftNavItem from "../../blog/pages/components/Main/LeftNavItem";
 import NoticeComment from "./NoticeComment";
 import NoticeFollow from "./NoticeFollow";
 import NoticeQqh from "./NoticeQqh";
-import Avatar from "../../blog/pages/components/Main/Avatar";
+// import Avatar from "../../blog/pages/components/Main/Avatar";
 import NoticeLike from './NoticeLike.vue';
 import icons from "@/components/Icons/Icons";
 // import {DropDown} from "@/components"
@@ -121,7 +142,7 @@ export default {
     LeftNavItem,
     MainMenu,
     // ArticleListItem,
-    Avatar,
+    // Avatar,
     NoticeComment,
     NoticeFollow,
     NoticeQqh,
@@ -162,6 +183,7 @@ export default {
     },
     async notification_unread_clear(type){
       let n = await this.user.notification_unread_clear(type);
+      this.allNoticeCount();
       console.log(n);
     },
     async showAllNotice(){
@@ -172,8 +194,8 @@ export default {
       }
     },
     gotoDetail(e){
-      if(e.type=="follower"){
-        this.$router.push('blog/user/'+e.from_userID)
+      if(e.type=="follow"){
+        this.activeId=3
       }
       if(e.type=="qqh"){
         this.activeId=2
@@ -189,14 +211,18 @@ export default {
   padding: 1rem;
   border-bottom: aliceblue 1px solid;
 }
-@media (max-width: 575.98px) {
-  .left-top-nav .name svg,
-  .left-top-nav .descrip {
+#avatar .avatar-word{
+    border-radius: 50%;
+    background-color: aliceblue;
+    text-align: center;
+    font-weight: 500;
+}
+@media (max-width: 768px) {
+  .left-top-nav .name svg{
     display: none;
   }
-  .left-top-nav {
-    display: flex;
-    justify-content: space-between;
+  .left-top-nav{
+    padding:12px 0;
   }
 }
 </style>

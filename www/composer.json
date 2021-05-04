@@ -8,6 +8,7 @@
 		"aws/aws-sdk-php" : "^3.94",
 		"google/apiclient": "^2.8",
 		"facebook/graph-sdk": "^5.7",
-		"firebase/php-jwt": "^5.2"
+		"firebase/php-jwt": "^5.2",
+		"hhxsv5/php-sse":"~2.0"
 	}
 }

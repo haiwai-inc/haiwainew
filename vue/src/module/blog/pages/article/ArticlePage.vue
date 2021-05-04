@@ -14,19 +14,7 @@
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
-               <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
-              <div style="color:gray;">阅读 . {{articleDetail.data.countinfo_postID.count_read}}</div>
-             <a class="ml-3" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" href="javascript:void(0)" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</a>
-            <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
-              placement="top-end"
-              confirm-button-text='删除'
-              cancel-button-text='取消'
-              title="确定删除这篇文章吗？"
-              :hide-icon="true"
-              @confirm="article_delete(articleDetail.data)"
-            >
-              <a href="javascript:void(0)" slot="reference" class="ml-3" style="color:#39b8eb">删除</a>
-            </el-popconfirm>
+               
               <div class="media-icons">
                 <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
                   
@@ -77,6 +65,21 @@
               
               </div>
             </div>
+            <div class="d-flex align-items-center">
+              <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
+              <div style="color:gray;" class="ml-3">阅读: {{articleDetail.data.countinfo_postID.count_read}}</div>
+              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</el-button>
+              <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                title="确定删除这篇文章吗？"
+                :hide-icon="true"
+                @confirm="article_delete(articleDetail.data)"
+              >
+                <el-button type="text" icon="el-icon-delete" slot="reference" class="ml-3" style="color:#39b8eb">删除</el-button>
+              </el-popconfirm>
+            </div>
             <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
               <!-- blog 正文 -->
             </div>
@@ -98,7 +101,9 @@
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
-          <div v-if="comment.length>0">
+          <div v-infinite-scroll="getComment"
+          infinite-scroll-disabled="disabled"
+          infinite-scroll-distance="50" v-if="comment.length>0">
               <comment 
               v-for="item in comment"
               :key="item.postID"
@@ -109,8 +114,9 @@
               ></comment>
           </div>
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
-              <i class="now-ui-icons loader_refresh spin"></i>{{loading.comment}}
+              <i class="now-ui-icons loader_refresh spin"></i>
           </div>
+          <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="getComment">加载更多评论</p>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="articleDetail.status">
@@ -165,7 +171,7 @@
             <div class="box my-3" v-if="recommend.articles.length>0">
                <div class="title  d-flex justify-content-between">
                   <h5>相关推荐</h5>
-                  <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button>
+                  <!-- <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button> -->
                </div>
                <span v-for="(item,index) in recommend.articles" :key="index">
                  <recommend-list-item :data="item" v-if="index<10"></recommend-list-item>
@@ -218,7 +224,7 @@ export default {
   methods:{
     article_view(){
       this.showcomment = false;
-      let postid = this.$route.params.id
+      let postid = this.$route.params.id ;
       blog.article_view(postid).then(res=>{
         this.articleDetail = res;console.log(res);
         if(res.status){
@@ -226,7 +232,7 @@ export default {
           this.shareItem.title = res.data.postInfo_postID.title;
           this.shareItem.description = descrip.replace(/<[^>]+>/g,"").substr(0,100);
           this.initRecommendProp(res);
-          this.getNewArticle(res,0);
+          this.getRecentArticle(res,0);
           this.getComment();
         }
       });
@@ -241,7 +247,8 @@ export default {
       this.getRecommend()
     },
     getRecommend(){
-      blog.article_list_tag(this.recommend.props.tags).then(res=>{
+      let postID = this.$route.params.id;
+      blog.article_list_tag(this.recommend.props.tags,postID).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data
@@ -250,9 +257,10 @@ export default {
         }
       })
     },
-    getNewArticle(res,lastID){
+    getRecentArticle(res,lastID){
+      let postID = this.$route.params.id;
       var bloggerID = res.data.bloggerID;
-      blog.article_list_recent(bloggerID,lastID).then(res=>{
+      blog.article_list_recent(bloggerID,lastID,postID).then(res=>{
         console.log(res);
         if(res.status){
           this.recommend.authorArticle = res.data
@@ -288,7 +296,7 @@ export default {
       blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
         let r = res.data;
         this.comment = this.comment.concat(r);
-        this.lastID = r.length>0?this.comment[r.length-1].postID:0;
+        this.lastID = r.length>0?r[r.length-1].postID:0;
         if(r.length<20){
           this.noMore = true;
         }

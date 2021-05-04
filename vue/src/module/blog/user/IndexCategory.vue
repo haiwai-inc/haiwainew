@@ -20,9 +20,9 @@
                    <!-- <span class="blog-user-index-des ml-4">阅读.10853(假数据)</span> -->
                  </div>
                  <div>
-                  <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
+                  <!-- <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享">
                     <span style=" fill:#39B8EB;" v-html="icons.share"></span>
-                 </button>
+                 </button> -->
                  </div>
               </div>
              <!-- header end -->
@@ -72,13 +72,13 @@ export default {
     blog.category_list(this.userID).then(res=>{
       this.collectionList=res.data;
       console.log(res.data);
-      this.loadArticle();
+      this.loadArticle(this.catID);
     })
   },
   watch:{
     '$route.params.catid':function(val){
       console.log(val)
-      this.loadArticle()
+      this.changeTab(val)
     }
   },
   methods:{
@@ -88,13 +88,13 @@ export default {
         this.articlelists = [];
         this.loadArticle(this.currentTabId);
       },
-      loadArticle(){
+      loadArticle(catID){
         this.loading.article=true;
-        blog.pubcat_article_list(this.catID,this.lastID.article).then(res=>{
+        blog.pubcat_article_list(catID,this.lastID.article).then(res=>{
           this.getList(res);
         })
         this.collectionList.forEach(item=>{
-          if(item.id==this.catID){
+          if(item.id==catID){
             this.currentCat=item
           }
         })
@@ -106,7 +106,7 @@ export default {
           this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
           this.articlelists = this.articlelists.concat(arr) ;
           this.loading.article=false;
-          // console.log(arr,this.lastID,this.noMore);
+          console.log(this.articlelists,this.lastID,this.noMore);
         }
       },
       getBloggerInfo(){
@@ -153,12 +153,7 @@ export default {
     color:#657786;
     font-size:18px 
 }
-.profile-header .nav-link.active {
-    color: #1D1D1D;
-    border-bottom: 2px solid #39B8EB;
-    font-weight: 600;
-    font-size:18px
-}
+
 .avatarbox {
         cursor: pointer;
 }

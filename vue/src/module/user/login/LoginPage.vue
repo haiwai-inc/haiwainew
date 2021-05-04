@@ -43,7 +43,7 @@
           
           <div id="google-signin-button" class="mb-3"></div>
             
-          <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
+          <!-- <n-button type="default" round simple class="w-100 mb-3" v-on:click="facebookLogin()">
           <facebook-logo></facebook-logo> Facebook 账号登录
           </n-button>
 
@@ -52,20 +52,20 @@
           </n-button>
           <n-button type="default" round simple class="w-100 mb-3" v-on:click="appleLogin()">
           <apple-logo></apple-logo> Apple 账号登录
-          </n-button>
+          </n-button> -->
           <!-- <div id="appleid-signin"></div> -->
           
           <!-- <n-button type="default" round simple class="w-100 mb-3" style="background-color:#468045;border-color:#468045">
               <wxc-logo-white></wxc-logo-white><span style="color:white">文学城 账号登录</span>
           </n-button>  -->
         </div>
-<el-dialog title="文学城用户登录" width="350px" :visible.sync="dialogFormVisible">
+<el-dialog title="文学城用户登录" width="350px" :visible.sync="dialogFormVisible" append-to-body>
   <el-form :model="wxcForm" :rules="wxcrules" ref="wxcForm" label-width="10px">
     <el-form-item
       prop="username"
       label=""
     >
-      <el-input v-model="wxcForm.username"  placeholder="文学城用户名"></el-input>
+      <el-input v-model="wxcForm.username" autofocuse placeholder="文学城用户名"></el-input>
     </el-form-item>
     <el-form-item 
       label="" 
@@ -73,6 +73,7 @@
     >
       <el-input type="password" placeholder="文学城密码" v-model="wxcForm.password" autocomplete="off"></el-input>
     </el-form-item>
+    <div style="color:#f56c6c;text-align:center" v-if="loginErr.status">{{loginErr.msg}}</div>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <n-button link @click="dialogFormVisible = false">取 消</n-button>
@@ -90,9 +91,9 @@ FormGroupInput,
 import {
 //WxcLogoWhite,
 WxcLogoGreen,
-FacebookLogo,
-LineLogo,
-AppleLogo
+// FacebookLogo,
+// LineLogo,
+// AppleLogo
 } from '@/components/Icons';
 import {Dialog} from "element-ui"
 import account from "../service/account";
@@ -100,17 +101,17 @@ import account from "../service/account";
 export default {
 name: 'login-page',
 props:{
-redirect:{type:String,default:""}
+  redirect:{type:String,default:""}
 },
 components: {
-[Button.name]: Button,
-[Checkbox.name]: Checkbox,
-[FormGroupInput.name]: FormGroupInput,
-[Dialog.name]:Dialog,
-WxcLogoGreen,
-FacebookLogo,
-LineLogo,
-AppleLogo
+  [Button.name]: Button,
+  [Checkbox.name]: Checkbox,
+  [FormGroupInput.name]: FormGroupInput,
+  [Dialog.name]:Dialog,
+  WxcLogoGreen,
+  // FacebookLogo,
+  // LineLogo,
+  // AppleLogo
 },
   data() {
     var validateMail =(rule,value,callback)=>{
@@ -200,16 +201,16 @@ AppleLogo
         'onsuccess': this.onGoogleSignIn,
         'onfailure': this.onGoogleFailure,
       });
-    AppleID.auth.init({
-        clientId : 'serviceid.haiwai.blog',
-        scope : 'email',
-        redirectURI : 'http://local.haiwai.com:8080/login',
-        state:"abc",
-        usePopup : true,
-        // response_mode: "query" //or false defaults to false
-    });
-    
-    this.lineSignin();
+    // AppleID.auth.init({
+    //     clientId : 'serviceid.haiwai.blog',
+    //     scope : 'email',
+    //     redirectURI : 'http://local.haiwai.com:8080/login',
+    //     state:"abc",
+    //     usePopup : true,
+    //     // response_mode: "query" //or false defaults to false
+    // });
+    console.log(this.$route.path)
+    // this.lineSignin();
   },
   methods:{
       isShowLogin(v){
@@ -219,14 +220,14 @@ AppleLogo
         this.$store.state.user.getUserStatus().then(res=>{
           this.$store.state.user.userinfo= res.data;
         });
-        if(this.redirect!==''){
-          this.$router.push(this.redirect);
-          console.log(this.redirect)
+    console.log("$route.query.redirect:"+this.$route.query.redirect);
+        if(this.$route.query.redirect){
+          this.$router.push(this.$route.query.redirect);
+        }else if(this.$route.path=="/login"){
+          this.$router.push('/');
         }else{
           this.$emit('closedialog')
-          console.log(this.redirect)
         }
-        // localStorage.setItem('loginState', res.state);
       },
       onGoogleSignIn (user) {
         const profile = user.getBasicProfile();
@@ -292,6 +293,7 @@ AppleLogo
                   this.setLoginState(res);
                 }else{
                   this.loginForm.submitDisable = false;
+                  this.$message.error(res.error);
                 }
                 this.loginErrFormat(res);
               })
@@ -304,6 +306,7 @@ AppleLogo
                   this.setLoginState(res);
                 }else{
                   this.wxcForm.submitDisable = false;
+                  this.$message.error(res.error);
                 }
                 this.loginErrFormat(res);
               })
