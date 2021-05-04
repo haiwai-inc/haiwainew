@@ -4,7 +4,7 @@
           我收到的评论
         </h6>
          <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="comments.data==0">
-             <div class="col-12 pt-4 col-md-8"><img src="/img/like.png" class="logo"></div>
+             <div class="col-12 pt-4 col-md-8"><img src="/img/com.png" class="logo"></div>
              <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
                 <div class="row featurette ">
                    <div class="mt-5 col-md-12 m torder-md-2">
