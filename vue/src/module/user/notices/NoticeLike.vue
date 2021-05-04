@@ -7,7 +7,7 @@
                 <div class="row featurette ">
                    <div class="mt-5 col-md-12 m torder-md-2">
                       <h5 class="featurette-heading">如果有人给您的文章点赞</h5>
-                      <p class="lead text-dark">您就可以在<br>“我收到的赞”里看到他的名字<br>和她点赞的文章</p>
+                      <p class="lead text-dark">您就可以在<br>“我收到的赞”<br>查看详细信息</p>
                    </div>
                 </div>
              </div>
