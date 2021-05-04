@@ -278,7 +278,7 @@ class user extends Api {
         if(!empty($lastID)){
             $fields['postID,>']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],['order'=>['id'=>'DESC'],'treelevel'=>0,'visible'=>1,'OR'=>['userID'=>$followingID_account_follow]]);      
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],$fields);      
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
