@@ -57,6 +57,10 @@
           </div>
         </div>
         <div class="col-sm-9 col-12">
+         <template>
+            <div class="text-center my-3" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧</div>
+            <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
+          </template>
           <div v-if="articlelists.length>0">
             <div v-if="selectItem.followingID==0">
               <article-list-item 
@@ -77,7 +81,7 @@
             </div>
           </div>
           <template v-if="selectItem.followingID==-1">
-            <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
+            <div class="text-center my-3" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
           </template>
         </div>

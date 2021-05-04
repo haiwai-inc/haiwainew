@@ -64,7 +64,7 @@ export default {
   position: absolute;
   top:45%;
   margin-top:-50px;
-  padding-left: 30%;
+  padding-left: 33%;
   color:white;
 }
 .login-leftpart .slogan span{
