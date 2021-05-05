@@ -57,9 +57,9 @@
           </div>
         </div>
         <div class="col-sm-9 col-12">
-          <div v-if="selectItem.followingID!=-1">
-            <index-header v-if="selectItem.followingID>0" :bloggerID="selectItem.bloggerID"></index-header>
-            <div
+          <div v-show="selectItem.followingID!=-1 && articlelists.length>0">
+            <index-header v-show="selectItem.followingID>0" :bloggerID="selectItem.bloggerID"></index-header>
+            <div class="scrollbox"
               v-infinite-scroll="getArticleList"
               infinite-scroll-disabled="disabled"
               infinite-scroll-distance="50">
@@ -71,13 +71,13 @@
               </article-list-item>
             </div>
            
-            <div class="text-center py-5" v-if="loading.article"><!-- loader -->
-            <i class="now-ui-icons loader_refresh spin"></i>
+            <div class="text-center py-5" v-show="loading.article"><!-- loader -->
+              <i class="now-ui-icons loader_refresh spin"></i>
+            </div>
+            <p class="text-center py-4" v-show="noMore">没有更多了</p>
           </div>
-          <p class="text-center py-4" v-if="noMore">没有更多了</p>
-          </div>
-          <div v-if="selectItem.followingID==-1">
-            <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
+          <div v-show="selectItem.followingID==-1">
+            <div class="text-center my-5" v-show="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
           </div>
         </div>
@@ -139,6 +139,7 @@ export default {
     selected(item){console.log(item);
       this.selectItem=item;
       this.lastID.article = 0;
+      this.articlelists = [];
       this.getArticleList();
     },
     getFollowing(){
@@ -160,12 +161,11 @@ export default {
         this.articlelists = this.articlelists.concat(arr) ;
       }
       this.loading.article=false;
-      console.log(this.lastID.article)
+      console.log(this.articlelists);
     },
     async getBloggers(){
       let arr = await blog.hot_blogger();
       this.hotBlobbers = arr.data;
-      console.log(this.hotBlobbers,this.selectItem.followingID);
     },
   },
   data() {
@@ -224,4 +224,5 @@ export default {
 .followed-blogger li.active, .followed-blogger li:hover{
   background-color: aliceblue;
 }
+
 </style>

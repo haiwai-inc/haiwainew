@@ -276,7 +276,7 @@ class user extends Api {
             'OR'=>['userID'=>$followingID_account_follow]
         ];
         if(!empty($lastID)){
-            $fields['postID,>']=$lastID;
+            $fields['postID,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],$fields);      
         
