@@ -6,7 +6,7 @@
              <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
                 <div class="row featurette ">
                    <div class="mt-5 col-md-12 m torder-md-2">
-                      <h5 class="featurette-heading">如果有人给您发悄悄话</h5>
+                      <h5 class="featurette-heading">当您收到<br>悄悄话</h5>
                       <p class="lead text-dark">您就可以在<br>“我的悄悄话”里<br>查看详细信息</p>
                    </div>
                 </div>

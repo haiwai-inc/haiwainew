@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-4 login-left">
+    <div class="col-sm-4 login-left px-0">
       <left-bar>{{showPage==='login'?'登录':'注册'}}</left-bar>
     </div>
     <div class="col-sm-8 col-12">

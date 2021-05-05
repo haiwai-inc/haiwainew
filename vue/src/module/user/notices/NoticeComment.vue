@@ -8,7 +8,7 @@
              <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
                 <div class="row featurette ">
                    <div class="mt-5 col-md-12 m torder-md-2">
-                      <h5 class="featurette-heading">如果有人<br>评论您的文章</h5>
+                      <h5 class="featurette-heading">当您的文章<br>被评论</h5>
                       <p class="lead text-dark">您就可以在<br>“我收到的评论”里<br>查看详细信息</p>
                    </div>
                 </div>
