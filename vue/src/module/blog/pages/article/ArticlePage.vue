@@ -85,7 +85,7 @@
             </div>
             
             <previous-next-bar
-              v-if="articleDetail.data.article_previous_next.next.length>0 ||articleDetail.data.article_previous_next.previous.length>0"
+              v-if="articleDetail.data.article_previous_next.next ||articleDetail.data.article_previous_next.previous"
              :data="articleDetail.data"></previous-next-bar>
             
           </div>

@@ -95,7 +95,7 @@ export default {
         this.getList(res);
       })
       this.collectionList.forEach(item=>{
-        if(item.id==catID){
+        if(item.id==this.catID){
           this.currentCat=item
         }
       })
