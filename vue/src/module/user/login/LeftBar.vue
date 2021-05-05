@@ -88,7 +88,7 @@ export default {
         background: linear-gradient(60deg, #0a74c9 0%, rgb(0 172 193 / 73%) 100%)
 }
 .inner-textheader {
-  height:91vh;
+  height:94vh;
   width:100%;
   margin: 0;
   padding: 0;
