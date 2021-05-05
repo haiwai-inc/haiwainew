@@ -5,7 +5,7 @@
         <main-menu type="0"></main-menu>
       </div>
       <div class="row">
-        <div class="d-block d-sm-none w-100 p-3 d-flex">
+        <div class="d-block d-sm-none w-100 p-3 d-flex" v-if="authorList.length>0">
           <!-- <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
             <el-option :key="-1" :label="'请选择'" :value='-1'></el-option>
             <el-option :key='0' :label="'全部更新文章'" :value='0'>
@@ -57,8 +57,12 @@
           </div>
         </div>
         <div class="col-sm-9 col-12">
-          <div v-if="articlelists.length>0">
-            <div v-if="selectItem.followingID==0">
+          <div v-if="selectItem.followingID!=-1">
+            <index-header v-if="selectItem.followingID>0" :bloggerID="selectItem.bloggerID"></index-header>
+            <div
+              v-infinite-scroll="getArticleList"
+              infinite-scroll-disabled="disabled"
+              infinite-scroll-distance="50">
               <article-list-item 
                 v-for="item in articlelists"
                 v-bind:key="item.articleID"
@@ -66,20 +70,16 @@
                 type="0">
               </article-list-item>
             </div>
-            <div v-if="selectItem.followingID>0">
-              <index-header :bloggerID="selectItem.bloggerID"></index-header>
-              <article-list-item 
-                v-for="item in articlelists"
-                v-bind:key="item.articleID"
-                v-bind:data="item"
-                type="0">
-              </article-list-item>
-            </div>
+           
+            <div class="text-center py-5" v-if="loading.article"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
           </div>
-          <template v-if="selectItem.followingID==-1">
+          <p class="text-center py-4" v-if="noMore">没有更多了</p>
+          </div>
+          <div v-if="selectItem.followingID==-1">
             <div class="text-center my-5" v-if="authorList.length==0"> 您还没有关注任何人，看看我们给您推荐的博主吧！</div>
             <bloger-list-item v-for="(item,index) in hotBlobbers" :key="index" :data="item"></bloger-list-item>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -112,15 +112,20 @@ export default {
     IconV
   },
   watch:{
-    '$store.state.user.userinfo':function(){
-      console.log(this.user.userinfo.id);
-      if(this.user.userinfo.id)this.getFollowing();
-      this.getBloggers();
-    }
+    // '$store.state.user.userinfo':function(){
+    //   console.log(this.user.userinfo.id);
+    //   if(this.user.userinfo.id)this.getFollowing();
+    //   this.getBloggers();
+    // }
   },
   created:function(){
     this.getBloggers();
     this.getFollowing();
+  },
+  computed:{
+    disabled () {
+      return this.loading.article || this.noMore
+    }
   },
   methods:{
     changeID(id){
@@ -133,6 +138,7 @@ export default {
     },
     selected(item){console.log(item);
       this.selectItem=item;
+      this.lastID.article = 0;
       this.getArticleList();
     },
     getFollowing(){
@@ -145,22 +151,33 @@ export default {
       });
     },
     async getArticleList(){
-      let arr = await this.user.following_article_list(this.selectItem.followingID);
-      this.articlelists = arr.data;
-      console.log(this.articlelists)
+      this.loading.article=true;
+      let res = await this.user.following_article_list(this.selectItem.followingID,this.lastID.article);
+      let arr = res.data;
+      if (res.status){
+        this.noMore = arr.length<30 ? true : false;
+        this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
+        this.articlelists = this.articlelists.concat(arr) ;
+      }
+      this.loading.article=false;
+      console.log(this.lastID.article)
     },
     async getBloggers(){
       let arr = await blog.hot_blogger();
       this.hotBlobbers = arr.data;
+      console.log(this.hotBlobbers,this.selectItem.followingID);
     },
   },
   data() {
     return {
       user:this.$store.state.user,
-      selectItem:{},
+      selectItem:{followingID:-1},
       authorList : [],
       articlelists: [],
       hotBlobbers:[],
+      loading:{article:true,blogger:true},
+      lastID:{article:0,blogger:0},
+      noMore:false,
       selectID:0
     };
   },

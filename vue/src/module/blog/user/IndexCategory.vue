@@ -69,10 +69,10 @@ export default {
   },
   created () {
     this.getBloggerInfo();
-    blog.category_list(this.userID).then(res=>{
+    blog.category_list(this.bloggerID).then(res=>{
       this.collectionList=res.data;
       console.log(res.data);
-      this.loadArticle(this.catID);
+      this.loadArticle();
     })
   },
   watch:{
@@ -82,46 +82,47 @@ export default {
     }
   },
   methods:{
-      changeTab(id){
-        this.currentTabId = id;
-        this.lastID.article = 0;
-        this.articlelists = [];
-        this.loadArticle(this.currentTabId);
-      },
-      loadArticle(catID){
-        this.loading.article=true;
-        blog.pubcat_article_list(catID,this.lastID.article).then(res=>{
-          this.getList(res);
-        })
-        this.collectionList.forEach(item=>{
-          if(item.id==catID){
-            this.currentCat=item
-          }
-        })
-      },
-      getList(res){
-        if(res.status){
-          let arr = res.data;
-          this.noMore = arr.length<30 ? true : false;
-          this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
-          this.articlelists = this.articlelists.concat(arr) ;
-          this.loading.article=false;
-          console.log(this.articlelists,this.lastID,this.noMore);
+    changeTab(id){
+      this.currentTabId = id;
+      this.catID = id;
+      this.lastID.article = 0;
+      this.articlelists = [];
+      this.loadArticle();
+    },
+    loadArticle(){
+      this.loading.article=true;
+      blog.pubcat_article_list(this.catID,this.lastID.article).then(res=>{
+        this.getList(res);
+      })
+      this.collectionList.forEach(item=>{
+        if(item.id==catID){
+          this.currentCat=item
         }
-      },
-      getBloggerInfo(){
-        blog.blogger_info(this.userID).then(res=>{
-          console.log(res)
-          if(res.status){
-            this.userInfo = res.data;
-            this.loading.userinfo=true;
-          }
-        })
+      })
+    },
+    getList(res){
+      if(res.status){
+        let arr = res.data;
+        this.noMore = arr.length<30 ? true : false;
+        this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
+        this.articlelists = this.articlelists.concat(arr) ;
+        this.loading.article=false;
+        console.log(this.articlelists,this.lastID,this.noMore);
       }
+    },
+    getBloggerInfo(){
+      blog.blogger_info(this.bloggerID).then(res=>{
+        console.log(res)
+        if(res.status){
+          this.userInfo = res.data;
+          this.loading.userinfo=true;
+        }
+      })
+    }
   },
   data() {
     return {
-        userID:this.$route.params.userid,
+        bloggerID:this.$route.params.bloggerid,
         catID:this.$route.params.catid,
         currentCat:{},
         noMore:false,

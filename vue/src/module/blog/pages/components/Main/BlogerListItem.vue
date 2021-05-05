@@ -108,7 +108,7 @@ export default {
     LoginDialog
   },
   created: function () {
-    let userinfor = this.$store.state.user.userinfo
+    let userinfor = this.$store.state.user.userinfo;
     this.loginuserID = userinfor?userinfor.UserID:-1;
     if(this.usertype=="follower"){
       this.curent_data.userinfo_userID = this.data.userinfo_followerID
