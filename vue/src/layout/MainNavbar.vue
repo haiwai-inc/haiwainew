@@ -1,8 +1,7 @@
 <template>
   <navbar
-    type="white sticky-top"
-
-    menu-classes="ml-auto "
+    type="white"
+    menu-classes="ml-auto"
   >
     <template>
       <router-link class="navbar-brand" to="/">
