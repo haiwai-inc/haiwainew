@@ -353,6 +353,16 @@ export default {
   .switchbtn{
     margin: 12px 30px;
   }
+  html {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  }
+  body {
+  top: 0;
+  left: 0
+  }
 }
 
 </style>

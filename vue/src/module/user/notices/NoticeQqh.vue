@@ -1,34 +1,33 @@
 <template>
   <div>
-         <h6 class="pb-3 font-weight-normal" @click="getlike">我的悄悄话</h6>
-            <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative" v-if="(item,index) in qqhList==0">
-             <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.png" class="logo"></div>
-             <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
-                <div class="row featurette ">
-                   <div class="mt-5 col-md-12 m torder-md-2">
-                      <h5 class="featurette-heading">当您收到<br>悄悄话</h5>
-                      <p class="lead text-dark">您就可以在<br>“我的悄悄话”里<br>查看详细信息</p>
-                   </div>
-                </div>
-             </div>
-          </div>
+    <h6 class="pb-3 font-weight-normal" v-if="!showView">我的悄悄话</h6>
+    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.length==0">
+      <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.webp" class="logo"></div>
+      <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
+        <div class="row featurette ">
+            <div class="mt-5 col-md-12 m torder-md-2">
+              <h5 class="featurette-heading">当您收到<br>悄悄话</h5>
+              <p class="lead text-dark">您就可以在<br>“我的悄悄话”里<br>查看详细信息</p>
+            </div>
+        </div>
+      </div>
+    </div>
     <!-- 悄悄话列表 -->
-    <div class="qiaoqiao-list"  v-if="!showView">
+    <div class="qiaoqiao-list"  v-if="!showView && qqhList.length>0">
       <!-- <h6 class="pb-2 font-weight-normal">
         我的悄悄话
       </h6> -->
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center" @click="showQqhView(index)">
-            
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
               />
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
-              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter.toUpperCase():item.userinfo_touserID.first_letter.toUpperCase()}}</div>
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
             <div class="pl-2">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
@@ -79,23 +78,23 @@
     </div>
     <!-- 悄悄话详情 -->
     <div class="qiaoqiao-view" v-if="showView">
-      <div class="row no-gutters">
-        <div class="col-4 pt-2">
+      <div class="row no-gutters mb-2">
+        <div class="col-1 pt-2">
           <a href="#" 
           class="back-to-list active" 
           @click="showView=false"
             ><left-arrow ></left-arrow>
-            返回悄悄话列表
+            <span class="d-none d-sm-block">返回悄悄话列表</span>
           </a>
         </div>
-        <div class="col-4 pt-2 text-center">
+        <div class="col-10 pt-2 text-center">
           <b>
             与
             <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
             的对话
           </b>
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-1 d-flex justify-content-end">
           <drop-down
           class="nav-item dropdown"
           :haiwaiIcon="iconmore3v"
@@ -117,7 +116,7 @@
               :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
               v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
               />
-              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter.toUpperCase():touser.first_letter.toUpperCase()}}</div>
+              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter:touser.first_letter}}</div>
             </a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
@@ -322,7 +321,7 @@ export default {
   white-space: nowrap;
 }
 .qiaoqiao-list .pull-right {
-  margin: 20px 20px 0 0;
+  margin: 20px -10px 0 0;
   font-size: 13px;
   float: right !important;
 }

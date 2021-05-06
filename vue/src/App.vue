@@ -14,6 +14,8 @@ export default {};
 html{
   font-size: 16px;
 }
-
+body,#app{
+  height:100%;
+}
 
 </style>

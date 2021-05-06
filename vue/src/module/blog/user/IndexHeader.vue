@@ -13,7 +13,7 @@
             <div class="avatarbox" @click="go()">
                 <div 
                 v-if="!data.userinfo_userID.avatar" 
-                class="avatar-word" :style="{height:'150px',width:'150px',lineHeight:'150px'}">{{data.userinfo_userID.first_letter.toUpperCase()}}</div>
+                class="avatar-word" :style="{height:'150px',width:'150px',lineHeight:'150px'}">{{data.userinfo_userID.first_letter}}</div>
                 <img 
                 v-if="data.userinfo_userID.avatar" 
                 :src="data.userinfo_userID.avatar" 
