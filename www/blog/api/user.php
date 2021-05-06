@@ -346,9 +346,6 @@ class user extends Api {
         }
         $rs_article_draft=$obj_article_draft->getAll("*",$fields);
         
-        debug::d($fields);
-        exit;
-        
         //添加用户信息
         $rs_article_draft=$obj_account_user->get_basic_userinfo($rs_article_draft,"userID");
         
