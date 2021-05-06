@@ -85,7 +85,7 @@
           class="back-to-list active" 
           @click="showView=false"
             ><left-arrow ></left-arrow>
-            返回悄悄话列表
+            <span class="d-none d-sm-block">返回悄悄话列表</span>
           </a>
         </div>
         <div class="col-4 pt-2 text-center">
