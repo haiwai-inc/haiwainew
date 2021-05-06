@@ -1,7 +1,7 @@
 <template>
   <div>
     <h6 class="pb-3 font-weight-normal">我的悄悄话</h6>
-    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="showView">
+    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.length==0">
       <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.png" class="logo"></div>
       <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
         <div class="row featurette ">
@@ -13,7 +13,7 @@
       </div>
     </div>
     <!-- 悄悄话列表 -->
-    <div class="qiaoqiao-list"  v-if="!showView">
+    <div class="qiaoqiao-list"  v-if="!showView && qqhList.length>0">
       <!-- <h6 class="pb-2 font-weight-normal">
         我的悄悄话
       </h6> -->
