@@ -321,7 +321,7 @@ export default {
   white-space: nowrap;
 }
 .qiaoqiao-list .pull-right {
-  margin: 20px 20px 0 0;
+  margin: 20px -10px 0 0;
   font-size: 13px;
   float: right !important;
 }
