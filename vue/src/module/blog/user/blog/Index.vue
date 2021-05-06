@@ -210,6 +210,9 @@ export default {
             let arr = res.data.filter(obj=>obj.visible!=0);;
             this.noMore = arr.length<30 ? true : false;
             this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
+            if(this.lastID.article==0){
+                this.articleList = [] ;
+            }
             this.articleList = this.articleList.concat(arr) ;
             this.loading.article=false;
             console.log(arr);
