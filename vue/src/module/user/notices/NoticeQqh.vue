@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h6 class="pb-3 font-weight-normal">我的悄悄话</h6>
+    <h6 class="pb-3 font-weight-normal" v-if="!showView">我的悄悄话</h6>
     <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.length==0">
       <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.png" class="logo"></div>
       <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
@@ -79,8 +79,8 @@
     </div>
     <!-- 悄悄话详情 -->
     <div class="qiaoqiao-view" v-if="showView">
-      <div class="row no-gutters">
-        <div class="col-4 pt-2">
+      <div class="row no-gutters mb-2">
+        <div class="col-1 pt-2">
           <a href="#" 
           class="back-to-list active" 
           @click="showView=false"
@@ -88,14 +88,14 @@
             <span class="d-none d-sm-block">返回悄悄话列表</span>
           </a>
         </div>
-        <div class="col-4 pt-2 text-center">
+        <div class="col-10 pt-2 text-center">
           <b>
             与
             <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
             的对话
           </b>
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-1 d-flex justify-content-end">
           <drop-down
           class="nav-item dropdown"
           :haiwaiIcon="iconmore3v"
