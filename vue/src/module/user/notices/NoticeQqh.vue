@@ -1,6 +1,6 @@
 <template>
   <div>
-         <h6 class="pb-3 font-weight-normal" @click="getlike">我的悄悄话</h6>
+         <h6 class="pb-3 font-weight-normal">我的悄悄话</h6>
             <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative" v-if="(item,index) in qqhList==0">
              <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.png" class="logo"></div>
              <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
