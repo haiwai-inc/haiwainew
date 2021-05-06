@@ -1,8 +1,7 @@
 <template>
   <navbar
-    type="white sticky-top"
-
-    menu-classes="ml-auto "
+    type="white"
+    menu-classes="ml-auto"
   >
     <template>
       <router-link class="navbar-brand" to="/">
@@ -353,16 +352,6 @@ export default {
   }
   .switchbtn{
     margin: 12px 30px;
-  }
-  html {
-  position: relative;
-  height: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  }
-  body {
-  top: 0;
-  left: 0
   }
 }
 
