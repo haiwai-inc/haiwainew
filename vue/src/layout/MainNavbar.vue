@@ -361,9 +361,8 @@ export default {
   -webkit-overflow-scrolling: touch;
   }
   body {
-  position: absolute;
   top: 0;
-  left: 0;
+  left: 0
   }
 }
 
