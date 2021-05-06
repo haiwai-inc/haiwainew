@@ -241,12 +241,17 @@ class passport extends Api {
         $check_blog_wxc_postID=$obj_blog_wxc_postID->getOne("*",['wxc_postID'=>$wxc_postID,'userID'=>$rs_account_user_auth['userID'],'wxc_userID'=>$wxc_userID]);
         if(empty($check_blog_wxc_postID)) {$this->error="博文不存在";$this->status=false;return false;}
         
+        //查询博客文章
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['postID'],['visible'=>1,'postID'=>$check_blog_wxc_postID['postID']]);
+        if(empty($check_article_indexing)) {$this->error="博文不存在";$this->status=false;return false;}
+        
         //生成数据
         $article_data=[
             "title"=>empty($title)?"":urldecode($title),
             "msgbody"=>empty($msgbody)?"":urldecode($msgbody),
             "tagname"=>[],
-            "postID"=>$check_blog_wxc_postID['postID'],
+            "postID"=>$check_article_indexing['postID'],
             "typeID"=>1,
             'tagname'=>empty($tagname)?[]:explode(",",urldecode($tagname)),
             "is_comment"=>1,
@@ -258,7 +263,6 @@ class passport extends Api {
         ];
         
         //修改文章 post
-        $obj_article_indexing=load("article_indexing");
         $obj_article_post=load("article_post");
         $time=times::getTime();
         $fields_indexing=[
@@ -273,7 +277,7 @@ class passport extends Api {
             "title"=>$article_data['title'],
             "msgbody"=>$article_data['msgbody'],
         ];
-        $obj_article_post->update($fields_post,['id'=>$check_blog_wxc_postID['postID']],"post_{$post_tbn}");
+        $obj_article_post->update($fields_post,['id'=>$check_article_indexing['postID']],"post_{$post_tbn}");
         
         //添加文章 tag
         $obj_article_tag=load("article_tag");
