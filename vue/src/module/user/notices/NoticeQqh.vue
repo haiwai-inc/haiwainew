@@ -20,15 +20,14 @@
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center" @click="showQqhView(index)">
-            
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
               />
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
-              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter.toUpperCase():item.userinfo_touserID.first_letter.toUpperCase()}}</div>
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
             <div class="pl-2">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
@@ -117,7 +116,7 @@
               :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
               v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
               />
-              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter.toUpperCase():touser.first_letter.toUpperCase()}}</div>
+              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter:touser.first_letter}}</div>
             </a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
