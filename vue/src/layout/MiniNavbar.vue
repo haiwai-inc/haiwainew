@@ -3,7 +3,7 @@
     type="white"
     menu-classes="ml-auto"
   > -->
-  <nav class="navbar sticky-top bg-white navbar-expand-lg navbar-relative">
+  <nav class="navbar bg-white navbar-expand-lg navbar-relative">
     <template>
       <router-link class="navbar-brand" to="/">
         <img src="/img/logo.png" alt="海外博客" height="32">
