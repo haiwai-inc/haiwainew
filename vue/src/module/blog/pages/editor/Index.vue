@@ -683,6 +683,11 @@ export default {
           // {title: 'narrow', value:'narrow-img'},
           {title: 'origin', value:'origin-img'}
         ],
+        setup: function(editor){
+            editor.on('change', function(e){
+              console.log(e);
+            })
+        },
         image_description:false,
         // media_poster:false,
         content_style: '.mce-content-body .mce-offscreen-selection {position: absolute;left: -9999999999px;max-width: 1000000px;} ' + ' body{font-size:medium;} .wide-img{width:100%; height:auto;} .narrow-img{width:30%; height:auto;} .medium-img{width:60%; height:auto;} .origin-img{max-width:100%; height:auto;}',
