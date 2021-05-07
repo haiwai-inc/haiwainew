@@ -666,6 +666,14 @@ export default {
            'searchreplace visualblocks code fullscreen emoticons',
            'insertdatetime media table paste help wordcount fontsizeselect'
          ],
+         setup: function(editor){
+            ed.on('keyup', function (e) {
+              // tinyMceChange(ed);
+            });
+            ed.on('change', function(e) {
+              // tinyMceChange(ed);
+            });
+        },
          toolbar_mode:"wrap",
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
