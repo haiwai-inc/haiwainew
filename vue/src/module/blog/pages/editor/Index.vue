@@ -337,13 +337,12 @@ export default {
       })
     },
     changeCategory(val){
-      this.categoryList.forEach(item=>{console.log(item.id,val)
+      this.categoryList.forEach(item=>{
         if(item.id==val){
           this.curentArticle.is_publish = item.is_publish;
           console.log(this.curentArticle.is_publish,item.is_publish)
         }
       })
-      console.log(val)
     },
     openDialog(item){
         this.categoryForm.name = item?item.name:''
