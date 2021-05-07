@@ -15,6 +15,9 @@ npm run build
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/send_email.php
 # 更新关注时间
 */1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/sync_follower_update.php
+# 同步文学成悄悄话消息
+0 0 */1 * * root /usr/bin/php /pub/www/haiwainew.com/www/account/Cron/send_wxc_notification.php
+
 
 # blog
 # 同步文学城博客推荐
