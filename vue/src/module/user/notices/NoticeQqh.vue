@@ -35,9 +35,10 @@
 
           </div>
           <div class="pull-right dropdown">
-            <drop-down
+            <!-- <drop-down
             class="nav-item dropdown"
             :haiwaiIcon="iconmore3v"
+            :tag="'div'"
             haiwaiClass="haiwaiicon"
             style="padding:0;"
             >
@@ -70,8 +71,48 @@
                   >举报</n-button>
                 <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
               </el-popover>
-            </drop-down>
+            </drop-down> -->
             
+            <el-dropdown trigger="click">
+              <span v-html="iconmore3v">
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <el-popconfirm 
+                    placement="top-end"
+                    confirm-button-text='删除'
+                    cancel-button-text='取消'
+                    title="确定删除这组悄悄话吗？"
+                    :hide-icon="true"
+                    @confirm="qqh_delete(item)"
+                  >
+                    <a href="javascript:void(0)" slot="reference" class="dropdown-item" style="color:gray;">删除会话</a>
+                  </el-popconfirm>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.id:item.userinfo_touserID.id)">加入黑名单</a>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-popover 
+                  placement="bottom-start"
+                  width="375" 
+                  :ref="'report0-'+item.postID"
+                  trigger="click">
+                    <div>我要举报 <b>{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
+                    <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
+                    <n-button 
+                    type="primary"
+                    round 
+                    simple
+                    :disabled="replybtndisable"
+                    @click="report('0',item)"
+                      >举报</n-button>
+                    <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
+                  </el-popover>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
           </div>
         </li>
       </ul>
@@ -84,7 +125,7 @@
           class="back-to-list active" 
           @click="showView=false"
             ><left-arrow ></left-arrow>
-            <span class="d-none d-sm-block">返回悄悄话列表</span>
+            <!-- <span class="d-none d-sm-block">返回</span> -->
           </a>
         </div>
         <div class="col-10 pt-2 text-center">
@@ -95,14 +136,14 @@
           </b>
         </div>
         <div class="col-1 d-flex justify-content-end">
-          <drop-down
+          <!-- <drop-down
           class="nav-item dropdown"
           :haiwaiIcon="iconmore3v"
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
             <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(touser.id)">加入黑名单</a>
-          </drop-down>
+          </drop-down> -->
         </div>
       </div>
       <div class="message-show">
@@ -147,7 +188,7 @@
   </div>
 </template>
 <script>
-import { Button,DropDown,} from '@/components';
+import { Button,} from '@/components';
 import { Input } from 'element-ui';
 import { LeftArrow } from "@/components/Icons";
 // import Avatar from "../../blog/pages/components/Main/Avatar";
@@ -158,7 +199,7 @@ export default {
   components: {
     [Button.name]: Button,
     [Input.name]: Input,
-    DropDown,
+    // DropDown,
     LeftArrow, 
     // Avatar,
   },
@@ -321,7 +362,7 @@ export default {
   white-space: nowrap;
 }
 .qiaoqiao-list .pull-right {
-  margin: 20px -10px 0 0;
+  margin: 20px 10px 0 0;
   font-size: 13px;
   float: right !important;
 }

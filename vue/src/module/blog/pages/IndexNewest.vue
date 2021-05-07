@@ -52,7 +52,7 @@ export default {
   methods:{
     loadArticle(){
       this.loading.article=true;
-      blog.article_list_recent(0,this.lastID.article).then(res=>{//需要新接口
+      blog.article_list_recent(0,this.lastID.article,0).then(res=>{//需要新接口
         if(res.status){
           let arr = res.data;
           this.noMore = arr.length<30 ? true : false;
