@@ -10,7 +10,7 @@
                 <span>上一篇</span>
             </a>
         </div>
-        <div class="article-menub article-menut " role="button" >{{data.article_previous_next.category.name}}</div>
+        <div class="article-menub article-menut " role="button" @click="gocategory(data.article_previous_next.category.id)">{{data.article_previous_next.category.name}}</div>
         <div class="article-menub">
             <a class="text-black" href="javascript:void(0)" @click="go(data.article_previous_next.next.postID)" v-if="data.article_previous_next.next.postID">
                 <span>下一篇</span>
@@ -35,9 +35,12 @@ export default {
     methods:{
         go(id){
             let url='/blog/p/'+id;
-            console.log(this.data,id);
             this.$router.push(url);
             this.$router.go(url);
+        },
+        gocategory(id){
+            let url = '/blog/c/'+this.data.bloggerID+"/"+id;
+            this.$router.push(url);
         }
     }
 }

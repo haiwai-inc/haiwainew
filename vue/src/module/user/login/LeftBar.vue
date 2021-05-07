@@ -12,7 +12,7 @@
           </span>
         您的<br>
         海外博客账号<br>
-        <small>写出您的故事</small></span>
+        <small>海外博客以文会友</small></span>
       </div>
        </div>
       <div>
@@ -88,7 +88,7 @@ export default {
         background: linear-gradient(60deg, #0a74c9 0%, rgb(0 172 193 / 73%) 100%)
 }
 .inner-textheader {
-  height:91vh;
+  height:94vh;
   width:100%;
   margin: 0;
   padding: 0;

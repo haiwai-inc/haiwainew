@@ -52,11 +52,11 @@ export default {
   methods:{
     loadArticle(){
       this.loading.article=true;
-      blog.article_list_recent(0,this.lastID.article).then(res=>{//需要新接口
+      blog.article_list_recent(0,this.lastID.article,0).then(res=>{//需要新接口
         if(res.status){
           let arr = res.data;
           this.noMore = arr.length<30 ? true : false;
-          this.lastID.article = arr.length===30 ? arr[arr.length-1].id : this.lastID.article;
+          this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
           this.articlelists = this.articlelists.concat(arr) ;
           this.loading.article=false;
           console.log(arr,this.lastID,this.noMore);

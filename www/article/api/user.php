@@ -167,6 +167,9 @@ class user extends Api {
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
         
+        //删除草稿
+        $this->draft_delete($postID);
+        
         return true;
     }
     

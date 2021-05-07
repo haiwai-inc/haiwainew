@@ -266,7 +266,7 @@ export default {
   },
   methods: {
     watchModify(val){
-      this.watchCount+=1;console.log(this.watchCount);
+      this.watchCount+=1;
       this.changeCategory(val);
       if(this.curentArticle.isDraft && this.watchCount>3){
         console.log("草稿")
@@ -337,12 +337,13 @@ export default {
       })
     },
     changeCategory(val){
-      this.categoryList.forEach(item=>{
+      this.categoryList.forEach(item=>{console.log(item.id,val)
         if(item.id==val){
           this.curentArticle.is_publish = item.is_publish;
           console.log(this.curentArticle.is_publish,item.is_publish)
         }
       })
+      console.log(val)
     },
     openDialog(item){
         this.categoryForm.name = item?item.name:''
@@ -618,7 +619,8 @@ export default {
           title:"",
           msgbody:"",
           tags:[]},
-        is_comment:1
+        is_comment:1,
+        is_publish:1
       },
       tabStatus:{},
       watchCount:0,

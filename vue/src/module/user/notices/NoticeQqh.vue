@@ -1,34 +1,33 @@
 <template>
   <div>
-         <h6 class="pb-3 font-weight-normal" @click="getlike">我的悄悄话</h6>
-            <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative" v-if="(item,index) in qqhList==0">
-             <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.png" class="logo"></div>
-             <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
-                <div class="row featurette ">
-                   <div class="mt-5 col-md-12 m torder-md-2">
-                      <h5 class="featurette-heading">当您收到<br>悄悄话</h5>
-                      <p class="lead text-dark">您就可以在<br>“我的悄悄话”里<br>查看详细信息</p>
-                   </div>
-                </div>
-             </div>
-          </div>
+    <h6 class="pb-3 font-weight-normal" v-if="!showView">我的悄悄话</h6>
+    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.length==0">
+      <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.webp" class="logo"></div>
+      <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
+        <div class="row featurette ">
+            <div class="mt-5 col-md-12 m torder-md-2">
+              <h5 class="featurette-heading">当您收到<br>悄悄话</h5>
+              <p class="lead text-dark">您就可以在<br>“我的悄悄话”里<br>查看详细信息</p>
+            </div>
+        </div>
+      </div>
+    </div>
     <!-- 悄悄话列表 -->
-    <div class="qiaoqiao-list"  v-if="!showView">
+    <div class="qiaoqiao-list"  v-if="!showView && qqhList.length>0">
       <!-- <h6 class="pb-2 font-weight-normal">
         我的悄悄话
       </h6> -->
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center" @click="showQqhView(index)">
-            
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
               />
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
-              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter.toUpperCase():item.userinfo_touserID.first_letter.toUpperCase()}}</div>
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
             <div class="pl-2">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
@@ -36,9 +35,10 @@
 
           </div>
           <div class="pull-right dropdown">
-            <drop-down
+            <!-- <drop-down
             class="nav-item dropdown"
             :haiwaiIcon="iconmore3v"
+            :tag="'div'"
             haiwaiClass="haiwaiicon"
             style="padding:0;"
             >
@@ -71,39 +71,79 @@
                   >举报</n-button>
                 <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
               </el-popover>
-            </drop-down>
+            </drop-down> -->
             
+            <el-dropdown trigger="click">
+              <span v-html="iconmore3v">
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <el-popconfirm 
+                    placement="top-end"
+                    confirm-button-text='删除'
+                    cancel-button-text='取消'
+                    title="确定删除这组悄悄话吗？"
+                    :hide-icon="true"
+                    @confirm="qqh_delete(item)"
+                  >
+                    <a href="javascript:void(0)" slot="reference" class="dropdown-item" style="color:gray;">删除会话</a>
+                  </el-popconfirm>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.id:item.userinfo_touserID.id)">加入黑名单</a>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-popover 
+                  placement="bottom-start"
+                  width="375" 
+                  :ref="'report0-'+item.postID"
+                  trigger="click">
+                    <div>我要举报 <b>{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</b><span v-if="report_status" class="text-success ml-3">举报成功</span></div>
+                    <textarea  type="textarea" v-model="reportmsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的举报原因..." @keyup="checkstatus(1)" maxlength="400"></textarea>
+                    <n-button 
+                    type="primary"
+                    round 
+                    simple
+                    :disabled="replybtndisable"
+                    @click="report('0',item)"
+                      >举报</n-button>
+                    <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
+                  </el-popover>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
           </div>
         </li>
       </ul>
     </div>
     <!-- 悄悄话详情 -->
     <div class="qiaoqiao-view" v-if="showView">
-      <div class="row no-gutters">
-        <div class="col-4 pt-2">
+      <div class="row no-gutters mb-2">
+        <div class="col-1 pt-2">
           <a href="#" 
           class="back-to-list active" 
           @click="showView=false"
             ><left-arrow ></left-arrow>
-            返回悄悄话列表
+            <!-- <span class="d-none d-sm-block">返回</span> -->
           </a>
         </div>
-        <div class="col-4 pt-2 text-center">
+        <div class="col-10 pt-2 text-center">
           <b>
             与
             <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
             的对话
           </b>
         </div>
-        <div class="col-4 d-flex justify-content-end">
-          <drop-down
+        <div class="col-1 d-flex justify-content-end">
+          <!-- <drop-down
           class="nav-item dropdown"
           :haiwaiIcon="iconmore3v"
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
             <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(touser.id)">加入黑名单</a>
-          </drop-down>
+          </drop-down> -->
         </div>
       </div>
       <div class="message-show">
@@ -117,7 +157,7 @@
               :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
               v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
               />
-              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter.toUpperCase():touser.first_letter.toUpperCase()}}</div>
+              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter:touser.first_letter}}</div>
             </a>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
@@ -148,7 +188,7 @@
   </div>
 </template>
 <script>
-import { Button,DropDown,} from '@/components';
+import { Button,} from '@/components';
 import { Input } from 'element-ui';
 import { LeftArrow } from "@/components/Icons";
 // import Avatar from "../../blog/pages/components/Main/Avatar";
@@ -159,7 +199,7 @@ export default {
   components: {
     [Button.name]: Button,
     [Input.name]: Input,
-    DropDown,
+    // DropDown,
     LeftArrow, 
     // Avatar,
   },
@@ -322,7 +362,7 @@ export default {
   white-space: nowrap;
 }
 .qiaoqiao-list .pull-right {
-  margin: 20px 20px 0 0;
+  margin: 20px 10px 0 0;
   font-size: 13px;
   float: right !important;
 }

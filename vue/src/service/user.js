@@ -322,9 +322,10 @@ class User extends API{
     /**
      * 获取我关注的人的文章列表
      * @param {被我关注人的id，如果为0返回所有被关注者新文章} followingID 
+     * @param lastID
      */
-    async following_article_list(followingID){
-        return await this.sendget("blog/user/following_article_list/?followingID="+followingID)
+    async following_article_list(followingID,lastID){
+        return await this.sendget("blog/user/following_article_list/?followingID="+followingID+"&lastID="+lastID)
     }
 
     /**

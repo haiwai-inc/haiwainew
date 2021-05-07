@@ -85,7 +85,7 @@
             </div>
             
             <previous-next-bar
-              v-if="articleDetail.data.article_previous_next.next.length>0 ||articleDetail.data.article_previous_next.previous.length>0"
+              v-if="articleDetail.data.article_previous_next.next ||articleDetail.data.article_previous_next.previous"
              :data="articleDetail.data"></previous-next-bar>
             
           </div>
@@ -130,7 +130,7 @@
                  <recommend-list-item :data="item" v-if="index<5"></recommend-list-item>
                </span>
                <div class="justify-content-right border-top d-flex text-right ">
-                 <router-link  :to="'/blog/user/'+articleDetail.data.userID">
+                 <router-link  :to="'/blog/user/'+articleDetail.data.bloggerID">
                   <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
                      <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>more</title>
