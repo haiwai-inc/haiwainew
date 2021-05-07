@@ -84,6 +84,11 @@ class extract_article_pic{
                     $is_pic=-1;
                 }
                 
+                //清空图片
+                if($is_pic==-1){
+                    $this->obj_article_post->update(['pic'=>""],['id'=>$v['postID']],"post_{$post_tbn}");
+                }
+                
                 //更新索引
                 $this->obj_article_indexing->update(['is_pic'=>$is_pic],['postID'=>$v['postID']]);
                 
