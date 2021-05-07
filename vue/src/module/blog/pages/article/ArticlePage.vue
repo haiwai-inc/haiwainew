@@ -10,7 +10,7 @@
         <div class="col-sm-8 col-12" v-if="articleDetail.status">
           
           <div>
-            <h4>{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.is_publish===0" class="text-muted">（隐）</span></h4>
+            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.is_publish===0" class="text-muted">（隐）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
