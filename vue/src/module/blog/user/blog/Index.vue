@@ -194,8 +194,11 @@ export default {
     getArticleList(){
         this.loading.article=true;
         blog.category_article_list(this.currentTabId,this.lastID.article).then(res=>{
-          // 需要完善翻頁
-          this.getList(res);console.log(res)
+            if(res.status){
+                this.getList(res);
+            }else{
+                this.$message.error(res.error);
+            }
         //   this.articleList = res.data.filter(obj=>obj.visible!=0);
         //   this.articleList.forEach(item=>{
         //     if(item.postInfo_postID.title==""){

@@ -278,8 +278,8 @@ export default {
       };
     },
     //for editor
-    tinyMceChange(ed){
-      console.log(ed)
+    editor_change(e){
+      this.watchModify(e);
     },
     // destroyApp() {
     //   app.$destroy();
@@ -578,6 +578,9 @@ export default {
   },
 
   data() {
+    var editoronChange=(e)=>{
+      this.editor_change(e);
+    };
     var checkNameSame = (rule, value, callback) =>{
       this.categoryList.forEach(item=>{
         if(item.name === value){
@@ -649,14 +652,6 @@ export default {
            'searchreplace visualblocks code fullscreen emoticons',
            'insertdatetime media table paste help wordcount fontsizeselect'
          ],
-         setup: function(editor){
-            ed.on('keyup', function (e) {
-              // tinyMceChange(ed);
-            });
-            ed.on('change', function(e) {
-              tinyMceChange(ed);
-            });
-        },
          toolbar_mode:"wrap",
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
@@ -677,9 +672,9 @@ export default {
           {title: 'origin', value:'origin-img'}
         ],
         setup: function(editor){
-            editor.on('change', function(e){
-              console.log(e);
-            })
+          editor.on('change', function(e){
+            editoronChange(e);
+          })
         },
         image_description:false,
         // media_poster:false,

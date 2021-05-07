@@ -214,7 +214,7 @@ export default {
   },
   mounted: function () {
     this.article_view();
-    
+    this.user_login_wxc_to_haiwai(this.token);
   },
   computed:{
     disabled () {
@@ -374,6 +374,14 @@ export default {
         }
       })
     },
+    user_login_wxc_to_haiwai(token){
+      let user =this.$store.state.user;
+      if(this.token && !user.userinfo.id){
+        user.user_login_wxc_to_haiwai(token).then(res=>{
+            console.log(res);
+        })
+      }
+    }
   },
   data() {
     return {
@@ -424,7 +432,8 @@ export default {
           lastID:0,
           tags:''
         }
-      }
+      },
+      token:this.$route.query.haiwai_token,
     };
   },
    filters: {
