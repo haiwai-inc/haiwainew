@@ -278,28 +278,12 @@ export default {
       };
     },
     //for editor
-    toggleEditorDisabled() {
-      this.editorDisabled = !this.editorDisabled;
+    tinyMceChange(ed){
+      console.log(ed)
     },
-    onEditorReady(editor) {
-      console.log("Editor is ready.", { editor });
-      //console.log( Array.from( editor.ui.componentFactory.names() ) );
-    },
-    onEditorFocus(event, editor) {
-      console.log("Editor focused.", { event, editor });
-    },
-    onEditorBlur(event, editor) {
-      console.log("Editor blurred.", { event, editor });
-    },
-    onEditorInput(data, event, editor) {
-      console.log("Editor data input.", { event, editor, data });
-    },
-    onEditorDestroy(editor) {
-      console.log("Editor destroyed.", { editor });
-    },
-    destroyApp() {
-      app.$destroy();
-    },
+    // destroyApp() {
+    //   app.$destroy();
+    // },
     uploadImage(blobInfo, success, failure, progress){
       this.uploadFile("image", blobInfo.base64(), success, failure, progress);
     },
@@ -670,7 +654,7 @@ export default {
               // tinyMceChange(ed);
             });
             ed.on('change', function(e) {
-              // tinyMceChange(ed);
+              tinyMceChange(ed);
             });
         },
          toolbar_mode:"wrap",

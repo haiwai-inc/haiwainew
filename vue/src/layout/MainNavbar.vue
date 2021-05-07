@@ -324,6 +324,10 @@ export default {
 .switchbtn{
   margin:12px 20px;
 }
+.dropdown-item,.dropdown-item.active, .dropdown-item:active{
+  color:#606266 !important;
+  background-color: transparent !important;
+}
 .badge-item .el-badge__content.is-fixed{
   top:12px;
   right:20px;
