@@ -5,7 +5,8 @@
         <main-menu ></main-menu>
       </div>
       <div class="row">
-        <div v-if="!articleDetail.status" class="text-center text-warning mb-4"><h4>{{articleDetail.error}}</h4></div>
+        <div v-if="!articleDetail.status" class="mt-4 pt-4 mx-auto text-center  mb-4 ">
+        <h4>{{articleDetail.error}}</h4></div>
         <div class="col-sm-8 col-12" v-if="articleDetail.status">
           
           <div>
