@@ -29,6 +29,7 @@
             autofocus
             v-model="curentArticle.postInfo_postID.title"
             :placeholder="$t('message').editor.title_ph"
+            @keyup="watchModify"
           />
         </div>
 
@@ -48,7 +49,7 @@
         
         <div class="d-flex justify-content-between align-items-center">
           <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
-        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="watchModify">
+        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="changeCategory">
           <el-option
             v-for="item in categoryList"
             :key="item.id"
@@ -249,31 +250,16 @@ export default {
     // IconX,
     'editor': Editor,
   },
-  watch:{
-    'curentArticle.postInfo_postID.tags':function(val){
-      this.tags = []
-      this.curentArticle.postInfo_postID.tags.forEach(item=>{
-        this.tags.push(item.name)
-      });
-      this.watchModify(val);
-    },
-    'curentArticle.postInfo_postID.title':function(val){
-      this.watchModify(val);
-    },
-    'curentArticle.postInfo_postID.msgbody':function(val){
-      this.watchModify(val);
-    }
-  },
+  watch:{},
   methods: {
     watchModify(val){
-      this.watchCount+=1;
-      this.changeCategory(val);
-      if(this.curentArticle.isDraft && this.watchCount>3){
-        console.log("草稿")
+      // this.watchCount+=1;
+      if(this.curentArticle.isDraft){
+        console.log("草稿",val)
         this.autoSave()
       };
-      if(!this.curentArticle.isDraft && this.watchCount>3){
-        console.log("非草稿")
+      if(!this.curentArticle.isDraft){
+        console.log("非草稿",val)
         this.draft_add()
       };
     },
@@ -281,9 +267,7 @@ export default {
     editor_change(e){
       this.watchModify(e);
     },
-    // destroyApp() {
-    //   app.$destroy();
-    // },
+    
     uploadImage(blobInfo, success, failure, progress){
       this.uploadFile("image", blobInfo.base64(), success, failure, progress);
     },
@@ -321,17 +305,19 @@ export default {
       })
     },
     changeCategory(val){
+      this.setIsPublish(val);
+      this.watchModify(val);
+    },
+    setIsPublish(val){
       this.categoryList.forEach(item=>{
         if(item.id==val){
           this.curentArticle.is_publish = item.is_publish;
-          console.log(this.curentArticle.is_publish,item.is_publish)
         }
-      })
+      });
     },
     openDialog(item){
-        this.categoryForm.name = item?item.name:''
-        this.dialogFormVisible = true
-        console.log()
+        this.categoryForm.name = item?item.name:'';
+        this.dialogFormVisible = true;
     },
     
     // 发布一篇新文章（草稿=>文章）
@@ -453,6 +439,8 @@ export default {
           // this.curentArticle.draftID = res.data.id;
           this.curentArticle.categoryID = this.curentArticle.categoryID!=0?this.curentArticle.categoryID:this.categoryList[0].id;//草稿默认加到第一目录里
           this.curentArticle.isDraft = true;
+          this.setIsPublish(this.curentArticle.categoryID);//初始化文章is_publish字段
+          this.initTag();
         }else{
           this.curentArticle.isDraft = false;
           this.article_view(id);
@@ -475,6 +463,8 @@ export default {
       let res = await this.user.article_view(id);
       if(res.status){
         this.curentArticle = res.data;
+        this.setIsPublish(this.curentArticle.categoryID);//初始化文章is_publish字段
+        this.initTag();
       }console.log(this.curentArticle)
     },
     autoSave(){
@@ -498,6 +488,13 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
+    // tag
+    initTag(){
+      this.tags = []
+      this.curentArticle.postInfo_postID.tags.forEach(item=>{
+        this.tags.push(item.name)
+      });
+    },
     handleSelect(item) {
       this.tag = item.name;
       console.log(item);
@@ -506,7 +503,6 @@ export default {
     handleInputConfirm() {
       let inputValue = this.tag;
       if (inputValue) {
-        // this.dynamicTags.push(inputValue);
         this.pushtag(inputValue)
       }
       this.inputVisible = false;
@@ -514,11 +510,15 @@ export default {
     },
     removetag(index){
       this.curentArticle.postInfo_postID.tags.splice(index,1);
+      this.initTag();
+      this.watchModify();
     },
     pushtag(val){
       let t={name:val}
       this.curentArticle.postInfo_postID.tags.push(t);
       this.tag='';
+      this.initTag();
+      this.watchModify(val)
     },
     beforeDestroy() {
       clearTimeout(this.timer);
@@ -573,7 +573,6 @@ export default {
   },
   mounted() {
     document.documentElement.setAttribute("class", "");
-    console.log(this.$route.redirect)
     // this.initEditor();
   },
 
@@ -672,7 +671,7 @@ export default {
           {title: 'origin', value:'origin-img'}
         ],
         setup: function(editor){
-          editor.on('change', function(e){
+          editor.on('input', function(e){
             editoronChange(e);
           })
         },
