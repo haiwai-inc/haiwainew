@@ -46,7 +46,7 @@
                     >
                       <span class="shareIcon mr-1" v-html="item.icon" @click="share.showShareBar=false"></span>  
                     </ShareNetwork>
-                    <el-popover 
+                    <el-popover style="display:inline-block"
                     placement="bottom-end"
                     width="400" 
                     trigger="click"
@@ -55,7 +55,7 @@
                       <div class="float-right" @click="share.wechatQR=false">关闭</div>
                       <div class="mt-5">打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮</div>
                       <img style="margin: 0 95px;" :src="shareItem.QRcode" alt="">
-                      <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon" v-html="icons.wechat"></span></a>
+                      <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon d-none d-sm-block" v-html="icons.wechat"></span></a>
                     </el-popover>
                   </div>
                     
