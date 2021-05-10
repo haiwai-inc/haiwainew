@@ -14,17 +14,23 @@
             </n-button>
         </div>
         <div class="aricle_list">
-          <ul  v-if="articleList.length!=0">
+          <ul v-if="articleList.length>0">
             <li
               v-for="(item, index) in articleList"
               :key="index"
               class="aritcleItem d-flex justify-content-between align-items-center"
               :class="{active: item.id==articleActiveId,ispublished: item.visible==1}"
+              
             >
-              <div
+             <div
                 class="flex-fill"
               @click="changeMenu(item)"
               >
+          
+              <!-- <div
+                class="flex-fill"
+              @click="changeM(index,item)"
+              > :class="{active: index==$store.state.user.editorTabStatus.filter(arr=>arr[0]>0)[0][1],ispublished: item.visible==1}"-->
                 <icon-draft class="icon" v-if="item.visible!=1"></icon-draft>
                 <icon-published class="icon" v-if="item.visible==1"></icon-published>
                 {{ item.postInfo_postID.title }}
@@ -192,12 +198,19 @@ export default {
     props:{
       wjid:Number,
       cats:Array,
-      activeid:Number
+      activeid:Number,
+      catid:Number
     },
     watch:{
       wjid:function(v){
         this.getArticleList();console.log(v)
-      }
+      },
+      // catid:function(val){
+      //   let obj = this.$store.state.user.editorObj[val]
+      //   this.articleList = obj['articleList']
+      //   console.log(this.articleList,val)
+      //   this.$forceUpdate();
+      // }
     },
     components: {
       [Button.name]: Button,
@@ -221,8 +234,11 @@ export default {
       // [Popconfirm.name]:Popconfirm,
       // [Popover.name]:Popover
     },
+  created() {
+   
+  },
     mounted() {
-      console.log(this.$t('message').topnav.myindex)
+      console.log(this.cats)
     },
     data(){
       return{
@@ -257,6 +273,13 @@ export default {
       }
     },
     methods:{
+      changeM(idx,item){
+        let arr = this.$store.state.user.editorTabStatus.filter(e=>e[0]==1);
+        arr[0][1]=idx;
+        console.log(this.$store.state.user.editorTabStatus,arr);
+        this.changeMenu(item);
+        this.$forceUpdate();
+      },
       changeMenu(e) {
         if(e){console.log(e)
           this.articleActiveId = e.visible!=1?e.id:e.postID;

@@ -10,9 +10,11 @@
             v-for="(item, index) in wenjiList"
             :key="index"
             :class="{ active: wenjiActiveId==item.id }"
+            
           >
-            <span class="flex-fill" @click="changeMenu(item.id)">
-              {{ item.name }} ({{ item.count_article }})
+            <span class="flex-fill" @click="changeM(index)">
+            <!-- <span class="flex-fill" @click="changeMenu(item.id)"> :class="{ 'active':$store.state.user.editorTabStatus[index][0] }"-->
+             {{ item.name }} ({{ item.count_article }})
             </span>
             <drop-down
               class="nav-item dropdown"
@@ -104,14 +106,15 @@ export default {
     name: 'category-list',
     props:{
       wl:Array,
-      wjid:Number
+      wjid:Number,
+      state:Array
     },
     watch:{
       wjid:function(v){
-        this.changeMenu(this.wjid);
+        // this.changeMenu(this.wjid);
       },
       wl:function(){console.log(this.wl)
-        this.wenjiList=this.wl
+        this.wenjiList=this.wl;
       }
     },
     components: {
@@ -166,13 +169,22 @@ export default {
       }
     },
     mounted() {
-      
+      console.log(this.wl)
     },
     methods:{
       changeMenu(wid) {
         this.wenjiActiveId = wid;
         this.$emit('setwjid',wid);
         // this.articleActiveId = aid;
+      },
+      changeM(idx) {
+        this.$store.state.user.editorTabStatus.forEach(item=>{
+          item[0]=0
+        });
+        this.$store.state.user.editorTabStatus[idx][0]=1;
+        this.$forceUpdate();
+        console.log(this.$store.state.user.editorTabStatus);
+        this.$emit('changwj',idx);
       },
       categoryAdd(){
         this.$refs['catForm'].validate((valid) => {console.log(valid)
