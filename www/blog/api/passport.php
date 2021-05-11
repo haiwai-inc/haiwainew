@@ -143,10 +143,14 @@ class passport extends Api {
             $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'is_default'=>1]);
         }
         
+        //图片域名处理
+        $obj_article_indexing=load("article_indexing");
+        $msgbody=$obj_article_indexing->add_image_domian(urldecode($msgbody));
+        
         //生成数据
         $article_data=[
             "title"=>empty($title)?"":urldecode($title),
-            "msgbody"=>empty($msgbody)?"":urldecode($msgbody),
+            "msgbody"=>empty($msgbody)?"":$msgbody,
             "tagname"=>[],
             "typeID"=>1,
             'tagname'=>empty($tagname)?[]:explode(",",urldecode($tagname)),
@@ -159,7 +163,6 @@ class passport extends Api {
         ];
         
         //添加文章 post
-        $obj_article_indexing=load("article_indexing");
         $obj_article_post=load("article_post");
         $article_data['postID']=$obj_article_post->get_id();
         $time=times::getTime();
@@ -246,10 +249,13 @@ class passport extends Api {
         $check_article_indexing=$obj_article_indexing->getOne(['postID'],['visible'=>1,'postID'=>$check_blog_wxc_postID['postID']]);
         if(empty($check_article_indexing)) {$this->error="博文不存在";$this->status=false;return false;}
         
+        //图片域名处理
+        $msgbody=$obj_article_indexing->add_image_domian(urldecode($msgbody));
+        
         //生成数据
         $article_data=[
             "title"=>empty($title)?"":urldecode($title),
-            "msgbody"=>empty($msgbody)?"":urldecode($msgbody),
+            "msgbody"=>empty($msgbody)?"":$msgbody,
             "tagname"=>[],
             "postID"=>$check_article_indexing['postID'],
             "typeID"=>1,
