@@ -233,9 +233,7 @@ class article_indexing extends Model
 	    }
 	    
 	    //文学城域名
-	    if(!empty(strpos($msgbody, "/upload/album/"))){
-	        $msgbody=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$msgbody);
-	    }
+        $msgbody=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$msgbody);
 	    return $msgbody;
 	}
 	
