@@ -6,7 +6,7 @@
                 <p class="bdescription" v-html="data.bloggerinfo_id.description"></p>
             </div>
             <div class="pr-3 pt-auto" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button @click="$router.push('/profile/?id=0')" size="sm">博客设置</n-button>
+                <n-button @click="$router.push('/profile/?id=0')" size="sm"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
             </div>
         </div>
         <div class="user-avatar d-flex py-2">
@@ -49,7 +49,10 @@
                 </div>
             </div>
             <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button size="sm" @click="$router.push('/profile/?id=1')">账号设置</n-button>
+                <n-button size="sm" @click="$router.push('/profile/?id=1')">
+                    <span class="d-none d-sm-block">账号设置
+                    </span><i class="el-icon-setting d-sm-none"></i>
+                </n-button>
             </div>
 
         </div>

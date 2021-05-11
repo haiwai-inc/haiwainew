@@ -8,13 +8,21 @@
       </div>
       <div class="row" v-if="$route.params.id!=0">
       <index-header :bloggerID="Number($route.params.id)"></index-header>
-       <div class="col-sm-3 d-none d-sm-block">
+      <div class="d-lg-none col text-right mb-3">
+          <el-button 
+          v-if="$store.state.user.userinfo.bloggerID==$route.params.id" 
+          round
+          @click="$router.push('/blog/my/')">
+            <i class="el-icon-notebook-2"></i> 博文管理
+        </el-button>
+      </div>
+       <div class="col-lg-3 d-none d-lg-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
             <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录"></collection-list>
           </div>
         </div>
-       <div class="col-sm-9 col-12">
+       <div class="col-lg-9 col-12">
             <div class="profile-header mt-2 mb-3 border-bottom">
                 <ul class="nav justify-content-center">
                     <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
