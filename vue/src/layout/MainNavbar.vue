@@ -356,6 +356,10 @@ export default {
   .switchbtn{
     margin: 12px 30px;
   }
+  .dropdown-item,.dropdown-item.active, .dropdown-item:active{
+    color:#fff !important;
+    background-color: transparent !important;
+  }
   html {
   position: relative;
   height: 100%;
