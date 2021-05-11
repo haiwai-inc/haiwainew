@@ -197,15 +197,9 @@ export default {
             if(res.status){
                 this.getList(res);
             }else{
-                this.$message.error(res.error);
+                // this.$message.error(res.error);
             }
-        //   this.articleList = res.data.filter(obj=>obj.visible!=0);
-        //   this.articleList.forEach(item=>{
-        //     if(item.postInfo_postID.title==""){
-        //       item.postInfo_postID.title = this.$t('message').editor.title_ph
-        //     }
-        //   })
-
+        
         })
     },
     getList(res){
@@ -323,7 +317,7 @@ export default {
             this.addCategory()
         }
     },
-    goeditor(item){console.log(item)
+    goeditor(item){
         let url = '/blog/my/editor/'
         url+=item.postID===0?'':'?postid='+item.postID;
         this.$router.push(url);
