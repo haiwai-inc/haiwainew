@@ -578,7 +578,7 @@ export default {
 
   data() {
     var editoronChange=(e)=>{
-      this.editor_change(e);
+      this.editor_change(e);console.log(e);
     };
     var checkNameSame = (rule, value, callback) =>{
       this.categoryList.forEach(item=>{
@@ -671,7 +671,7 @@ export default {
           {title: 'origin', value:'origin-img'}
         ],
         setup: function(editor){
-          editor.on('input', function(e){
+          editor.on('change', function(e){
             editoronChange(e);
           })
         },

@@ -14,7 +14,6 @@
            </div>
         </div>
     <div v-if="this.follows.authorList.length">
-
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item" :usertype="'follower'"></bloger-list-item>
     </div>
   </div>     

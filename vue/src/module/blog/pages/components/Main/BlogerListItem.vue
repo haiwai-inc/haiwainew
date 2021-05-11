@@ -1,10 +1,13 @@
 <template>
   <div>
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
-      <div class="" :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
-        <router-link :to="'/blog/user/'+curent_data.bloggerID">
+      <div :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
+        <router-link 
+        :to="'/blog/user/'+curent_data.bloggerID" 
+        :style="{cursor:curent_data.bloggerID?'pointer':'default'}"
+        :disabled="!curent_data.bloggerID" 
+        :event="curent_data.bloggerID ? 'click' : ''">
         <icon-V class="text-primary lable" v-if="curent_data.userinfo_userID.is_hot_blogger"></icon-V>
-        <!-- <i class="now-ui-icons objects_diamond text-primary lable" v-if="data.isHot"></i>-->
           <div v-if="!curent_data.userinfo_userID.avatar" class="avatar-word">{{curent_data.userinfo_userID.first_letter}}</div>
           <img 
             v-if="curent_data.userinfo_userID.avatar" 
@@ -16,37 +19,40 @@
       </div>
       <div class='align-self-center right pl-2 flex-grow-1'> 
           <div class="d-flex align-self-center justify-content-between">
-              <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-                <router-link :to="'/blog/user/'+curent_data.bloggerID">
+            <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
+              <router-link :to="'/blog/user/'+curent_data.bloggerID"
+                :style="{cursor:curent_data.bloggerID?'pointer':'default'}"
+                :disabled="!curent_data.bloggerID" 
+                :event="curent_data.bloggerID ? 'click' : ''">
                 <span v-if="usertype!=='search'">{{curent_data.userinfo_userID.username}}</span>
                 <span v-if="usertype==='search'" class="text-muted">
                   <span v-html="curent_data.username" style="color:#14171a;"></span>
                   <span style="font-size:24px;font-weight:300;padding:0 14px">|</span>博客名：<span v-html="curent_data.name"></span>
                 </span>
-                </router-link>
-              </div>
-              
-              <div>
-                  <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(curent_data.userID)">
-                      <div class="d-flex justify-content-end align-items-end add">
-                          <icon-plus></icon-plus>
-                          {{$t('message').blog.blogger_follow}}
-                      </div></a>
-                  <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(curent_data.userID)">
-                      <span class="cancel-text text-danger">
-                          <div class="d-flex justify-content-end align-items-end">
-                            <icon-x :style="{fill:'#FF3636'}"></icon-x>
-                            {{$t('message').blog.blogger_remove_follow}}
-                          </div>
-                      </span>
-                      <span class="followed-text text-default">
-                          <div class="d-flex justify-content-end align-items-end" style="fill:#999">
-                              <icon-check></icon-check>
-                              {{$t('message').blog.blogger_followed}}
-                          </div>
-                      </span>
-                  </a>
-              </div>
+              </router-link>
+            </div>
+            
+            <div>
+              <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(curent_data.userID)">
+                <div class="d-flex justify-content-end align-items-end add">
+                    <icon-plus></icon-plus>
+                    {{$t('message').blog.blogger_follow}}
+                </div></a>
+              <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(curent_data.userID)">
+                  <span class="cancel-text text-danger">
+                      <div class="d-flex justify-content-end align-items-end">
+                        <icon-x :style="{fill:'#FF3636'}"></icon-x>
+                        {{$t('message').blog.blogger_remove_follow}}
+                      </div>
+                  </span>
+                  <span class="followed-text text-default">
+                      <div class="d-flex justify-content-end align-items-end" style="fill:#999">
+                          <icon-check></icon-check>
+                          {{$t('message').blog.blogger_followed}}
+                      </div>
+                  </span>
+              </a>
+            </div>
           </div>
           <div id="description" class="description" :title="curent_data.description">
             {{curent_data.description}}
