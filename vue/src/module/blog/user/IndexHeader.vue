@@ -112,7 +112,8 @@ import LoginDialog from '../../user/login/LoginDialog';
 export default {
     name: 'blog-user-index-header',
     props:{
-        bloggerID:Number
+        bloggerID:Number,
+        userID:Number
     },
     watch:{
         'bloggerID':function(){
