@@ -1,34 +1,36 @@
 <template>
-    <div class="blog-user-index mb-3 col-sm-12 col-12 ">
-        <div class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_id.background+')',backgroundSize:'cover'}">
+    <div class="blog-user-index mb-3 col-sm-12 col-12 " v-if="data.id">
+        <div v-show="data.bloggerinfo_bloggerID" class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_bloggerID.background+')',backgroundSize:'cover'}">
             <div class="user-bgup flex-fill">
-                <span class="name">{{data.bloggerinfo_id.name}}</span>
-                <p class="bdescription" v-html="data.bloggerinfo_id.description"></p>
+                <span class="name">{{data.bloggerinfo_bloggerID.name}}</span>
+                <p class="bdescription" v-html="data.bloggerinfo_bloggerID.description"></p>
             </div>
-            <div class="pr-3 pt-auto" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
-                <n-button @click="$router.push('/profile/?id=0')" size="sm"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
+            <div class="pr-3 pt-auto" style="position:absolute;right:10px;top:10px" v-if="data.id==$store.state.user.userinfo.UserID">
+                <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
+                <el-button v-if="data.bloggerID==0"  type="primary" @click="$router.push('/blog_register')">开通博客</el-button>
             </div>
         </div>
+        
         <div class="user-avatar d-flex py-2">
             <div class="avatarbox" @click="go()">
                 <div 
-                v-if="!data.userinfo_userID.avatar" 
-                class="avatar-word" :style="{height:'150px',width:'150px',lineHeight:'150px'}">{{data.userinfo_userID.first_letter}}</div>
+                v-if="!data.userinfo_id.avatar" 
+                class="avatar-word" :style="{height:'150px',width:'150px',lineHeight:'150px'}">{{data.userinfo_id.first_letter}}</div>
                 <img 
-                v-if="data.userinfo_userID.avatar" 
-                :src="data.userinfo_userID.avatar" 
-                :alt="data.userinfo_userID.username">
+                v-if="data.userinfo_id.avatar" 
+                :src="data.userinfo_id.avatar" 
+                :alt="data.userinfo_id.username">
             </div>
             
             <div class="flex-grow-1">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row textgroup">
-                <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V>{{data.userinfo_userID.username}}</span>
-                <span class="col-9 blog-user-index-des x">{{data.userinfo_userID.description}} </span>
+                <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_id.is_hot_blogger"></icon-V>{{data.userinfo_id.username}}</span>
+                <span class="col-9 blog-user-index-des x">{{data.userinfo_id.description}} </span>
                 </div>
-                <span class="blog-user-index-des">博客访问：{{data.bloggerinfo_id.count_read}}</span>
-                <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_userID.count_follower}}</span>
-                <div class="float-right pr-4 qqh" v-if="bloggerID!=$store.state.user.userinfo.bloggerID">
+                <span v-if="data.bloggerID" class="blog-user-index-des">博客访问：{{data.bloggerinfo_bloggerID.count_read}}</span>
+                <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_id.count_follower}}</span>
+                <div class="float-right pr-4 qqh" v-if="data.id!=$store.state.user.userinfo.UserID">
                     <n-button  
                     link 
                     size="sm"
@@ -38,17 +40,17 @@
                     </n-button>
                     
                     <n-button 
-                    :type="data.userinfo_userID.is_following?'text':'primary'" 
+                    :type="data.userinfo_id.is_following?'text':'primary'" 
                     round 
                     size="sm"
                     @click="follow"
                     class="editbtn ml-3"
                     >
-                        <icon-plus :style="{fill:'#fff'}"></icon-plus>{{data.userinfo_userID.is_following?'已关注':'关注'}}
+                        <icon-plus :style="{fill:'#fff'}"></icon-plus>{{data.userinfo_id.is_following?'已关注':'关注'}}
                     </n-button>
                 </div>
             </div>
-            <div class="pr-3" v-if="bloggerID==$store.state.user.userinfo.bloggerID">
+            <div class="pr-3" v-if="data.id==$store.state.user.userinfo.UserID">
                 <n-button size="sm" @click="$router.push('/profile/?id=1')">
                     <span class="d-none d-sm-block">账号设置
                     </span><i class="el-icon-setting d-sm-none"></i>
@@ -59,7 +61,7 @@
         
     <!-- Send QQH Modal -->
     <modal :show.sync="modals.sendQqhModal" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">向 {{data.userinfo_userID.username}} 发送悄悄话</h4>
+      <h4 slot="header" class="title title-up" style="padding-top:5px">向 {{data.userinfo_id.username}} 发送悄悄话</h4>
       
       <div class="datepicker-container d-flex justify-content-center">
         <el-input
@@ -112,12 +114,12 @@ import LoginDialog from '../../user/login/LoginDialog';
 export default {
     name: 'blog-user-index-header',
     props:{
-        bloggerID:Number,
-        userID:Number
+        info:Object
     },
     watch:{
-        'bloggerID':function(){
-            this.getInfo();
+        'info':function(val){
+            this.data = val;
+            this.init_data(val);
         }
     },
     components:{
@@ -130,16 +132,26 @@ export default {
         Modal,
         LoginDialog
     },
-    mounted:function(){
-        this.getInfo();
+    beforeMount:function(){
+        // this.getInfo();
+        console.log(this.data,this.info)
+        this.init_data(this.data);
+        
     },
     methods:{
-        getInfo(){
-            blog.blogger_info(this.bloggerID).then(res=>{
-                this.data = res.data;
-                this.data.bloggerinfo_id.background = this.data.bloggerinfo_id.background?this.data.bloggerinfo_id.background:this.defaultBackground;
-                console.log(this.data,this.$store.state.user.userinfo);
-            })
+        // getInfo(){
+        //     blog.blogger_info(this.bloggerID).then(res=>{
+        //         this.data = res.data;
+        //         this.data.bloggerinfo_bloggerID.background = this.data.bloggerinfo_bloggerID.background?this.data.bloggerinfo_bloggerID.background:this.defaultBackground;
+        //         console.log(this.data,this.$store.state.user.userinfo);
+        //     })
+        // },
+        init_data(data){
+            if(!data.bloggerID){
+                this.data.bloggerID = 0 ;
+                this.data.bloggerinfo_bloggerID = this.default_blginfo;
+            }
+            
         },
         openModal(){
             if(this.$store.state.user.userinfo.UserID!==undefined){
@@ -167,14 +179,14 @@ export default {
             let url=this.$route.path
             let isidx = url.indexOf('blog/user')
             if(isidx==-1){
-                this.$router.push('/blog/user/' + this.data.bloggerID);
+                this.$router.push('/blog/user/' + this.data.id);
             }
         },
         following_add(id){console.log(this.$store.state.user.userinfo)
             if(this.$store.state.user.userinfo.UserID!==undefined){
                 account.following_add(id).then(res=>{
                 if(res.status) {
-                    this.data.userinfo_userID.is_following = 1;
+                    this.data.userinfo_id.is_following = 1;
                 }else{
                     this.$message.error(res.error);
                 }
@@ -187,7 +199,7 @@ export default {
             if(this.$store.state.user.userinfo.UserID!==undefined){
                 account.following_delete(id).then(res=>{
                     if(res.status == true) {
-                        this.data.userinfo_userID.is_following = 0;
+                        this.data.userinfo_id.is_following = 0;
                     }else{
                         this.$message.error(res.error);
                     }
@@ -195,7 +207,7 @@ export default {
             }
         },
         follow(){
-            if(this.data.userinfo_userID.is_following){
+            if(this.data.userinfo_id.is_following){
                 this.following_delete(this.data.userID)
             }else{
                 this.following_add(this.data.userID)
@@ -204,22 +216,11 @@ export default {
     },
     data() {
         return {
-            defaultBackground:'/img/default_bg.jpg',
-            data:{
-                bloggerinfo_id:{
-                    background:'',
-                    description:'',
-                    count_read:0,
-                    count_follower:0
-                },
-                id:0,
-                userID:0,
-                userinfo_userID:{
-                    avatar:'',
-                    username:'',
-                    is_following:0
-                }
-            },
+            default_blginfo:{
+                background : '/img/default_bg.jpg',
+                name : "未开通博客",
+                description : "此用户尚未开通博客..."},
+            data:this.info,
             modals:{
                 sendQqhModal:false,
                 qqhMsgbody:'',

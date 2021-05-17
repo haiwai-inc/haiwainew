@@ -6,24 +6,11 @@
       </div>
       <div class="row">
         <div class="d-block d-sm-none w-100 p-3 d-flex" v-if="authorList.length>0">
-          <!-- <el-select v-if="authorList.length>0" v-model="selectID" placeholder="请选择" @change="changeID(selectID)">
-            <el-option :key="-1" :label="'请选择'" :value='-1'></el-option>
-            <el-option :key='0' :label="'全部更新文章'" :value='0'>
-            </el-option>
-            <el-option
-            v-for="(item,index) in authorList"
-            :key="item.id"
-            :label="item.userinfo_followingID.username"
-            :value="index+1">
-            <span style="float: left;color:black">{{ item.userinfo_followingID.username }} <span class="text-muted">的文章</span></span>
-            <div class="noticealert mr-auto" v-if="item.follower_update < item.following_update"></div>
-            </el-option>
-          </el-select> -->
           <div class="flex-grow-1 mobile-avatar" style="overflow-x:auto;overflow-y:hidden">
             <ul style="white-space:nowrap;display:block;overflow:auto;padding-inline-start:0px">
               <li v-for="item in authorList" 
               style="list-style:none;display:inline-block;margin-left:10px;padding-top:6px;vertical-align:top"
-              :key="item.id" @click="$router.push('/blog/user/'+item.bloggerID)">
+              :key="item.id" @click="$router.push('/blog/user/'+item.userID)">
                 <!-- <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar> -->
                 <el-avatar v-if="item.userinfo_followingID.avatar" :src="item.userinfo_followingID.avatar" :size="50"></el-avatar>
                 <el-avatar v-if="!item.userinfo_followingID.avatar" :size="50">{{item.userinfo_followingID.first_letter}}</el-avatar>
@@ -58,7 +45,7 @@
         </div>
         <div class="col-sm-9 col-12">
           <div v-show="selectItem.followingID!=-1 && articlelists.length>0">
-            <index-header v-show="selectItem.followingID>0" :bloggerID="selectItem.bloggerID"></index-header>
+            <index-header v-show="userinfo.id>0" :info="userinfo"></index-header>
             <div class="scrollbox"
               v-infinite-scroll="getArticleList"
               infinite-scroll-disabled="disabled"
@@ -128,7 +115,7 @@ export default {
     }
   },
   methods:{
-    changeID(id){
+    changeID(id){ // for msite
       if(id>0){
         this.selectItem = this.authorList[id-1]
       }else{
@@ -141,6 +128,7 @@ export default {
       this.lastID.article = 0;
       this.articlelists = [];
       this.getArticleList();
+      this.header_info(item.followingID);
     },
     getFollowing(){
       this.user.my_followering_list(0).then(res=>{
@@ -149,6 +137,11 @@ export default {
           this.selectItem.followingID = this.authorList.length>0?0:-1;
           this.getArticleList();
         }
+      });
+    },
+    header_info(userID){
+      blog.get_user_info(userID).then(res=>{
+          this.userinfo = res.data;
       });
     },
     async getArticleList(){
@@ -171,6 +164,7 @@ export default {
   data() {
     return {
       user:this.$store.state.user,
+      userinfo:{},
       selectItem:{followingID:-1},
       authorList : [],
       articlelists: [],

@@ -11,10 +11,10 @@ export default {
         onSubmit(){
             this.$store.state.user.blog_register().then(res=>{
                 if(res.status){
-                    this.$store.state.user.getUserInfo(this.$store.state.user.userinfo.id).then(res=>{
+                    this.$store.state.user.getUserInfo(this.$store.state.user.userinfo.UserID).then(res=>{
                         console.log(res.data);
                         if(res.status){
-                            this.$router.push('/blog/editor');
+                            this.$router.push('/blog/user/'+this.$store.state.user.userinfo.UserID);
                         }
                     });
                 }
@@ -24,7 +24,7 @@ export default {
     beforeCreate() {
         this.$store.state.user.getUserStatus().then(r=>{
         if(r.data.bloggerID){
-            this.$router.push('/blog/editor');
+            this.$router.push('/blog/user/'+this.$store.state.user.userinfo.UserID);
         }
         });
     },

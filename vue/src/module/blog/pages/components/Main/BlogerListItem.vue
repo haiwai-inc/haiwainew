@@ -3,10 +3,7 @@
     <div class="d-flex hot-blogger" id="author" :class="{noborder:type=='small'}">
       <div :class="{'hot-blogger-avatar':type=='default','small':type=='small'}">
         <router-link 
-        :to="'/blog/user/'+curent_data.bloggerID" 
-        :style="{cursor:curent_data.bloggerID?'pointer':'default'}"
-        :disabled="!curent_data.bloggerID" 
-        :event="curent_data.bloggerID ? 'click' : ''">
+        :to="'/blog/user/'+curent_data.userID" >
         <icon-V class="text-primary lable" v-if="curent_data.userinfo_userID.is_hot_blogger"></icon-V>
           <div v-if="!curent_data.userinfo_userID.avatar" class="avatar-word">{{curent_data.userinfo_userID.first_letter}}</div>
           <img 
@@ -20,10 +17,7 @@
       <div class='align-self-center right pl-2 flex-grow-1'> 
           <div class="d-flex align-self-center justify-content-between">
             <div :class="{'blogger-name':type=='default','small-name':type=='small'}">
-              <router-link :to="'/blog/user/'+curent_data.bloggerID"
-                :style="{cursor:curent_data.bloggerID?'pointer':'default'}"
-                :disabled="!curent_data.bloggerID" 
-                :event="curent_data.bloggerID ? 'click' : ''">
+              <router-link :to="'/blog/user/'+curent_data.userID">
                 <span v-if="usertype!=='search'">{{curent_data.userinfo_userID.username}}</span>
                 <span v-if="usertype==='search'" class="text-muted">
                   <span v-html="curent_data.username" style="color:#14171a;"></span>

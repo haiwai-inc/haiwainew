@@ -3,7 +3,7 @@
       <div class="name" :style="data.id===activeId?{color:'#39b8eb', fill: '#39b8eb'}:''">
        <span v-html="data.icon" class="icon"></span>
         {{data.title}}</div>
-      <div class="descrip" :style="data.id===activeId?{color:'#39b8eb',}:''">{{data.unread}}</div> 
+      <div class="descrip" :style="data.id===activeId?{color:'#39b8eb',}:''">{{data.unread?data.unread:''}}</div> 
   </div>
 </template>
 <script>

@@ -3,26 +3,27 @@
       <div>
         <main-menu type="-1"></main-menu>
       </div>
+      <!-- 如果没有blog -->
       <div v-if="$route.params.id==0">
           <regist-blog></regist-blog>
       </div>
       <div class="row" v-if="$route.params.id!=0">
-      <index-header :bloggerID="Number($route.params.id)"></index-header>
+      <index-header v-if="userinfo.id>0" :info="userinfo"></index-header>
       <div class="d-lg-none col text-right mb-3">
           <el-button 
-          v-if="$store.state.user.userinfo.bloggerID==$route.params.id" 
+          v-if="$store.state.user.userinfo.userID==$route.params.id" 
           round
           @click="$router.push('/blog/my/')">
             <i class="el-icon-notebook-2"></i> 博文管理
         </el-button>
       </div>
-       <div class="col-lg-3 d-none d-lg-block">
+       <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
             <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录"></collection-list>
           </div>
         </div>
-       <div class="col-lg-9 col-12">
+       <div class="col-lg-9 col-12" v-show="bloggerID!=0">
             <div class="profile-header mt-2 mb-3 border-bottom">
                 <ul class="nav justify-content-center">
                     <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">
@@ -34,9 +35,9 @@
                     </li>
                 </ul>
             </div>
-            <div
+            <div 
             v-infinite-scroll="loadArticle"
-            infinite-scroll-disabled="noMore"
+            infinite-scroll-disabled="disabled"
             infinite-scroll-distance="50">
                 <article-list-item 
                 v-for="item in articlelists"
@@ -75,48 +76,59 @@ export default {
   },
   watch:{
     "$route.params.id":function(val){
-        this.userID = this.$route.params.id;
-        this.articlelists = [];
-        this.loadArticle();
-        blog.category_list(this.userID).then(res=>{
-            this.collectionList=res.data;
-            this.$forceUpdate();
-            console.log(res,this.token);
-        })
-            
-        this.user_login_wxc_to_haiwai(this.token)
+        this.userID = val;
+        this.init_data();
     }
   },
   created () {
     // this.loadArticle();
-    blog.category_list(this.userID).then(res=>{
-        this.collectionList=res.data;
-        console.log(res,this.token);
-    })
-    
-    this.user_login_wxc_to_haiwai(this.token)
-    
+    this.init_data();
+  },
+  computed:{
+    disabled () {
+      return this.bloggerID==0 || this.noMore || this.loading.article
+    }
   },
   methods:{
-      changeTab(id){
+    init_data(){
+        blog.get_user_info(this.userID).then(res=>{
+            this.userinfo = res.data;console.log(this.userinfo);
+            this.bloggerID = res.data.bloggerID?res.data.bloggerID:0;
+            if(this.bloggerID!=0){
+                this.articlelists = [];
+                this.collectionList = [];
+                this.loadArticle();
+                blog.category_list(this.bloggerID).then(res=>{
+                    if(res.status){
+                        this.collectionList=res.data;
+                    }else{
+                        this.$message.error(res.error);
+                    }
+                })
+            }
+        });
+        this.user_login_wxc_to_haiwai(this.token);
+    },
+    changeTab(id){
         this.currentTabId = id;
         this.lastID.article = 0;
         this.articlelists = [];
         this.loadArticle();
       },
       loadArticle(){
+          this.loading.article = true
         if(this.currentTabId==0){
-            blog.article_list_recent(this.userID,this.lastID.article).then(res=>{
+            blog.article_list_recent(this.bloggerID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
         };
         if(this.currentTabId==1){
-            blog.article_list_hot(this.userID,this.lastID.article).then(res=>{
+            blog.article_list_hot(this.bloggerID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
         };
         if(this.currentTabId==2){
-            blog.article_list_comment(this.userID,this.lastID.article).then(res=>{
+            blog.article_list_comment(this.bloggerID,this.lastID.article).then(res=>{
                 this.getList(res);
             });
         };
@@ -132,7 +144,7 @@ export default {
             }
       },
       user_login_wxc_to_haiwai(token){
-          let user =this.$store.state.user;
+            let user =this.$store.state.user;
           if(this.token && !user.userinfo.id){
             user.user_login_wxc_to_haiwai(token).then(res=>{
                 console.log(res);
@@ -143,6 +155,8 @@ export default {
   data() {
     return {
         userID:this.$route.params.id,
+        bloggerID:0,
+        userinfo:{},
         token:this.$route.query.haiwai_token,
         currentTabId:0,
         noMore:false,

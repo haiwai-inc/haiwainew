@@ -88,10 +88,18 @@ class Blog extends API{
 	if(res.status){
 		res.data.bloggerID = res.data.id
 	}
-	console.log(res)
-	return res
+	return res;
   }
   
+  /**
+   * 返回某个用户的信息
+   * @param {用户id} userID 
+   */
+  	async get_user_info(userID){
+		let res = await this.sendget("account/page/user_info/?userID="+userID);
+		return res;
+	}
+
   /**
 	 * 返回博客文章列表
 	 * 

@@ -22,7 +22,7 @@
             :label="item.title"
             :value="item.id">
             <span style="float: left">{{ item.title }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.unread?item.unread:'' }}</span>
             </el-option>
         </el-select>
       </div>
