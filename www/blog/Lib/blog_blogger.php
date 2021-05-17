@@ -23,11 +23,18 @@ class blog_blogger extends Model{
 		return $bloggers;
 	}
 
-	//获取博客基本信息
-	function get_basic_bloggerinfo($rs,$hashID='id',$nested=false){
+	/**
+	 * 获取博客基本信息
+	 * ($rs_account_follow,"userinfo_followingID",true);
+	 * [0] => 
+	 *     [id] => 56
+	 *     [userinfo_followingID] => Array
+	 *         [id] => 137
+	 */
+	function get_basic_bloggerinfo($rs,$hashID='id',$hashID_in_array=false){
 	    if(!empty($rs)){
 	        //没有bloggerID情况下
-	        if(!empty($nested)){
+	        if(!empty($hashID_in_array)){
 	            foreach($rs as $v){
 	                $tmp_hashID[]=$v[$hashID]['id'];
 	            }
