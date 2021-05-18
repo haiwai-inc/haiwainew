@@ -260,7 +260,7 @@ export default {
       };
       if(!this.curentArticle.isDraft){
         console.log("非草稿",val)
-        this.draft_add()
+        this.draft_add(val)
       };
     },
     //for editor
@@ -383,11 +383,13 @@ export default {
       // this.modals.publish = false;
       this.$router.push("/blog/p/"+res.data);
     },
-    draft_add(){
+    draft_add(e){
+      console.log(e)
       let data={
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
-          msgbody:this.curentArticle.postInfo_postID.msgbody,
+          // msgbody:this.curentArticle.postInfo_postID.msgbody,
+          msgbody:e.level.content,
           tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,
@@ -400,7 +402,7 @@ export default {
           categoryID:this.curentArticle.categoryID
         }
       };
-      this.user.draft_add(data).then(res=>{console.log(res.data)
+      this.user.draft_add(data).then(res=>{
         this.draft_view(res.data);
       })
     },
