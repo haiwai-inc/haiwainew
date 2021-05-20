@@ -61,13 +61,13 @@ const cnt = {
             black_remove:"從黑名單中移除"
         },
         editor:{
-            wenji_new_btn:"新建文集",
-            wenji_new_title:"請輸入新文集名稱",
+            wenji_new_btn:"新建目錄",
+            wenji_new_title:"請輸入新目錄名稱",
             wenji_new_cancel:"取消",
             wenji_new_save:"保存",
             wenji_update_btn:"修改",
-            wenji_update_menu:"修改文集名稱",
-            wenji_delet_menu:"刪除文集",
+            wenji_update_menu:"修改目錄名稱",
+            wenji_delet_menu:"刪除目錄",
             wenji_comfirm_title:"確定删除博文目錄 ",
             wenji_comfirm_title1:" 嗎？",
             wenji_comfirm_btn:"删除",

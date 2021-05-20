@@ -378,7 +378,7 @@ class User extends API{
     }
         
     /**
-     * 删除文集中的草稿
+     * 删除目录中的草稿
      * 
      * @param {postID}
      *          postID
@@ -441,7 +441,7 @@ class User extends API{
     }
 
   /**
-	 * 返回文集列表(作者)
+	 * 返目录列表(作者)
 	 * 
 	 * @param number
 	 *          $bloggerID

@@ -35,7 +35,7 @@ class Search extends API{
     }
 
     /**
-     * 文集搜索
+     * 目录搜索
      * @param string keyword        搜索关键词
      * @param number last_score     翻页用，之前页面分数最低的
      * */ 
