@@ -300,10 +300,12 @@ export default {
         blog.reply_add(obj).then(res=>{
           if(res.status){
             this.regetComment(this.currentItem);
-            this.replybtndisable = false;
-            this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
-            this.replymsgbody="";
+          }else{
+            this.$message.error(res.error)
           }
+          this.replybtndisable = false;
+          this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
+          this.replymsgbody="";
         })
       }else{
         this.$emit('opendialog')

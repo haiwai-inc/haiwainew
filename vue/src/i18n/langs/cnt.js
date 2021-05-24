@@ -29,7 +29,12 @@ const cnt = {
             notice_menu_comment:"我收到的評論",
             notice_menu_qqh:"我的悄悄話",
             notice_menu_funs:"我的粉絲",
-            notice_menu_likeme:"我收到的讚"
+            notice_menu_likeme:"我收到的讚",
+            index_hot_categorymenu: "其它分類"
+        },
+        article:{
+          read_count:"閱讀",
+          edit:"編輯"
         },
         setting:{
             menu_bolg:"博客設置",
