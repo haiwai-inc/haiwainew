@@ -114,10 +114,10 @@ class user extends Api {
         if(empty($check_account_user))  {$this->error="不是有效的屏蔽用户";$this->status=false;return false;}
             
         $obj_account_blacklist=load("account_blacklist");
+        $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
         if(!empty($check_account_blacklist))    {$this->error="此用户已经被屏蔽";$this->status=false;return false;}
             
         $obj_account_blacklist->insert(['userID'=>$_SESSION['id'],'blockID'=>$blockID]);
-        
         return true;
     }
     
@@ -271,6 +271,11 @@ class user extends Api {
         $obj_account_user=load("account_user");
         $check_account_user=$obj_account_user->getOne(['id','username'],["id"=>$touserID,"status"=>1]);
         if(empty($check_account_user))  {$this->error="此用户不存在";$this->status=false;return false;}
+        
+        //查看黑名单
+        $obj_account_blacklist=load("account_blacklist");
+        $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$touserID,'blockID'=>$_SESSION['id']]);
+        if(!empty($check_account_blacklist)) {$this->error="此用户已经将您加入黑名单，无法发送悄悄话";$this->status=false;return false;}
         
         //查看是否开启对话框
         $check_account_qqh=$obj_account_qqh->getOne("*",['SQL'=>"(userID={$touserID} and touserID={$_SESSION['id']}) OR (userID={$_SESSION['id']} and touserID={$touserID})"]);

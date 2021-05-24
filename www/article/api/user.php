@@ -350,6 +350,11 @@ class user extends Api {
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
         
+        //查看黑名单
+        $obj_account_blacklist=load("account_blacklist");
+        $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$check_article_indexing['userID'],'blockID'=>$_SESSION['id']]);
+        if(!empty($check_account_blacklist)) {$this->error="此用户已经将您加入黑名单，无法评论";$this->status=false;return false;}
+        
         //添加回复 post
         $obj_article_post=load("article_post");
         $postID=$obj_article_post->get_id();
