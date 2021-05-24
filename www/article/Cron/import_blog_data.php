@@ -26,8 +26,11 @@ class import_blog_data{
                     $lastid=$v['postid'];
                     echo $lastid."_".$month."\n";
                     
-                    //汪老师 userID=942857 blogid=69027 basecode=211   7324
-                    if($v['userid']==866909){
+                    //热门博主搜索
+                    $obj_blog_legacy_hot_blogger=load("blog_legacy_hot_blogger");
+                    $check_blog_legacy_hot_blogger=$obj_blog_legacy_hot_blogger->getOne(['id'],['userid'=>$v['userid']]);
+                    
+                    if(!empty($check_blog_legacy_hot_blogger)){
                         //主贴
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
                         $rs_import_post=$obj_blog_tool->import_post($v);
