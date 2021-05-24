@@ -2,8 +2,8 @@
   <div class="list-itme d-flex mb-3">
     <div class="flex-fill">
       <router-link :to="'/blog/p/'+data.postID">
-        <h4 class='article-title'>{{data.postInfo_postID.title}}</h4>
-        <p class="descript" v-html="data.postInfo_postID.msgbody"></p>
+        <h4 class='article-title'>{{data.postInfo_postID.title | textTrans}}</h4>
+        <p class="descript" v-html="$options.filters.textTrans(data.postInfo_postID.msgbody)"></p>
       </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
@@ -49,7 +49,8 @@
 import {
     IconV
 } from '@/components/Icons';
-import blog from '../../../blog.service'
+import blog from '../../../blog.service';
+import {textTrans} from '@/directives/textTrans.js';
 
 export default {
   name: 'article-list-item',
@@ -84,6 +85,11 @@ export default {
     //   let url = '/blog/my/editor/?postid='+item.postID
     //   this.$router.push(url);
     // }
+  },
+  filters: {
+    textTrans(string) {
+      return textTrans(string);
+    }
   }
    
 };

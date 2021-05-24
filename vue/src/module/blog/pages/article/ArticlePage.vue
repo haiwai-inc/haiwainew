@@ -10,7 +10,7 @@
         <div class="col-sm-8 col-12" v-if="articleDetail.status">
           
           <div>
-            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（隐）</span></h4>
+            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title|textTrans}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（隐）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
@@ -68,8 +68,8 @@
             </div>
             <div class="d-flex align-items-center">
               <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
-              <div style="color:gray;" class="ml-3">阅读: {{articleDetail.data.countinfo_postID.count_read}}</div>
-              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</el-button>
+              <div style="color:gray;" class="ml-3">{{$t('message').article.read_count}}: {{articleDetail.data.countinfo_postID.count_read}}</div>
+              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">{{$t('message').article.edit}}</el-button>
               <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
                 placement="top-end"
                 confirm-button-text='删除'
@@ -81,7 +81,7 @@
                 <el-button type="text" icon="el-icon-delete" slot="reference" class="ml-3" style="color:#39b8eb">删除</el-button>
               </el-popconfirm>
             </div>
-            <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
+            <div class="content" v-html="$options.filters.textTrans(articleDetail.data.postInfo_postID.msgbody)">
               <!-- blog 正文 -->
             </div>
             
@@ -177,6 +177,7 @@
 </template>
 <script>
 import {formatDate} from '@/directives/formatDate.js';
+import {textTrans} from '@/directives/textTrans.js';
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
@@ -266,7 +267,12 @@ export default {
         this.replybtndisable = true;
         blog.reply_add(obj).then(res=>{
           this.replybtndisable = false;
-          this.getFirst20();
+          if(res.status){
+            this.getFirst20();
+          }else{
+            this.$message.error(res.error)
+          }
+          
           this.replymsgbody="";
         })
       }
@@ -429,6 +435,9 @@ export default {
     formatDate(time) {
     var date = new Date(time);
     return formatDate(date, 'yyyy-MM-dd hh:mm');
+    },
+    textTrans(string) {
+      return textTrans(string);
     }
   }
  };

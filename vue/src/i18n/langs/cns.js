@@ -30,6 +30,11 @@ const cns = {
       notice_menu_qqh: "我的悄悄话",
       notice_menu_funs: "我的粉丝",
       notice_menu_likeme: "我收到的赞",
+      index_hot_categorymenu: "其它分类"
+    },
+    article:{
+      read_count:"阅读",
+      edit:"编辑"
     },
     setting: {
       menu_bolg: "博客设置",

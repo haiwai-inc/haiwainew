@@ -73,7 +73,7 @@
       </div>
       
       <template slot="footer">
-          <span v-if="modals.modalData" :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.data?'发送成功':'发送失败'}}</span>
+          <span v-if="modals.modalData" :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.status?'发送成功':modals.modalData.error}}</span>
         <n-button 
         class="mr-3"
         type="default" 
@@ -161,7 +161,7 @@ export default {
             }
         },
         sendQqh(data){
-            this.send(this.$store.state.user.userinfo.id,data.userID,this.modals.qqhMsgbody);
+            this.send(this.$store.state.user.userinfo.id,data.id,this.modals.qqhMsgbody);
         },
         async send(userID,touserID,msgbody) {
             let user = this.$store.state.user;
@@ -172,7 +172,7 @@ export default {
             setTimeout(()=>{
                 this.modals.modalData=undefined;
                 this.modals.sendQqhModal=res.status?false:true;
-            },2000)
+            },4000)
         //   console.log(res);
         },
         go(){

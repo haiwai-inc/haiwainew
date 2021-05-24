@@ -10,13 +10,13 @@
             @click="sendTagId(item.id)" 
             v-bind:class="{active:activeId==item.id}"
         >
-            <span>{{item.name}}</span>
+            <span>{{item.name|textTrans}}</span>
         </n-button>
         
       </span>
       <drop-down
       class="nav-item dropdown"
-      title="其它分类"
+      :title="$t('message').blog.index_hot_categorymenu"
       style="margin-top:3px;"
       tag="span">
         <span v-for="(item,index) of data" :key="index">
@@ -24,7 +24,7 @@
           class="dropdown-item" 
           v-if="index>=6 && item.visible==1"
           :key="item.id" href="#" 
-          @click="sendTagId(item.id)">{{item.name}}</a>
+          @click="sendTagId(item.id)">{{item.name|textTrans}}</a>
         </span>
       </drop-down>
     </div>
@@ -39,7 +39,7 @@
             @click="sendTagId(item.id)"
             v-bind:class="{active:activeId==item.id}"
         >
-            <span>{{item.name}}</span>
+            <span>{{item.name|textTrans}}</span>
         </n-button>
       </span>
       <drop-down
@@ -64,6 +64,8 @@ import {
   Button,
   DropDown
 } from '@/components';
+import {textTrans} from '@/directives/textTrans.js';
+
 export default {
   name: 'main-category-bar',
   props: {
@@ -82,6 +84,11 @@ export default {
   methods:{
     sendTagId(id){
       this.$emit('get-tagid',id)
+    }
+  },
+  filters: {
+    textTrans(string) {
+      return textTrans(string);
     }
   }
 };
