@@ -34,7 +34,9 @@ class user extends Api {
             if(!empty($check_name)) {$this->error="此博主名已经被占用";$this->status=false;return false;}
         }
         
+        $time=times::gettime();
         $fields=[
+            "update_date"=>$time,
             "name"=>empty($name)?"":$name,
             "description"=>empty($description)?"":$description,
         ];
