@@ -7,9 +7,9 @@ $user_obj = load("account_user");
 $search_category = load("search_category");
 $blog_category = load("blog_category");
 if (count($argv) < 2) {
-    $first_update_time = time() - 30*60;
+    $first_update_time = times::gettime() - 30*60;
 } else {
-    $first_update_time = time() - intval($argv[1])*60;
+    $first_update_time = times::gettime() - intval($argv[1])*60;
 }
 
 // $first_update_time = 0;
