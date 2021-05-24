@@ -2,7 +2,7 @@
 include 'inc.comm.php';
 
 /**
- * @author sida
+ * @author sida1
  * [
  *  'data'=>[],
  *  'error'=>[
