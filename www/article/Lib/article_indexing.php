@@ -131,8 +131,9 @@ class article_indexing extends Model
 			    if(empty($v[$key])){
 			        continue;
 			    }
+			    $v[$key] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $v[$key]);
+			    $v[$key] = strip_tags($v[$key]);
 			    
-				$v[$key] = strip_tags($v[$key]);
 				if(!empty($max_character)){
 				    $v[$key] = strings::subString($v[$key], $max_character);
 				}

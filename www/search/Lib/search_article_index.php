@@ -176,7 +176,8 @@ class search_article_index extends Search
 				if(!empty($doc['found'])){
 					$doc_body = $doc['_source'];
 					if(empty($full_msg)){
-						$doc_body['msgbody'] = strip_tags($doc_body['msgbody']);
+					    $doc_body['msgbody'] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $doc_body['msgbody']);
+					    $doc_body['msgbody'] = strip_tags($doc_body['msgbody']);
 						$doc_body['msgbody'] = strstr($doc_body['msgbody'], 1000);
 					}
 					$posts_body[] = $doc_body;
