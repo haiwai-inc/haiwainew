@@ -270,7 +270,11 @@ export default {
     async send(userID,touserID,msgbody) {
       // let user = this.$store.state.user;
       let res = await this.user.sendQqh(userID,touserID,msgbody);
-      this.showQqhView(this.msgID);
+      if(res.status){
+        this.showQqhView(this.msgID);
+      }else{
+        this.$message.error(res.error);
+      }
       this.msgbody='';
       console.log(res);
     },

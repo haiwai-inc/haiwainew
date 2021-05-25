@@ -30,6 +30,11 @@ const cns = {
       notice_menu_qqh: "我的悄悄话",
       notice_menu_funs: "我的粉丝",
       notice_menu_likeme: "我收到的赞",
+      index_hot_categorymenu: "其它分类"
+    },
+    article:{
+      read_count:"阅读",
+      edit:"编辑"
     },
     setting: {
       menu_bolg: "博客设置",
@@ -61,13 +66,13 @@ const cns = {
       black_remove:"从黑名单中移除"
     },
     editor:{
-        wenji_new_btn:"新建文集",
-        wenji_new_title:"请输入新文集名称",
+        wenji_new_btn:"新建目录",
+        wenji_new_title:"请输入新目录名称",
         wenji_new_cancel:"取消",
         wenji_new_save:"保存",
         wenji_update_btn:"修改",
-        wenji_update_menu:"修改文集名称",
-        wenji_delet_menu:"删除文集",
+        wenji_update_menu:"修改目录名称",
+        wenji_delet_menu:"删除目录",
         wenji_comfirm_title:"确定删除博文目录 ",
         wenji_comfirm_title1:" 吗？",
         wenji_comfirm_btn:"删除",

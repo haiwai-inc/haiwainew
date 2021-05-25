@@ -14,6 +14,7 @@ class clear_blog_data{
             $this->obj_account_user_auth=load("account_user_auth");
             $this->obj_blog_category=load("blog_category");
             $this->obj_article_indexing=load("article_indexing");
+            $this->obj_article_indexing_wxc=load("article_indexing_wxc");
             $this->obj_article_tag=load("article_tag");
             $this->obj_blog_blogger=load("blog_blogger");
             $this->obj_article_draft=load("article_draft");
@@ -38,6 +39,7 @@ class clear_blog_data{
             $this->obj_blog_category->exec("TRUNCATE TABLE `category`");
             $this->obj_article_draft->exec("TRUNCATE TABLE `draft`");
             $this->obj_article_indexing->exec("TRUNCATE TABLE `indexing`");
+            $this->obj_article_indexing_wxc->exec("TRUNCATE TABLE `indexing_wxc`");
             $this->obj_article_tag->exec("TRUNCATE TABLE `tag`");
             $this->obj_blog_blogger->exec("TRUNCATE TABLE `blogger`");
             $this->obj_account_blacklist->exec("TRUNCATE TABLE `blacklist`");

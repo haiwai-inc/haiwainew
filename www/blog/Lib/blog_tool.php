@@ -181,7 +181,8 @@ class blog_tool{
                 'username'=>$rs_account_legacy_user['username'],
                 'description'=>empty($rs_account_legacy_user_details['summary'])?"":$rs_account_legacy_user_details['summary'],
                 'background'=>empty($rs_account_legacy_user_details['aboutme'])?"":$rs_account_legacy_user_details['aboutme'],
-                'email'=>"sida9567@gmail.com", //$rs_legacy_user_passwd_new['email']
+                //'email'=>"sida9567@gmail.com", //$rs_legacy_user_passwd_new['email']
+                'email'=>$rs_legacy_user_passwd_new['email'], 
                 'verified'=>1,
                 'ip'=>$rs_account_legacy_user["ipaddress"],
                 'login_date'=>strtotime($rs_account_legacy_user['dateline']),

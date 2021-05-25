@@ -46,6 +46,7 @@
 		<form name="git" class="post" id="post" method="post" action="?server={%$servername%}" onsubmit="return checkfrom();">
 			<hr style="clear:both;">
 			<input type="checkbox" value="beta" name='publish[]' checked><label> beta</label>
+			<input type="checkbox" value="stage" name='publish[]'><label> stage</label>
 			<input type="checkbox" value="production" name='publish[]'><label> production</label>
 			<input type="submit" name="submit" value="提交" />	
 			<input type="button" name="log" value="查看提交日志" onClick="self.location.href='?server={%$servername%}&log=true'" />	

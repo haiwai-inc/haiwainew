@@ -15,7 +15,7 @@
               haiwaiClass="haiwaiicon"
               style="padding:0;"
               >
-                <el-popover 
+                <!-- <el-popover 
                 placement="bottom-start"
                 width="375" 
                 :ref="'report0-'+data.postID"
@@ -31,7 +31,7 @@
                     >举报</n-button
                   >
                   <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
-                </el-popover>
+                </el-popover> -->
                 <!-- <a class="dropdown-item" href="javascript:void(0)" @click="report(data)">举报</a> -->
                 <a class="dropdown-item pl-4" href="javascript:void(0)" style="color:gray" @click="blockUser(data.userID)">加入黑名单</a>
             </drop-down>
@@ -93,7 +93,7 @@
                       haiwaiClass="haiwaiicon"
                       style="padding:0;"
                     >
-                      <el-popover 
+                      <!-- <el-popover 
                       placement="bottom-start"
                       width="375" 
                       :ref="'report1-'+r.postID"
@@ -108,7 +108,7 @@
                         @click="report('1',r)"
                           >举报</n-button>
                         <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
-                      </el-popover>
+                      </el-popover> -->
                       <a class="dropdown-item pl-4" href="javascript:void(0)" @click="blockUser(r.userID)">加入黑名单</a>
                     </drop-down>
                     </span>
@@ -300,10 +300,12 @@ export default {
         blog.reply_add(obj).then(res=>{
           if(res.status){
             this.regetComment(this.currentItem);
-            this.replybtndisable = false;
-            this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
-            this.replymsgbody="";
+          }else{
+            this.$message.error(res.error)
           }
+          this.replybtndisable = false;
+          this.currentItem.treelevel==2?this.$refs[`${pop}`][0].doClose():this.$refs[`${pop}`].doClose();
+          this.replymsgbody="";
         })
       }else{
         this.$emit('opendialog')

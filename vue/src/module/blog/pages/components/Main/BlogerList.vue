@@ -10,7 +10,9 @@
     :data="item"></bloger-list-item>
   </div>
 </template>
-<script>import {
+<script>
+import icons from "@/components/Icons/Icons";
+import {
   Button,
 } from '@/components';
 import BlogerListItem from './BlogerListItem'

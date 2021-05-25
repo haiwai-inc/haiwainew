@@ -4,23 +4,6 @@
     <div class="container">
     <div class="row editorbox">
       <div class="col-md-9 editor mx-auto col-12" id="editor_container" ref="editorContainer">
-        <!-- <div class="col-12 d-flex mt-3">
-          <div class=" flex-fill"><h5>发表博客文章</h5></div>
-          <div class="mr-3 text-muted">所属目录：我的文章</div>
-          <el-dropdown trigger="click">
-            <span class="el-dropdown-link">
-              更多功能<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-folder">移动文章</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-arrow-up">置顶文章</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-check">允许评论</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-check">允许转载</el-dropdown-item>
-              <el-dropdown-item divided icon="el-icon-delete">删除文章</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div> -->
-        
         <div class="d-flex justify-content-between py-2" ref="titleBox">
           <input
             ref="editor_title"
@@ -32,9 +15,7 @@
             @keyup="watchModify"
           />
         </div>
-
           <!-- 编辑器 -->
-          
           <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
         <editor 
           :init="editorConfig"
@@ -90,7 +71,7 @@
           <el-button v-else round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
         </div>
         <div class="pb-5">
-          可否评论：
+          当前博文可否评论：<br>
           <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
           <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
@@ -656,7 +637,7 @@ export default {
          toolbar_mode:"wrap",
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
-            image link media file emoticons\
+            image media link file emoticons\
            formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
         language: lang,
         relative_urls : false,

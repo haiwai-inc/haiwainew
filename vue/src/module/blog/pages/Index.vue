@@ -26,6 +26,19 @@
           <div class="hot-bloger" v-if="bloggerList.length>0">
             <bloger-list v-bind:data="bloggerList" :title="$t('message').blog.index_title_hot"></bloger-list>
           </div>
+          <!-- help -->
+            <div class="box my-3 pl-3 bolger-box sticky-top">
+              <span v-html="icons.helpcenter"></span>
+              <span class="ml-3 mb-3 h6">帮助中心</span>
+              <div class=row>
+                <div class="col-6 mt-3 text-secondary">如何上传图片</div>
+                <div class="col-6 mt-3  text-secondary">怎样发视频</div>
+                <div class="col-12 mt-3 text-secondary">如何贴音乐</div>
+              </div>
+            </div>
+
+          <!-- help -->
+          <div class="my-3  ml-3  text-muted text-left text-small"><p class="mb-1">Copyright ©2021 Haiwai.com</p><ul class="list-inline"><li class="list-inline-item"><a class="text-dark" href="#">隐私协议</a></li><li class="list-inline-item"><a class="text-dark" href="#">关于我们</a></li><li class="list-inline-item"><a class="text-dark" href="#">联系我们</a></li></ul></div>
         </div>
       </div>
     </div>
@@ -36,6 +49,7 @@ import MainMenu from './components/Main/MainMenu.vue';
 import ArticleListItem from './components/Main/ArticleListItem.vue';
 import BlogerList from './components/Main/BlogerList.vue';
 import blog from '../blog.service';
+import icons from "@/components/Icons/Icons";
 
 export default {
   name: 'blog-index',
@@ -82,6 +96,7 @@ export default {
       res_bloggerList:[],
       bloggerList : [],
       articlelists: [],
+      icons:icons,
     };
   },
 };

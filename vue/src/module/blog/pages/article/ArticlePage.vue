@@ -10,7 +10,7 @@
         <div class="col-sm-8 col-12" v-if="articleDetail.status">
           
           <div>
-            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（隐）</span></h4>
+            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title|textTrans}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（隐）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
@@ -68,8 +68,8 @@
             </div>
             <div class="d-flex align-items-center">
               <div style="color:gray;">{{articleDetail.data.create_date*1000 | formatDate}}</div>
-              <div style="color:gray;" class="ml-3">阅读: {{articleDetail.data.countinfo_postID.count_read}}</div>
-              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">编辑</el-button>
+              <div style="color:gray;" class="ml-3">{{$t('message').article.read_count}}: {{articleDetail.data.countinfo_postID.count_read}}</div>
+              <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">{{$t('message').article.edit}}</el-button>
               <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
                 placement="top-end"
                 confirm-button-text='删除'
@@ -81,7 +81,7 @@
                 <el-button type="text" icon="el-icon-delete" slot="reference" class="ml-3" style="color:#39b8eb">删除</el-button>
               </el-popconfirm>
             </div>
-            <div class="content" v-html="articleDetail.data.postInfo_postID.msgbody">
+            <div class="content" v-html="$options.filters.textTrans(articleDetail.data.postInfo_postID.msgbody)">
               <!-- blog 正文 -->
             </div>
             
@@ -131,7 +131,7 @@
                  <recommend-list-item :data="item" v-if="index<5"></recommend-list-item>
                </span>
                <div class="justify-content-right border-top d-flex text-right ">
-                 <router-link  :to="'/blog/user/'+articleDetail.data.bloggerID">
+                 <router-link  :to="'/blog/user/'+articleDetail.data.userID">
                   <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
                      <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>more</title>
@@ -145,29 +145,6 @@
                  </router-link>
                </div>
             </div>
-          <!-- r2 -->
-            <div class="box" v-if="false">
-               <div class="title  d-flex justify-content-between">
-                  <h5>文集-芳草渡 (56) </h5>
-               </div>
-               <!-- <span v-for="(item,index) in recommend.collections" :key="index" >
-                 <recommend-list-item type="small" :data="item"></recommend-list-item>
-               </span> -->
-               
-
-               <div class="justify-content-right border-top d-flex text-right ">
-                  <button type="button" class="btn btn-link btn-default f-right" style="padding-right: 0px;">
-                     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <title>more</title>
-                        <g id="more" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                           <path d="M11.5740443,6.24199451 L11.5740443,20.2419945 M5,12 L11.5,6 L18,12" id="Arrow" stroke="#6D7278" stroke-width="2" transform="translate(11.500000, 13.120997) rotate(46.000000) translate(-11.500000, -13.120997) "></path>
-                           <rect id="Rectangle" stroke="#6D7278" stroke-width="2" x="3" y="3" width="18" height="18" rx="1"></rect>
-                        </g>
-                     </svg>
-                     更多
-                  </button>
-               </div>
-            </div>
           <!-- r3 -->
             <div class="box my-3" v-if="recommend.articles.length>0">
                <div class="title  d-flex justify-content-between">
@@ -179,16 +156,28 @@
                </span>
             </div>
           <!-- r3 end-->
+          <!-- help -->
+            <div class="box my-3 pl-3 sticky-top">
+              <span v-html="icons.helpcenter"></span>
+              <span class="ml-3 mb-3 h6">帮助中心</span>
+              <div class=row>
+                <div class="col-6 mt-3 text-secondary">如何上传图片</div>
+                <div class="col-6 mt-3  text-secondary">怎样发视频</div>
+                <div class="col-12 mt-3 text-secondary">如何贴音乐</div>
+              </div>
+            </div>
+          <!-- help -->
         </div>
       </div>
     </div>
     
-      <login-dialog ref="dialog"></login-dialog>
+    <login-dialog ref="dialog"></login-dialog>
     
   </div>
 </template>
 <script>
 import {formatDate} from '@/directives/formatDate.js';
+import {textTrans} from '@/directives/textTrans.js';
 import MainMenu from '../components/Main/MainMenu';
 import BlogerListItem from '../components/Main/BlogerListItem';
 import RecommendListItem from '../components/Main/RecommendListItem';
@@ -278,7 +267,12 @@ export default {
         this.replybtndisable = true;
         blog.reply_add(obj).then(res=>{
           this.replybtndisable = false;
-          this.getFirst20();
+          if(res.status){
+            this.getFirst20();
+          }else{
+            this.$message.error(res.error)
+          }
+          
           this.replymsgbody="";
         })
       }
@@ -441,6 +435,9 @@ export default {
     formatDate(time) {
     var date = new Date(time);
     return formatDate(date, 'yyyy-MM-dd hh:mm');
+    },
+    textTrans(string) {
+      return textTrans(string);
     }
   }
  };
