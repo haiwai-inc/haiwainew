@@ -71,7 +71,7 @@
           <el-button v-else round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
         </div>
         <div class="pb-5">
-          可否评论：
+          当前博文可否评论：<br>
           <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
           <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
