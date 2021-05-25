@@ -187,7 +187,11 @@ class search_article_noindex extends Search
 				unset($rs[$k]);
 				continue;
 			}
+
             $rs[$k]["postInfo_{$hashID}"]=$hash_posts[$v[$hashID]];
+            
+            //去除样式
+		    $rs[$k]["postInfo_{$hashID}"]['msgbody'] = preg_replace('/(<(script|style)\b[^>]*>).*?(<\/\2>)/is', "$1$3", $rs[$k]["postInfo_{$hashID}"]['msgbody']); 
             
             //是否加入书签
             $rs[$k]["postInfo_{$hashID}"]['is_bookmark']=empty($hash_account_bookmark[$v['postID']])?0:1;
