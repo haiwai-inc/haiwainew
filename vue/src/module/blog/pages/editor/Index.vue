@@ -637,7 +637,7 @@ export default {
          toolbar_mode:"wrap",
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
-            image link media file emoticons\
+            image media link file emoticons\
            formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
         language: lang,
         relative_urls : false,
