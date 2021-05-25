@@ -3,7 +3,11 @@ class article extends Api{
 
 
     /**
-    * For debug purpose
+    * For debug purpose, 
+    * 带index文章: indexing, 不带index文章: noindexing
+    * 博主：blogger
+    * 文集：category
+    * 标签：tag
     *
     * @param string $id
     * @param string $table

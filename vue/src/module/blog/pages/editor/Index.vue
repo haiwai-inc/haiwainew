@@ -198,7 +198,7 @@ import HaiwaiIcons from "@/components/Icons/Icons";
 import blog from "../../blog.service";
 import tinymce from './tinymce/tinymce.min'
 import 'tinymce/themes/silver'
-import 'tinymce/icons/default/icons.js'
+import './tinymce/icons/default/icons.js'
 import './tinymce/plugins/image/plugin.js'
 import './tinymce/plugins/media'
 import 'tinymce/plugins/advlist'

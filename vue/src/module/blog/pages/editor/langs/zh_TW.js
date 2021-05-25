@@ -118,7 +118,7 @@ tinymce.addI18n('zh_TW',{
 "Source": "\u5716\u7247\u7db2\u5740",
 "Dimensions": "\u5c3a\u5bf8",
 "Constrain proportions": "\u7b49\u6bd4\u4f8b\u7e2e\u653e",
-"General": "\u4e00\u822c",
+"General": "\u93c8\u63a5",
 "Advanced": "\u9032\u968e",
 "Style": "\u6a23\u5f0f",
 "Vertical space": "\u9ad8\u5ea6",
