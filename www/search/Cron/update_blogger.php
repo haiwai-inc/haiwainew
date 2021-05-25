@@ -9,7 +9,7 @@ $blog_category = load("blog_category");
 if (count($argv) < 2) {
     $first_update_time = time() - 30*60;
 } else {
-    $first_update_time = time() - intval($argv[1])*60;
+    $first_update_time = time() - intval($argv[1]) * 60;
 }
 
 // $first_update_time = 0;
@@ -35,3 +35,4 @@ while(true){
     echo("$total_category category updated\n");
     $iter++;
 }
+
