@@ -36,7 +36,9 @@
                 <div class="col-12 mt-3 text-secondary">如何贴音乐</div>
               </div>
             </div>
+
           <!-- help -->
+          <div class="my-3  ml-3  text-muted text-left text-small"><p class="mb-1">Copyright ©2021 Haiwai.com</p><ul class="list-inline"><li class="list-inline-item"><a class="text-dark" href="#">隐私协议</a></li><li class="list-inline-item"><a class="text-dark" href="#">关于我们</a></li><li class="list-inline-item"><a class="text-dark" href="#">联系我们</a></li></ul></div>
         </div>
       </div>
     </div>
