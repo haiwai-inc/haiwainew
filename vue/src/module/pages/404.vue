@@ -35,7 +35,7 @@
 <script>
 
 export default {
-  name: 'profile',
+  name: '404',
   bodyClass: 'profile-page',
   components: {
     

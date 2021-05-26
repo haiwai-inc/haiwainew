@@ -9,7 +9,19 @@ const routes = [
   {
     path: '',redirect:{name:'index'},
   },{
-    path:'*',components:{default: resolve => require (['../module/404.vue'],resolve), header: MainNavbar}
+    path:'*',
+    name:'404',
+    components:{default: resolve => require (['../module/pages/404.vue'],resolve), header: MainNavbar}
+  },
+  {
+      path: '/privacy',
+      name: 'api_example',
+      components: { default: resolve => require (['../module/pages/Privacy.vue'],resolve), header: MainNavbar },
+  },
+  {
+      path: '/tou',
+      name: 'api_example',
+      components: { default: resolve => require (['../module/pages/Tou.vue'],resolve), header: MainNavbar },
   }
 ];
 const files = require.context('../module', true, /\.router.js$/);
