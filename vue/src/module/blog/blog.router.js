@@ -1,5 +1,6 @@
 
 import MainNavbar from '../../layout/MainNavbar.vue';
+import MainFooter from '../../layout/MainFooter.vue';
 export default [
     {
         path: '/blog',
@@ -23,11 +24,11 @@ export default [
       },{
         path: '/blog/follows',
         name: 'follows',
-        components: { default:resolve => require (['./pages/IndexFollows.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./pages/IndexFollows.vue'],resolve), header: MainNavbar, footer: MainFooter},
       },{
         path: '/blog/p/:id',
         name: 'article',
-        components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar, footer: MainFooter},
       // },{
       //   path: '/blog/editor',
       //   name: 'editor',
@@ -46,15 +47,15 @@ export default [
       // },{
         path: '/blog/user/:id',
         name: 'bloguserindex',
-        components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar, footer: MainFooter},
       },{
         path: '/blog/my',
         name: 'myblog',
-        components: { default:resolve => require (['./user/blog/Index.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./user/blog/Index.vue'],resolve), header: MainNavbar, footer: MainFooter},
         meta:{requiresAuth:true}
       },{
         path: '/blog/c/:bloggerid/:catid',
         name: 'categorindex',
-        components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar},
+        components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar, footer: MainFooter},
       }
 ]

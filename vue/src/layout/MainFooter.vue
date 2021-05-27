@@ -1,55 +1,19 @@
 <template>
-  <footer
-    class="footer"
-    :class="{ [`footer-${type}`]: type }"
-    :data-background-color="backgroundColor"
-  >
-    <div class="container">
-      <nav>
-        <ul>
-          <li>
-            <a href="https://www.creative-tim.com">
-              Creative Tim
-            </a>
-          </li>
-          <li>
-            <a href="https:///presentation.creative-tim.com">
-              About Us
-            </a>
-          </li>
-          <li>
-            <a href="https:///blog.creative-tim.com">
-              Blog
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <div class="copyright">
-        &copy; {{ year }}, Designed by
-        <a href="https:///www.invisionapp.com" target="_blank" rel="noopener"
-          >Invision</a
-        >. Coded by
-        <a href="https://binarcode.com" target="_blank" rel="noopener"
-          >BinarCode</a
-        >
-        and
-        <a href="https://www.creative-tim.com" target="_blank" rel="noopener"
-          >Creative Tim</a
-        >.
-      </div>
-    </div>
-  </footer>
+<footer class="my-5 bg-light pb-2 pt-4 text-muted text-center text-small">
+   <p class="mb-1 text-small">Copyright ©2021 Haiwai.com</p>
+   <ul class="list-inline">
+      <li class="list-inline-item"><a class="text-secondary" href="/privacy">隐私</a></li>
+      <li class="list-inline-item"><a class="text-secondary" href="/tou">条款</a></li>
+      <li class="list-inline-item"><a class="text-secondary" href="#">关于</a></li>
+   </ul>
+</footer>
 </template>
 <script>
+
 export default {
-  props: {
-    backgroundColor: String,
-    type: String
-  },
-  data() {
-    return {
-      year: new Date().getFullYear()
-    };
+  name: 'main-footer',
+  components: {
+    
   }
 };
 </script>

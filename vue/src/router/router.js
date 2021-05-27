@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import MainNavbar from '../layout/MainNavbar.vue';
+import MainFooter from '../layout/MainFooter.vue';
 import User from '../service/user';
 
 Vue.use(Router);
@@ -11,17 +12,17 @@ const routes = [
   },{
     path:'*',
     name:'404',
-    components:{default: resolve => require (['../module/pages/404.vue'],resolve), header: MainNavbar}
+    components:{default: resolve => require (['../module/pages/404.vue'],resolve), header: MainNavbar, footer: MainFooter}
   },
   {
       path: '/privacy',
       name: 'api_example',
-      components: { default: resolve => require (['../module/pages/Privacy.vue'],resolve), header: MainNavbar },
+      components: { default: resolve => require (['../module/pages/Privacy.vue'],resolve), header: MainNavbar, footer: MainFooter },
   },
   {
       path: '/tou',
       name: 'api_example',
-      components: { default: resolve => require (['../module/pages/Tou.vue'],resolve), header: MainNavbar },
+      components: { default: resolve => require (['../module/pages/Tou.vue'],resolve), header: MainNavbar, footer: MainFooter },
   }
 ];
 const files = require.context('../module', true, /\.router.js$/);
