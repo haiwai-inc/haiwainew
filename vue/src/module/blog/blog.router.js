@@ -28,7 +28,7 @@ export default [
       },{
         path: '/blog/p/:id',
         name: 'article',
-        components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components: { default:resolve => require (['./pages/article/ArticlePage.vue'],resolve), header: MainNavbar},
       // },{
       //   path: '/blog/editor',
       //   name: 'editor',
