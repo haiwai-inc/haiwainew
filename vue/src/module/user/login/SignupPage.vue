@@ -15,7 +15,7 @@
           </el-form-item>
           <el-form-item prop="policy">
             <el-checkbox-group v-model="signupForm.policy">
-              <el-checkbox label="" name="policy">我已阅读并同意 <a class="text-secondary" href="/tou">海外博客-用户协议</a></el-checkbox>
+              <el-checkbox checked label="" name="policy">我已阅读并同意 海外博客-<a class="text-secondary" href="/privacy">隐私</a><a class="text-secondary" href="/tou">条款</a></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>

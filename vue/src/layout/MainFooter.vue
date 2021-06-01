@@ -4,7 +4,7 @@
    <ul class="list-inline">
       <li class="list-inline-item"><a class="text-secondary" href="/privacy">隐私</a></li>
       <li class="list-inline-item"><a class="text-secondary" href="/tou">条款</a></li>
-      <li class="list-inline-item"><a class="text-secondary" href="#">关于</a></li>
+      <li class="list-inline-item"><a class="text-secondary" href="/about">关于</a></li>
    </ul>
 </footer>
 </template>

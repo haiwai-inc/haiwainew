@@ -23,6 +23,11 @@ const routes = [
       path: '/tou',
       name: 'api_example',
       components: { default: resolve => require (['../module/pages/Tou.vue'],resolve), header: MainNavbar, footer: MainFooter },
+  },
+    {
+      path: '/about',
+      name: 'api_example',
+      components: { default: resolve => require (['../module/pages/About.vue'],resolve), header: MainNavbar, footer: MainFooter },
   }
 ];
 const files = require.context('../module', true, /\.router.js$/);

@@ -156,17 +156,7 @@
                </span>
             </div>
           <!-- r3 end-->
-          <!-- help -->
-            <div class="box my-3 pl-3 sticky-top">
-              <span v-html="icons.helpcenter"></span>
-              <span class="ml-3 mb-3 h6">帮助中心</span>
-              <div class=row>
-                <div class="col-6 mt-3 text-secondary">如何上传图片</div>
-                <div class="col-6 mt-3  text-secondary">怎样发视频</div>
-                <div class="col-12 mt-3 text-secondary">如何贴音乐</div>
-              </div>
-            </div>
-          <!-- help -->
+         <blog-help></blog-help>
           <div class=" my-3  ml-3  text-secondary text-left text-small">
              <p class="small d-inline mb-1">Copyright ©2021 Haiwai.com</p>
              <div class="row">
@@ -198,6 +188,9 @@ import blog from '../../blog.service';
 import account from '../../../user/service/account';
 import { Popover } from 'element-ui';
 import LoginDialog from '../../../user/login/LoginDialog.vue';
+import BlogHelp from '../components/Main/BlogHelp.vue';
+
+
 
 export default {
   name: 'article-page',
@@ -209,7 +202,8 @@ export default {
     PreviousNextBar,
     [Button.name]: Button,
     [Popover.name]:Popover,
-    LoginDialog
+    LoginDialog,
+    BlogHelp
   },
   mounted: function () {
     this.article_view();
