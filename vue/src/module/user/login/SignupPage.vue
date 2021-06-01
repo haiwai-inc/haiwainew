@@ -15,7 +15,7 @@
           </el-form-item>
           <el-form-item prop="policy">
             <el-checkbox-group v-model="signupForm.policy">
-              <el-checkbox label="" name="policy">我已阅读并同意 <a href=#>海外博客-用户协议</a></el-checkbox>
+              <el-checkbox label="" name="policy">我已阅读并同意 <a class="text-secondary" href="/tou">海外博客-用户协议</a></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
@@ -189,5 +189,8 @@ export default {
 .signup-page .form-check .form-check-label{
   line-height: 18px;
   padding-left: 24px;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+        color: #6f777f;
 }
 </style>
