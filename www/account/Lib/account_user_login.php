@@ -247,13 +247,34 @@ class account_user_login extends Model{
 	    $rs_user_session['UserID']=$rs_account_user['id'];
 	    $rs_user_session['UserLevel']=$rs_account_user['auth_group'];
 	    $rs_user_session['id']=$rs_account_user['id'];
-	    $_SESSION=$rs_user_session;
 	    
 	    $obj_account_user=load("account_user");
 	    $rs_user_session=$obj_account_user->get_basic_userinfo([$rs_user_session]);
 	    $rs_user_session=empty($rs_user_session)?[]:$rs_user_session[0];
 	    
+	    //查看用户气泡
+	    $rs_user_bubble=$this->user_bubble($rs_account_user['id']);
+	    if(!empty($rs_user_bubble['user']['visible'])){
+	        $rs_user_session['bubble']=$rs_user_bubble;
+	    }
+	    
+	    $_SESSION=$rs_user_session;
 	    return $rs_user_session;
+	}
+	
+	//查看用户气泡
+	function user_bubble($userID){
+	    //查看用户气泡
+	    $obj_account_user_bubble=load("account_user_bubble");
+	    $check_account_user_bubble=$obj_account_user_bubble->getOne("*",['userID'=>$userID]);
+	    if(empty($check_account_user_bubble)){
+	        $obj_account_user_bubble->insert(['userID'=>$userID]);
+	        $check_account_user_bubble=$obj_account_user_bubble->getOne("*",['userID'=>$userID]);
+	    }
+	    
+        $rs_bubble['user']=$check_account_user_bubble;
+        $rs_bubble['instruction']=conf("account.bubble");
+	    return $rs_bubble;
 	}
 	
 	//自动登录

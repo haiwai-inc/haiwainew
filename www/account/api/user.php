@@ -683,6 +683,59 @@ class user extends Api {
         return $rs_account_notification;
     }
     
+    /**
+     * 很多页
+     * 用户 气泡
+     */
+    public function user_bubble() {
+        $obj_account_user_login=load("account_user_login");
+        $rs_user_bubble=$obj_account_user_login->user_bubble($_SESSION['id']);
+        
+        return $rs_user_bubble;
+    }
+    
+    /**
+     * 很多页
+     * 用户 气泡
+     * @param string $type | 气泡类型
+     * @param integer $visible | 0,1
+     */
+    function user_bubble_update($type,$visible){
+        $obj_account_user_bubble=load("account_user_bubble");
+        $obj_account_user_bubble->update([$type=>$visible],['userID'=>$_SESSION['id']]);
+        
+        $check_account_user_bubble=$obj_account_user_bubble->getOne("*",['userID'=>$_SESSION['id']]);
+        if(!empty($check_account_user_bubble)){
+            $visible=0;
+            foreach($check_account_user_bubble as $k=>$v){
+                if($k=="id" || $k=="userID" || $k=="visible"){
+                    continue;
+                }
+                if($v==1){
+                    $visible=0;
+                    break;
+                }
+            }
+            if($visible==0){
+                $obj_account_user_bubble->update(['visible'=>0],['userID'=>$_SESSION['id']]);
+                $check_account_user_bubble['visible']=0;
+            }
+        }
+        
+        return $this->user_bubble();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 }
