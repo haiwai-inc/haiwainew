@@ -459,6 +459,15 @@ class User extends API{
         return await this.sendget('article/user/article_timer/?draftID='+draftID+'&is_timer='+is_timer+'&time='+time)
     }
 
+    //关闭editor bubble
+    /**
+     * 
+     * @param {bubble类型字符串} type 
+     * @returns 
+     */
+    async remove_bubble(type){
+        return await this.sendget('account/user/user_bubble_update/?type='+type+'&visible=0')
+    }
     // 管理员相关函数
     /**
      * 获取文章列表

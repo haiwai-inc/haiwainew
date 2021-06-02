@@ -468,8 +468,7 @@ export default {
 
 <style>
 .blacklist {
-        padding: 12px 18px;
-        border-top: 1px solid #ddd;
+        padding: 12px 18px
 }
 .collection-box {
         background-color: #fbfbfb;

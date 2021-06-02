@@ -110,7 +110,7 @@ export default {
 }
 .main-category-bar .active ,.main-category-bar .active span{
   text-align: center;
-    color:#32caf9 !important;
+    color:#0ba0ce !important;
     background-color: aliceblue !important;
 }
 .main-category-bar .active{
