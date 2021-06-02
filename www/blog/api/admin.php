@@ -36,9 +36,9 @@ class admin extends Api {
                 foreach($rs_blog_recommend as $v){
                     $hash_blog_recommend[$v['postID']]=$v;
                 }
-                foreach($rs_article_indexing as $k=>$v){
-                    $rs_article_indexing[$k]['recommend']=empty($hash_blog_recommend[$v['postID']])?[]:$hash_blog_recommend[$v['postID']];
-                }
+            }
+            foreach($rs_article_indexing as $k=>$v){
+                $rs_article_indexing[$k]['recommend']=empty($hash_blog_recommend[$v['postID']])?[]:$hash_blog_recommend[$v['postID']];
             }
         }
         
@@ -105,6 +105,8 @@ class admin extends Api {
         $check_blog_recommend=$obj_blog_recommend->update(['title'=>$title],['postID'=>$postID]);
         return true;     
     }
+    
+    
     
     /**
      * 博主 热门
