@@ -16,7 +16,7 @@ class admin extends Api {
      * 每日更新文章
      * @param integer $lastID
      */
-    public function article_list($lastID){
+    public function article_list($lastID=0){
         //最新帖子
         $obj_article_indexing=load("article_indexing");
         $fields=['limit'=>40,'treelevel'=>0,'visible'=>1,'order'=>['postID'=>"DESC"]];
@@ -36,8 +36,10 @@ class admin extends Api {
                 foreach($rs_blog_recommend as $v){
                     $hash_blog_recommend[$v['postID']]=$v;
                 }
-                foreach($rs_article_indexing as $k=>$v){
-                    $rs_article_indexing[$k]['recommend']=empty($hash_blog_recommend[$v['postID']])?[]:$hash_blog_recommend[$v['postID']];
+            }
+            foreach($rs_article_indexing as $k=>$v){
+                if(!empty($hash_blog_recommend[$v['postID']])){
+                    $rs_article_indexing[$k]['recommend']=$hash_blog_recommend[$v['postID']];
                 }
             }
         }
@@ -105,6 +107,8 @@ class admin extends Api {
         $check_blog_recommend=$obj_blog_recommend->update(['title'=>$title],['postID'=>$postID]);
         return true;     
     }
+    
+    
     
     /**
      * 博主 热门

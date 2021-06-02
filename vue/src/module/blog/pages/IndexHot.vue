@@ -30,26 +30,8 @@
           <div class="hot-bloger" v-if="bloggerList.length>0">
             <bloger-list v-bind:data="bloggerList"  :title="$t('message').blog.index_title_hot"></bloger-list>
           </div>
-           <!-- help -->
-            <div class="box my-3 pl-3 bolger-box sticky-top">
-              <span v-html="icons.helpcenter"></span>
-              <span class="ml-3 mb-3 h6">帮助中心</span>
-              <div class=row>
-                <div class="col-6 mt-3 text-secondary">如何上传图片</div>
-                <div class="col-6 mt-3  text-secondary">怎样发视频</div>
-                <div class="col-12 mt-3 text-secondary">如何贴音乐</div>
-              </div>
-            </div>
-          <!-- help -->
-           <div class=" my-3  ml-3  text-secondary text-left text-small">
-             <p class="small d-inline mb-1">Copyright ©2021 Haiwai.com</p>
-             <div class="row">
-                <div class="ml-3 mr-2"><a href="/privacy" class="small text-secondary">隐私</a></div>
-                <div class="mr-2"><a href="/tou" class="small text-secondary">条款</a></div>
-                <div class="mr-2"><a href="#" class="text-secondary small">关于</a></div>
-             </div>
-          </div>
-          <!-- footer -->
+          <blog-help></blog-help>
+          <right-footer></right-footer>
         </div>
       </div>
     </div>
@@ -61,7 +43,9 @@ import MainMenu from './components/Main/MainMenu';
 import MainCategoryBar from './components/Main/MainCategoryBar';
 import ArticleListItem from './components/Main/ArticleListItem';
 import BlogerList from './components/Main/BlogerList';
+import BlogHelp from './components/Main/BlogHelp.vue';
 import blog from '../blog.service';
+import RightFooter from '../../../layout/RightFooter.vue'
 
 export default {
   name: 'index-hot',
@@ -71,6 +55,8 @@ export default {
     MainCategoryBar,
     ArticleListItem,
     BlogerList,
+    RightFooter,
+    BlogHelp
   },
   created () {
     blog.hot_tag().then(res=>{

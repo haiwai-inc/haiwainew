@@ -6,7 +6,7 @@ class article extends Api {
     }
 
     /**
-     * 很多页面
+     * 通用页
      * 文章 添加
      */
     function article_add($id){
@@ -18,7 +18,7 @@ class article extends Api {
     }
     
     /**
-     * 很多页面
+     * 通用页
      * 文章 显示
      */
     function article_view($id){

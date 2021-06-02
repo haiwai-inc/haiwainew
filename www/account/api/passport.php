@@ -16,14 +16,11 @@ class passport extends Api {
      */
     public function login_status($userID=0) {
         $obj_account_user=load("account_user");
+        $obj_account_user_login=load("account_user_login");
         
         if(empty($_SESSION['UserID']) || !empty($userID)){
-            $rs_account_user=$obj_account_user->getOne(['id','auth_group'],['id'=>$userID]);
-            
-            $_SESSION=$rs_account_user;
-            $_SESSION['UserID']=$rs_account_user['id'];
-            $_SESSION['UserLevel']=$rs_account_user['auth_group'];
-            
+            $rs_account_user=$obj_account_user->getOne("*",['id'=>$userID]);
+            $_SESSION=$obj_account_user_login->set_user_session($rs_account_user);
             if(empty($rs_account_user)){
                 $this->error='用户未登录';
                 $this->status=false;
@@ -34,7 +31,7 @@ class passport extends Api {
         }
         
         //获取基本用户信息
-        $rs_account_user=$obj_account_user->get_basic_userinfo([$rs_account_user]);
+        $rs_account_user=$obj_account_user->get_basic_userinfo([$_SESSION]);
         $rs_account_user=empty($rs_account_user)?[]:$rs_account_user[0];
         
         //查看博客信息

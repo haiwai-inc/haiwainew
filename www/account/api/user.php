@@ -104,7 +104,7 @@ class user extends Api {
     }
     
     /**
-     * 很多页面
+     * 通用页
      * 黑名单 添加
      * @param integer $blockID|屏蔽人的ID
      */
@@ -122,7 +122,7 @@ class user extends Api {
     }
     
     /**
-     * 很多页面
+     * 通用页
      * 黑名单 删除
      * @param integer $blockID|屏蔽人的ID
      */
@@ -163,7 +163,7 @@ class user extends Api {
     }
     
     /**
-     * 很多页
+     * 通用页
      * 举报 添加
      * @param integer $userID|举报用户的userID
      * @param string $msgbody|举报用户的msgbody
@@ -257,7 +257,7 @@ class user extends Api {
     }
     
     /**
-     * 很多页面
+     * 通用页
      * 悄悄话 发送
      * @param integer $touserID | 被发送人touserID
      * @param integer $msgbody | 被发送人msgbody
@@ -682,6 +682,66 @@ class user extends Api {
         $rs_account_notification=$obj_account_user->get_basic_userinfo($rs_account_notification,"from_userID");
         return $rs_account_notification;
     }
+    
+    /**
+     * 通用页
+     * 用户 气泡
+     */
+    public function user_bubble() {
+        $obj_account_user_login=load("account_user_login");
+        $rs_user_bubble=$obj_account_user_login->user_bubble($_SESSION['id']);
+        
+        return $rs_user_bubble;
+    }
+    
+    /**
+     * 通用页
+     * 用户 气泡
+     * @param string $type | 气泡类型
+     * @param integer $visible | 0,1
+     */
+    function user_bubble_update($type,$visible){
+        //更新数据库
+        $obj_account_user_bubble=load("account_user_bubble");
+        $obj_account_user_bubble->update([$type=>$visible],['userID'=>$_SESSION['id']]);
+        
+        //更新SESSION
+        if(!empty($_SESSION['bubble'])){
+            $_SESSION['bubble']['user'][$type]=$visible;
+        }
+        
+        //全部字段为0,取消bubble
+        $check_account_user_bubble=$obj_account_user_bubble->getOne("*",['userID'=>$_SESSION['id']]);
+        if(!empty($check_account_user_bubble)){
+            $visible=0;
+            foreach($check_account_user_bubble as $k=>$v){
+                if($k=="id" || $k=="userID" || $k=="visible"){
+                    continue;
+                }
+                if($v==1){
+                    $visible=0;
+                    break;
+                }
+            }
+            if($visible==0){
+                $obj_account_user_bubble->update(['visible'=>0],['userID'=>$_SESSION['id']]);
+                $check_account_user_bubble['visible']=0;
+            }
+        }
+        
+        return $this->user_bubble();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
