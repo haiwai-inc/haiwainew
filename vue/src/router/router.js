@@ -16,17 +16,17 @@ const routes = [
   },
   {
       path: '/privacy',
-      name: 'api_example',
+      name: 'privacy',
       components: { default: resolve => require (['../module/pages/Privacy.vue'],resolve), header: MainNavbar, footer: MainFooter },
   },
   {
       path: '/tou',
-      name: 'api_example',
+      name: 'tou',
       components: { default: resolve => require (['../module/pages/Tou.vue'],resolve), header: MainNavbar, footer: MainFooter },
   },
     {
       path: '/about',
-      name: 'api_example',
+      name: 'about',
       components: { default: resolve => require (['../module/pages/About.vue'],resolve), header: MainNavbar, footer: MainFooter },
   }
 ];

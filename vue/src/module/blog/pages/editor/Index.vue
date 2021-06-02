@@ -17,27 +17,74 @@
         </div>
           <!-- 编辑器 -->
           <!-- api-key="kslxtlgbsr246by5yerx9t5glaje0cgp5hwaqf2aphdo3aaw" -->
+          <el-popover
+            placement="bottom"
+            ref="blog_pic"
+            v-model="bubbles.editor_pic"
+            width="300"
+            popper-class="bubble"
+            >
+            <p><svg width="24" height="24" fill="white"><path d="M5 15.7l3.3-3.2c.3-.3.7-.3 1 0L12 15l4.1-4c.3-.4.8-.4 1 0l2 1.9V5H5v10.7zM5 18V19h3l2.8-2.9-2-2L5 17.9zm14-3l-2.5-2.4-6.4 6.5H19v-4zM4 3h16c.6 0 1 .4 1 1v16c0 .6-.4 1-1 1H4a1 1 0 01-1-1V4c0-.6.4-1 1-1zm6 8a2 2 0 100-4 2 2 0 000 4z" fill-rule="nonzero"></path></svg> 
+            {{user.userinfo.bubble.instruction.editor_pic}} <br>
+            <svg width="24" height="17"><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="youtobe" fill="white" fill-rule="nonzero"><g id="Group" transform="translate(0.500000, 0.000000)"><path d="M10.5,0 C7.44140651,0 4.73437535,0.316406512 3.08789163,0.5625 C1.74023442,0.761719535 0.667970233,1.81640651 0.421875349,3.1699214 C0.210937674,4.35351628 0,6.08203256 0,8.25 C0,10.4179688 0.210937674,12.1464837 0.421875349,13.3300786 C0.667970233,14.6835949 1.74023442,15.7324214 3.08789163,15.9375 C4.74023442,16.1835949 7.45898512,16.5 10.5,16.5 C13.5410163,16.5 16.2539065,16.1835949 17.9062507,15.9375 L17.9121098,15.9375 C19.259767,15.7382819 20.3320326,14.6835949 20.578126,13.3300786 C20.7890637,12.1406247 21,10.4121098 21,8.25 C21,6.08203256 20.7890637,4.35351628 20.572267,3.1699214 C20.3320326,1.81640651 19.259767,0.761719535 17.9121098,0.5625 C16.265626,0.316406512 13.5585949,0 10.5,0 L10.5,0 Z M10.5000014,1.5 C13.4531247,1.5 16.0957033,1.80468698 17.689454,2.0449214 C18.3925786,2.15039023 18.9609377,2.70117209 19.0957047,3.43359488 C19.2949228,4.54101628 19.5000014,6.18164093 19.5000014,8.25 C19.5000014,10.3183591 19.2949228,11.9589837 19.1015637,13.060546 C18.9667981,13.7988279 18.3984391,14.3496084 17.6894553,14.4550786 C16.0839865,14.689454 13.4355488,15 10.5000014,15 C7.56445535,15 4.9101586,14.689454 3.31054744,14.4550786 C2.60742279,14.3496098 2.03320465,13.7988293 1.89843907,13.060546 C1.70508,11.9531247 1.5000014,10.3183591 1.5000014,8.25 C1.5000014,6.17578186 1.70508,4.54101628 1.89843907,3.43359488 C2.03320465,2.70117209 2.60156372,2.15039163 3.30468977,2.05078186 L3.31054884,2.05078186 C4.90429953,1.81054605 7.54687674,1.5 10.5000014,1.5 L10.5000014,1.5 Z M7.5,4.5 L7.5,12 L15,8.25 L7.5,4.5 Z" id="Shape"></path></g></g></g></svg>
+            {{user.userinfo.bubble.instruction.editor_video}}
+            </p>
+             <div style="text-align: right; margin: 0">
+               2/4
+                <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('editor_pic')">知道了</el-button>
+              </div>
+            <div class="w-100 bubble-pic"
+          slot="reference"></div>
+          </el-popover>
         <editor 
           :init="editorConfig"
           v-model="curentArticle.postInfo_postID.msgbody"
         />
         
       </div>
-      <div class="col-md-3" style="padding-top:30px">
-        <div>
-          <el-button type="text" link v-bind:style="{paddingRight:0 }" @click="$router.push('/blog/my/')"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
+      <div class="col-md-3" style="padding-top:20px">
+        <div class="mb-3">
+          <el-popover
+            placement="bottom"
+            ref="blog_manage"
+            v-model="bubbles.blog_manage"
+            width="300"
+            popper-class="bubble"
+            >
+            <p>{{user.userinfo.bubble.instruction.blog_manage}}</p>
+             <div style="text-align: right; margin: 0">
+               1/4
+                <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_manage')">知道了</el-button>
+              </div>
+            <el-button plain round type="primary" link @click="$router.push('/blog/my/')" slot="reference"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
+          </el-popover>
         </div>
+        <el-popover
+            placement="bottom"
+            ref="blog_category"
+            v-model="bubbles.blog_category"
+            width="300"
+            popper-class="bubble"
+            >
+            <p>{{user.userinfo.bubble.instruction.blog_category}}</p>
+             <div style="text-align: right; margin: 0">
+               3/4
+                <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_category')">知道了</el-button>
+              </div>
+          <div class="d-flex justify-content-between align-items-center" slot="reference">
+            <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button>
+          </div>
+        </el-popover>
+            <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="changeCategory">
+              <el-option
+                v-for="item in categoryList"
+                :key="item.id"
+                :label="item.is_publish?item.name:item.name+' (隐)'"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          
         
-        <div class="d-flex justify-content-between align-items-center">
-          <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button></div>
-        <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="changeCategory">
-          <el-option
-            v-for="item in categoryList"
-            :key="item.id"
-            :label="item.is_publish?item.name:item.name+' (隐)'"
-            :value="item.id">
-          </el-option>
-        </el-select>
         
         <div class="py-4">
           <div class="mb-2">
@@ -68,10 +115,23 @@
           </template>
           <el-button slot="append" round icon="el-icon-plus" :disabled="tag==''" @click="handleInputConfirm"></el-button>
           </el-autocomplete>
-          <el-button v-else round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
+          <el-popover
+            placement="bottom"
+            ref="editor_tag"
+            v-model="bubbles.editor_tag"
+            width="300"
+            popper-class="bubble" v-else
+            >
+            <p>{{user.userinfo.bubble.instruction.editor_tag}}</p>
+             <div style="text-align: right; margin: 0">
+               4/4
+                <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('editor_tag')">知道了</el-button>
+              </div>
+            <el-button slot="reference" round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
+          </el-popover>
         </div>
-        <div class="pb-5">
-          当前博文可否评论：<br>
+        <div class="pb-3">
+          <span >当前博文可否评论：</span><br>
           <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
           <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
@@ -503,8 +563,32 @@ export default {
       this.initTag();
       this.watchModify(val)
     },
-    beforeDestroy() {
-      clearTimeout(this.timer);
+    showBubble(){
+      var bubbles=['blog_manage','editor_pic','blog_category','editor_tag'];
+      for(let i=0;i<bubbles.length;i++){
+        let type = bubbles[i]
+        if(this.user.userinfo.bubble.user[type]==1){
+          this.bubbles[type]=true;
+          return
+        }else{
+          this.bubbles[type]=false;
+        }
+      };
+      console.log(this.bubbles);
+      // if(this.user.userinfo.bubble.user.blog_manage){
+      //   this.bubbles.blog_manage = true;
+      //   return
+      // }else{
+      //   this.bubbles.blog_manage = false;
+      // }
+    },
+    removeBubble(type){
+      this.user.remove_bubble(type).then(res=>{
+        if(res.status){
+          this.user.userinfo.bubble = res.data;
+          this.showBubble();
+        }
+      })
     },
     filePicker:function(callback, value, meta) {
     // Provide file and text for the link dialog
@@ -558,8 +642,12 @@ export default {
     document.documentElement.setAttribute("class", "");
     // this.initEditor();
     console.log(this.user)
+    this.showBubble();
   },
 
+  beforeDestroy() {
+    clearTimeout(this.timer);
+  },
   data() {
     var editoronChange=(e)=>{
       this.editor_change(e);console.log(e);
@@ -610,6 +698,12 @@ export default {
         publish:false,
         autosaving:false,
         autosaved:false,
+      },
+      bubbles:{
+        blog_manage:false,
+        blog_category:false,
+        editor_pic:false,
+        editor_tag:false
       },
       dialogFormVisible:false,
       categoryForm:{name:'',is_publish:1},
@@ -848,9 +942,26 @@ body{
   cursor: pointer;
   color: #39b8eb;
 }
+.el-popover.bubble {
+  background-color: #14171a;
+  color:white
+}
+.el-popover.bubble .popper__arrow,
+.el-popover.bubble .popper__arrow::after{
+  border-top-color: #14171a;
+  border-bottom-color: #14171a;
+}
+.bubble-pic{
+  position: absolute;
+  top:100px;
+}
 @media (max-width: 575.98px){
   .publisher .menu1{
     height:auto;
   }
+  .bubble-pic{
+  position: absolute;
+  top:130px;
+}
 }
 </style>
