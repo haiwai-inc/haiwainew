@@ -1,12 +1,12 @@
 <template>
-<div class=" my-3  ml-3  text-secondary text-left text-small">
+<footer class="mt-3 p-2 my-3 ml-1  text-left text-small">
    <p class="small d-inline mb-1">Copyright ©2021 Haiwai.com</p>
    <div class="row">
-      <div class="ml-3 mr-2"><a href="/privacy" class="small text-secondary">隐私</a></div>
-      <div class="mr-2"><a href="/tou" class="small text-secondary">条款</a></div>
-      <div class="mr-2"><a href="/about" class="text-secondary small">关于</a></div>
+      <div class="ml-3 mr-2"><a href="/privacy" class="small">隐私</a></div>
+      <div class="mr-2"><a href="/tou" class="small">条款</a></div>
+      <div class="mr-2"><a href="/about" class="small">关于</a></div>
    </div>
-</div>
+</footer>
 </template>
 <script>
 
@@ -17,4 +17,8 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+footer p,footer a{
+        color: #8194a5
+}
+</style>
