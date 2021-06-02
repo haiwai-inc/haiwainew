@@ -151,7 +151,7 @@ class user extends Api {
      */
     public function article_delete($postID,$visible){
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID]);
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID,'userID'=>$_SESSION['userID']]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         $time=times::gettime();
@@ -166,9 +166,6 @@ class user extends Api {
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
         $obj_article_noindex->fetch_and_insert([$postID]);
-        
-        //删除草稿
-        $this->draft_delete($postID);
         
         return true;
     }
@@ -397,7 +394,7 @@ class user extends Api {
     
     /**
      * 文章详情页
-     * 文章 回复 修改
+     * 回复 修改
      * @param obj $article_data | 文章的数据
      * @post article_data
      * @response /article/api_response/reply_update.txt
@@ -405,7 +402,7 @@ class user extends Api {
     public function reply_update($article_data){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID']]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID'],['postID'=>$article_data['postID'],'userID'=>$_SESSION['id']]);
         if(empty($check_article_indexing)) {$this->error="修改的帖子不存在";$this->status=false;return false;}
         
         //更新帖子时间
@@ -426,13 +423,13 @@ class user extends Api {
     
     /**
      * 文章详情页
-     * 文章 回复 删除
+     * 回复 删除
      * @param int $id | 回复的postID
      */
     public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id,'userID'=>$_SESSION['id']]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
@@ -452,11 +449,7 @@ class user extends Api {
         
         //删除记录消息
         $obj_account_notification=load("account_notification");
-        if($check_article_indexing['userID']==$_SESSION['id']){
-            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['id']],"notification_".substr('0'.$check_main_article_indexing['userID'],-1));
-        }else{
-            $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'userID'=>$_SESSION['id']],"notification_".substr('0'.$_SESSION['id'],-1));
-        }
+        $obj_account_notification->remove(['type'=>'reply','typeID'=>$id,'from_userID'=>$_SESSION['id']],"notification_".substr('0'.$check_main_article_indexing['userID'],-1));
         
         return true;
     }
