@@ -11,16 +11,16 @@ class admin extends Api {
     /**
      * 用户 删除
      * @param integer $userID | 用户ID
-     * @param integer $visible | 1开 0关
+     * @param integer $status | 1开 0关
      */
-    public function user_delete($userID,$visible){
+    public function user_delete($userID,$status){
         //用户
         $obj_account_user=load("account_user");
-        $obj_account_user->update(['status'=>$visible],['id'=>$userID]);
+        $obj_account_user->update(['status'=>$status],['id'=>$userID]);
         
         //博客
         $obj_blog_blogger=load("blog_blogger");
-        $obj_blog_blogger->update(['status'=>$visible],['userID'=>$userID]);
+        $obj_blog_blogger->update(['status'=>$status],['userID'=>$userID]);
         return true;
     }
     
