@@ -65,6 +65,7 @@
             v-model="bubbles.blog_category"
             width="300"
             popper-class="bubble"
+            trigger="manual"
             >
             <p>{{user.userinfo.bubble.instruction.blog_category}}</p>
              <div style="text-align: right; margin: 0">
@@ -336,14 +337,15 @@ export default {
       this.$refs['categoryForm'].validate((valid) => {
         if (valid) {
           this.btnDisable = true;
-          blog.category_add(this.categoryForm.name,this.categoryForm.is_publish).then(res=>{
-            if(res.status){
+          blog.category_add(this.categoryForm.name,this.categoryForm.is_publish).then(r=>{
+            if(r.status){
               this.$store.state.user.category_list(this.user.userinfo.bloggerID).then(res=>{
                 this.categoryList = res.status?res.data:[];
-                this.curentArticle.categoryID = this.categoryList[0].id
+                this.curentArticle.categoryID = r.data
                 this.dialogFormVisible = false
               })
             }
+            console.log(r.data);
           })
         }
       })
