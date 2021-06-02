@@ -24,7 +24,15 @@ class admin extends Api {
         return true;
     }
     
-    
+    /**
+     * 搜索用户名
+     * @param string $keyword
+     */
+    public function user_search($keyword){
+        $user_obj = load("account_user");
+        $users = $user_obj->search_by_name($keyword);
+        return $users;
+    }
     
     
     
