@@ -28,9 +28,9 @@ class search_tag extends Search{
 					},
 					"filter": {
 						"substring": {
-							"type": "edge_ngram",
+							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 50
+							"max_gram": 14
                         }
                     },
                     "char_filter": {
@@ -164,5 +164,25 @@ class search_tag extends Search{
             "name"=>$tag['name'],
             "visible"=>$tag['visible']
         ];
+    }
+
+
+    public function update_data(){
+$article_tag = load("article_tag");
+$iter = 0;
+$total = 0;
+
+// 更新标签
+while(true){    
+    $tags = $article_tag->getAll("*", ["limit"=>[$iter*200,200]]);
+    
+    if(count($tags)==0){
+        break;
+    }
+    $total += count($tags);
+    $this->add_new_tags($tags);
+    echo("$total tags updated\n");
+    $iter++;
+}
     }
 }

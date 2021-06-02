@@ -3,12 +3,14 @@ class search_tool{
 
 
 
-    public function search_article($keyword, $last_score = 0, $last_id = 0){
+    public function search_article($keyword, $last_score = 0, $last_id = 0, $highlight = 1){
         $search_article_obj = load("search_article_index");
         $articles = $search_article_obj->search_by_keyword($keyword, $last_score, $last_id);
         $user_obj = load("account_user");
         $articles = $user_obj->get_basic_userinfo($articles, "userID");
-        $articles = $this->overwrite_highlight($articles);
+        if(!empty($highlight)){
+            $articles = $this->overwrite_highlight($articles);
+        }
         return $this->fetch_article_info($articles);
     }
 

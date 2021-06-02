@@ -33,9 +33,9 @@ class search_blogger extends Search
 					},
 					"filter": {
 						"substring": {
-							"type": "edge_ngram",
+							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 50
+							"max_gram": 14
 						}
 					},
 					"char_filter": {
@@ -209,4 +209,35 @@ class search_blogger extends Search
 		return $rs;
 	}
 
+    public function update_data($time = 0){
+		$search_blogger = load("search_blogger");
+$blogger_obj = load ("blog_blogger");
+$user_obj = load("account_user");
+$search_category = load("search_category");
+$blog_category = load("blog_category");
+
+// $first_update_time = 0;
+$iter = 0;
+$total = 0;
+$total_category = 0;
+while(true){    
+    $bloggers = $blogger_obj->getAll(["id", "userID", "name"], ["update_date, >="=>$time, "limit"=>[$iter*200,200]]);
+    if(count($bloggers)==0){
+        break;
+    }
+    $total += count($bloggers);
+    $bloggerIDs = [];
+    foreach($bloggers as $blogger){
+        $bloggerIDs[] = $blogger['id'];
+    }
+    $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");
+    $search_blogger->add_new_bloggers($bloggers);
+    $categories = $blog_category->getAll("*", ["OR"=>['bloggerID'=>$bloggerIDs]]);
+    $total_category += count($categories);
+    $search_category->add_new_categories($categories);
+    echo("$total blogger updated\n");
+    echo("$total_category category updated\n");
+    $iter++;
+}
+	}
 }

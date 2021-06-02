@@ -35,7 +35,3 @@ while(true){
     echo("$total_category category updated\n");
     $iter++;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 319df08001019d93aa9258b99872029a8d1f25d6

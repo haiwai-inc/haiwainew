@@ -287,6 +287,11 @@ class search_article_noindex extends Search
 		$this->add_new_articles($rs_article_indexing);
 		return true;
     }
+
+	public function update_data(){
+		$obj = load("search_update");
+		$obj->start();
+	}
 }
 
 

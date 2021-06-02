@@ -302,7 +302,10 @@ export default {
       };
       if(!this.curentArticle.isDraft){
         console.log("非草稿",val)
-        this.draft_add(val)
+        if(val.level)
+          this.draft_add(val.level.content)
+        else 
+          this.draft_add(this.curentArticle.postInfo_postID.msgbody)
       };
     },
     //for editor
@@ -427,12 +430,11 @@ export default {
       this.$router.push("/blog/p/"+res.data);
     },
     draft_add(e){
-      console.log(e)
       let data={
         article_data:{
           title:this.curentArticle.postInfo_postID.title,
           // msgbody:this.curentArticle.postInfo_postID.msgbody,
-          msgbody:e.level.content,
+          msgbody:e,
           tagname:this.tags,
           postID:this.curentArticle.postID,
           typeID:1,

@@ -6,12 +6,13 @@ class page extends Api{
     * @param string $keyword
     * @param string $last_score
     * @param string $last_id
+    * @param string $highlight
     * @response 搜索结果
     *
     */
-    public function articles($keyword, $last_score = 0, $last_id = 0){
+    public function articles($keyword, $last_score = 0, $last_id = 0, $highlight = 1){
         $tool_obj = load("search_tool");
-        $articles = $tool_obj -> search_article($keyword, $last_score, $last_id);
+        $articles = $tool_obj -> search_article($keyword, $last_score, $last_id, $highlight);
         return $articles;
     }
 

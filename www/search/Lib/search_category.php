@@ -30,9 +30,9 @@ class search_category  extends Search{
                     },
 					"filter": {
 						"substring": {
-							"type": "edge_ngram",
+							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 50
+							"max_gram": 14
                         }
                     },
                     "char_filter": {
@@ -188,4 +188,24 @@ class search_category  extends Search{
         ];
     }
 
+
+    public function update_data(){
+$blog_category = load("blog_category");
+
+
+$first_update_time = 0;
+$iter = 0;
+$total = 0;
+// 更新文集
+while(true){    
+    $categories = $blog_category->getAll("*", ["limit"=>[$iter*200,200]]);
+    if(count($categories)==0){
+        break;
+    }
+    $total += count($categories);
+    $this->add_new_categories($categories);
+    echo("$total categories updated\n");
+    $iter++;
+}
+    }
 }
