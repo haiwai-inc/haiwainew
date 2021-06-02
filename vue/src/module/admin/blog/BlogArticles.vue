@@ -8,7 +8,7 @@
                     <el-popover v-if="item.recommend"
                     placement="bottom-start"
                     width="350" 
-                    ref="title"
+                    :ref="'pop-'+item.postID"
                     trigger="click">
                         <el-form :model="item.recommend" :rules="rules" ref="titleForm" label-width="0px">
                         <el-form-item
@@ -95,8 +95,10 @@ export default {
             })
         },
         update(item){
+            let pop = 'pop-'+item.postID;
             this.$store.state.user.article_recommand_update(item.postID,item.recommend.title).then(res=>{
                 if (res.status){
+                    this.$refs[`${pop}`][0].doClose();
                     this.getlist();
                 }
             })
