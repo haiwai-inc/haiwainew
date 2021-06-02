@@ -116,7 +116,7 @@ class user extends Api {
         $categoryID=$obj_blog_category->insert(['is_publish'=>$is_publish,'bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         $obj_blog_category->update(['sort'=>$categoryID],['id'=>$categoryID]);
         
-        return true;
+        return $categoryID;
     }
     
     /**
@@ -137,7 +137,7 @@ class user extends Api {
         
         $obj_blog_category->update(['name'=>$name,'is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
-        return true;
+        return $id;
     }
     
     /**
@@ -162,7 +162,7 @@ class user extends Api {
         
         $obj_blog_category->remove(['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
-        return true;
+        return $id;
     }
     
     /**
