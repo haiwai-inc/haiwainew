@@ -1,5 +1,5 @@
 <template>
-<footer class="mt-3 p-2 my-3 ml-1  text-left text-small">
+<footer class="mt-2 p-2 my-3 ml-1  text-left text-small">
    <p class="small d-inline mb-1">Copyright ©2021 Haiwai.com</p>
    <div class="row">
       <div class="ml-3 mr-2"><a href="/privacy" class="small">隐私</a></div>

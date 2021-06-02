@@ -1,5 +1,5 @@
 <template>
-            <div class="box my-4 pl-3 bolger-box sticky-top">
+            <div class="box mt-4 pl-3 bolger-box sticky-top">
               <span v-html="icons.helpcenter"></span>
               <span class="ml-3 mb-3 h6">帮助中心</span>
               <div class=row>
