@@ -29,9 +29,9 @@ class admin extends Api {
      * @param string $keyword
      */
     public function user_search($keyword){
-        $user_obj = load("account_user");
-        $users = $user_obj->search_by_name($keyword);
-        return $users;
+        $obj_account_user=load("account_user");
+        $rs_account_user=$obj_account_user->getAll("*", ['limit'=>100,'username, LIKE' => "%$keyword%"]);
+        return $rs_account_user;
     }
     
     
