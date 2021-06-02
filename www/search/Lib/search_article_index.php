@@ -32,9 +32,9 @@ class search_article_index extends Search
 					},
 					"filter": {
 						"substring": {
-							"type": "edge_ngram",
+							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 50
+							"max_gram": 14
 						}
 					},
 					"char_filter": {
@@ -340,5 +340,12 @@ class search_article_index extends Search
 		$rs = $this->search($query);
 		$rs = json_decode(json_encode($rs), true);
 		return $rs;
+	}
+
+
+
+	public function update_data(){
+		$obj = load("search_update");
+		$obj->start();
 	}
 }
