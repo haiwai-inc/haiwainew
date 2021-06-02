@@ -51,9 +51,6 @@ class page extends Api {
             $rs=['status'=>false,'msg'=>"",'data'=>""];
             return $rs;
         }
-        foreach($rs_blog_recommend as $k=>$v){
-            $postID_blog_recommend[]=$v['postID'];
-        }
         
         //添加用户信息
         $obj_account_user=load("account_user");
@@ -65,6 +62,13 @@ class page extends Api {
         //添加文章计数信息
         $obj_article_indexing=load("article_indexing");
         $rs_blog_recommend=$obj_article_indexing->get_article_count($rs_blog_recommend);
+        
+        //替换标题
+        if(!empty($rs_blog_recommend)){
+            foreach($rs_blog_recommend as $k=>$v){
+                $rs_blog_recommend[$k]['postInfo_postID']['title']=$v['title'];
+            }
+        }
         
         return $rs_blog_recommend;
     }
