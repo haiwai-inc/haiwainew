@@ -473,7 +473,7 @@ class User extends API{
      * @param postID {推荐文章的postID}
      * */ 
     async article_recommand_add(postID){
-        return await this.sendget("blog/admin/article_recommand_add/?lastID="+postID);
+        return await this.sendget("blog/admin/article_recommand_add/?postID="+postID);
     }
 
     /**

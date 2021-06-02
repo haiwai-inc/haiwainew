@@ -98,10 +98,10 @@
               :username="$store.state.user.userinfo.userinfo_id.username"
               :avatarurl="$store.state.user.userinfo.userinfo_id.avatar"
               class="nav-item">
-        <nav-link to="/admin" v-if="$store.state.user.userinfo.auth_group==2">
+        <nav-link to="/backend" v-if="$store.state.user.userinfo.UserLevel==2">
           <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.admin}}
         </nav-link>
-        <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.auth_group==2">
+        <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.UserLevel==2">
         <nav-link :to="'/blog/user/'+$store.state.user.userinfo.UserID">
           <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myindex}}
         </nav-link>

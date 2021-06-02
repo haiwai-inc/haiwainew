@@ -3,8 +3,9 @@
         <ul v-if="articlelist.length>0" style="list-style-type:none">
             <li v-for="item in articlelist" :key="item.id">
                 <div class="mt-3 mb-2 d-flex p-1" style="background-color:#ddeeff66">
-                    <span v-if="item.recommend.id">推荐标题：<b>{{item.recommend.title}}</b></span>
-                    <el-popover v-if="item.recommend.id"
+                    <span >推荐标题：<b>{{item.recommend?item.recommend.title:item.postInfo_postID.title}}</b></span>
+                    
+                    <el-popover v-if="item.recommend"
                     placement="bottom-start"
                     width="350" 
                     ref="title"
@@ -26,8 +27,8 @@
                         >
                         <a class="dropdown-item" href="javascript:void(0)" slot="reference"><span v-html="icon_edit" class="icon"></span>修改标题</a>
                     </el-popover>
-                    <a href="javascript:void(0)" v-if="!item.recommend.id" @click="recommend(item)">推荐</a>
-                    <a href="javascript:void(0)" v-if="item.recommend.id" @click="remove_recommend(item)" class="text-danger">撤销推荐</a>
+                    <a href="javascript:void(0)" class="ml-3" v-if="!item.recommend" @click="recommend(item)">推荐</a>
+                    <a href="javascript:void(0)" v-if="item.recommend" @click="remove_recommend(item)" class="ml-3 text-danger">撤销推荐</a>
                 
                 </div>
                 <article-list-item :data="item"></article-list-item>

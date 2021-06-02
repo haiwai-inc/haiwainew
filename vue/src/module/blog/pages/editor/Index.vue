@@ -557,6 +557,7 @@ export default {
   mounted() {
     document.documentElement.setAttribute("class", "");
     // this.initEditor();
+    console.log(this.user)
   },
 
   data() {
