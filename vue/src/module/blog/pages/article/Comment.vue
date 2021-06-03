@@ -62,7 +62,7 @@
                 <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>回复</span></a>
               </el-popover>
             <!-- <a style="color:gray" @click="reply(data)">回复</a> -->
-            <el-popconfirm v-if="data.userID==loginuserID || author==loginuserID"
+            <el-popconfirm v-if="data.userID==loginuserID || author==loginuserID || $store.state.user.userinfo.UserLevel==2"
               placement="top-end"
               confirm-button-text='删除'
               cancel-button-text='取消'
@@ -136,7 +136,7 @@
                         <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
                       </el-popover>
                       
-                      <el-popconfirm v-if="r.userID==loginuserID || author==loginuserID"
+                      <el-popconfirm v-if="r.userID==loginuserID || author==loginuserID || $store.state.user.userinfo.UserLevel==2"
                         placement="top-end"
                         confirm-button-text='删除'
                         cancel-button-text='取消'

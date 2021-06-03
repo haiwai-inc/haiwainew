@@ -2,7 +2,7 @@
     <div>
         <ul v-if="articlelist.length>0" style="list-style-type:none">
             <li v-for="item in articlelist" :key="item.id">
-                <div class="mt-3 mb-2 d-flex p-1" style="background-color:#ddeeff66">
+                <div class=" mb-2 d-flex p-2" style="background-color:#ddeeff66">
                     <span >推荐标题：<b>{{item.recommend?item.recommend.title:item.postInfo_postID.title}}</b></span>
                     
                     <el-popover v-if="item.recommend"
