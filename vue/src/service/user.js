@@ -502,6 +502,23 @@ class User extends API{
         return await this.sendget("blog/admin/article_recommand_update/?postID="+postID+"&title="+title);
     }
 
+    /**
+     * 管理员查询用户
+     * @param keyword {查询关键字}
+     */
+    async user_search(keyword){
+        return await this.sendget("account/admin/user_search/?keyword="+keyword);
+    }
+
+    /**
+     * 管理员封禁用户
+     * @param userID {用户id}
+     * @param status {0:封禁；1:解封}
+     */
+     async user_delete(userID,status){
+        return await this.sendget("account/admin/user_delete/?userID="+userID+'&status='+status);
+    }
+    
 // 公用函数
     async sendget(url){
         try{
