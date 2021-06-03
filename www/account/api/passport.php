@@ -270,12 +270,12 @@ class passport extends Api {
     public function user_password_send_request($email){
         $obj_account_user=load("account_user");
         $rs_account_user=$obj_account_user->getOne(['id','username'],['email'=>$email,'status'=>1]);
-        if(empty($rs_account_user['status']))   {$this->error="此用户不存在";$this->status=false;return false;}
+        if(empty($rs_account_user))   {$this->error="此用户不存在";$this->status=false;return false;}
         
         //设置过期token
         $obj_memcache = func_initMemcached('cache01');
         $token=md5(rand(0,1000)+times::gettime());
-        $obj_memcache->set($token,1,3600);
+        $obj_memcache->set($token,$rs_account_user['id'],3600);
         
         //发送email
         $obj_account_user_email=load("account_user_email");
