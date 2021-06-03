@@ -139,7 +139,7 @@ class admin extends Api {
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','visible'],$fields);
         if(empty($rs_article_indexing)){
             return $rs_article_indexing;
         }
@@ -148,7 +148,7 @@ class admin extends Api {
         foreach($rs_article_indexing as $k=>$v){
             $basecode_article_indexing[$v['postID']]=$v['postID'];
         }
-        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['treelevel'=>2,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
+        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','visible'],['treelevel'=>2,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
         if(!empty($rs_article_reply)){
             //ES补全postID信息
             $obj_article_noindex=load("search_article_noindex");
