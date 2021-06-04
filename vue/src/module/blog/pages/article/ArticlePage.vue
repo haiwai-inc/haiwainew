@@ -291,17 +291,31 @@ export default {
     getComment(){
       this.loading.comment = true;
       this.noMore = false;
-      blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
-        let r = res.data;
-        this.comment = this.comment.concat(r);
-        this.lastID = r.length>0?r[r.length-1].postID:0;
-        if(r.length<20){
-          this.noMore = true;
-        }
-        this.showcomment=res.status?true:false;
-        this.loading.comment = false;
-        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
-      })
+      if(this.$store.state.user.userinfo.UserLevel!=2){
+        blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
+          let r = res.data;
+          this.comment = this.comment.concat(r);
+          this.lastID = r.length>0?r[r.length-1].postID:0;
+          if(r.length<20){
+            this.noMore = true;
+          }
+          this.showcomment=res.status?true:false;
+          this.loading.comment = false;
+          console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        })
+      }else{
+        this.$store.state.user.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
+          let r = res.data;
+          this.comment = this.comment.concat(r);
+          this.lastID = r.length>0?r[r.length-1].postID:0;
+          if(r.length<20){
+            this.noMore = true;
+          }
+          this.showcomment=res.status?true:false;
+          this.loading.comment = false;
+          console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        })
+      }
     },
     rewrite(id){
       console.log("reget",id);
@@ -383,7 +397,7 @@ export default {
   },
   data() {
     return {
-      showLogin:false,
+      // showLogin:false,
       icons:icons,
       loginuserID:-1,
       showcomment:false,

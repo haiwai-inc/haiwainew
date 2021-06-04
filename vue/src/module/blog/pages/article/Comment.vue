@@ -66,12 +66,28 @@
               placement="top-end"
               confirm-button-text='删除'
               cancel-button-text='取消'
-              title="确定删除这条回复吗？"
+              title="确定删除这条评论吗？"
               :hide-icon="true"
               @confirm="article_reply_delete(data)"
             >
               <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray">删除</a>
             </el-popconfirm>
+            <span  v-if="$store.state.user.userinfo.UserLevel==2">
+              <span v-if="data.visible==0" class="text-warning mx-3">已删除</span>
+              <a v-if="data.visible==0" href="javascript:void(0)" @click="admin_reply_delete(data,1)">恢复</a>
+
+              <el-popconfirm v-if="data.visible!==0"
+                placement="top-end"
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                title="确定删除这条评论吗？其下的所有回复将一并删除！"
+                :hide-icon="true"
+                @confirm="admin_reply_delete(data,0)"
+              >
+                <a href="javascript:void(0)" slot="reference" class="ml-5" >管理员删除</a>
+              </el-popconfirm>
+            </span>
+            
           </p>
           <!-- <a
           v-if="item.userID==loginuserID" class="ml-5" style="color:gray" >删除</a> -->
@@ -146,6 +162,21 @@
                       >
                         <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray;">删除</a>
                       </el-popconfirm>
+                       <span  v-if="$store.state.user.userinfo.UserLevel==2">
+                          <span v-if="r.visible==0" class="text-warning mx-3">已删除</span>
+                          <a v-if="r.visible==0" href="javascript:void(0)" @click="admin_reply_delete(r,1)">恢复</a>
+
+                          <el-popconfirm v-if="r.visible!==0"
+                            placement="top-end"
+                            confirm-button-text='删除'
+                            cancel-button-text='取消'
+                            title="确定删除这条回复吗？"
+                            :hide-icon="true"
+                            @confirm="admin_reply_delete(r,0)"
+                          >
+                            <a href="javascript:void(0)" slot="reference" class="ml-5" >管理员删除</a>
+                          </el-popconfirm>
+                        </span>
                     </p>
                 </div>
               </div>
@@ -228,7 +259,7 @@ export default {
   mounted: function () {
     let userinfor = this.$store.state.user.userinfo
     this.loginuserID = userinfor?userinfor.UserID:-1;
-    console.log(this.data)
+    // console.log(this.data)
   },
   computed:{
     has_author () {
@@ -317,6 +348,13 @@ export default {
         console.log("Del",item);
         if(res.status){
           this.regetComment(item);
+        }
+      })
+    },
+    admin_reply_delete(item,visible){
+      this.$store.state.user.admin_reply_delete(item.postID,visible).then(res=>{
+        if(res.status){
+          item.visible = visible
         }
       })
     },
