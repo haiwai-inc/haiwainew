@@ -25,7 +25,8 @@ class admin extends Api {
         //同步博客数据
         if($rs_article_indexing['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->delete_blog_article($rs_article_indexing);
+            $count=(empty($visible))?-1:1;
+            $obj_blog_blogger->delete_blog_article($rs_article_indexing,$count);
         }
         
         //同步ES索引
@@ -39,15 +40,16 @@ class admin extends Api {
      * 通用页
      * 回复 删除
      * @param int $id | 回复的postID
+     * @param integer $visible | 1开 0关
      */
-    public function reply_delete($id){
+    public function reply_delete($id,$visible){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
-        $obj_article_indexing->update(['visible'=>0],['postID'=>$check_article_indexing['postID']]);
+        $obj_article_indexing->update(['visible'=>$visible],['postID'=>$check_article_indexing['postID']]);
         
         //更新主贴
         $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
@@ -55,7 +57,8 @@ class admin extends Api {
             $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
         }
         $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$id]);
-        $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete-1],['postID'=>$check_article_indexing['basecode']]);
+        $count=(empty($visible))?-1:1;
+        $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete+$count],['postID'=>$check_article_indexing['basecode']]);
         
         //同步ES索引
         $obj_article_noindex=load("search_article_noindex");
@@ -67,9 +70,6 @@ class admin extends Api {
         
         return true;
     }
-    
-    
-    
     
     
     
