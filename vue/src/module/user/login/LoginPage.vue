@@ -25,7 +25,7 @@
         >
         </fg-input> -->
         <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-link btn-primary">忘记密码</button>
+          <button type="button" class="btn btn-link btn-primary" @click="resetpasswordform=true">忘记密码</button>
           <span class="noaccount">
             还没有账号？
             <button type="button" class="btn btn-link btn-primary" @click="isShowLogin('signin')">前往注册</button>
@@ -80,6 +80,27 @@
     <n-button type="primary" round  @click="submitForm('wxcForm')">用文学城账号登录</n-button>
   </div>
 </el-dialog>
+
+<el-dialog
+  title="找回密码"
+  :visible.sync="resetpasswordform"
+  width="350px"
+  >
+  <p>请输入您在本站的注册邮箱，我们会给您发送一封重置密码的邮件</p>
+  <el-form :model="resetForm" :rules="resetrules" ref="resetForm" label-width="10px">
+    <el-form-item
+      prop="email"
+      label=""
+    >
+      <el-input v-model="resetForm.email"  placeholder="邮箱"></el-input>
+    </el-form-item>
+  </el-form>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="resetpasswordform = false">取 消</el-button>
+    <el-button type="primary" @click="submitForm('resetForm')" :disabled="resetForm.submitDisable">发 送</el-button>
+  </span>
+</el-dialog>
+
       </div>
 </template>
 <script>
@@ -188,7 +209,18 @@ components: {
           { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
-      loginErr:{status:false,msg:''}
+      loginErr:{status:false,msg:''},
+      resetpasswordform:false,
+      resetForm:{
+        email:'',
+        submitDisable:false
+      },
+      resetrules: {
+        email:[
+          { required: true, validator:validateMail, trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+      },
     };
   },
   mounted() {
@@ -311,6 +343,9 @@ components: {
                 this.loginErrFormat(res);
               })
             }
+            if(formName==='resetForm'){
+              this.user_password_send_request(this.resetForm.email)
+            }
           } else {
             console.log('error submit!!');
             this.loginForm.submitDisable = false;
@@ -334,6 +369,28 @@ components: {
             console.log(err)
           }
         }
+      },
+      user_password_send_request(email){
+        this.resetForm.submitDisable=true;console.log(email)
+        account.user_password_send_request(email).then(res=>{console.log(res)
+          if(res.status){
+            this.$message({
+              showClose:true,
+              message:"重置密码邮件已经发出，请注意查收！",
+              type:'success',
+              duration:0
+            });
+          }else{
+            this.$message({
+              showClose:true,
+              message:res.error,
+              type:'error',
+              duration:0
+            });
+          }
+            this.resetpasswordform = false;
+            this.resetForm.submitDisable=false;
+        })
       }
   }
 };
