@@ -371,8 +371,8 @@ components: {
         }
       },
       user_password_send_request(email){
-        this.resetForm.submitDisable=true;console.log(email)
-        account.user_password_send_request(email).then(res=>{console.log(res)
+        this.resetForm.submitDisable=true;
+        account.user_password_send_request(email).then(res=>{
           if(res.status){
             this.$message({
               showClose:true,
@@ -388,8 +388,8 @@ components: {
               duration:0
             });
           }
-            this.resetpasswordform = false;
-            this.resetForm.submitDisable=false;
+          this.resetpasswordform = false;
+          this.resetForm.submitDisable=false;
         })
       }
   }
