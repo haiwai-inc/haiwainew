@@ -33,7 +33,7 @@
                   <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
                 </el-popover> -->
                 <!-- <a class="dropdown-item" href="javascript:void(0)" @click="report(data)">举报</a> -->
-                <a class="dropdown-item pl-4" href="javascript:void(0)" style="color:gray" @click="blockUser(data.userID)">加入黑名单</a>
+                <a class="dropdown-item pl-4" href="javascript:void(0)" style="color:gray" @click="blockUser(data.userID)">{{$t('message').article.black_list}}</a>
             </drop-down>
             </span>
           </div>
@@ -50,27 +50,27 @@
               width="375" 
               :ref="'pop-'+data.postID"
               trigger="click">
-                <textarea  type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                <textarea  type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2 p-2" :placeholder="$t('message').article.comment_placeholder" @keyup="checkstatus"></textarea>
                 <n-button 
                 type="primary"
                 round 
                 simple
                 :disabled="replybtndisable"
                 @click="reply_add()"
-                  >回复</n-button
+                  >{{$t('message').article.reply}}</n-button
                 >
-                <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>回复</span></a>
+                <a href="javascript:void(0)" slot="reference" @click="reply(data)" style="color:gray"><span>{{$t('message').article.reply}}</span></a>
               </el-popover>
             <!-- <a style="color:gray" @click="reply(data)">回复</a> -->
             <el-popconfirm v-if="data.userID==loginuserID || author==loginuserID "
               placement="top-end"
-              confirm-button-text='删除'
-              cancel-button-text='取消'
-              title="确定删除这条评论吗？"
+              :confirm-button-text="$t('message').article.comment_delet"
+              :cancel-button-text="$t('message').article.comment_cancel"
+              :title="$t('message').article.comment_del_confirm"
               :hide-icon="true"
               @confirm="article_reply_delete(data)"
             >
-              <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray">删除</a>
+              <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray">{{$t('message').article.comment_delet}}</a>
             </el-popconfirm>
             <span  v-if="$store.state.user.userinfo.UserLevel==2">
               <span v-if="data.visible==0" class="text-warning mx-3">已删除</span>
@@ -125,7 +125,7 @@
                           >举报</n-button>
                         <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
                       </el-popover> -->
-                      <a class="dropdown-item pl-4" href="javascript:void(0)" @click="blockUser(r.userID)">加入黑名单</a>
+                      <a class="dropdown-item pl-4" href="javascript:void(0)" @click="blockUser(r.userID)">{{$t('message').article.black_list}}</a>
                     </drop-down>
                     </span>
                   </div>
@@ -140,27 +140,27 @@
                       @show="reply(r)"
                       :ref="'pop-'+r.postID"
                       trigger="click">
-                        <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+                        <textarea style="border: #ddd 1px solid;" type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" :placeholder="$t('message').article.comment_placeholder" @keyup="checkstatus"></textarea>
                         <n-button 
                           type="primary"
                           round 
                           simple
                           :disabled="replybtndisable"
                           @click="reply_add()"
-                            >回复</n-button
+                            >{{$t('message').article.reply}}</n-button
                           >
-                        <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>回复</span></a>
+                        <a href="javascript:void(0)" slot="reference" style="color:gray" ><span>{{$t('message').article.reply}}</span></a>
                       </el-popover>
                       
                       <el-popconfirm v-if="r.userID==loginuserID || author==loginuserID "
                         placement="top-end"
-                        confirm-button-text='删除'
-                        cancel-button-text='取消'
-                        title="确定删除这条回复吗？"
+                        :confirm-button-text="$t('message').article.comment_delet"
+                        :cancel-button-text="$t('message').article.comment_cancel"
+                        :title="$t('message').article.reply_del_confirm"
                         :hide-icon="true"
                         @confirm="article_reply_delete(r)"
                       >
-                        <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray;">删除</a>
+                        <a href="javascript:void(0)" slot="reference" class="ml-5" style="color:gray;">{{$t('message').article.comment_delet}}</a>
                       </el-popconfirm>
                        <span  v-if="$store.state.user.userinfo.UserLevel==2">
                           <span v-if="r.visible==0" class="text-warning mx-3">已删除</span>
@@ -186,14 +186,14 @@
             class="btn btn-link btn-info" 
             style="padding-left:0px" 
             v-on:click="replystatus(data.postID)">
-              {{replyshowstatus}} {{data.reply.length}} 条回复<span class="ml-2" v-if="has_author">[含作者]</span>
+              {{replyshowstatus}} {{data.reply.length}} {{$t('message').article.reply_count}}<span class="ml-2" v-if="has_author">[含作者]</span>
             </button>
           </div>
       </div>
     <!-- </div> -->
 <!-- 回复 modal -->
     <modal :show.sync="modals.reply" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px"><span class="text-muted">回复</span> {{currentItem.userinfo_userID.username}} <span class="text-muted">评论</span></h4>
+      <h4 slot="header" class="title title-up" style="padding-top:5px"><span class="text-muted">{{$t('message').article.reply}}</span> {{currentItem.userinfo_userID.username}} <span class="text-muted">{{$t('message').article.comment_text}}</span></h4>
       <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 my-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
       <template slot="footer">
         <n-button 
@@ -202,7 +202,7 @@
         link
         @click.native="modals.reply = false"
         >
-          取消
+          {{$t('message').article.comment_cancel}}
         </n-button>
         <n-button 
         type="primary"
@@ -210,24 +210,8 @@
         simple
         :disabled="replybtndisable"
         @click="reply_add()"
-          >回复</n-button
+          >{{$t('message').article.reply}}</n-button
         >
-      </template>
-    </modal>
-<!-- 登录 modal -->
-    <modal :show.sync="modals.login" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px"><span class="text-muted">登录/注册</span></h4>
-      <p>待开发！！！</p>
-      <template slot="footer">
-        <n-button 
-        class="mr-3"
-        type="default" 
-        link
-        @click.native="modals.login = false"
-        >
-          取消
-        </n-button>
-        
       </template>
     </modal>
   </div>
