@@ -58,7 +58,7 @@ router.beforeEach((to,from,next)=>{
           query: { redirect: to.fullPath }
         })
       }else {
-        if(to.name=="admin" && res.data.auth_group!=2){
+        if(to.name=="backend" && res.data.UserLevel!=2){
           next({path:'/'})
         }
         next()
