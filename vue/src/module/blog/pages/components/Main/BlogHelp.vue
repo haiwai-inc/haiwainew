@@ -23,4 +23,10 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.bolger-box {
+        background-color: #f6f9fc;
+        border-radius: 16px;
+        padding: 18px 0;
+}
+</style>
