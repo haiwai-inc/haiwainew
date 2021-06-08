@@ -50,7 +50,7 @@ let user = new User();
 router.beforeEach((to,from,next)=>{
   let status = false;
   if(to.matched.some(record=>record.meta.requiresAuth)){
-    user.getUserStatus().then(res=>{
+    user.getUserStatus().then(res=>{console.log(to.name,res.data.UserLevel)
       status=res.status;
       if(!status){
         next({
