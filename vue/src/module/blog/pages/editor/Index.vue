@@ -50,6 +50,7 @@
             v-model="bubbles.blog_manage"
             width="300"
             popper-class="bubble"
+            trigger="manual"
             >
             <p>{{user.userinfo.bubble.instruction.blog_manage}}</p>
              <div style="text-align: right; margin: 0">
@@ -84,8 +85,6 @@
                 :value="item.id">
               </el-option>
             </el-select>
-          
-        
         
         <div class="py-4">
           <div class="mb-2">
