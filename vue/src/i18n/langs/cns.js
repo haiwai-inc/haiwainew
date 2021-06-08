@@ -34,7 +34,26 @@ const cns = {
     },
     article:{
       read_count:"阅读",
-      edit:"编辑"
+      edit:"编辑",
+      comment_delet:"删除",
+      comment_cancel:"取消",
+      comment_del_confirm:"确定删除这条评论吗？",
+      reply_del_confirm:"确定删除这条回复吗？",
+      black_list:"加入黑名单",
+      comment_placeholder:"写下您的评论...",
+      reply:"回复",
+      reply_count:"条回复",
+      comment_button:"发表评论",
+      comment_text:"评论",
+      hide_text:"隐",
+      like_text:"喜欢",
+      bookmark_text:"收藏",
+      share_text:"分享",
+      share_wechat_text:"打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮",
+      share_wechat_close:"关闭",
+      delete_confirm:"确定删除这篇文章吗？",
+      comment_more:"加载更多评论",
+      recomment_text:"相关推荐"
     },
     setting: {
       menu_bolg: "博客设置",

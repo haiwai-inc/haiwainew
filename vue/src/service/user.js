@@ -518,7 +518,26 @@ class User extends API{
      async user_delete(userID,status){
         return await this.sendget("account/admin/user_delete/?userID="+userID+'&status='+status);
     }
+
+    /**
+     * 管理员查询评论
+     * @param {主贴postID} id 
+     * @param {评论最后一个postID} lastID 
+     */
+    async article_view_comment(id,lastID){
+        return await this.sendget("blog/admin/article_view_comment/?id="+id+"&lastID="+lastID)
+    }
     
+    /**
+     * 管理员删除/恢复评论
+     * @param {评论的postID} id
+     * @param {0:删除; 1:恢复} visible
+     * @returns 
+     */
+    async admin_reply_delete(id,visible){
+        return await this.sendget("article/admin/reply_delete/?id="+id+"&visible="+visible)
+    }
+
 // 公用函数
     async sendget(url){
         try{

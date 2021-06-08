@@ -183,6 +183,11 @@ export default {
   watch:{
     "$store.state.user.userinfo.id":function(val){
       this.$forceUpdate();
+      if(val){
+        this.unread_count = setInterval(this.notification_unread_count,10000)
+      }else{
+        clearInterval(this.unread_count);
+      }
     }
   },
   data(){
@@ -195,7 +200,7 @@ export default {
       currentEncoding : true,
       targetEncoding : true,
       select: '0',
-      unread_count:setInterval(this.notification_unread_count,10000)
+      unread_count:''
     };
   },
   methods:{
