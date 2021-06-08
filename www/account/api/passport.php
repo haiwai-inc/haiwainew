@@ -90,16 +90,6 @@ class passport extends Api {
     }
     
     /**
-     * 保存.wenxuecity.com sid
-     * @param integer $userID|文学城用户ID
-     */
-    public function init_wxc_sid($userID){
-        $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("wxc_to_haiwai_login_".$userID,1,86400);
-        return true;
-    }
-    
-    /**
      * 用户登录页
      * 用户 登录 文学城
      * @param integer $login_data|登录信息  用户名
