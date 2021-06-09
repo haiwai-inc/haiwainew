@@ -22,6 +22,7 @@
           <div class="collection-list mt-3" v-if="collectionList.length>0">
             <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录" @showbubble="showbubble"></collection-list>
           </div>
+        <blog-help></blog-help>
         </div>
        <div class="col-lg-9 col-12" v-show="bloggerID!=0">
             <div class="profile-header mt-2 mb-3 border-bottom">
@@ -56,6 +57,7 @@
     </div>
 </template>
 <script>
+import BlogHelp from '../pages/components/Main/BlogHelp.vue';
 import MainMenu from '../pages/components/Main/MainMenu.vue';
 import ArticleListItem from '../pages/components/Main/ArticleListItem.vue';
 import UserIndexSort from '../pages/components/Main/UserIndexSort.vue';
@@ -72,7 +74,8 @@ export default {
     ArticleListItem,
     CollectionList,
     IndexHeader,
-    RegistBlog
+    RegistBlog,
+    BlogHelp,
   },
   watch:{
     "$route.params.id":function(val){

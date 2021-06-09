@@ -18,6 +18,10 @@ class admin extends Api {
         $obj_account_user=load("account_user");
         $obj_account_user->update(['status'=>$status],['id'=>$userID]);
         
+        //踢人下线
+        $obj_account_user_login=load("account_user_login");
+        $obj_account_user_login->update(['']);
+        
         //博客
         $obj_blog_blogger=load("blog_blogger");
         $obj_blog_blogger->update(['status'=>$status],['userID'=>$userID]);

@@ -77,7 +77,7 @@ class account_user_login extends Model{
 	    
 	    //设置session
 	    $this->set_user_session($check_account_user);
-	    $rs=['status'=>true];
+	    $rs=['status'=>true,'data'=>$userID];
 	    return $rs;
 	}
 	
