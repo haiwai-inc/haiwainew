@@ -18,8 +18,8 @@
          <p>海外生活，从这里开始。欢迎来到海外（Haiwai.com）！</p>
          <div class="mail">
             <p>如果您对我们的网站有任何建议，请联系 
-            <a  href="mailto:support@haiwai.com">support@haiwai.com</a>。 
-            商业合作请洽：<a href="mailto:ad@haiwai.com">ad@haiwai.com</a>。</p>
+            <a  href="mailto:support@haiwai.com">support@haiwai.com</a> 。 
+            商业合作请洽 ：<a href="mailto:ad@haiwai.com">ad@haiwai.com</a> 。</p>
          </div>
       </div>
    </div>
