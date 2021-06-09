@@ -1,6 +1,7 @@
 <?php 
 return [
-    "blog_editor_media"=>"插个图试试... 点这里可以轻松嵌入一个视频影片",
+    "blog_editor_pic"=>"插个图试试...",
+    "blog_editor_video"=>"点这里可以轻松嵌入一个视频影片",
     "blog_editor_tag"=>"给本文定义一个或多个关键词，当然要尽量符合文章主旨，关键词越多曝光率越高哦！",
     "blog_editor_manage"=>"回到你的博文目录，可以增、删、改、查，以及归类整理...",
     "blog_editor_category"=>"点这里可以建立你的博文分类、修改分类、以及将博文各归其类",
