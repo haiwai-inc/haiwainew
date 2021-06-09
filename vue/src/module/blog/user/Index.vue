@@ -8,7 +8,7 @@
           <regist-blog></regist-blog>
       </div>
       <div class="row" v-if="$route.params.id!=0">
-      <index-header v-if="userinfo.id>0" :info="userinfo"></index-header>
+      <index-header v-if="userinfo.id>0" :info="userinfo" ref="header"></index-header>
       <div class="d-lg-none col text-right mb-3">
           <el-button 
           v-if="$store.state.user.userinfo.userID==$route.params.id" 
@@ -20,7 +20,7 @@
        <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
-            <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录"></collection-list>
+            <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录" @showbubble="showbubble"></collection-list>
           </div>
         </div>
        <div class="col-lg-9 col-12" v-show="bloggerID!=0">
@@ -150,6 +150,9 @@ export default {
                 console.log(res);
             })
           }
+      },
+      showbubble(){
+          this.$refs['header'].showBubble()
       }
   },
   data() {
