@@ -50,6 +50,7 @@
             v-model="bubbles.blog_manage"
             width="300"
             popper-class="bubble"
+            trigger="manual"
             >
             <p>{{user.userinfo.bubble.instruction.blog_manage}}</p>
              <div style="text-align: right; margin: 0">
@@ -84,8 +85,6 @@
                 :value="item.id">
               </el-option>
             </el-select>
-          
-        
         
         <div class="py-4">
           <div class="mb-2">
@@ -136,6 +135,7 @@
           <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
           <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
+        <blog-help></blog-help>
       </div>
       <div class="col-12">
         <div class="mt-2 text-muted">注：发表博客文章时请不要提供广告信息或不友好信息，本站保留拒绝的权利。</div>
@@ -227,6 +227,7 @@
   </div>
 </template>
 <script>
+import BlogHelp from './../components/Main/BlogHelp.vue';
 import Editor from '@tinymce/tinymce-vue'
 // import CategoryList from "./components/CategoryList.vue";
 // import CategoryArticleList from "./components/CategoryArticleList";
@@ -275,6 +276,7 @@ export default {
   name:"my-editor",
   components: {
     MiniNavbar,
+    BlogHelp,
     // CategoryList,
     // CategoryArticleList,
     [Button.name]: Button,
