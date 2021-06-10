@@ -343,8 +343,9 @@ export default {
             if(r.status){
               this.$store.state.user.category_list(this.user.userinfo.bloggerID).then(res=>{
                 this.categoryList = res.status?res.data:[];
-                this.curentArticle.categoryID = r.data
-                this.dialogFormVisible = false
+                this.curentArticle.categoryID = r.data;
+                this.setIsPublish(this.curentArticle.categoryID);
+                this.dialogFormVisible = false;
               })
             }
             console.log(r.data);
