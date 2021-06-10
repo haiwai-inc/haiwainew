@@ -292,7 +292,7 @@ class account_user_login extends Model{
 	        $obj_account_user=load("account_user");
 	        $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_login['userID']]);
 	        //检查cookie
-	        if(empty(in_array($_COOKIE['haiwai_login'],$rs_account_login))){
+	        if(empty(in_array(session(),$rs_account_login))){
 	            return false;
 	        }
 	        
