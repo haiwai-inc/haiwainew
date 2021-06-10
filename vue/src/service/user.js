@@ -11,8 +11,8 @@ class User extends API{
     published = {};
     notice={};
     myEditor={};
-    editorObj=[];
-    editorTabStatus=[];
+    // editorObj=[];
+    // editorTabStatus=[];
     /**
      * Login function for example
      * @param {*} email 

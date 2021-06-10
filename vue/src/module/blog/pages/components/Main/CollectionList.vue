@@ -5,7 +5,24 @@
     </span>
     <div class="collection-title d-flex justify-content-between">
       <h4>{{title}}</h4>
-      <el-button v-if="$store.state.user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()"><i class="el-icon-notebook-2"></i> 博文管理</el-button>
+      <el-popover
+        placement="top"
+        ref="blog_home_manage"
+        v-model="bubbles.blog_home_manage"
+        width="300"
+        popper-class="bubble"
+        trigger="manual"
+        >
+        <p>{{user.userinfo.bubble.instruction.blog_home_manage}}</p>
+          <div style="text-align: right; margin: 0">
+            1/3
+            <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_manage')">知道了</el-button>
+          </div>
+        <el-button v-if="user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()" slot="reference">
+          <i class="el-icon-notebook-2"></i> 博文管理
+        </el-button>
+      </el-popover>
+      
     </div>
     <div v-if="data.length===0" class="pl-3">暂无目录</div>
     <div v-if="data.length!==0">
@@ -38,7 +55,11 @@ export default {
   },
   data(){
     return {
-      collapse:true
+      user:this.$store.state.user,
+      collapse:true,
+      bubbles:{
+        blog_home_manage:false,
+      }
     }
   },
   components: {
@@ -51,10 +72,31 @@ export default {
   methods: {
     go(){
       this.$router.push("/blog/my/")
-    }
+    },
+    showBubble(){
+      var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
+      for(let i=0;i<bubbles.length;i++){
+        let type = bubbles[i]
+        if(this.user.userinfo.bubble.user[type]==1){
+          this.bubbles[type]=true;
+          return
+        }else{
+          this.bubbles[type]=false;
+        }
+      };
+    },
+    removeBubble(type){
+      this.user.remove_bubble(type).then(res=>{
+        if(res.status){
+          this.user.userinfo.bubble = res.data;
+          this.showBubble();
+          this.$emit('showbubble')
+        }
+      })
+    },
   },
   mounted() {
-    console.log(this.$store.state.user.userinfo)
+    this.showBubble();
   },
 };
 
@@ -81,6 +123,15 @@ export default {
   padding: 10px 18px 0px;
   font-size: 0.85rem;
   text-align: right;
+}
+.el-popover.bubble {
+  background-color: #14171a;
+  color:white
+}
+.el-popover.bubble .popper__arrow,
+.el-popover.bubble .popper__arrow::after{
+  border-top-color: #14171a;
+  border-bottom-color: #14171a;
 }
 
 </style>

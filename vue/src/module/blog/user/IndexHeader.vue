@@ -2,11 +2,33 @@
     <div class="blog-user-index mb-3 col-sm-12 col-12 " v-if="data.id">
         <div v-show="data.bloggerinfo_bloggerID" class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_bloggerID.background+')',backgroundSize:'cover'}">
             <div class="user-bgup flex-fill">
-                <span class="name">{{data.bloggerinfo_bloggerID.name}}</span>
+                <el-popover
+    placement="top-start"
+    title="标题"
+    width="200"
+    trigger="hover"
+    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+                <span class="name" slot="reference">{{data.bloggerinfo_bloggerID.name}}</span>
+                </el-popover>
+
                 <p class="bdescription" v-html="data.bloggerinfo_bloggerID.description"></p>
             </div>
             <div class="pr-3 pt-auto" style="position:absolute;right:10px;top:10px" v-if="data.id==$store.state.user.userinfo.UserID">
-                <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
+                <el-popover
+                    placement="bottom-end"
+                ref="blog_home_setting"
+                v-model="bubbles.blog_home_setting"
+                width="300"
+                popper-class="bubble"
+                trigger="manual"
+                >
+                    <p>{{user.userinfo.bubble.instruction.blog_home_setting}}</p>
+                    <div style="text-align: right; margin: 0">
+                        2/3
+                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_setting')">知道了</el-button>
+                    </div>
+                    <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm" slot="reference"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
+                </el-popover>
                 <el-button v-if="data.bloggerID==0"  type="primary" @click="$router.push('/blog_register')">开通博客</el-button>
             </div>
         </div>
@@ -22,7 +44,7 @@
                 :alt="data.userinfo_id.username">
             </div>
             
-            <div class="flex-grow-1">
+            <div class="flex-fill">
                 <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
                <div class="row textgroup">
                 <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_id.is_hot_blogger"></icon-V>{{data.userinfo_id.username}}</span>
@@ -51,10 +73,24 @@
                 </div>
             </div>
             <div class="pr-3" v-if="data.id==$store.state.user.userinfo.UserID">
-                <n-button size="sm" @click="$router.push('/profile/?id=1')">
-                    <span class="d-none d-sm-block">账号设置
-                    </span><i class="el-icon-setting d-sm-none"></i>
-                </n-button>
+                <el-popover
+                    placement="bottom-end"
+                ref="blog_home_profile"
+                v-model="bubbles.blog_home_profile"
+                width="300"
+                popper-class="bubble"
+                trigger="manual"
+                >
+                    <p>{{user.userinfo.bubble.instruction.blog_home_profile}}</p>
+                    <div style="text-align: right; margin: 0">
+                        2/3
+                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_profile')">知道了</el-button>
+                    </div>
+                    <n-button size="sm" @click="$router.push('/profile/?id=1')" slot="reference">
+                        <span class="d-none d-sm-block">账号设置</span>
+                        <i class="el-icon-setting d-sm-none"></i>
+                    </n-button>
+                </el-popover>  
             </div>
 
         </div>
@@ -133,10 +169,10 @@ export default {
         LoginDialog
     },
     beforeMount:function(){
-        // this.getInfo();
-        console.log(this.data,this.info)
         this.init_data(this.data);
-        
+    },
+    mounted() {
+        this.showBubble();
     },
     methods:{
         // getInfo(){
@@ -212,10 +248,31 @@ export default {
             }else{
                 this.following_add(this.data.userID)
             }
-        }
+        },
+        showBubble(){
+            var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
+            for(let i=0;i<bubbles.length;i++){
+                let type = bubbles[i]
+                if(this.user.userinfo.bubble.user[type]==1){
+                this.bubbles[type]=true;
+                return
+                }else{
+                this.bubbles[type]=false;
+                }
+            };
+        },
+        removeBubble(type){
+            this.user.remove_bubble(type).then(res=>{
+                if(res.status){
+                this.user.userinfo.bubble = res.data;
+                this.showBubble();
+                }
+            })
+        },
     },
     data() {
         return {
+            user:this.$store.state.user,
             default_blginfo:{
                 background : '/img/default_bg.jpg',
                 name : "未开通博客",
@@ -226,6 +283,11 @@ export default {
                 qqhMsgbody:'',
                 modalData:undefined
             },
+            bubbles:{
+                blog_home_manage:false,
+                blog_home_profile:false,
+                blog_home_setting:false
+            }
         };
     },
 }
@@ -320,6 +382,15 @@ export default {
     font-weight: 500;
     font-size: 36px;
     line-height: 90px;
+}
+.el-popover.bubble {
+  background-color: #14171a;
+  color:white
+}
+.el-popover.bubble .popper__arrow,
+.el-popover.bubble .popper__arrow::after{
+  border-top-color: #14171a;
+  border-bottom-color: #14171a;
 }
 @media (max-width: 767.98px) {
      .blog-user-index .bdescription,
