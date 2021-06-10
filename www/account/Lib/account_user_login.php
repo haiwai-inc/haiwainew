@@ -235,8 +235,8 @@ class account_user_login extends Model{
 	        $this->insert([$index=>$rand,"userID"=>$rs_account_user['id']]);
 	    }else{
 	        $index="index{$check_account_user_login['pointer']}";
-	        $point=substr($check_account_user_login['pointer']+1,-1);
 	        if(empty(in_array(session_id(),$check_account_user_login))){
+	            $point=substr($check_account_user_login['pointer']+1,-1);
 	            $this->update([$index=>$rand,"pointer"=>$point],["userID"=>$rs_account_user['id']]);
 	        }
 	    }
