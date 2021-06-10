@@ -20,7 +20,20 @@ class admin extends Api {
         
         //踢人下线
         $obj_account_user_login=load("account_user_login");
-        $obj_account_user_login->update(['']);
+        $rs_account_user_login=$obj_account_user_login->getOne("*",['userID'=>$userID]);
+        if(!empty($rs_account_user_login)){
+            $obj_memcache=func_initMemcached('memSession');
+            foreach($rs_account_user_login as $k=>$v){
+                if($k=="id" || $k=="userID" || $k=="pointer"){
+                    continue;
+                }
+                if(!empty($v)){
+                    $obj_memcache->delete($v);
+                }
+            }
+        }
+        $fields=["pointer"=>0,"index0"=>"","index1"=>"","index2"=>"","index3"=>"","index4"=>"","index5"=>"","index6"=>"","index7"=>"","index8"=>"","index9"=>""];
+        $obj_account_user_login->update($fields,["userID"=>$userID]);
         
         //博客
         $obj_blog_blogger=load("blog_blogger");
