@@ -283,16 +283,16 @@ class account_user_login extends Model{
 	//自动登录
 	function auto_login(){
 	    $cookie=explode("___",$this->decrypt($_COOKIE['haiwai_login']));
-	    $rand=$cookie[0];
+	    $sid=$cookie[0];
 	    $userID=$cookie[1];
 	    $pointer=$cookie[2];
 	    
-	    $rs_account_login=$this->getOne("*",['userID'=>$userID,$pointer=>$rand]);
+	    $rs_account_login=$this->getOne("*",['userID'=>$userID,$pointer=>$sid]);
 	    if(!empty($rs_account_login)){
 	        $obj_account_user=load("account_user");
 	        $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_login['userID']]);
 	        //检查cookie
-	        if(empty(in_array(session(),$rs_account_login))){
+	        if(empty(in_array($sid,$rs_account_login))){
 	            return false;
 	        }
 	        
