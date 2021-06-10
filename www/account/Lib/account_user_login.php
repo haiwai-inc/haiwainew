@@ -287,16 +287,22 @@ class account_user_login extends Model{
 	    $userID=$cookie[1];
 	    $pointer=$cookie[2];
 	    
-	    $rs_account_login=$this->getOne(["userID"],['userID'=>$userID,$pointer=>$rand]);
+	    $rs_account_login=$this->getOne("*",['userID'=>$userID,$pointer=>$rand]);
 	    if(!empty($rs_account_login)){
 	        $obj_account_user=load("account_user");
 	        $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_login['userID']]);
-	        $rs_status=$this->check_user($check_account_user);
-	        if(!$rs_status['status']){
-	            return $rs_status;
+	        //检查cookie
+	        if(empty(in_array($_COOKIE['haiwai_login'],$rs_account_login))){
+	            return false;
 	        }
 	        
-	        //设置session
+	        //检查用户
+	        $rs_status=$this->check_user($check_account_user);
+	        if(!$rs_status['status']){
+	            return false;
+	        }
+	        
+	        //设置session登录
 	        $this->set_user_session($check_account_user);
 	        return $rs_status;
 	    }
