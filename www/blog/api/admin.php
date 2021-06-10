@@ -19,7 +19,6 @@ class admin extends Api {
      */
     public function article_list($type="recent",$lastID=0){
         $obj_article_indexing=load("article_indexing");
-        
         //最新
         if($type=="recent"){
             $fields=['limit'=>40,'treelevel'=>0,'order'=>['postID'=>"DESC"]];
@@ -31,11 +30,12 @@ class admin extends Api {
         
         //推荐
         if($type=="recommand"){
-            $fields=["limit"=>$limit,'order'=>['id'=>'DESC']];
+            $obj_blog_recommend=load("blog_recommend");
+            $fields=["limit"=>40,'order'=>['id'=>'DESC']];
             if(!empty($lastID)){
                 $fields['postID,<']=$lastID;
             }
-            $rs_blog_recommend=$obj_blog_recommend->getAll("*",$fields);
+            $rs_article_indexing=$obj_blog_recommend->getAll("*",$fields);
         }
         
         //标注推荐
