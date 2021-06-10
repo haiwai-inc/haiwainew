@@ -14,28 +14,30 @@ class admin extends Api {
     
     /**
      * 每日更新文章
-     * @param string $type
+     * @param string $type | "recent" || "recommand"
      * @param integer $lastID
      */
     public function article_list($type="recent",$lastID=0){
         $obj_article_indexing=load("article_indexing");
-        //最新
         if($type=="recent"){
+            //最新
             $fields=['limit'=>40,'treelevel'=>0,'order'=>['postID'=>"DESC"]];
             if(!empty($lastID)){
                 $fields['postID,<']=$lastID;
             }
             $rs_article_indexing=$obj_article_indexing->getAll("*",$fields);
         }
-        
-        //推荐
-        if($type=="recommand"){
+        else if($type=="recommand"){
+            //推荐
             $obj_blog_recommend=load("blog_recommend");
             $fields=["limit"=>40,'order'=>['id'=>'DESC']];
             if(!empty($lastID)){
                 $fields['postID,<']=$lastID;
             }
             $rs_article_indexing=$obj_blog_recommend->getAll("*",$fields);
+        }
+        else{
+            return [];
         }
         
         //标注推荐
