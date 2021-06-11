@@ -473,8 +473,8 @@ class User extends API{
      * 获取文章列表
      * @param lastID {列表最后一条id，用于分页；缺省为0}
      * */ 
-    async admin_article_list(lastID){
-        return await this.sendget("blog/admin/article_list/?lastID="+lastID);
+    async admin_article_list(type,lastID){
+        return await this.sendget("blog/admin/article_list/?lastID="+lastID+"&type="+type);
     }
 
     /**

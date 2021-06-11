@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-sm-3 left-top-nav">
         <left-nav-item
-          v-for="(item, index) in data"
+          v-for="(item, index) in tabdata"
           :key="index"
           :data="item"
           :activeId="activeId"
@@ -20,10 +20,7 @@
         <!-- 文章 -->
         <div v-if="activeId === 0">
           <span v-if="search.article.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <div v-if="search.article.data.length>0"
-          v-infinite-scroll="infiniteGet"
-          infinite-scroll-disabled="disabled"
-          infinite-scroll-distance="50">
+          <div v-show="search.article.data.length>0">
             <article-list-item
               v-for="(item,index) in search.article.data"
               v-bind:key="index"
@@ -31,28 +28,31 @@
               type="0"
             >
             </article-list-item>
+            <p class="text-center py-4" v-if="!noMore.article && !loading.article">
+                <el-button type="primary" plain @click="infiniteGet" round>加载更多搜索结果</el-button>
+            </p>
+            <p class="text-center py-4" v-if="noMore.article">没有更多了</p>
           </div>
           <div class="text-center py-5" v-if="loading.article"><!-- loader -->
             <i class="now-ui-icons loader_refresh spin"></i>
           </div>
-          <p class="text-center py-4" v-if="noMore.article">没有更多了</p>
         </div>
         <!-- 用户 -->
         <div v-if="activeId === 1">
           <span v-if="search.blogger.data.length==0">在搜索框中输入一些内容，你会发现更多精彩内容。</span>
-          <div v-if="search.blogger.data.length>0"
-          v-infinite-scroll="infiniteGet"
-          infinite-scroll-disabled="disabled"
-          infinite-scroll-distance="50">
+          <div v-if="search.blogger.data.length>0">
             <bloger-list-item 
             v-for="(item,index) in search.blogger.data" 
             v-bind:key="index" 
             :data="item" :usertype="'search'"></bloger-list-item>
+            <p class="text-center py-4" v-if="!noMore.blogger && !loading.blogger">
+                <el-button type="primary" plain @click="infiniteGet" round>加载更多搜索结果</el-button>
+            </p>
+            <p class="text-center py-4" v-if="noMore.blogger">没有更多了</p>
           </div>
           <div class="text-center py-5" v-if="loading.blogger"><!-- loader -->
             <i class="now-ui-icons loader_refresh spin"></i>
           </div>
-          <p class="text-center py-4" v-if="noMore.blogger">没有更多了</p>
         </div>
         <!-- 标签 -->
         <div v-if="activeId === 2">
@@ -130,7 +130,7 @@ export default {
       lastScore:{article:0,blogger:0,tag_articles:0,categories:0},
       loading:{article:false,blogger:false,tag_articles:false,categories:false},
       noMore:{article:false,blogger:false,tag_articles:false,categories:false},
-      data: [
+      tabdata: [
         {
           id: 0,
           icon:icons.article,
@@ -202,6 +202,7 @@ export default {
       this.get_tags_articles(this.tags.length==0?this.tagres:this.tags,0);
     },
     async doSearch(k){
+      this.search.article.data=this.search.blogger.data=this.search.tag_articles.data=this.search.categories.data=[];
       this.get_articles(k,0);
       this.get_bloggers(k,0,'all',0);
       this.get_tags(k);
@@ -211,6 +212,7 @@ export default {
       return rl<30?true:false
     },
     infiniteGet(){
+      this.loading.article = true;
       if (this.activeId==0) {
         this.get_articles(this.keyword,this.lastScore.article);
       } 
@@ -226,37 +228,35 @@ export default {
     },
     async get_articles(k,lastScore){
       // this.loading.article = true;
-      if (lastScore==0){
-        this.search.article = await this.search.search_articles(k,lastScore);
-        let rl = this.search.article.data;
-        this.lastScore.article = rl.length>0?rl[rl.length-1]._score:0;
-        this.noMore.article = this.nomoreStatus(rl.length);
-      }else{
+      // if (lastScore==0){
+      //   this.search.article = await this.search.search_articles(k,lastScore);
+      //   let rl = this.search.article.data;
+      //   this.lastScore.article = rl.length<30?rl[rl.length-1]._score:this.lastScore.article;
+      //   this.noMore.article = this.nomoreStatus(rl.length);
+      // }else{
         let r = await this.search.search_articles(k,lastScore);
         let arr = r.data;
-        this.search.article.data = this.search.article.data.concat(arr);
-        let data = this.search.article.data;
-        this.lastScore.article = data.length>0?data[data.length-1]._score:0;
+        // let data = this.search.article.data;
+        this.lastScore.article = arr.length<30?this.lastScore.article:arr[arr.length-1]._score;
         this.noMore.article = this.nomoreStatus(arr.length);
-      }
+        this.search.article.data = this.search.article.data.concat(arr);
+      // }
       this.loading.article = false;
     },
     async get_bloggers(k,lastScore,type,w){
       // this.loading.blogger = true;
-      if(lastScore==0){
-        this.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
-        let rl = this.search.blogger.data;
-        this.lastScore.blogger = rl.length>0?rl[rl.length-1]._score:0;
-        this.noMore.blogger = this.nomoreStatus(rl.length);
-      }else{
+      // if(lastScore==0){
+      //   this.search.blogger = await this.search.search_bloggers(k,lastScore,type,w);
+      //   let rl = this.search.blogger.data;
+      //   this.lastScore.blogger = rl.length>0?rl[rl.length-1]._score:0;
+      //   this.noMore.blogger = this.nomoreStatus(rl.length);
+      // }else{
         let r = await this.search.search_bloggers(k,lastScore,type,w);
         let arr = r.data;
-        this.search.blogger.data = this.search.blogger.data.concat(arr);
-        let data = this.search.blogger.data;
-        this.lastScore.blogger = data.length>0?data[data.length-1]._score:0;
+        this.lastScore.blogger = arr.length<30?this.lastScore.blogger:arr[arr.length-1]._score;
         this.noMore.blogger = this.nomoreStatus(arr.length);
-      }
-      console.log(this.search.blogger.data);
+        this.search.blogger.data = this.search.blogger.data.concat(arr);
+      // }
       this.loading.blogger = false;
     },
     async get_tags(k){
@@ -270,36 +270,34 @@ export default {
       this.get_tags_articles(this.tagres,this.lastScore.tag_articles);
     },
     async get_tags_articles(tags,lastScore){
-      if (lastScore==0){
-        this.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
-        let rl = this.search.tag_articles.data;
-        this.lastScore.tag_articles = rl.length>0?rl[rl.length-1]._score:0;
-        this.noMore.tag_articles = this.nomoreStatus(rl.length);
-      }else{
+      // if (lastScore==0){
+      //   this.search.tag_articles = await this.search.search_tag_articles(tags,lastScore);
+      //   let rl = this.search.tag_articles.data;
+      //   this.lastScore.tag_articles = rl.length>0?rl[rl.length-1]._score:0;
+      //   this.noMore.tag_articles = this.nomoreStatus(rl.length);
+      // }else{
         let r = await this.search.search_tag_articles(tags,lastScore);
         let arr = r.data;
         this.search.tag_articles.data = this.search.tag_articles.data.concat(arr);
-        let data = this.search.tag_articles.data;
-        this.lastScore.tag_articles = data.length>0?data[data.length-1]._score:0;
+        this.lastScore.tag_articles = arr.length<30?this.lastScore.tag_articles:arr[arr.length-1]._score;
         this.noMore.tag_articles = this.nomoreStatus(arr.length);
-      }
+      // }
       console.log(tags,lastScore);
     },
     async get_categories(k,lastScore){
-      this.search.categories = await this.search.search_categories(k,lastScore);
-      if(lastScore==0){
-        this.search.categories = await this.search.search_categories(k,lastScore);
-        let rl = this.search.categories.data;
-        this.lastScore.categories = rl.length>0?rl[rl.length-1]._score:0;
-        this.noMore.categories = this.nomoreStatus(rl.length);
-      }else{
+      // this.search.categories = await this.search.search_categories(k,lastScore);
+      // if(lastScore==0){
+      //   this.search.categories = await this.search.search_categories(k,lastScore);
+      //   let rl = this.search.categories.data;
+      //   this.lastScore.categories = rl.length>0?rl[rl.length-1]._score:0;
+      //   this.noMore.categories = this.nomoreStatus(rl.length);
+      // }else{
         let r = await this.search.search_categories(k,lastScore);
         let arr = r.data;
         this.search.categories.data = this.search.blogger.data.concat(arr);
-        let data = this.search.categories.data;
-        this.lastScore.categories = data.length>0?data[data.length-1]._score:0;
+        this.lastScore.categories = arr.length<30?this.lastScore.categories:arr[arr.length-1]._score;
         this.noMore.categories = this.nomoreStatus(arr.length);
-      }
+      // }
       this.loading.categories = false;
     },
   },
@@ -311,7 +309,7 @@ export default {
   watch:{
     $route(){
       this.keyword = this.$route.query.keyword;
-      this.activeId = Number(this.$route.query.tab);
+      // this.activeId = Number(this.$route.query.tab);
       this.doSearch(this.keyword);
     }
   }

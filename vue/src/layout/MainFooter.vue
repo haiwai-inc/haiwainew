@@ -1,5 +1,5 @@
 <template>
-<footer class="d-none d-sm-block my-5  pb-2 pt-4 text-muted text-center text-small">
+<footer class="d-none d-sm-block pb-2 pt-4 text-muted text-center text-small">
  <div class="container border-top">
    <p class="mt-3 mb-1 text-small">Copyright ©2021 Haiwai.com</p>
    <ul class="list-inline">
