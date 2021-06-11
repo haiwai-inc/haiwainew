@@ -229,19 +229,21 @@ class account_user_login extends Model{
 	function set_user_cookie($rs_account_user){
 	    $check_account_user_login=$this->getOne("*",["userID"=>$rs_account_user['id']]);
 	    //$rand=md5(times::gettime().$this->rand());
-	    $rand=session_id();
+	    $sid=session_id();
 	    if(empty($check_account_user_login)){
 	        $index="index0";
 	        $this->insert([$index=>$rand,"userID"=>$rs_account_user['id']]);
 	    }else{
-	        $index="index{$check_account_user_login['pointer']}";
 	        if(empty(in_array(session_id(),$check_account_user_login))){
+	            $index="index{$check_account_user_login['pointer']}";
 	            $point=substr($check_account_user_login['pointer']+1,-1);
-	            $this->update([$index=>$rand,"pointer"=>$point],["userID"=>$rs_account_user['id']]);
+	            $this->update([$index=>$sid,"pointer"=>$point],["userID"=>$rs_account_user['id']]);
+	        }else{
+	            $index="index".array_search(session_id(), $check_account_user_login); ;
 	        }
 	    }
 	    
-	    $cookie=$this->encrypt($rand."___".$rs_account_user['id']."___".$index);
+	    $cookie=$this->encrypt($sid."___".$rs_account_user['id']."___".$index);
 	    setcookie("haiwai_login",$cookie,time()+(10 * 365 * 24 * 60 * 60),conf()['session']['sessionpath'],conf()['session']['sessiondomain']);
 	}
 	
