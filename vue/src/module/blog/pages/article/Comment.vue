@@ -295,7 +295,7 @@ export default {
     },
     // 回复
     reply(item){
-      this.currentItem = item ;console.log(item);
+      this.currentItem = item ;
         if(item.treelevel==2){
           this.replymsgbody = "@"+ item.userinfo_userID.username +"  ";
         }else{
@@ -303,11 +303,11 @@ export default {
         }
     },
     reply_add(){
-      console.log(this.loginuserID);
       let obj = {
-        article_data:{msgbody:this.replymsgbody,
-        postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
-        typeID:1}
+        article_data:{
+          msgbody:this.wrapToBr(this.replymsgbody),
+          postID:this.currentItem.treelevel==2?this.currentItem.basecode:this.currentItem.postID,
+          typeID:1}
       }
       let pop = 'pop-'+this.currentItem.postID;
       this.replybtndisable = true;
@@ -383,6 +383,17 @@ export default {
           this.$refs[`${pop}`].doClose();
         },2000)
       })
+    },
+    wrapToBr(text) {
+      var string = text;
+      try {
+          string = string.replace(/\r\n/g, "<br>")
+          string = string.replace(/\n/g, "<br>");
+          string = string.replace(/\r/g, "<br>");
+      } catch (e) {
+          console.log(e.message);
+      }
+      return string;
     }
   },
   data(){

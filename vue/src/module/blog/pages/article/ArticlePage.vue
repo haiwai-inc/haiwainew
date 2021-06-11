@@ -254,9 +254,11 @@ export default {
     reply_add(){
       if(this.$refs.dialog.isLogin()){ //权限判断
         let obj = {
-          article_data:{msgbody:this.replymsgbody,
-          postID:this.articleDetail.data.postID,
-          typeID:1}
+          article_data:{
+            msgbody:this.wrapToBr(this.replymsgbody),
+            postID:this.articleDetail.data.postID,
+            typeID:1
+          }
         }
         this.replybtndisable = true;
         blog.reply_add(obj).then(res=>{
@@ -384,6 +386,17 @@ export default {
             console.log(res);
         })
       }
+    },
+    wrapToBr(text) {
+      var string = text;
+      try {
+          string = string.replace(/\r\n/g, "<br>")
+          string = string.replace(/\n/g, "<br>");
+          string = string.replace(/\r/g, "<br>");
+      } catch (e) {
+          console.log(e.message);
+      }
+      return string;
     }
   },
   data() {
