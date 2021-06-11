@@ -393,6 +393,7 @@ export default {
           string = string.replace(/\r\n/g, "<br>")
           string = string.replace(/\n/g, "<br>");
           string = string.replace(/\r/g, "<br>");
+          string = string.replace(/\s/g,"&nbsp;");
       } catch (e) {
           console.log(e.message);
       }
