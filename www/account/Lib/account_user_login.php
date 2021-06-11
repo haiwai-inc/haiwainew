@@ -227,15 +227,18 @@ class account_user_login extends Model{
 	
 	//设置cookie
 	function set_user_cookie($rs_account_user){
-	    $check_account_user_login=$this->getOne(["id","pointer"],["userID"=>$rs_account_user['id']]);
-	    $rand=md5(times::gettime().$this->rand());
+	    $check_account_user_login=$this->getOne("*",["userID"=>$rs_account_user['id']]);
+	    //$rand=md5(times::gettime().$this->rand());
+	    $rand=session_id();
 	    if(empty($check_account_user_login)){
 	        $index="index0";
 	        $this->insert([$index=>$rand,"userID"=>$rs_account_user['id']]);
 	    }else{
 	        $index="index{$check_account_user_login['pointer']}";
-	        $point=substr($check_account_user_login['pointer']+1,-1);
-	        $this->update([$index=>$rand,"pointer"=>$point],["userID"=>$rs_account_user['id']]);
+	        if(empty(in_array(session_id(),$check_account_user_login))){
+	            $point=substr($check_account_user_login['pointer']+1,-1);
+	            $this->update([$index=>$rand,"pointer"=>$point],["userID"=>$rs_account_user['id']]);
+	        }
 	    }
 	    
 	    $cookie=$this->encrypt($rand."___".$rs_account_user['id']."___".$index);
@@ -280,20 +283,26 @@ class account_user_login extends Model{
 	//自动登录
 	function auto_login(){
 	    $cookie=explode("___",$this->decrypt($_COOKIE['haiwai_login']));
-	    $rand=$cookie[0];
+	    $sid=$cookie[0];
 	    $userID=$cookie[1];
 	    $pointer=$cookie[2];
 	    
-	    $rs_account_login=$this->getOne(["userID"],['userID'=>$userID,$pointer=>$rand]);
+	    $rs_account_login=$this->getOne("*",['userID'=>$userID,$pointer=>$sid]);
 	    if(!empty($rs_account_login)){
 	        $obj_account_user=load("account_user");
 	        $check_account_user=$obj_account_user->getOne("*",['id'=>$rs_account_login['userID']]);
-	        $rs_status=$this->check_user($check_account_user);
-	        if(!$rs_status['status']){
-	            return $rs_status;
+	        //检查cookie
+	        if(empty(in_array($sid,$rs_account_login))){
+	            return false;
 	        }
 	        
-	        //设置session
+	        //检查用户
+	        $rs_status=$this->check_user($check_account_user);
+	        if(!$rs_status['status']){
+	            return false;
+	        }
+	        
+	        //设置session登录
 	        $this->set_user_session($check_account_user);
 	        return $rs_status;
 	    }
