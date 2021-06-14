@@ -39,6 +39,7 @@ class page extends Api {
         $obj_search_article_noindex=load("search_article_noindex");
         
         $fields=[
+	    "is_publish"=>1,
             "limit"=>$limit,
             'order'=>['id'=>'DESC']
         ];
