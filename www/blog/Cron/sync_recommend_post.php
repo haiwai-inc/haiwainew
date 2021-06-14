@@ -33,7 +33,7 @@ class sync_recommend_post{
                     "postID"=>$rs_import_post['article_new']['postID'],
                     "userID"=>$rs_import_post['user_new']['id'],
                     "title"=>$v['title'],
-                    "is_publish"=>$v['is_publish'],
+                    "is_publish"=>$rs_import_post['article_new']['is_publish'],
 		    "create_date"=>times::getTime(),
                 ];
                 $obj_blog_recommend->insert($fields);
