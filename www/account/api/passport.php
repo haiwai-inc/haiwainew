@@ -60,6 +60,8 @@ class passport extends Api {
      * @param integer $login_token|登录凭证 密码
      */
     public function user_login($login_data,$login_token){
+	$login_data=str_replace(" ","+",$login_data);
+
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->haiwai_login($login_data,$login_token);
         if(empty($rs_user_login['status'])) {$this->error=$rs_user_login['error'];$this->status=false;return false;}
