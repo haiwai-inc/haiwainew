@@ -14,8 +14,8 @@
             
           </div>
           <div class="tail-data">
-            <span><i class="now-ui-icons ui-2_chat-round"></i> {{data.countinfo_postID.count_comment}}</span>
-            <span class="ml-3"><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>
+            <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>
+            <span class="ml-3"><i class="now-ui-icons ui-2_chat-round"></i> {{data.countinfo_postID.count_comment}}</span>
             <span class="ml-3" v-if="type=='bookmark'">
               <a herf="javascript:void(0)" v-if="data.postInfo_postID.is_bookmark==1" @click="deletBookmark(data.postID)">取消收藏</a>
             </span>
