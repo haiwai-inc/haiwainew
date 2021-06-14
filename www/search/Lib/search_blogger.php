@@ -8,7 +8,7 @@ class search_blogger extends Search
     public function __construct()
     {
         parent::__construct();
-		$this->bloggerSet = '
+        $this->bloggerSet = '
 
 		{
 			"settings": {
@@ -84,35 +84,45 @@ class search_blogger extends Search
         debug::d($this->indexset(json_decode($this->bloggerSet)));
     }
 
+    /**
+	 * Get one or multiple bloggers' info with one or a list of bloggerID
+	 * @param bloggerIDs | Array of bloggerID
+	 * @return bloggers | An array of bloggers
+	 */
     public function get_by_bloggerIDs($bloggerIDs)
     {
-        $posts = $this->get($bloggerIDs);
-        $posts = json_decode(json_encode($posts), true);
+        $bloggers = $this->get($bloggerIDs);
+        $bloggers = json_decode(json_encode($bloggers), true);
         if (is_array($bloggerIDs)) {
-            $posts_body = [];
-            foreach ($posts['docs'] as $doc) {
+            $bloggers_body = [];
+            foreach ($bloggers['docs'] as $doc) {
                 if (!empty($doc['found'])) {
                     $doc_body     = $doc['_source'];
-                    $posts_body[] = $doc_body;
+                    $bloggers_body[] = $doc_body;
                 }
             }
-            return $posts_body;
+            return $bloggers_body;
         }
-        return $posts;
+        return $bloggers;
     }
 
+    /**
+	 * Get a map with bloggerID as key and bloggerInfo as value
+	 * @param $bloggerIDs | Array of bloggerIDs
+	 * @return map | Map[bloggerID => blogger info]
+	 */
     public function get_bloggerID_map($bloggerIDs)
     {
         $rs    = [];
-        $posts = $this->get_by_bloggerIDs($bloggerIDs);
-        foreach ($posts as $post) {
-            $rs[$post['bloggerID']] = $post;
+        $bloggerIDs = $this->get_by_bloggerIDs($bloggerIDs);
+        foreach ($bloggerIDs as $blogger) {
+            $rs[$blogger['bloggerID']] = $blogger;
         }
         return $rs;
     }
 
     /**
-     * 批量添加
+     * 批量添加新博客
      * @param $bloggers | List of bloggers
      */
     public function add_new_bloggers($bloggers)
@@ -143,7 +153,7 @@ class search_blogger extends Search
                     "username"  => $user['username'],
                     "name"      => $blogger['name'],
                     "verified"  => $user["verified"],
-					"status"    => $user["status"]
+                    "status"    => $user["status"]
                 ];
 
                 $count++;
@@ -168,76 +178,84 @@ class search_blogger extends Search
             }
 
             return $total;
-
         } catch (Exception $e) {
             return 0;
         }
-	} 
-	
-	public function search_by_name($keyword, $last_score=0, $type="all", $last_id = 0){
-		$query = [];
-		if(is_string($keyword)){
-
-			$highlight = array("name"=>$this->object(), "username"=>$this->object());
-			$should = [];
-			if($type=="all"||$type=="user"){
-				$should[]=$this->object(array("match" => array("username"=>$keyword)));
-			}
-			if($type=="all"||$type=="blogger"){
-				$should[]=$this->object(array("match" => array("name"=>$keyword)));
-			}
-			$query["should"] =$should;
-			$query["must_not"]=array(
-				$this->object(array("term" => array("status"=>0)))
-			);
-
-			$query["sort"]=[$this->object(array("_score"=>array("order" =>"desc"), "userID"=>array("order" =>"desc")))];
-			if(!empty($last_score)){
-				$query["search_after"] = [$last_score, $last_id];
-			}
-			$query["highlight"] = array(
-				"pre_tags" => array( "<span style='color:#39B8EB'>" ),
-				"post_tags" => array( "</span>" ),
-				"fields" =>  $highlight
-			);
-		} 
-		else{
-			$query = $keyword;
-		}
-		$rs = $this->search($query);
-		$rs = json_decode(json_encode($rs), true);
-		return $rs;
-	}
-
-    public function update_data($time = 0){
-		$search_blogger = load("search_blogger");
-$blogger_obj = load ("blog_blogger");
-$user_obj = load("account_user");
-$search_category = load("search_category");
-$blog_category = load("blog_category");
-
-// $first_update_time = 0;
-$iter = 0;
-$total = 0;
-$total_category = 0;
-while(true){    
-    $bloggers = $blogger_obj->getAll(["id", "userID", "name"], ["update_date, >="=>$time, "limit"=>[$iter*200,200]]);
-    if(count($bloggers)==0){
-        break;
     }
-    $total += count($bloggers);
-    $bloggerIDs = [];
-    foreach($bloggers as $blogger){
-        $bloggerIDs[] = $blogger['id'];
+
+    /**
+     * Search for bloggers using username or blog name
+     * @param string $keyword | keyword to search
+     * @param double $last_score | Lowest score from previous search, for pagination, 0 if it's the first page
+     * @param string $type | "user" => use only username, "blogger" => use only blogger name, "all" => use both
+     * @param int $last_id | The last blogger id from previous search, for pagination, 0 if it's the first page
+     * @return array rs | Array of bloggers
+     */
+    public function search_by_name($keyword, $last_score = 0, $type = "all", $last_id = 0)
+    {
+        $query = [];
+        if (is_string($keyword)) {
+
+            $highlight = array("name" => $this->object(), "username" => $this->object());
+            $should = [];
+            if ($type == "all" || $type == "user") {
+                $should[] = $this->object(array("match" => array("username" => $keyword)));
+            }
+            if ($type == "all" || $type == "blogger") {
+                $should[] = $this->object(array("match" => array("name" => $keyword)));
+            }
+            $query["should"] = $should;
+            $query["must_not"] = array(
+                $this->object(array("term" => array("status" => 0)))
+            );
+
+            $query["sort"] = [$this->object(array("_score" => array("order" => "desc"), "userID" => array("order" => "desc")))];
+            if (!empty($last_score)) {
+                $query["search_after"] = [$last_score, $last_id];
+            }
+            $query["highlight"] = array(
+                "pre_tags" => array("<span style='color:#39B8EB'>"),
+                "post_tags" => array("</span>"),
+                "fields" =>  $highlight
+            );
+        } else {
+            $query = $keyword;
+        }
+        $rs = $this->search($query);
+        $rs = json_decode(json_encode($rs), true);
+        return $rs;
     }
-    $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");
-    $search_blogger->add_new_bloggers($bloggers);
-    $categories = $blog_category->getAll("*", ["OR"=>['bloggerID'=>$bloggerIDs]]);
-    $total_category += count($categories);
-    $search_category->add_new_categories($categories);
-    echo("$total blogger updated\n");
-    echo("$total_category category updated\n");
-    $iter++;
-}
-	}
+
+    public function update_data($time = 0)
+    {
+        $search_blogger = load("search_blogger");
+        $blogger_obj = load("blog_blogger");
+        $user_obj = load("account_user");
+        $search_category = load("search_category");
+        $blog_category = load("blog_category");
+
+        // $first_update_time = 0;
+        $iter = 0;
+        $total = 0;
+        $total_category = 0;
+        while (true) {
+            $bloggers = $blogger_obj->getAll(["id", "userID", "name"], ["update_date, >=" => $time, "limit" => [$iter * 200, 200]]);
+            if (count($bloggers) == 0) {
+                break;
+            }
+            $total += count($bloggers);
+            $bloggerIDs = [];
+            foreach ($bloggers as $blogger) {
+                $bloggerIDs[] = $blogger['id'];
+            }
+            $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");
+            $search_blogger->add_new_bloggers($bloggers);
+            $categories = $blog_category->getAll("*", ["OR" => ['bloggerID' => $bloggerIDs]]);
+            $total_category += count($categories);
+            $search_category->add_new_categories($categories);
+            echo ("$total blogger updated\n");
+            echo ("$total_category category updated\n");
+            $iter++;
+        }
+    }
 }

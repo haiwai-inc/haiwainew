@@ -724,13 +724,13 @@ export default {
         // language_url : './langs/zh_CN.js',
         plugins: [
            'advlist autolink lists link image charmap print preview anchor paste',
-           'searchreplace visualblocks code fullscreen emoticons',
+           'searchreplace visualblocks code fullscreen',
            'insertdatetime media table paste help wordcount fontsizeselect'
          ],
          toolbar_mode:"wrap",
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
-            image media link file \
+            image media link file\
            formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
         language: lang,
         relative_urls : false,

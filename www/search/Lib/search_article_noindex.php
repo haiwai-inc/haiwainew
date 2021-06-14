@@ -84,6 +84,12 @@ class search_article_noindex extends Search
         ];
 	}
 
+	/**
+	 * Update the number of buzz of a post
+	 * @param int $postID | The ID of the post that need to be updated
+	 * @param int $userID | The ID of the user with the buzz
+	 * @return int 1 if sucess, 0 if failure
+	 */
     public function update_buzz($postID, $userID)
     {
         $article = $this->get($postID);
@@ -101,6 +107,12 @@ class search_article_noindex extends Search
         return 0;
 	}
 	
+	/**
+	 * Get one or multiple postInfo with one or a list of postID
+	 * @param postIDs | Array of postID
+	 * @param full_msg | Whether the full post body should be kept
+	 * @return posts | An array of posts
+	 */
 	public function get_by_postIDs($postIDs, $full_msg = false){
 		$posts = $this->get($postIDs);
 		$posts = json_decode(json_encode($posts),true);
@@ -113,7 +125,7 @@ class search_article_noindex extends Search
 					$posts_body[] = $doc_body;
 				}
 			}
-
+			// Remove tags if full_msg is set to false
 			if(empty($full_msg)){
 				$article_index_obj = load("article_indexing");
 				$posts_body = $article_index_obj -> format_string($posts_body);
@@ -124,6 +136,12 @@ class search_article_noindex extends Search
 		return $posts;
 	}
 
+	/**
+	 * Get a map with postID as key and postInfo as value
+	 * @param postIDs | Array of postID
+	 * @param full_msg | Whether the full post body should be kept
+	 * @return map | Map[postID => postBody]
+	 */
 	public function get_postID_map($postIDs, $full_msg = false){
 		$rs = [];
 		$posts = $this->get_by_postIDs($postIDs, $full_msg);
@@ -133,7 +151,13 @@ class search_article_noindex extends Search
 		return $rs;
 	}
 
-	//添加ES信息
+	/**
+	 * Insert postinfo into a list of articles or search result. 添加ES信息
+	 * @param rs | The main body, list of item that need postInfo inserted
+	 * @param hashID | The name of the field with postID
+	 * @param full_msg 
+	 * @return rs with postInfo inserted
+	 */
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
 	    //hash处理
 	    if(empty($rs)){
@@ -233,34 +257,38 @@ class search_article_noindex extends Search
                 ];
 				$count++;
 				$total++;
+				// If the article already exists in es, update
 				if(!empty($postID_map[$article['postID']])){
 					$data_string = $data_string.json_encode(['update' => ["_id"=>$article['postID']]]) . "\n";
 					$data_string = $data_string.json_encode(array('doc'=>$article_formatted))."\n";
 				}
+				// If the article does not exists in es, insert
 				else{
 					$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
 					$data_string = $data_string.json_encode($article_formatted)."\n";
 				}
-
+				// Bulk update, 1000 at a time
                 if ($count == 1000) {
-                    // debug::d("adding");
-                    // debug::d($this->addBulk($data_string));
                     $this->addBulk($data_string);
                     $data_string = "";
                     $count       = 0;
                 }
             }
-
+			// Insert the result
             if (!empty($count)) {
                 $this->addBulk($data_string);
             }
             return $total;
         } catch (Exception $e) {
-            debug::d($e);
             return 0;
         }
     }
 
+	/**
+	 * Fetch one post and insert into the es
+	 * @param int $postID | The id of the post to update
+	 * @return boolean true if sucess, none if not
+	 */
     public function fetch_and_insert($postID)
     {
 

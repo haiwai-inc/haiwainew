@@ -66,6 +66,12 @@ class search_tag extends Search{
         debug::d($this->indexset(json_decode($this->tagSet)));
     }
 
+
+    /**
+     * Acquire an array of tags by their IDs
+     * @param array|int $tagIDs | An array of ids or just one id
+     * @return array $rs | An array of tags as search result
+     */
     public function get_by_tagIDs($tagIDs)
     {
         $tags = $this->get($tagIDs);
@@ -83,6 +89,12 @@ class search_tag extends Search{
         return $tags;
     }
 
+    /**
+     * Search for tags using a keyword string
+     * @param string $keyword
+     * @param double $last_score | 0 if first page
+     * @return array $rs | Array of categories
+     */
     public function search_by_name($keyword, $last_score=0){
         $query = [];
 		if(is_string($keyword)){
@@ -112,6 +124,11 @@ class search_tag extends Search{
 		return $rs;
     }
 
+    /**
+     * Insert/Update multiple tags into the Elasticsearch server
+     * @param array $tags | Tags to insert
+     * @return int $total | Total number of tags inserted
+     */
     public function add_new_tags($tags){
         try{
             $tag_ids = [];

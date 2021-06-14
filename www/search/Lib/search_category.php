@@ -80,6 +80,11 @@ class search_category  extends Search{
         debug::d($this->indexset(json_decode($this->categorySet)));
     }
 
+    /**
+     * Acquire an array of category by their IDs
+     * @param array|int $category_ids | An array of ids or just one id
+     * @return array $rs | An array of category as search result
+     */
     public function get_by_categoryIDs($categoryIDs)
     {
         $categories = $this->get($categoryIDs);
@@ -101,6 +106,13 @@ class search_category  extends Search{
     }
 
     // elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-stconvert/releases/download/v7.6.2/elasticsearch-analysis-stconvert-7.6.2.zip
+    /**
+     * Search for category using a keyword string
+     * @param string $keyword
+     * @param double $last_score | 0 if first page
+     * @param int $last_id | 0 if first page
+     * @return array $rs | Array of categories
+     */
 	public function search_by_name($keyword, $last_score=0, $last_id = 0){
         $query = [];
 		if(is_string($keyword)){
@@ -131,6 +143,11 @@ class search_category  extends Search{
 		return $rs;
     }
 
+    /**
+     * Insert multiple categories into the Elasticsearch server
+     * @param array $categories | Categories to insert
+     * @return int $total | Total number of categories inserted
+     */
     public function add_new_categories($categories){
         try{
             $category_ids = [];
@@ -150,10 +167,12 @@ class search_category  extends Search{
                 $count++;
                 $total++;
                 
+                // If the category has already been saved
 				if(!empty($categoryID_map[$category['id']])){
 					$data_string = $data_string.json_encode(['update' => ["_id"=>$category['id']]]) . "\n";
 					$data_string = $data_string.json_encode(array('doc'=>$category_formatted))."\n";
 				}
+                // If the category is new to es
 				else{
 					$data_string = $data_string.json_encode(['index' => ["_id"=>$category['id']]]) . "\n";
 					$data_string = $data_string.json_encode($category_formatted)."\n";
@@ -191,9 +210,6 @@ class search_category  extends Search{
 
     public function update_data(){
 $blog_category = load("blog_category");
-
-
-$first_update_time = 0;
 $iter = 0;
 $total = 0;
 // 更新文集
