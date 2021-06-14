@@ -141,15 +141,15 @@
                     autocomplete="off" 
                     maxlength="16" 
                     show-word-limit 
-                    placeholder="输入博文目录名">
+                    :placeholder="$t('message').editor.wenji_new_placeholder">
                     </el-input>
                 </el-form-item>
-                <el-radio v-model="form.is_publish" :label="1">公开目录</el-radio>
-                <el-radio v-model="form.is_publish" :label="0">隐藏目录</el-radio>
+                <el-radio v-model="form.is_publish" :label="1">{{$t('message').editor.wenji_new_radio1}}</el-radio>
+                <el-radio v-model="form.is_publish" :label="0">{{$t('message').editor.wenji_new_radio2}}</el-radio>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submit">确 定</el-button>
+                <el-button @click="dialogFormVisible = false">{{$t('message').editor.wenji_new_cancel}}</el-button>
+                <el-button type="primary" @click="submit">{{$t('message').editor.wenji_new_ok}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -304,7 +304,7 @@ export default {
       },
     openDialog(item){
         this.item = item
-        this.formTitle = item?"目录设置":"新建博文目录" ;
+        this.formTitle = item?this.$t('message').editor.wenji_setting_title :this.$t('message').editor.wenji_new_title ;
         this.form.name = item?item.name:''
         this.form.is_publish = item?item.is_publish:1
         this.dialogFormVisible = true
@@ -328,7 +328,7 @@ export default {
         if(this.item==0){
             this.collectionList.forEach(item=>{
                 if(item.name === value){
-                    return callback(new Error('与现有目录名重复'))
+                    return callback(new Error(this.$t('message').editor.wenji_new_error))
                 }
             })
         }
