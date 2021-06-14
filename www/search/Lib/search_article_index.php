@@ -134,6 +134,7 @@ class search_article_index extends Search
 			$tag= intval($tag);
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
 		}
+		// Do not search for any article with visible set to 0
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
 		); 
@@ -151,6 +152,7 @@ class search_article_index extends Search
 		$rs = $this->search($query,null,null, $limit);
 		$rs = json_decode(json_encode($rs), true);
 		$article_index_obj = load("article_indexing");
+		//Remove unused string from the result
 		$rs = $article_index_obj -> format_string($rs);
 		$rs = $article_index_obj -> format_pic($rs);
 		
@@ -166,10 +168,17 @@ class search_article_index extends Search
 		return $articles;
 	}
 
+	/**
+	 * Get one or multiple postInfo with one or a list of postID
+	 * @param postIDs | Array of postID
+	 * @param full_msg | Whether the full post body should be kept
+	 * @return posts | An array of posts
+	 */
 	public function get_by_postIDs($postIDs, $full_msg = false){
 
 		$posts = $this->get($postIDs);
 		$posts = json_decode(json_encode($posts),true);
+		// Fetching multiple post id, structure is different 
 		if(is_array($postIDs)){
 			$posts_body = [];
 			foreach($posts['docs'] as $doc){
@@ -188,6 +197,12 @@ class search_article_index extends Search
 		return $posts;
 	}
 
+	/**
+	 * Get a map with postID as key and postInfo as value
+	 * @param postIDs | Array of postID
+	 * @param full_msg | Whether the full post body should be kept
+	 * @return map | Map[postID => postBody]
+	 */
 	public function get_postID_map($postIDs, $full_msg = false){
 		$rs = [];
 		$posts = $this->get_by_postIDs($postIDs, $full_msg);
@@ -197,12 +212,18 @@ class search_article_index extends Search
 		return $rs;
 	}
 
+	/**
+	 * Insert postinfo into a list of articles or search result
+	 * @param rs | The main body, list of item that need postInfo inserted
+	 * @param hashID | The name of the field with postID
+	 * @param full_msg 
+	 * @return rs with postInfo inserted
+	 */
 	public function get_postInfo($rs,$hashID='postID', $full_msg=false){
 		if(!empty($rs)){
 	        foreach($rs as $v){
 	            $tmp_rs_id[]=$v[$hashID];
 			}
-			;
 			$hash_posts = $this->get_postID_map($tmp_rs_id, $full_msg);
 			
 	        foreach($rs as $k=>$v){
@@ -256,11 +277,13 @@ class search_article_index extends Search
 			foreach ($articles as $article) {
 				$postIDs[] = $article['postID'];
 			}
+			// Search for the postIDs from the ES to see if they exists already
 			$result = $this->get_by_postIDs($postIDs);
 			foreach($result as $post){
 				$postID_map[$post['postID']] = true;
 			}
             foreach ($articles as $article) {
+				// Only insert articles with tree level = 0
 				if(!empty($article['treelevel']))
 					continue;
                 $article_formatted = [
@@ -283,36 +306,42 @@ class search_article_index extends Search
 				];
 				$count++;
 				$total++;
+				// If the article already exists in es, update
 				if(!empty($postID_map[$article['postID']])){
 					$data_string = $data_string.json_encode(['update' => ["_id"=>$article['postID']]]) . "\n";
 					$data_string = $data_string.json_encode(array('doc'=>$article_formatted))."\n";
 				}
+				// If the article does not exists in es, insert
 				else{
 					$data_string = $data_string.json_encode(['index' => ["_id"=>$article['postID']]]) . "\n";
 					$data_string = $data_string.json_encode($article_formatted)."\n";
 				}
 					
-
+				// Bulk update, 1000 at a time
                 if ($count == 1000) {
-					// debug::d("adding");
-					// debug::d($this->addBulk($data_string));
 					$this->addBulk($data_string);
 					$data_string = "";
 					$count = 0;
                 }
             }
-
+			// Insert the result
             if (!empty($count)) {
                 $this->addBulk($data_string);
             }
             return $total;
         } catch (Exception $e) {
-			debug::d($e);
             return 0;
         }
 	}
 	
 
+	/**
+	 * Search for post with keyword
+	 * @param string $keyword | The keyword to search for
+	 * @param double $last_score | The lowest score from previous search, used for paging
+	 * @param int $last_id | The last id of the previous search, used for paging
+	 * @return array rs Array of posts
+	 */
 	function search_by_keyword($keyword, $last_score = 0, $last_id = 0){
 		$query = [];
 		if(is_string($keyword)){
