@@ -232,7 +232,7 @@ export default {
         this.currentEncoding = this.targetEncoding;
         this.targetEncoding = !this.targetEncoding;
         localStorage.targetEncoding = this.targetEncoding;
-        this.translateBody();
+        // this.translateBody();
     },
     async querySearch(queryString, cb) {
       let results = await this.search.getautocomplete(queryString);
