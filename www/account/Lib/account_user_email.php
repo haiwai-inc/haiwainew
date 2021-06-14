@@ -35,7 +35,7 @@ class account_user_email extends Model{
         
         $this->smartyObj->assign("data",$data);
         $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/register_verified.html");
-        $title="test!";
+        $title="海外博客，注册用户";
         $confirmation= func_sendMail($title,$content,$text='',$email,$name,$this->config);
         
         return $confirmation;
@@ -49,8 +49,7 @@ class account_user_email extends Model{
         
         $this->smartyObj->assign("data",$data);
         $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/forgotpwd.html");
-        $title="Forgot Your Password?";
-        
+        $title="海外博客，忘记密码";
         $confirmation= func_sendMail($title,$content,$text='',$email,$name,$this->config);
         
         return $confirmation;

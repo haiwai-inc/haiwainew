@@ -55,7 +55,12 @@ class Account extends API{
     async logout(){
         return await this.sendget("account/passport/user_logout/");
     }
-
+    async user_password_send_request(email){
+        return await this.sendget("account/passport/user_password_send_request/?email="+email)
+    }
+    async user_password_reset(password,token){
+        return await this.sendget("account/passport/user_password_reset/?password="+password+"&token="+token)
+    }
 // user profile api
     async get_user_profile(){
         return await this.sendget("account/user/user_profile/");

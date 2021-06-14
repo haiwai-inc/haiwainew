@@ -10,21 +10,18 @@
         <div class="col-sm-8 col-12" v-if="articleDetail.status">
           
           <div>
-            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title|textTrans}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（隐）</span></h4>
+            <h4 class="py-3">{{articleDetail.data.postInfo_postID.title|textTrans}}<span v-if="articleDetail.data.is_publish===0" class="text-muted">（{{$t('message').article.hide_text}}）</span></h4>
             <div class="d-flex justify-content-between align-items-center">
               <span class="blogger-box">
                 <bloger-list-item :data="articleDetail.data" type="small" @opendialog="$refs.dialog.isLogin()"></bloger-list-item>
               </span>
                
               <div class="media-icons">
-                <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" v-if="false">
-                  
-                </button>
-                <button type="button" class="btn btn-icon btn-round btn-neutral" title="喜欢" @click="like()">
+                <button type="button" class="btn btn-icon btn-round btn-neutral" :title="$t('message').article.like_text" @click="like()">
                   <span v-if="articleDetail.data.postInfo_postID.is_buzz" style="fill:#39B8EB" v-html="icons.like"></span>
                   <span v-if="!articleDetail.data.postInfo_postID.is_buzz" style=" stroke:#39B8EB" v-html="icons.like_outline"></span>
                 </button>
-                <button type="button" class="btn btn-icon btn-round btn-neutral" title="收藏" style="fill:#39B8EB" @click="bookmark()">
+                <button type="button" class="btn btn-icon btn-round btn-neutral" :title="$t('message').article.bookmark_text" style="fill:#39B8EB" @click="bookmark()">
                   <span v-if="articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star"></span>
                   <span v-if="!articleDetail.data.postInfo_postID.is_bookmark" v-html="icons.star_outline"></span>
                 </button>
@@ -52,14 +49,14 @@
                     trigger="click"
                     visible-arrow="false"
                     v-model="share.wechatQR">
-                      <div class="float-right" @click="share.wechatQR=false">关闭</div>
-                      <div class="mt-5">打开微信扫一扫[Scan QR Code]，打开网页后点击屏幕右上角分享按钮</div>
+                      <div class="float-right" @click="share.wechatQR=false">{{$t('message').article.share_wechat_close}}</div>
+                      <div class="mt-5">{{$t('message').article.share_wechat_text}}</div>
                       <img style="margin: 0 95px;" :src="shareItem.QRcode" alt="">
                       <a href="#" @click="share.showShareBar=false" slot="reference"><span class="shareIcon d-none d-sm-block" v-html="icons.wechat"></span></a>
                     </el-popover>
                   </div>
                     
-                  <button type="button" class="btn btn-icon btn-round btn-neutral" title="分享" slot="reference">
+                  <button type="button" class="btn btn-icon btn-round btn-neutral" :title="$t('message').article.share_text" slot="reference">
                     <span style=" fill:#39B8EB;" v-html="icons.share"></span>
                   </button>
                 </el-popover>
@@ -72,9 +69,9 @@
               <el-button class="ml-3" type="text" icon="el-icon-edit" v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID" style="color:#39b8eb" @click="gotoEditor(articleDetail.data)">{{$t('message').article.edit}}</el-button>
               <el-popconfirm  v-if="articleDetail.data.userID==$store.state.user.userinfo.UserID"
                 placement="top-end"
-                confirm-button-text='删除'
-                cancel-button-text='取消'
-                title="确定删除这篇文章吗？"
+                :confirm-button-text="$t('message').article.comment_delet"
+                :cancel-button-text="$t('message').article.comment_cancel"
+                :title="$t('message').article.delete_confirm"
                 :hide-icon="true"
                 @confirm="article_delete(articleDetail.data)"
               >
@@ -91,14 +88,14 @@
             
           </div>
           <div class="comment" v-if="articleDetail.data.is_comment">
-            <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" placeholder="写下您的评论..." @keyup="checkstatus"></textarea>
+            <textarea type="textarea" v-model="replymsgbody" rows="3" class="w-100 mt-2 p-2" :placeholder="$t('message').article.comment_placeholder" @keyup="checkstatus"></textarea>
             <n-button 
               type="primary"
               round 
               simple 
               :disabled="replybtndisable" 
-              @click="reply_add">发表评论</n-button>
-            <h5 class="commentlable">评论（{{articleDetail.data.countinfo_postID.count_comment}}）</h5>
+              @click="reply_add">{{$t('message').article.comment_button}}</n-button>
+            <h5 class="commentlable">{{$t('message').article.comment_text}}（{{articleDetail.data.countinfo_postID.count_comment}}）</h5>
             
           </div>
           <div v-if="!showcomment" class="text-center">评论数据获取失败</div>
@@ -117,7 +114,7 @@
           <div class="text-center py-5" v-if="loading.comment"><!-- loader -->
               <i class="now-ui-icons loader_refresh spin"></i>
           </div>
-          <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="getComment">加载更多评论</p>
+          <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="getComment">{{$t('message').article.comment_more}}</p>
           <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div class="col-sm-4 d-none d-sm-block" v-if="articleDetail.status">
@@ -148,7 +145,7 @@
           <!-- r3 -->
             <div class="box my-3" v-if="recommend.articles.length>0">
                <div class="title  d-flex justify-content-between">
-                  <h5>相关推荐</h5>
+                  <h5>{{$t('message').article.recomment_text}}</h5>
                   <!-- <button type="button" class="btn btn-link btn-default" style="padding-right: 0px;" @click="getRecommend()"><i class="now-ui-icons arrows-1_refresh-69"></i> 换一批</button> -->
                </div>
                <span v-for="(item,index) in recommend.articles" :key="index">
@@ -157,15 +154,7 @@
             </div>
           <!-- r3 end-->
          <blog-help></blog-help>
-          <div class=" my-3  ml-3  text-secondary text-left text-small">
-             <p class="small d-inline mb-1">Copyright ©2021 Haiwai.com</p>
-             <div class="row">
-                <div class="ml-3 mr-2"><a href="/privacy" class="small text-secondary">隐私</a></div>
-                <div class="mr-2"><a href="/tou" class="small text-secondary">条款</a></div>
-                <div class="mr-2"><a href="#" class="text-secondary small">关于</a></div>
-             </div>
-          </div>
-          <!-- footer -->
+         <right-footer></right-footer>
         </div>
       </div>
     </div>
@@ -175,6 +164,7 @@
   </div>
 </template>
 <script>
+import RightFooter from '../../../../layout/RightFooter.vue'
 import {formatDate} from '@/directives/formatDate.js';
 import {textTrans} from '@/directives/textTrans.js';
 import MainMenu from '../components/Main/MainMenu';
@@ -196,6 +186,7 @@ export default {
   name: 'article-page',
   components: {
     MainMenu,
+    RightFooter,
     BlogerListItem,
     RecommendListItem,
     Comment,
@@ -263,9 +254,11 @@ export default {
     reply_add(){
       if(this.$refs.dialog.isLogin()){ //权限判断
         let obj = {
-          article_data:{msgbody:this.replymsgbody,
-          postID:this.articleDetail.data.postID,
-          typeID:1}
+          article_data:{
+            msgbody:this.wrapToBr(this.replymsgbody),
+            postID:this.articleDetail.data.postID,
+            typeID:1
+          }
         }
         this.replybtndisable = true;
         blog.reply_add(obj).then(res=>{
@@ -291,17 +284,31 @@ export default {
     getComment(){
       this.loading.comment = true;
       this.noMore = false;
-      blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
-        let r = res.data;
-        this.comment = this.comment.concat(r);
-        this.lastID = r.length>0?r[r.length-1].postID:0;
-        if(r.length<20){
-          this.noMore = true;
-        }
-        this.showcomment=res.status?true:false;
-        this.loading.comment = false;
-        console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
-      })
+      if(this.$store.state.user.userinfo.UserLevel!=2){
+        blog.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
+          let r = res.data;
+          this.comment = this.comment.concat(r);
+          this.lastID = r.length>0?r[r.length-1].postID:0;
+          if(r.length<20){
+            this.noMore = true;
+          }
+          this.showcomment=res.status?true:false;
+          this.loading.comment = false;
+          console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        })
+      }else{
+        this.$store.state.user.article_view_comment(this.$route.params.id,this.lastID).then(res=>{
+          let r = res.data;
+          this.comment = this.comment.concat(r);
+          this.lastID = r.length>0?r[r.length-1].postID:0;
+          if(r.length<20){
+            this.noMore = true;
+          }
+          this.showcomment=res.status?true:false;
+          this.loading.comment = false;
+          console.log(this.comment,this.loading.comment,this.noMore,this.lastID)
+        })
+      }
     },
     rewrite(id){
       console.log("reget",id);
@@ -379,11 +386,23 @@ export default {
             console.log(res);
         })
       }
+    },
+    wrapToBr(text) {
+      var string = text;
+      try {
+          string = string.replace(/\r\n/g, "<br>")
+          string = string.replace(/\n/g, "<br>");
+          string = string.replace(/\r/g, "<br>");
+          string = string.replace(/\s/g,"&nbsp;");
+      } catch (e) {
+          console.log(e.message);
+      }
+      return string;
     }
   },
   data() {
     return {
-      showLogin:false,
+      // showLogin:false,
       icons:icons,
       loginuserID:-1,
       showcomment:false,

@@ -34,7 +34,26 @@ const cnt = {
         },
         article:{
           read_count:"閱讀",
-          edit:"編輯"
+          edit:"編輯",
+          comment_delet:"刪除",
+          comment_cancel:"取消",
+          comment_del_confirm:"確定刪除這條評論嗎？",
+          reply_del_confirm:"確定刪除這條回覆嗎？",
+          black_list:"加入黑名單",
+          comment_placeholder:"寫下您的評論...",
+          reply:"回覆",
+          reply_count:"條回覆",
+          comment_button:"發表評論",
+          comment_text:"評論",
+          hide_text:"隐",
+          like_text:"喜歡",
+          bookmark_text:"收藏",
+          share_text:"分享",
+          share_wechat_text:"打開微信掃一掃[Scan QR Code]，打開網頁後點擊屏幕右上角分享按鈕",
+          share_wechat_close:"關閉",
+          delete_confirm:"確定刪除這篇文章嗎？",
+          comment_more:"加載更多評論",
+          recomment_text:"相關推薦"
         },
         setting:{
             menu_bolg:"博客設置",

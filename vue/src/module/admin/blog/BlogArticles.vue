@@ -1,8 +1,12 @@
 <template>
     <div>
+        <el-radio-group v-model="type" class="ml-5 mb-3" @change="changtab">
+            <el-radio-button label="recent">全部博文</el-radio-button>
+            <el-radio-button label="recommand">已推荐博文</el-radio-button>
+        </el-radio-group>
         <ul v-if="articlelist.length>0" style="list-style-type:none">
             <li v-for="item in articlelist" :key="item.id">
-                <div class="mt-3 mb-2 d-flex p-1" style="background-color:#ddeeff66">
+                <div class=" mb-2 d-flex p-2" style="background-color:#ddeeff66">
                     <span >推荐标题：<b>{{item.recommend?item.recommend.title:item.postInfo_postID.title}}</b></span>
                     
                     <el-popover v-if="item.recommend"
@@ -34,17 +38,32 @@
                 <article-list-item :data="item"></article-list-item>
             </li>
         </ul>
+        <div class="text-center py-5" v-if="loading"><!-- loader -->
+            <i class="now-ui-icons loader_refresh spin"></i>
+        </div>
+        <p class="text-center py-4" v-if="!noMore && !loading">
+            <el-button type="primary" plain @click="getlist">加载更多内容</el-button>
+        </p>
+        <p class="text-center py-4" v-if="noMore && !loading">没有更多了</p>
     </div>
 </template>
 <script>
 import ArticleListItem from "../../blog/pages/components/Main/ArticleListItem";
 import HaiwaiIcons from "@/components/Icons/Icons";
+import { RadioButton,RadioGroup } from 'element-ui';
 
 export default {
     name:"blog-articles",
     components:{
-        ArticleListItem
+        ArticleListItem,
+        [RadioButton.name]:RadioButton,
+        [RadioGroup.name]:RadioGroup
     },
+  computed:{
+    disabled () {
+      return this.noMore || this.loading
+    }
+  },
     data(){
         var validateTitle =(rule,value,callback)=>{
         if(value===''){
@@ -54,9 +73,12 @@ export default {
         }
       };
         return {
+            type:'recent',
             icon_edit:HaiwaiIcons.icon_edit,
             articlelist:[],
             lastID:0,
+            noMore:false,
+            loading:false,
             titleForm:{title:''},
             rules:{
                 title:[
@@ -66,19 +88,28 @@ export default {
         } 
     },
     mounted() {
-        // this.$store.state.user.admin_article_list(0).then(res=>{
-        //     if(res.status){
-        //         this.articlelist = res.data
-        //         console.log(this.articlelist)
-        //     }
-        // })
         this.getlist()
     },
     methods:{
+        changtab(){
+            this.articlelist =[];
+            this.getlist()
+        },
         async getlist(){
-            let res = await this.$store.state.user.admin_article_list(this.lastID)
-            this.articlelist = res.status?res.data:''
-            console.log(this.articlelist)
+            this.loading = true;
+            let res = await this.$store.state.user.admin_article_list(this.type,this.lastID);
+            this.setList(res);
+        },
+
+        setList(res){
+            this.loading = false;
+            if(res.status){
+                let arr = res.data;
+                this.noMore = arr.length<40 ? true : false;
+                this.lastID = arr.length<40 ? this.lastID : arr[arr.length-1].postID ;
+                this.articlelist = this.articlelist.concat(arr) ;
+                console.log(arr,this.lastID,this.noMore);
+            }
         },
         recommend(item){
             this.$store.state.user.article_recommand_add(item.postID).then(res=>{

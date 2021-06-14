@@ -11,8 +11,8 @@ class User extends API{
     published = {};
     notice={};
     myEditor={};
-    editorObj=[];
-    editorTabStatus=[];
+    // editorObj=[];
+    // editorTabStatus=[];
     /**
      * Login function for example
      * @param {*} email 
@@ -473,8 +473,8 @@ class User extends API{
      * 获取文章列表
      * @param lastID {列表最后一条id，用于分页；缺省为0}
      * */ 
-    async admin_article_list(lastID){
-        return await this.sendget("blog/admin/article_list/?lastID="+lastID);
+    async admin_article_list(type,lastID){
+        return await this.sendget("blog/admin/article_list/?lastID="+lastID+"&type="+type);
     }
 
     /**
@@ -500,6 +500,42 @@ class User extends API{
      * */ 
     async article_recommand_update(postID,title){
         return await this.sendget("blog/admin/article_recommand_update/?postID="+postID+"&title="+title);
+    }
+
+    /**
+     * 管理员查询用户
+     * @param keyword {查询关键字}
+     */
+    async user_search(keyword){
+        return await this.sendget("account/admin/user_search/?keyword="+keyword);
+    }
+
+    /**
+     * 管理员封禁用户
+     * @param userID {用户id}
+     * @param status {0:封禁；1:解封}
+     */
+     async user_delete(userID,status){
+        return await this.sendget("account/admin/user_delete/?userID="+userID+'&status='+status);
+    }
+
+    /**
+     * 管理员查询评论
+     * @param {主贴postID} id 
+     * @param {评论最后一个postID} lastID 
+     */
+    async article_view_comment(id,lastID){
+        return await this.sendget("blog/admin/article_view_comment/?id="+id+"&lastID="+lastID)
+    }
+    
+    /**
+     * 管理员删除/恢复评论
+     * @param {评论的postID} id
+     * @param {0:删除; 1:恢复} visible
+     * @returns 
+     */
+    async admin_reply_delete(id,visible){
+        return await this.sendget("article/admin/reply_delete/?id="+id+"&visible="+visible)
     }
 
 // 公用函数

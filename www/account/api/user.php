@@ -719,7 +719,7 @@ class user extends Api {
                     continue;
                 }
                 if($v==1){
-                    $visible=0;
+                    $visible=1;
                     break;
                 }
             }

@@ -1,6 +1,14 @@
 https://docs.google.com/spreadsheets/d/1gwQAMukqeHd4c8VjvfS5bUGke7yYPwQgoXez1_LOZT8/edit#gid=220659139
 https://docs.google.com/spreadsheets/d/1lgSyIDChfk1zHacQMlKRGh7-GeImpIyPah79WeG5Sjs/edit#gid=0
 
+# 查看ES
+http://34.68.37.98:9200/hwblogger/_doc/79
+
+blogger
+indexing / no_indexing
+category
+tag
+
 # haiwainew
 blog
 

@@ -3,7 +3,6 @@
 set_time_limit(0);
 define( 'DOCUROOT',str_replace("/account/Cron","",dirname( __FILE__ )));
 include DOCUROOT.'/inc.comm.php';
-func_checkCliEnv();
 
 class sync_follower_update{
     function start(){

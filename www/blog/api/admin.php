@@ -14,16 +14,31 @@ class admin extends Api {
     
     /**
      * 每日更新文章
+     * @param string $type | "recent" || "recommand"
      * @param integer $lastID
      */
-    public function article_list($lastID=0){
-        //最新帖子
+    public function article_list($type="recent",$lastID=0){
         $obj_article_indexing=load("article_indexing");
-        $fields=['limit'=>40,'treelevel'=>0,'visible'=>1,'order'=>['postID'=>"DESC"]];
-        if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+        if($type=="recent"){
+            //最新
+            $fields=['limit'=>40,'treelevel'=>0,'order'=>['postID'=>"DESC"]];
+            if(!empty($lastID)){
+                $fields['postID,<']=$lastID;
+            }
+            $rs_article_indexing=$obj_article_indexing->getAll("*",$fields);
         }
-        $rs_article_indexing=$obj_article_indexing->getAll("*",$fields);
+        else if($type=="recommand"){
+            //推荐
+            $obj_blog_recommend=load("blog_recommend");
+            $fields=["limit"=>40,'order'=>['id'=>'DESC']];
+            if(!empty($lastID)){
+                $fields['postID,<']=$lastID;
+            }
+            $rs_article_indexing=$obj_blog_recommend->getAll("*",$fields);
+        }
+        else{
+            return [];
+        }
         
         //标注推荐
         if(!empty($rs_article_indexing)){
@@ -117,6 +132,70 @@ class admin extends Api {
         
     }
     
+    /**
+     * 文章详情页
+     * 文章 评论
+     * @param integer $id | 主贴postID
+     * @param integer $lastID | 评论最后一个postID
+     */
+    public function article_view_comment($id,$lastID=0){
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],['visible'=>1,'postID'=>$id]);
+        if(empty($check_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //评论
+        $fields=[
+            'treelevel,!='=>0,
+            'order'=>['postID'=>'DESC'],
+            'basecode'=>$check_article_indexing['postID'],
+            'limit'=>20,
+        ];
+        
+        if(!empty($lastID)){
+            $fields['postID,<']=$lastID;
+        }
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','visible'],$fields);
+        if(empty($rs_article_indexing)){
+            return $rs_article_indexing;
+        }
+        
+        //补全二层评论
+        foreach($rs_article_indexing as $k=>$v){
+            $basecode_article_indexing[$v['postID']]=$v['postID'];
+        }
+        $rs_article_reply=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','visible'],['treelevel'=>2,'OR'=>['basecode'=>$basecode_article_indexing],'order'=>['postID'=>'DESC']]);
+        if(!empty($rs_article_reply)){
+            //ES补全postID信息
+            $obj_article_noindex=load("search_article_noindex");
+            $rs_article_reply=$obj_article_noindex->get_postInfo($rs_article_reply,'postID',true);
+            
+            //添加用户信息
+            $obj_account_user=load("account_user");
+            $rs_article_reply=$obj_account_user->get_basic_userinfo($rs_article_reply,"userID");
+            
+            //添加计数信息
+            $rs_article_reply=$obj_article_indexing->get_article_count($rs_article_reply);
+            foreach($rs_article_reply as $v){
+                $hash_article_reply[$v['basecode']][]=$v;
+            }
+            foreach($rs_article_indexing as $k=>$v){
+                $rs_article_indexing[$k]['reply']=empty($hash_article_reply[$v['postID']])?[]:$hash_article_reply[$v['postID']];
+            }
+        }
+        
+        //ES补全postID信息
+        $obj_article_noindex=load("search_article_noindex");
+        $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
+        
+        //添加用户信息
+        $obj_account_user=load("account_user");
+        $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
+        
+        //添加计数信息
+        $rs_article_indexing=$obj_article_indexing->get_article_count($rs_article_indexing);
+        
+        return $rs_article_indexing;
+    }
     
     
     

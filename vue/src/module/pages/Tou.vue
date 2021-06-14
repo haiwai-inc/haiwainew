@@ -1,5 +1,5 @@
 <template>
-	<main role="main" class="container">
+	<main class="container">
 	   <div class="row">
 	      <div class="col-md-12 ">
 	         <h3 class="pb-3 mt-4 mb-4 border-bottom">Member Conduct</h3>

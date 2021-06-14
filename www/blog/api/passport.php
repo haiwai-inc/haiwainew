@@ -49,16 +49,17 @@ class passport extends Api {
      * 文学城
      * 目录 修改
      * @param string $token 
+     * @param string $wxc_userID
      * @param string $username
      * @param string $oldname
      * @param string $newname
-     * @post token,username,oldname,newname
+     * @post token,wxc_userID,username,oldname,newname
      */
-    public function wxc_to_haiwai_category_update($token,$username,$oldname,$newname){
+    public function wxc_to_haiwai_category_update($token,$wxc_userID,$username,$oldname,$newname){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
-        $wxc_userID=$obj_memcache->get($token);
-        if(empty($wxc_userID))  {$this->error="未通过验证";$this->status=false;return false;}
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
         
         //验证博客用户
         $obj_account_user_auth=load("account_user_auth");
@@ -83,15 +84,16 @@ class passport extends Api {
      * 文学城
      * 目录 修改
      * @param string $token
+     * @param string $wxc_userID
      * @param string $username
      * @param string $name
-     * @post token,username,name
+     * @post token,wxc_userID,username,name
      */
-    public function wxc_to_haiwai_category_add($token,$username,$name){
+    public function wxc_to_haiwai_category_add($token,$wxc_userID,$username,$name){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
-        $wxc_userID=$obj_memcache->get($token);
-        if(empty($wxc_userID))  {$this->error="未通过验证";$this->status=false;return false;}
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
         
         //验证博客用户
         $obj_account_user_auth=load("account_user_auth");
@@ -115,19 +117,20 @@ class passport extends Api {
      * 文学城
      * 文章 添加
      * @param string $token
+     * @param string $wxc_userID
      * @param string $username
      * @param string $wxc_postID
      * @param string $title
      * @param string $msgbody
      * @param string $category_name
      * @param string $tagname
-     * @post token,username,wxc_postID,title,msgbody,category_name,tagname
+     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,tagname
      */
-    public function wxc_to_haiwai_article_add($token,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
+    public function wxc_to_haiwai_article_add($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
-        $wxc_userID=$obj_memcache->get($token);
-        if(empty($wxc_userID))  {$this->error="未通过验证";$this->status=false;return false;}
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
         
         //验证博客用户
         $obj_account_user_auth=load("account_user_auth");
@@ -211,19 +214,20 @@ class passport extends Api {
      * 文学城
      * 文章 修改
      * @param string $token
+     * @param string $wxc_userID
      * @param string $username
      * @param string $wxc_postID
      * @param string $title
      * @param string $msgbody
      * @param string $category_name
      * @param string $tagname
-     * @post token,username,wxc_postID,title,msgbody,category_name,tagname
+     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,tagname
      */
-    public function wxc_to_haiwai_article_edit($token,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
+    public function wxc_to_haiwai_article_edit($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
-        $wxc_userID=$obj_memcache->get($token);
-        if(empty($wxc_userID))  {$this->error="未通过验证";$this->status=false;return false;}
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
         
         //验证博客用户
         $obj_account_user_auth=load("account_user_auth");

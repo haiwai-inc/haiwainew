@@ -4,7 +4,7 @@ export default [
     
     {
         path:'/backend',
-        name:'admin',
+        name:'backend',
         components:{default: resolve => require (['./AdminIndex.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
     }

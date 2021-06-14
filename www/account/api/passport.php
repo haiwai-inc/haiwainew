@@ -90,16 +90,6 @@ class passport extends Api {
     }
     
     /**
-     * 保存.wenxuecity.com sid
-     * @param integer $userID|文学城用户ID
-     */
-    public function init_wxc_sid($userID){
-        $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("wxc_to_haiwai_login_".$userID,1,86400);
-        return true;
-    }
-    
-    /**
      * 用户登录页
      * 用户 登录 文学城
      * @param integer $login_data|登录信息  用户名
@@ -263,6 +253,27 @@ class passport extends Api {
     }
     
     /**
+     * 用户忘记密码页
+     * 用户 密码 发送 重置
+     * @param string $email|用户邮箱
+     */
+    public function user_password_send_request($email){
+        $obj_account_user=load("account_user");
+        $rs_account_user=$obj_account_user->getOne(['id','username'],['email'=>$email,'status'=>1]);
+        if(empty($rs_account_user))   {$this->error="此用户不存在";$this->status=false;return false;}
+        
+        //设置过期token
+        $obj_memcache = func_initMemcached('cache01');
+        $token=md5(rand(0,1000)+times::gettime());
+        $obj_memcache->set($token,$rs_account_user['id'],3600);
+        
+        //发送email
+        $obj_account_user_email=load("account_user_email");
+        $obj_account_user_email->insert(['function'=>"forgotpwd",'name'=>$rs_account_user['username'],'email'=>$email,'data'=>serialize(['token'=>$token,'id'=>$rs_account_user['id']])]);
+        return true;
+    }
+    
+    /**
      * 用户修改密码页 
      * 用户 密码 重置
      * @param string $password|密码
@@ -286,14 +297,6 @@ class passport extends Api {
         $obj_account_user_login->set_user_session($rs_account_user);
         
         return true;
-    }
-    
-    /**
-     * 用户忘记密码页
-     * 用户 密码 发送 重置
-     */
-    public function user_password_send_request(){
-        
     }
     
     /**
