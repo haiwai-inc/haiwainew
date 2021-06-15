@@ -28,8 +28,8 @@ class tmp{
         $obj_account_user=load("account_user");
         $obj_account_follow=load("account_follow");
         
-        //$bloggerID=17298;
-        $bloggerID=80;
+        $bloggerID=17298;
+        //$bloggerID=80;
         $lastid=0;
         $time=times::gettime();
         while($rs_account_user=$obj_account_user->getAll("*",['status'=>1,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
