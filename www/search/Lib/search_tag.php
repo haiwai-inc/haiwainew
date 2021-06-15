@@ -15,7 +15,7 @@ class search_tag extends Search{
 						"substring_analyzer": {
                             "type":"custom",
                             "tokenizer" :  "ik_max_word",
-						  	"filter": ["lowercase", "substring"],
+						  	"filter": ["lowercase"],
                             "char_filter": ["tsconvert"]
                         },
                         
@@ -30,7 +30,7 @@ class search_tag extends Search{
 						"substring": {
 							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 14
+							"max_gram": 6
                         }
                     },
                     "char_filter": {
