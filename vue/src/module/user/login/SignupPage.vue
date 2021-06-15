@@ -39,7 +39,7 @@
             :visible="signupSuccess"
             :show-close="false"
             center>
-            <p class="text-center">请去您的邮箱 <b>{{userEmail}}</b> 进行确认，以完成注册。</p>
+            <p class="text-center">验证链接已发出，请稍候在您的邮箱 <b>{{userEmail}}</b> 进行确认，以完成注册。</p>
             <span slot="footer" class="dialog-footer">
               <el-button type="primary" @click="closeDialog">知道了</el-button>
             </span>
