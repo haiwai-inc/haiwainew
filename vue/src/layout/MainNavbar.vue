@@ -280,7 +280,8 @@ export default {
       account.logout().then(res=>{
         if(res.status==true){
           this.$store.state.user.userinfo = {};
-          this.$forceUpdate()
+          this.$forceUpdate();
+          this.$router.push("/");
         }
       })
     }
