@@ -8,6 +8,7 @@ class search_blogger extends Search
     public function __construct()
     {
         parent::__construct();
+        /*
         $this->bloggerSet = '
 
 		{
@@ -36,6 +37,76 @@ class search_blogger extends Search
 							"type": "ngram",
 							"min_gram": 1,
 							"max_gram": 14
+						}
+					},
+					"char_filter": {
+						"tsconvert" : {
+							"type" : "stconvert",
+							"delimiter" : "#",
+							"keep_both" : false,
+							"convert_type" : "t2s"
+						}
+					  }
+				}
+			},
+			"mappings": {
+				"properties": {
+				  "bloggerID": {
+					"type": "integer"
+				  },
+				  "userID": {
+					"type": "integer"
+				  },
+				  "username": {
+					"analyzer": "substring_analyzer",
+                    "search_analyzer":"search_sub_analyzer",
+					"boost": 2,
+					"type": "text"
+				  },
+				  "name": {
+					"analyzer": "substring_analyzer",
+					"boost": 2,
+					"type": "text",
+                    "search_analyzer":"search_sub_analyzer"
+				  },
+				  "verified": {
+					"type": "integer"
+				  },
+				  "status":{
+					"type": "integer"
+				  }
+				}
+			  }
+        }';
+        */
+        $this->bloggerSet = '
+
+		{
+			"settings": {
+				"index.number_of_replicas":"2",
+				"index.number_of_shards":"5",
+				"index.max_ngram_diff":"13",
+				"analysis": {
+					"analyzer": {
+						"substring_analyzer": {
+                            "type":"custom",
+                            "tokenizer" :  "ik_max_word",
+						  	"filter": ["lowercase"],
+                            "char_filter": ["tsconvert"]
+                        },
+                        
+                        "search_sub_analyzer": {
+                            "type":"custom",
+                            "tokenizer" :  "ik_smart",
+						  	"filter": ["lowercase", "substring"],
+                            "char_filter": ["tsconvert"]
+                        }
+					},
+					"filter": {
+						"substring": {
+							"type": "ngram",
+							"min_gram": 1,
+							"max_gram": 6
 						}
 					},
 					"char_filter": {
