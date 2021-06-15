@@ -1,7 +1,9 @@
 <?php
 class admin extends Api{
 
-
+    function __construct(){
+        if(!defined("SEARCHADMIN") || empty(SEARCHADMIN)) exit;
+    }
     /**
     * For debug purpose, 
     * 带index文章: indexing, 不带index文章: noindexing
