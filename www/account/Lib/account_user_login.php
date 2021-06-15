@@ -232,7 +232,7 @@ class account_user_login extends Model{
 	    $sid=session_id();
 	    if(empty($check_account_user_login)){
 	        $index="index0";
-	        $this->insert([$index=>$rand,"userID"=>$rs_account_user['id']]);
+	        $this->insert([$index=>$sid,"userID"=>$rs_account_user['id']]);
 	    }else{
 	        if(empty(in_array(session_id(),$check_account_user_login))){
 	            $index="index{$check_account_user_login['pointer']}";

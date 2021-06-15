@@ -157,7 +157,7 @@ export default {
               this.userEmail = this.signupForm.email;
               this.signupSuccess = true;
               this.initForm();
-              this.$router.push("/");
+              // this.$router.push("/");
             }else{
               this.signErr = res.error;
               this.signupForm.submitDisable = true;

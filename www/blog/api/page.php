@@ -39,6 +39,7 @@ class page extends Api {
         $obj_search_article_noindex=load("search_article_noindex");
         
         $fields=[
+	    "is_publish"=>1,
             "limit"=>$limit,
             'order'=>['id'=>'DESC']
         ];
@@ -314,8 +315,9 @@ class page extends Api {
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //未公开
-        //if(empty($_SESSION['id']) || (empty($rs_article_indexing['is_publish']) && $rs_article_indexing['userID']!=$_SESSION['id']))  {$this->error="此文章不存在";$this->status=false;return false;}
-        
+	if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
+
+
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
         $rs_article_indexing=$obj_article_noindex->get_postInfo([$rs_article_indexing],'postID',true);

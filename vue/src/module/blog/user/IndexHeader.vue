@@ -244,16 +244,16 @@ export default {
         },
         follow(){
             if(this.data.userinfo_id.is_following){
-                this.following_delete(this.data.userID)
+                this.following_delete(this.data.id)
             }else{
-                this.following_add(this.data.userID)
+                this.following_add(this.data.id)
             }
         },
-        showBubble(){
+        showBubble(){console.log(this.user.userinfo.UserID,this.data.id)
             var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
             for(let i=0;i<bubbles.length;i++){
                 let type = bubbles[i]
-                if(this.user.userinfo.bubble.user[type]==1){
+                if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.UserID==this.data.id){
                 this.bubbles[type]=true;
                 return
                 }else{

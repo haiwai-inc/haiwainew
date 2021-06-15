@@ -1,6 +1,6 @@
 <template>
   <div class="publisher">
-    <mini-navbar title="发博文"></mini-navbar>
+    <mini-navbar :title="$t('message').editor.page_title"></mini-navbar>
     <div class="container">
     <div class="row editorbox">
       <div class="col-md-9 editor mx-auto col-12" id="editor_container" ref="editorContainer">
@@ -74,21 +74,21 @@
                 <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_editor_category')">知道了</el-button>
               </div>
           <div class="d-flex justify-content-between align-items-center" slot="reference">
-            <span>文章所属目录：</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">+ 新建目录</el-button>
+            <span>{{$t('message').editor.wenji_lable}}</span><el-button type="text" href="javascript:void(0)" @click="openDialog(0)">{{$t('message').editor.wenji_new_btn}}</el-button>
           </div>
         </el-popover>
             <el-select v-if="categoryList.length>0" v-model="curentArticle.categoryID" placeholder="请选择" @change="changeCategory">
               <el-option
                 v-for="item in categoryList"
                 :key="item.id"
-                :label="item.is_publish?item.name:item.name+' (隐)'"
+                :label="item.is_publish?item.name:item.name+$t('message').editor.wenji_title_suffix"
                 :value="item.id">
               </el-option>
             </el-select>
         
         <div class="py-4">
           <div class="mb-2">
-            <span>博文标签：</span>
+            <span>{{$t('message').editor.tag_lable}}</span>
             <!-- <span class="text-muted" style="font-size:0.85rem">（可多选）</span> -->
           </div>
           <el-tag
@@ -105,7 +105,7 @@
             v-if="inputVisible"
             v-model="tag"
             ref="saveTagInput"
-            placeholder="请输入标签"
+            :placeholder="$t('message').editor.tag_placeholder"
             :fetch-suggestions="tagSuggestion"
             @keyup.enter.native="handleInputConfirm"
             @select="handleSelect"
@@ -127,37 +127,37 @@
                4/4
                 <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_editor_tag')">知道了</el-button>
               </div>
-            <el-button slot="reference" round class="button-new-tag"  @click="showInput">+ 添加和内容相关的关键词</el-button>
+            <el-button slot="reference" round class="button-new-tag"  @click="showInput">{{$t('message').editor.tag_btn_add}}</el-button>
           </el-popover>
         </div>
         <div class="pb-3">
-          <span >当前博文可否评论：</span><br>
+          <span>{{$t('message').editor.recommend_lable}}</span><br>
           <el-radio v-model="curentArticle.is_comment" :label="1" @change="watchModify">是</el-radio>
           <el-radio v-model="curentArticle.is_comment" :label="0" @change="watchModify">否</el-radio>
         </div>
         <blog-help></blog-help>
       </div>
       <div class="col-12">
-        <div class="mt-2 text-muted">注：发表博客文章时请不要提供广告信息或不友好信息，本站保留拒绝的权利。</div>
+        <div class="mt-2 text-muted">{{$t('message').editor.notice}}</div>
         <div ref="saveBox" class="m-2" v-if="curentArticle.isDraft">
           <el-button v-if="curentArticle.postID==0" type="primary" round simple @click="publish()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
-            发布文章
+            {{$t('message').editor.btn_publish}}
           </el-button>
           <el-button v-if="curentArticle.postID!==0" type="primary" round simple @click="article_update()" :disabled="flags.publish || curentArticle.postInfo_postID.title==''">
-            发布更新
+            {{$t('message').editor.btn_update}}
           </el-button>
           <el-popconfirm v-if="curentArticle.postID!==0"
             placement="top-end"
-            confirm-button-text="放弃"
-            cancel-button-text='取消'
-            :title="curentArticle.visible==-1?'您还没有发布这篇文章，放弃草稿将彻底删除此文章。是否放弃？':'放弃编辑，将退回到您上次发布此文章的版本！是否放弃？'"
+            :confirm-button-text="$t('message').editor.canceledit_comfirm_btn"
+            cancel-button-text='取 消'
+            :title="curentArticle.visible==-1?'您还没有发布这篇文章，放弃草稿将彻底删除此文章。是否放弃？':$t('message').editor.canceledit_comfirm_title"
             :hide-icon="true"
             @confirm="draft_delete(curentArticle)"
             >
-            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{'放弃编辑'}}</el-button>
+            <el-button class="ml-3" round icon="el-icon-delete" slot="reference">{{$t('message').editor.btn_canceledit}}</el-button>
           </el-popconfirm>
           <el-button v-if="curentArticle.postID==0" round @click="draft_update">
-              保存草稿
+              {{$t('message').editor.draft_btn_save}}
           </el-button>
           <div ref="saving" style="font-size:13px;padding-left:8px;display:inline">
             <span v-if="flags.autosaving" class="text-muted">{{$t('message').editor.autosaving}}</span> 
@@ -165,21 +165,21 @@
           </div>
           <el-popconfirm v-if="curentArticle.postID==0"
             placement="top-end"
-            confirm-button-text="清空"
-            cancel-button-text='取消'
-            :title="'您要清空草稿的标题和内容吗？'"
+            :confirm-button-text="$t('message').editor.wenji_new_ok"
+            :cancel-button-text="$t('message').editor.wenji_new_cancel"
+            :title="$t('message').editor.draft_comfirm_text"
             :hide-icon="true"
             @confirm="draft_refresh()"
             >
             <el-button round type="text"  slot="reference">
-              清空草稿内容
+              {{$t('message').editor.draft_btn_refresh}}
             </el-button>
           </el-popconfirm>
         </div>
       </div>
     </div>
   </div>
-  <el-dialog width="350px" :title="'新建博文目录'" :visible.sync="dialogFormVisible">
+  <el-dialog width="350px" :title="$t('message').editor.wenji_new_title" :visible.sync="dialogFormVisible">
     <el-form :model="categoryForm" :rules="rules" ref="categoryForm">
         <el-form-item label="" prop="name">
             <el-input 
@@ -187,15 +187,15 @@
               autocomplete="off" 
               maxlength="16" 
               show-word-limit 
-              placeholder="输入博文目录名">
+              :placeholder="$t('message').editor.wenji_new_placeholder">
             </el-input>
         </el-form-item>
-        <el-radio v-model="categoryForm.is_publish" :label="1">公开目录</el-radio>
-        <el-radio v-model="categoryForm.is_publish" :label="0">隐藏目录</el-radio>
+        <el-radio v-model="categoryForm.is_publish" :label="1">{{$t('message').editor.wenji_new_radio1}}</el-radio>
+        <el-radio v-model="categoryForm.is_publish" :label="0">{{$t('message').editor.wenji_new_radio2}}</el-radio>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCategory">确 定</el-button>
+        <el-button @click="dialogFormVisible = false">{{$t('message').editor.wenji_new_cancel}}</el-button>
+        <el-button type="primary" @click="addCategory">{{$t('message').editor.wenji_new_ok}}</el-button>
     </div>
   </el-dialog>
     <!-- Publish Modal -->
@@ -216,10 +216,10 @@
           取消
         </n-button>
         <n-button v-if="curentArticle.visible==-1" type="primary" round simple @click="publish()" :disabled="flags.publish">
-          发布
+          {{$t('message').editor.btn_publish}}
         </n-button>
         <n-button v-if="curentArticle.visible!=-1" type="primary" round simple @click="article_update()" :disabled="flags.publish">
-          发布更新
+          {{$t('message').editor.btn_update}}
         </n-button>
       </template>
     </modal>
@@ -299,11 +299,9 @@ export default {
     watchModify(val){
       // this.watchCount+=1;
       if(this.curentArticle.isDraft){
-        console.log("草稿",val)
         this.autoSave()
       };
       if(!this.curentArticle.isDraft){
-        console.log("非草稿",val)
         if(val.level)
           this.draft_add(val.level.content)
         else 
@@ -655,7 +653,7 @@ export default {
     var checkNameSame = (rule, value, callback) =>{
       this.categoryList.forEach(item=>{
         if(item.name === value){
-          return callback(new Error('与现有目录名重复'))
+          return callback(new Error(this.$t('message').editor.wenji_new_error))
         }
       })
       callback()
@@ -709,7 +707,7 @@ export default {
       categoryForm:{name:'',is_publish:1},
       rules:{
         name:[
-          {required: true, message: '请输入目录名称', trigger: 'blur'},
+          {required: true, message: this.$t('message').editor.wenji_new_placeholder, trigger: 'blur'},
           { validator:checkNameSame, trigger: 'blur' }]
       },
       //TinyMCE
