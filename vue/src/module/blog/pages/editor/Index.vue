@@ -318,9 +318,11 @@ export default {
     },
 
     uploadFile(fileType, file, success, failure, progress){
+      document.tinymceEditor.topLevelWindow.block("Uploading file ...");
       if(fileType == 'media'){
         this.loading.media = true;
         blog.uploadMedia(file).then(rs=>{
+          document.tinymceEditor.topLevelWindow.unblock();
           success(rs.data);
           this.loading.media = false;
         }).catch(error=>{
@@ -329,6 +331,7 @@ export default {
       }
       else {
         blog.uploadImage(file).then(rs=>{
+          document.tinymceEditor.topLevelWindow.unblock();
           success(rs.data);
         }).catch(error=>{
 
@@ -749,6 +752,10 @@ export default {
           {title: 'origin', value:'origin-img'}
         ],
         setup: function(editor){
+          document.tinymceEditor = {};
+          editor.on('OpenWindow', function(eventDetails) {
+            document.tinymceEditor.topLevelWindow = eventDetails.dialog;
+          })
           editor.on('change', function(e){
             editoronChange(e);
           })
