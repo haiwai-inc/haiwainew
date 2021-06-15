@@ -33,6 +33,7 @@ class account_user_email extends Model{
             return false;
         }
         
+        $data['domain']=FILE_DOMIAN;
         $this->smartyObj->assign("data",$data);
         $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/register_verified.html");
         $title="海外博客，注册用户";
@@ -47,6 +48,7 @@ class account_user_email extends Model{
             return false;
         }
         
+        $data['domain']=FILE_DOMIAN;
         $this->smartyObj->assign("data",$data);
         $content=$this->smartyObj->fetch(DOCUROOT."/account/Tpl/forgotpwd.html");
         $title="海外博客，忘记密码";

@@ -202,7 +202,7 @@ class passport extends Api {
         $obj_account_user_login=load("account_user_login");
         $obj_account_user_login->set_user_session($rs_account_user);
         
-        go("/profile");
+        go("/blog/follows");
     }
     
     /**
