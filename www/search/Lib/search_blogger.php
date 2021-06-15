@@ -106,7 +106,7 @@ class search_blogger extends Search
 						"substring": {
 							"type": "ngram",
 							"min_gram": 1,
-							"max_gram": 6
+							"max_gram": 14
 						}
 					},
 					"char_filter": {
