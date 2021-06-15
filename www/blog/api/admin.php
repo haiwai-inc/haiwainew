@@ -21,7 +21,7 @@ class admin extends Api {
         $obj_article_indexing=load("article_indexing");
         if($type=="recent"){
             //最新
-            $fields=['limit'=>40,'treelevel'=>0,'order'=>['postID'=>"DESC"]];
+            $fields=['is_publish'=>1,'limit'=>40,'treelevel'=>0,'order'=>['postID'=>"DESC"]];
             if(!empty($lastID)){
                 $fields['postID,<']=$lastID;
             }
@@ -30,7 +30,7 @@ class admin extends Api {
         else if($type=="recommand"){
             //推荐
             $obj_blog_recommend=load("blog_recommend");
-            $fields=["limit"=>40,'order'=>['id'=>'DESC']];
+            $fields=["is_publish"=>1,"limit"=>40,'order'=>['id'=>'DESC']];
             if(!empty($lastID)){
                 $fields['postID,<']=$lastID;
             }
