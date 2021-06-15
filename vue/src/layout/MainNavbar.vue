@@ -107,7 +107,7 @@
         </nav-link>
          <hr class="mb-1 mt-1">
         <nav-link to="/bookmark">
-          <i class="now-ui-icons location_bookmark"></i> {{$t('message').topnav.myfavorite}}
+         <span class="icon" v-html="icons.star_small"></span>{{$t('message').topnav.myfavorite}}
         </nav-link>
         <nav-link to="/notices?id=1">
           <i class="now-ui-icons ui-2_chat-round"></i> {{$t('message').topnav.mycomment}}
@@ -154,6 +154,7 @@
 </template>
 
 <script>
+import icons from "@/components/Icons/Icons";
 import { IconPen } from '@/components/Icons'
 import { ProfileDropDown, DropDown, Navbar, NavLink, Switch, Button, FormGroupInput } from '@/components';
 // import { Popover, } from 'element-ui';
@@ -192,6 +193,7 @@ export default {
   },
   data(){
     return {
+     icons:icons,
       bodyclass:'',
       langswitch: localStorage.lang?localStorage.lang=='cns'?true:false:true,
       keyword: '',
@@ -300,6 +302,10 @@ export default {
 </script>
 
 <style>
+span.icon {
+        margin-right: 5px;
+        height: 27px;
+}
 .el-input__inner{
   border-radius: 20px;
 }
