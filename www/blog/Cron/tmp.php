@@ -34,10 +34,12 @@ class tmp{
         $time=times::gettime();
         while($rs_account_user=$obj_account_user->getAll("*",['status'=>1,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
             foreach($rs_account_user as $v){
+                $lastid=$v['id'];
                 $check_account_follow=$obj_account_follow->getOne("*",['followerID'=>$v['id'],'followingID'=>$bloggerID]);
                 if(empty($check_account_follow)){
                     $obj_account_follow->insert(['followerID'=>$v['id'],'followingID'=>$bloggerID,'follower_update'=>$time,'following_update'=>$time]);
                 }
+                echo $lastid."\n";
             }
         }
     }
