@@ -66,6 +66,7 @@ class blog_blogger extends Model{
 	        }
 			
 	        foreach($rs as $k=>$v){
+				if(empty($hash_blog_blogger[$v[$hashID]])) continue;
 				$item=$hash_blog_blogger[$v[$hashID]];
 	            $item['o_avatar']=$item['background'];
 	            $item['background']=empty($item['background'])?"/img/default_bg.jpg":str_replace("{$v[$hashID]}_background","{$item['id']}_background_750_420",$item['background']);
