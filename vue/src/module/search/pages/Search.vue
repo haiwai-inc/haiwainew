@@ -188,6 +188,7 @@ export default {
   methods: {
     whichActive(id) {
       this.activeId = id;
+      this.$router.push({path:'/search/',query:{keyword:this.$route.query.keyword,tab:id}});
     },
     tagChange(id){
       let idx = this.tags.indexOf(id);
@@ -309,7 +310,7 @@ export default {
   watch:{
     $route(){
       this.keyword = this.$route.query.keyword;
-      // this.activeId = Number(this.$route.query.tab);
+      this.activeId = Number(this.$route.query.tab);
       this.doSearch(this.keyword);
     }
   }

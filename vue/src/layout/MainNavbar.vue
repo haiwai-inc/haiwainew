@@ -257,7 +257,7 @@ export default {
       this.$i18n.locale = localStorage.lang
       this.translatePage()
     },
-    onSubmit(){
+    onSubmit(){console.log(this.select);
       this.doSearch(this.keyword,this.select);
     },
 
