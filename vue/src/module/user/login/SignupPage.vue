@@ -41,7 +41,7 @@
             center>
             <p class="text-center">请去您的邮箱 <b>{{userEmail}}</b> 进行确认，以完成注册。</p>
             <span slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="signupSuccess = false">知道了</el-button>
+              <el-button type="primary" @click="closeDialog">知道了</el-button>
             </span>
           </el-dialog>
           <n-button type="primary" round class="w-100" size="lg"  @click="submitForm('signupForm')" :disabled="signupForm.submitDisable">注册</n-button>
@@ -170,6 +170,10 @@ export default {
         }
       });
     },
+    closeDialog(){
+      this.signupSuccess = false;
+      this.$router.push("/");
+    }
   }
 };
 </script>

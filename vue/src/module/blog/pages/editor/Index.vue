@@ -319,8 +319,10 @@ export default {
 
     uploadFile(fileType, file, success, failure, progress){
       if(fileType == 'media'){
+        this.loading.media = true;
         blog.uploadMedia(file).then(rs=>{
           success(rs.data);
+          this.loading.media = false;
         }).catch(error=>{
           
         })
@@ -690,7 +692,7 @@ export default {
       },
       msgbody:'asd',
       articleList: [],
-      loading: false,
+      loading: {media:false},
       article: {},
       flags:{
         publish:false,

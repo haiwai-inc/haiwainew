@@ -28,8 +28,8 @@
                         <div class="py-2">{{c.postInfo_postID.msgbody}}</div>
                         <div class="d-flex" style="font-size:0.85rem;color:gray">
                             <span class="mr-auto">{{c.create_date*1000 | formatDate}}</span>
-                            <span>{{c.count_buzz}}</span>
-                            <span class="px-3">{{c.count_comment}}</span>
+                            <!-- <span>{{c.count_buzz}}</span>
+                            <span class="px-3">{{c.count_comment}}</span> -->
                             <span>
                                 <el-popconfirm 
                                     placement="top-end"
