@@ -25,7 +25,7 @@ class sync_recommend_post{
             $rs=$obj_blog_legacy_202005_post->getOne("*",['postid'=>$v['postid']],"blog_{$v['date']}_post");
             
             //导入新数据库
-	    $rs['date']=substr($rs['dateline'],0,7); //=========================主贴时间
+	        $rs['date']=substr($rs['dateline'],0,7); //=========================主贴时间
             $rs_import_post=$obj_blog_tool->import_post($rs);
             $check_blog_hot=$obj_blog_recommend->getOne("*",['postID'=>$rs_import_post['article_new']['postID']]);
             if(empty($check_blog_hot)){
@@ -33,8 +33,8 @@ class sync_recommend_post{
                     "postID"=>$rs_import_post['article_new']['postID'],
                     "userID"=>$rs_import_post['user_new']['id'],
                     "title"=>$v['title'],
-                    "is_publish"=>$rs_import_post['article_new']['is_publish'],
-		    "create_date"=>times::getTime(),
+                    "is_publish"=>1,//$rs_import_post['article_new']['is_publish'],
+		            "create_date"=>times::getTime(),
                 ];
                 $obj_blog_recommend->insert($fields);
             }
