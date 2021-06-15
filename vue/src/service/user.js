@@ -104,13 +104,7 @@ class User extends API{
      */
     async blog_register(){
         let res = await this.sendget("blog/passport/blog_register/");
-        if (res.status){
-            this.getUserInfo(this.userinfo.id).then(r=>{
-                if(r.status){
-                    return res
-                }
-            })
-        }
+        return res;
     }
 
     /**
