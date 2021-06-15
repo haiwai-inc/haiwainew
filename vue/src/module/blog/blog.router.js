@@ -24,7 +24,7 @@ export default [
       },{
         path: '/blog/follows',
         name: 'follows',
-        components: { default:resolve => require (['./pages/IndexFollows.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components: { default:resolve => require (['./pages/IndexFollows.vue'],resolve), header: MainNavbar},
       },{
         path: '/blog/p/:id',
         name: 'article',
