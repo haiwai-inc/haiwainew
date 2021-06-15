@@ -16,18 +16,18 @@ export default [
     {
         path: '/blog_register',
         name: 'blog_register',
-        components: { default: resolve => require (['./login/RegistBlog.vue'],resolve), header: MainNavbar, footer: MainFooter },
+        components: { default: resolve => require (['./login/RegistBlog.vue'],resolve), header: MainNavbar},
     },
     {
         path: '/profile',
         name: 'profile',
-        components: { default: resolve => require (['./Profile.vue'],resolve), header: MainNavbar , footer: MainFooter},
+        components: { default: resolve => require (['./Profile.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
     },
     {
         path: '/bookmark',
         name: 'bookmark',
-        components: { default: resolve => require (['./BookMark.vue'],resolve), header: MainNavbar, footer: MainFooter },
+        components: { default: resolve => require (['./BookMark.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
     },
     // {
@@ -38,7 +38,7 @@ export default [
     {
         path:'/notices',
         name:'notices',
-        components:{default: resolve => require (['./notices/Notices.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components:{default: resolve => require (['./notices/Notices.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
     }
 ]

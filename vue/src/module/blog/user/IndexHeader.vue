@@ -2,14 +2,7 @@
     <div class="blog-user-index mb-3 col-sm-12 col-12 " v-if="data.id">
         <div v-show="data.bloggerinfo_bloggerID" class="user-bg d-flex" v-bind:style="{backgroundImage:'url('+data.bloggerinfo_bloggerID.background+')',backgroundSize:'cover'}">
             <div class="user-bgup flex-fill">
-                <el-popover
-    placement="top-start"
-    title="标题"
-    width="200"
-    trigger="hover"
-    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
                 <span class="name" slot="reference">{{data.bloggerinfo_bloggerID.name}}</span>
-                </el-popover>
 
                 <p class="bdescription" v-html="data.bloggerinfo_bloggerID.description"></p>
             </div>

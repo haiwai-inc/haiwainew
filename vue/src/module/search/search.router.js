@@ -7,6 +7,6 @@ export default [
       
         path: '/search',
         name: 'search',
-        components: { default: resolve => require (['./pages/Search.vue'],resolve), header: MainNavbar, footer: MainFooter  },
+        components: { default: resolve => require (['./pages/Search.vue'],resolve), header: MainNavbar},
     },
 ]
