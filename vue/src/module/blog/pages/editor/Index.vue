@@ -320,9 +320,11 @@ export default {
     uploadFile(fileType, file, success, failure, progress){
       document.tinymceEditor.topLevelWindow.block("Uploading file ...");
       if(fileType == 'media'){
+        this.loading.media = true;
         blog.uploadMedia(file).then(rs=>{
           document.tinymceEditor.topLevelWindow.unblock();
           success(rs.data);
+          this.loading.media = false;
         }).catch(error=>{
           
         })
@@ -693,7 +695,7 @@ export default {
       },
       msgbody:'asd',
       articleList: [],
-      loading: false,
+      loading: {media:false},
       article: {},
       flags:{
         publish:false,
