@@ -14,13 +14,13 @@
           v-if="$store.state.user.userinfo.userID==$route.params.id" 
           round
           @click="$router.push('/blog/my/')">
-            <i class="el-icon-notebook-2"></i> 博文管理
+            <i class="el-icon-notebook-2"></i> {{$t('message').userindex.menu_btn_manage}}
         </el-button>
       </div>
        <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
-            <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录" @showbubble="showbubble"></collection-list>
+            <collection-list v-bind:data="collectionList" :userdata="false" :title="$t('message').userindex.menu_title" @showbubble="showbubble"></collection-list>
           </div>
         <blog-help></blog-help>
         </div>
@@ -97,9 +97,9 @@ export default {
         blog.get_user_info(this.userID).then(res=>{
             this.userinfo = res.data;console.log(this.userinfo);
             this.bloggerID = res.data.bloggerID?res.data.bloggerID:0;
+            this.articlelists = [];
+            this.collectionList = [];
             if(this.bloggerID!=0){
-                this.articlelists = [];
-                this.collectionList = [];
                 this.loadArticle();
                 blog.category_list(this.bloggerID).then(res=>{
                     if(res.status){
@@ -171,13 +171,13 @@ export default {
         tabs:[
             {
                 id:0,
-                text:'最新博文',
+                text:this.$t('message').userindex.article_tab0,
             },{
                 id:1,
-                text:'最热博文',
+                text:this.$t('message').userindex.article_tab1,
             },{
                 id:2,
-                text:'新评博文',
+                text:this.$t('message').userindex.article_tab2,
             }
         ],
         authorInfo : {},

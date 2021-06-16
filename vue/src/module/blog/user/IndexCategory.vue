@@ -7,7 +7,7 @@
        <div class="col-sm-3 d-none d-sm-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-1">
-            <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" title="博文目录"></collection-list>
+            <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" :title="$t('message').userindex.menu_title"></collection-list>
           </div>
         </div>
        <div class="col-sm-9 col-12">   
