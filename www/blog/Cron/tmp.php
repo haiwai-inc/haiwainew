@@ -84,8 +84,8 @@ class tmp{
                 $lastid=$v['id'];
                 $check_blog_category=$obj_blog_category->getOne("*",['id'=>$v['categoryID'],'is_default'=>1,'bloggerID'=>$v['bloggerID']]);
                 if(!empty($check_blog_category)){
-                    echo $v['is_publish']."\n";
-                    //$obj_article_indexing->update(['is_publish'=>1],['id'=>$v['id']]);
+                    //echo $v['is_publish']."\n";
+                    $obj_article_indexing->update(['is_publish'=>1],['id'=>$v['id']]);
                 }
                 
                 echo $v['id']."\n";
