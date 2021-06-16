@@ -31,7 +31,13 @@ const cns = {
       notice_menu_funs: "我的粉丝",
       notice_menu_likeme: "我收到的赞",
       index_hot_categorymenu: "其它分类",
-      
+    },
+    userindex:{
+      bubble_iknow:"知道了",
+      name_noregist:"未开通博客",
+      discrib_noregist:"此用户尚未开通博客...",
+      header_funs:"粉丝：",
+      header_readcount:"博客访问："
     },
     article:{
       read_count:"阅读",
@@ -83,7 +89,8 @@ const cns = {
       accout_comfirm_ph:"确认密码",
       accout_pass_btn:"修改密码",
       black_title:"黑名单",
-      black_remove:"从黑名单中移除"
+      black_remove:"从黑名单中移除",
+      blogregist_btn:"开通博客"
     },
     editor:{
       page_title:"发博文",
@@ -122,6 +129,15 @@ const cns = {
       tag_btn_add:"+ 添加和内容相关的关键词",
       tag_placeholder:"请输入标签",
       tag_lable:"博文标签：",
+    },
+    qqh:{
+      modal_title_prefix:"向",
+      modal_title:"发送悄悄话",
+      modal_placeholder:"请输入内容",
+      modal_succese:"发送成功",
+      modal_btn_send:"发 送",
+      modal_btn_cancel:"取 消",
+      btn_send:"发悄悄话"
     }
   },
   ...zhLocale,
