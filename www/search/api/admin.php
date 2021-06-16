@@ -2,7 +2,7 @@
 class admin extends Api{
 
     function __construct(){
-        if(!defined("SEARCHADMIN") || empty(SEARCHADMIN)) exit;
+        // if(!defined("SEARCHADMIN") || empty(SEARCHADMIN)) exit;
     }
     /**
     * For debug purpose, 
