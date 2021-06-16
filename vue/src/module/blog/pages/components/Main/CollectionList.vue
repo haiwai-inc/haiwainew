@@ -13,7 +13,7 @@
         popper-class="bubble"
         trigger="manual"
         >
-        <p>{{user.userinfo.bubble.instruction.blog_home_manage}}</p>
+        <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_manage}}</p>
           <div style="text-align: right; margin: 0">
             1/3
             <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_manage')">{{$t('message').userindex.bubble_iknow}}</el-button>
