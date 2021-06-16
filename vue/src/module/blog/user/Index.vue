@@ -150,7 +150,9 @@ export default {
             let user =this.$store.state.user;
           if(this.token && !user.userinfo.id){
             user.user_login_wxc_to_haiwai(token).then(res=>{
-                console.log(res);
+                user.getUserInfo(this.$route.params.id).then(res=>{
+                    console.log(res)
+                })
             })
           }
       },
