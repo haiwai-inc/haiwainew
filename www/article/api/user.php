@@ -347,13 +347,17 @@ class user extends Api {
         $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode'],['postID'=>$article_data['postID']]);
         if(empty($check_article_indexing)) {$this->error="回复的主帖不存在";$this->status=false;return false;}
         
+        //检查主贴内容
+        $obj_article_post=load("article_post");
+        $main_post_tbn=substr('0'.$check_article_indexing['userID'],-1);
+        $check_article_indexing_post=$obj_article_post->getOne("*",['id'=>$check_article_indexing['postID']],"post_{$main_post_tbn}");
+        
         //查看黑名单
         $obj_account_blacklist=load("account_blacklist");
         $check_account_blacklist=$obj_account_blacklist->getOne(['id'],['userID'=>$check_article_indexing['userID'],'blockID'=>$_SESSION['id']]);
         if(!empty($check_account_blacklist)) {$this->error="此用户已经将您加入黑名单，无法评论";$this->status=false;return false;}
         
         //添加回复 post
-        $obj_article_post=load("article_post");
         $postID=$obj_article_post->get_id();
         $time=times::getTime();
         $fields_indexing=[
@@ -370,7 +374,7 @@ class user extends Api {
         $post_tbn=substr('0'.$_SESSION['id'],-1);
         $fields_post=[
             "id"=>$postID,
-            "title"=>"回复 {$check_article_indexing['postID']}",
+            "title"=>"回复 {$check_article_indexing_post['title']}",
             "msgbody"=>$article_data['msgbody'],
         ];
         $id=$obj_article_post->insert($fields_post,"post_{$post_tbn}");
@@ -429,7 +433,7 @@ class user extends Api {
     public function reply_delete($id){
         //检查修改帖子
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id,'userID'=>$_SESSION['id']]);
+        $check_article_indexing=$obj_article_indexing->getOne(['id','postID','treelevel','userID','basecode','treelevel'],['postID'=>$id]);
         if(empty($check_article_indexing)) {$this->error="删除的帖子不存在";$this->status=false;return false;}
         
         //更新帖子状态
@@ -440,6 +444,10 @@ class user extends Api {
         if($check_main_article_indexing['treelevel']==2){
             $check_main_article_indexing=$obj_article_indexing->getOne(['postID','count_comment','treelevel','userID'],['postID'=>$check_article_indexing['basecode']]);
         }
+        
+        //不是自己的发帖 或 主贴不是自己
+        if($check_article_indexing['userID']!=$_SESSION['id'] || $check_main_article_indexing['userID']!=$_SESSION['id']) {$this->error="删除的帖子没有权限";$this->status=false;return false;}
+        
         $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$id]);
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete-1],['postID'=>$check_article_indexing['basecode']]);
         

@@ -200,6 +200,7 @@ export default {
         this.tags.splice(idx,1);
         obj.classList.remove("activeTag");
       }
+      this.search.tag_articles.data = [];
       this.get_tags_articles(this.tags.length==0?this.tagres:this.tags,0);
     },
     async doSearch(k){
