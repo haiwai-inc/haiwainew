@@ -109,10 +109,10 @@ class User extends API{
 
     /**
      * 文学城用户sso 
-     * @param {文学城token} haiwai_token
+     * @param {文学城token} token
      */
     async user_login_wxc_to_haiwai(token){
-        return await this.sendget("account/passport/user_login_wxc_to_haiwai/?haiwai_token="+token);
+        return await this.sendget("account/passport/user_login_wxc_to_haiwai/?token="+token);
     }
 
     /**

@@ -163,7 +163,7 @@ export default {
         userID:this.$route.params.id,
         bloggerID:0,
         userinfo:{},
-        token:this.$route.query.haiwai_token,
+        token:this.$route.query.token,
         currentTabId:0,
         noMore:false,
         lastID:{article:0,wenji:0},
