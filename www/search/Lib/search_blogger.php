@@ -88,35 +88,23 @@ class search_blogger extends Search
 				"index.max_ngram_diff":"13",
 				"analysis": {
 					"analyzer": {
-						"substring_analyzer": {
-                            "type":"custom",
-                            "tokenizer" :  "ik_max_word",
-						  	"filter": ["lowercase"],
-                            "char_filter": ["tsconvert"]
-                        },
-                        
-                        "search_sub_analyzer": {
-                            "type":"custom",
-                            "tokenizer" :  "ik_smart",
-						  	"filter": ["lowercase", "substring"],
-                            "char_filter": ["tsconvert"]
+                        "ngram_analyzer": {
+                          "tokenizer": "ngram_tokenizer",
+                          "filter":["lowercase"]
                         }
-					},
-					"filter": {
-						"substring": {
-							"type": "ngram",
-							"min_gram": 1,
-							"max_gram": 14
-						}
-					},
-					"char_filter": {
-						"tsconvert" : {
-							"type" : "stconvert",
-							"delimiter" : "#",
-							"keep_both" : false,
-							"convert_type" : "t2s"
-						}
-					  }
+                      },
+                      "tokenizer": {
+                        "ngram_tokenizer": {
+                          "type": "ngram",
+                          "min_gram": 1,
+                          "max_gram": 14,
+                          "token_chars": [
+                            "letter",
+                            "digit",
+                            "symbol"
+                          ]
+                        }
+                      }
 				}
 			},
 			"mappings": {
@@ -128,16 +116,14 @@ class search_blogger extends Search
 					"type": "integer"
 				  },
 				  "username": {
-					"analyzer": "substring_analyzer",
-                    "search_analyzer":"search_sub_analyzer",
+					"analyzer": "ngram_analyzer",
 					"boost": 2,
 					"type": "text"
 				  },
 				  "name": {
-					"analyzer": "substring_analyzer",
+					"analyzer": "ngram_analyzer",
 					"boost": 2,
-					"type": "text",
-                    "search_analyzer":"search_sub_analyzer"
+					"type": "text"
 				  },
 				  "verified": {
 					"type": "integer"

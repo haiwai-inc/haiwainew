@@ -223,7 +223,7 @@ class passport extends Api {
         $obj_memcache->set($token,$check_account_user['id'], 600);
         $obj_account_user_email->insert(['function'=>"register_verified",'name'=>$check_account_user['username'],'email'=>$check_account_user['email'],'data'=>serialize(['id'=>$id,'token'=>$token,'email'=>$check_account_user['email']])]);
         
-        return "认证链接已发送至邮箱: ".$check_account_user['email'];
+        return "认证链接已发出，请您注意查收 ".$check_account_user['email'];
     }
     
     /**
@@ -272,7 +272,7 @@ class passport extends Api {
         //发送email
         $obj_account_user_email=load("account_user_email");
         $obj_account_user_email->insert(['function'=>"forgotpwd",'name'=>$rs_account_user['username'],'email'=>$email,'data'=>serialize(['token'=>$token,'id'=>$rs_account_user['id']])]);
-        return true;
+        return "修改密码链接已发出，请您注意查收";
     }
     
     /**
