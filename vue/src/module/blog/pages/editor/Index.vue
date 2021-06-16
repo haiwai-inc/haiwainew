@@ -575,15 +575,17 @@ export default {
     },
     showBubble(){
       var bubbles=['blog_editor_manage','blog_editor_pic','blog_editor_category','blog_editor_tag'];
-      for(let i=0;i<bubbles.length;i++){
-        let type = bubbles[i]
-        if(this.user.userinfo.bubble.user[type]==1){
-          this.bubbles[type]=true;
-          return
-        }else{
-          this.bubbles[type]=false;
-        }
-      };
+      if(this.user.userinfo.bubble){
+        for(let i=0;i<bubbles.length;i++){
+          let type = bubbles[i]
+          if(this.user.userinfo.bubble.user[type]==1){
+            this.bubbles[type]=true;
+            return
+          }else{
+            this.bubbles[type]=false;
+          }
+        };
+      }
     },
     removeBubble(type){
       this.user.remove_bubble(type).then(res=>{

@@ -75,15 +75,17 @@ export default {
     },
     showBubble(){
       var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
-      for(let i=0;i<bubbles.length;i++){
-        let type = bubbles[i]
-        if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.bloggerID==this.data[0].bloggerID){
-          this.bubbles[type]=true;
-          return
-        }else{
-          this.bubbles[type]=false;
-        }
-      };
+      if(this.user.userinfo.bubble){
+        for(let i=0;i<bubbles.length;i++){
+          let type = bubbles[i]
+          if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.bloggerID==this.data[0].bloggerID){
+            this.bubbles[type]=true;
+            return
+          }else{
+            this.bubbles[type]=false;
+          }
+        };
+      }
     },
     removeBubble(type){
       this.user.remove_bubble(type).then(res=>{
