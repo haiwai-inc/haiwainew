@@ -446,7 +446,8 @@ class user extends Api {
         }
         
         //不是自己的发帖 或 主贴不是自己
-        if($check_article_indexing['userID']!=$_SESSION['id'] || $check_main_article_indexing['userID']!=$_SESSION['id']) {$this->error="删除的帖子没有权限";$this->status=false;return false;}
+        if($check_article_indexing['userID']!=$_SESSION['id'] && $check_main_article_indexing['userID']!=$_SESSION['id']) 
+        {$this->error="删除的帖子没有权限";$this->status=false;return false;}
         
         $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$id]);
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete-1],['postID'=>$check_article_indexing['basecode']]);
