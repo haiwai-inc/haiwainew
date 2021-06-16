@@ -169,6 +169,10 @@ class passport extends Api {
         
         $userID=$obj_account_user->insert($fields);
         
+        //关注官方博客
+        $obj_account_follow=load("account_follow");
+        $obj_account_follow->insert(['followerID'=>$userID,'followingID'=>17298,'following_update'=>$time,'follower_update'=>$time]);
+        
         //发送确认邮件
         $obj_account_user_email=load("account_user_email");
         $time=times::gettime();
