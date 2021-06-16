@@ -37,7 +37,12 @@ const cnt = {
           name_noregist:"未開通博客",
           discrib_noregist:"此用戶尚未開通博客...",
           header_funs:"粉絲：",
-          header_readcount:"博客訪問："
+          header_readcount:"博客訪問：",
+          menu_title:"博文目錄",
+          menu_btn_manage:"博文管理",
+          article_tab0:"最新博文",
+          article_tab1:"最熱博文",
+          article_tab2:"新評博文"
         },
         article:{
           read_count:"閱讀",

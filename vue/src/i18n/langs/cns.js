@@ -37,7 +37,12 @@ const cns = {
       name_noregist:"未开通博客",
       discrib_noregist:"此用户尚未开通博客...",
       header_funs:"粉丝：",
-      header_readcount:"博客访问："
+      header_readcount:"博客访问：",
+      menu_title:"博文目录",
+      menu_btn_manage:"博文管理",
+      article_tab0:"最新博文",
+      article_tab1:"最热博文",
+      article_tab2:"新评博文"
     },
     article:{
       read_count:"阅读",
