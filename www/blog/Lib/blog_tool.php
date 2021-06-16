@@ -112,7 +112,7 @@ class blog_tool{
                 "edit_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
-                'is_publish'=>empty($rs_blog_legacy_blogcat_members['visible'])?0:$rs_blog_legacy_blogcat_members['visible'],
+                'is_publish'=>empty($rs_blog_legacy_blogcat_members['visible'])?1:$rs_blog_legacy_blogcat_members['visible'],
             ];
             $fields_indexing['id']=$this->obj_article_indexing->insert($fields_indexing);
             
