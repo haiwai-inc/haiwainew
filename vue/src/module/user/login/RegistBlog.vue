@@ -11,7 +11,9 @@ export default {
         onSubmit(){
             this.$store.state.user.blog_register().then(res=>{
                 if(res.status){
-                    this.$router.push('/blog/user/'+this.$store.state.user.userinfo.UserID);
+                    this.$store.state.user.getUserInfo(this.$store.state.user.userinfo.UserID).then(res=>{
+                        this.$router.push('/blog/user/'+this.$store.state.user.userinfo.UserID);
+                    })
                 }
             })
         }
