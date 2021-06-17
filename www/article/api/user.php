@@ -157,6 +157,10 @@ class user extends Api {
         $time=times::gettime();
         $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
         
+        //撤销精选
+        $obj_blog_recommend=load("blog_recommend");
+        $obj_blog_recommend->remove(['postID'=>$postID]);
+        
         //同步博客数据
         if($rs_article_indexing['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");

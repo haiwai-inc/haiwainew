@@ -315,7 +315,9 @@ class page extends Api {
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         //已经删除
-        if($_SESSION['UserLevel']!=2 && $rs_article_indexing['visible']==0) {$this->error="此文章已删除";$this->status=false;return false;}
+        if(empty($rs_article_indexing['visible'])){
+            if((!empty($_SESSION) && $_SESSION['UserLevel']!=2) || empty($_SESSION))    {$this->error="此文章已删除";$this->status=false;return false;}
+        }
         
         //未公开
 	    if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
