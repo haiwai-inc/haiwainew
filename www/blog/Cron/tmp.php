@@ -101,7 +101,7 @@ class tmp{
         $obj_article_post=load("article_post");
         
         $lastid=1406117;
-        while($rs_article_indexing_wxc=$obj_article_indexing_wxc->getAll("*",['id,>'=>1406117,'limit'=>20,'order'=>['id'=>'ASC']])){
+        while($rs_article_indexing_wxc=$obj_article_indexing_wxc->getAll("*",['id,>'=>$lastid,'limit'=>20,'order'=>['id'=>'ASC']])){
             foreach($rs_article_indexing_wxc as $v){
                 $lastid=$v['id'];
                 //获取wxc postid
