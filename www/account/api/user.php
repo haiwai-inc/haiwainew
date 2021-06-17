@@ -628,7 +628,7 @@ class user extends Api {
         
         //缓存
         $obj_memcache=func_initMemcached('cache01');
-        $rs=$obj_memcache->get("{$_SESSION['id']}_notification_unread_count");
+        $rs=$obj_memcache->get(FILE_DOMAIN."{$_SESSION['id']}_notification_unread_count");
         
         if(empty($rs)){
             $obj_account_notification=load("account_notification");
@@ -638,7 +638,7 @@ class user extends Api {
             $rs['follow']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'follow'],"notification_".$tbn);
             $rs['buzz']=$obj_account_notification->count(["userID"=>$_SESSION['id'],'is_read'=>0,'type'=>'buzz'],"notification_".$tbn);
             $rs['totall']=$rs['reply']+$rs['qqh']+$rs['follow']+$rs['buzz'];
-            $obj_memcache->set("{$_SESSION['id']}_notification_unread_count",$rs,60);
+            $obj_memcache->set(FILE_DOMAIN."{$_SESSION['id']}_notification_unread_count",$rs,60);
         }
         
         return $rs;
