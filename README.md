@@ -34,6 +34,8 @@ npm run build
 0 */12 * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/generate_hot_blogger.php
 # 生成最热标签
 0 */12 * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/generate_hot_tag.php
+# 生成博客最新文章缓存
+*/1 * * * * root /usr/bin/php /pub/www/haiwainew.com/www/blog/Cron/generate_recent_article.php
 
 # search
 # 同步修改的文章到搜索引擎
