@@ -764,7 +764,7 @@ uploadFileTest(fileType, file, success, failure, progress){
         plugins: [
            'advlist autolink lists link image axupimgs charmap print preview anchor paste',
            'searchreplace visualblocks code fullscreen',
-           'insertdatetime media table paste help wordcount fontsizeselect'
+           'insertdatetime media table paste help wordcount '
          ],
          toolbar_mode:"wrap",
          toolbar:
