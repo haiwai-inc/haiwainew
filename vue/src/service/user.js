@@ -532,6 +532,15 @@ class User extends API{
         return await this.sendget("article/admin/reply_delete/?id="+id+"&visible="+visible)
     }
 
+    /**
+     * 管理员删除/恢复文章
+     * @param {文章的postID} postID
+     * @param {0:删除; 1:恢复} visible
+     * @returns 
+     */
+     async admin_article_delete(postID,visible){
+        return await this.sendget("article/admin/article_delete/?postID="+postID+"&visible="+visible)
+    }
 // 公用函数
     async sendget(url){
         try{
