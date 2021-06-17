@@ -55,7 +55,7 @@ class tmp{
         $obj_account_legacy_user=load("account_legacy_user");
         $lastid=0;
         
-        while($rs_blog_category=$obj_blog_category->getAll("*",['is_default'=>0,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
+        while($rs_blog_category=$obj_blog_category->getAll("*",['bloggerID'=>207,'is_default'=>0,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
             foreach($rs_blog_category as $v){
                 $lastid=$v['id'];
                 
@@ -66,7 +66,12 @@ class tmp{
                 //获取文学成用户信息
                 $rs_blog_legacy_blogcat_members=$obj_blog_legacy_blogcat_members->getOne("*",['category'=>$v['name'],'username'=>$rs_account_user['username']]);
                 if(!empty($rs_blog_legacy_blogcat_members)){
-                    $obj_blog_blogger->update(['is_publish'=>$rs_blog_legacy_blogcat_members['visible']],['id'=>$v['id']]);
+                    
+                    debug::D($v);
+                    debug::d($rs_blog_legacy_blogcat_members);
+                    exit;
+                    
+                    //$obj_blog_blogger->update(['is_publish'=>$rs_blog_legacy_blogcat_members['visible']],['id'=>$v['id']]);
                 }
                 echo $lastid."\n";
             }
