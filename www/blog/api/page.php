@@ -191,7 +191,7 @@ class page extends Api {
         
         //缓存处理
         $obj_memcache=func_initMemcached('cache03');
-        $rs_article_indexing=$obj_memcache->get("blog_recent_article");
+        $rs_article_indexing=$obj_memcache->get(FILE_DOMAIN."blog_recent_article");
         if(!empty($bloggerID) || empty($rs_article_indexing)){
             $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         }else{
