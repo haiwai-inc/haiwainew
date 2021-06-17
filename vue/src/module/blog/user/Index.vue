@@ -140,7 +140,7 @@ export default {
             if(res.status){
                 let arr = res.data;
                 this.noMore = arr.length<30 ? true : false;
-                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
+                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].create_date ;
                 this.articlelists = this.articlelists.concat(arr) ;
                 this.loading.article=false;
                 console.log(arr,this.lastID,this.noMore);
