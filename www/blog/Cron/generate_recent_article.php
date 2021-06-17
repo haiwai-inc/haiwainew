@@ -18,6 +18,7 @@ class generate_recent_article{
         ];
         $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         
+        //最新缓存
         $obj_memcache = func_initMemcached('cache03');
         $obj_memcache->set("blog_recent_article",$rs_article_indexing,3600*24);
     }
