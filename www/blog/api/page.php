@@ -311,12 +311,14 @@ class page extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish','visible'],['postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
+        //已经删除
+        if($_SESSION['UserLevel']!=2 && $rs_article_indexing['visible']==0) {$this->error="此文章已删除";$this->status=false;return false;}
+        
         //未公开
-	if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
-
+	    if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
 
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
