@@ -66,12 +66,7 @@ class tmp{
                 //获取文学成用户信息
                 $rs_blog_legacy_blogcat_members=$obj_blog_legacy_blogcat_members->getOne("*",['category'=>$v['name'],'username'=>$rs_account_user['username']]);
                 if(!empty($rs_blog_legacy_blogcat_members)){
-                    
-                    debug::D($v);
-                    debug::d($rs_blog_legacy_blogcat_members);
-                    exit;
-                    
-                    //$obj_blog_blogger->update(['is_publish'=>$rs_blog_legacy_blogcat_members['visible']],['id'=>$v['id']]);
+                    $obj_blog_category->update(['is_publish'=>$rs_blog_legacy_blogcat_members['visible']],['id'=>$v['id']]);
                 }
                 echo $lastid."\n";
             }
