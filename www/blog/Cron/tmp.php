@@ -126,7 +126,9 @@ class tmp{
                 
                 $post_tbn=substr('0'.$rs_article_indexing['userID'],-1);
                 //$rs_article_post=$obj_article_post->getOne("*",['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
-                $obj_article_post->update(['msgbody'=>$rs_blog_legacy_202005_msg['msgbody']],['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
+                
+                $msgbody=str_replace("/upload/album/","http://cdn.wenxuecity.com/upload/album/",$rs_blog_legacy_202005_msg['msgbody']);
+                $obj_article_post->update(['msgbody'=>$msgbody],['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
                 
                 $postID_legacy_hot_post[]=$rs_article_indexing['postID'];
                 echo $v['id']."\n";
