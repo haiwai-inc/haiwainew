@@ -30,7 +30,10 @@ const cnt = {
             notice_menu_qqh:"我的悄悄話",
             notice_menu_funs:"我的粉絲",
             notice_menu_likeme:"我收到的讚",
-            index_hot_categorymenu: "其它分類"
+            index_hot_categorymenu: "其它分類",
+            btn_regist_now:"立即激活博客",
+            blog_regist_prefix:"請點擊下面按鈕激活您的博客。我們會自動為您生成一個博客名:",
+            blog_regist_suffix:"如果您對這個名字不滿意,可以在“個人設置”中的“博客設置”修改。",
         },
         userindex:{
           bubble_iknow:"知道了",
