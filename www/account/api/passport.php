@@ -17,6 +17,7 @@ class passport extends Api {
     public function login_status($userID=0) {
         $obj_account_user=load("account_user");
         $obj_account_user_login=load("account_user_login");
+        $userID=0;
         
         if(empty($_SESSION['UserID']) || !empty($userID)){
             $rs_account_user=$obj_account_user->getOne("*",['id'=>$userID]);
