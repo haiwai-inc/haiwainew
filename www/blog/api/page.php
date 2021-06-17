@@ -80,7 +80,7 @@ class page extends Api {
      */
     public function hot_blogger(){
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache = $obj_memcache->get("blog_hot_blogger");
+        $rs_memcache = $obj_memcache->get(FILE_DOMAIN."blog_hot_blogger");
         
         if(empty($rs_memcache)){
             $rs=['status'=>false,'msg'=>"",'data'=>""];
@@ -98,7 +98,7 @@ class page extends Api {
      */
     public function hot_tag(){
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache = $obj_memcache->get("blog_hot_tag");
+        $rs_memcache = $obj_memcache->get(FILE_DOMAIN."blog_hot_tag");
         
         if(empty($rs_memcache)){
             $rs=['status'=>false,'msg'=>"",'data'=>""];
@@ -121,7 +121,7 @@ class page extends Api {
         $obj_article_noindex=load("search_article_noindex");
         
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache=$obj_memcache->get("blog_hot_article_{$tagID}");
+        $rs_memcache=$obj_memcache->get(FILE_DOMAIN."blog_hot_article_{$tagID}");
         
         $rs=empty($rs_memcache)?[]:$rs_memcache;
         return $rs;

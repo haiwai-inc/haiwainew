@@ -43,12 +43,12 @@ class generate_hot_tag_article{
         
         //最热标签
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("blog_hot_tag",$rs_article_tag,3600*24);
+        $obj_memcache->set(FILE_DOMAIN."blog_hot_tag",$rs_article_tag,3600*24);
         
         //最热文章
         if(!empty($rs_article_hot)){
             foreach($rs_article_hot as $k=>$v){
-                $obj_memcache->set("blog_hot_article_{$k}",$v,3600*24);
+                $obj_memcache->set(FILE_DOMAIN."blog_hot_article_{$k}",$v,3600*24);
             }
         }
     }
