@@ -31,6 +31,9 @@ const cns = {
       notice_menu_funs: "我的粉丝",
       notice_menu_likeme: "我收到的赞",
       index_hot_categorymenu: "其它分类",
+      btn_regist_now:"立即激活博客",
+      blog_regist_prefix:"请点击下面按钮激活您的博客。我们会自动为您生成一个博客名:",
+      blog_regist_suffix:"如果您对这个名字不满意,可以在“个人设置”中的“博客设置”修改。",
     },
     userindex:{
       bubble_iknow:"知道了",

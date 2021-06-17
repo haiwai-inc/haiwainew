@@ -15,9 +15,9 @@
                 popper-class="bubble"
                 trigger="manual"
                 >
-                    <p>{{user.userinfo.bubble.instruction.blog_home_setting}}</p>
+                    <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_setting}}</p>
                     <div style="text-align: right; margin: 0">
-                        2/3
+                        3/3
                         <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_setting')">{{$t('message').userindex.bubble_iknow}}</el-button>
                     </div>
                     <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm" slot="reference"><span class="d-none d-sm-block">{{$t('message').setting.menu_bolg}}</span><i class="el-icon-setting d-sm-none"></i></n-button>
@@ -76,7 +76,7 @@
                 popper-class="bubble"
                 trigger="manual"
                 >
-                    <p>{{user.userinfo.bubble.instruction.blog_home_profile}}</p>
+                    <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_profile}}</p>
                     <div style="text-align: right; margin: 0">
                         2/3
                         <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_profile')">{{$t('message').userindex.bubble_iknow}}</el-button>
