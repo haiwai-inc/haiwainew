@@ -102,6 +102,7 @@ class tmp{
         
         $lastid=1406117;
         while($rs_article_indexing_wxc=$obj_article_indexing_wxc->getAll("*",['id,>'=>$lastid,'limit'=>20,'order'=>['id'=>'ASC']])){
+            $postID_legacy_hot_post=[];
             foreach($rs_article_indexing_wxc as $v){
                 $lastid=$v['id'];
                 //获取wxc postid
@@ -126,8 +127,14 @@ class tmp{
                 $post_tbn=substr('0'.$rs_article_indexing['userID'],-1);
                 //$rs_article_post=$obj_article_post->getOne("*",['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
                 $obj_article_post->update(['msgbody'=>$rs_blog_legacy_202005_msg['msgbody']],['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
+                
+                $postID_legacy_hot_post[]=$rs_article_indexing['postID'];
                 echo $v['id']."\n";
             }
+            
+            //同步ES索引
+            $obj_article_noindex=load("search_article_noindex");
+            $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
         }
     }
 }
