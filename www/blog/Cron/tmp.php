@@ -55,7 +55,7 @@ class tmp{
         $obj_account_legacy_user=load("account_legacy_user");
         $lastid=0;
         
-        while($rs_blog_category=$obj_blog_category->getAll("*",['bloggerID'=>207,'is_default'=>0,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
+        while($rs_blog_category=$obj_blog_category->getAll("*",['is_default'=>0,'order'=>['id'=>'ASC'],'limit'=>20,'id,>'=>$lastid])){
             foreach($rs_blog_category as $v){
                 $lastid=$v['id'];
                 
