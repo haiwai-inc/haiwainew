@@ -91,10 +91,48 @@ class tmp{
             }
         }
     }
+    
+    //修复5月以后的文章内容
+    function start5(){
+        $obj_article_indexing_wxc=load("article_indexing_wxc");
+        $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
+        $obj_blog_legacy_202005_msg=load("blog_legacy_202005_msg");
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_post=load("article_post");
+        
+        $lastid=1406117;
+        while($rs_article_indexing_wxc=$obj_article_indexing_wxc->getAll("*",['id,>'=>1406117,'limit'=>20,'order'=>['id'=>'ASC']])){
+            foreach($rs_article_indexing_wxc as $v){
+                //获取wxc postid
+                $wxc_postid_array=explode("_",$v['wxc_postid']);
+                $wxc_date_array=explode("-",$wxc_postid_array[0]);
+                $wxc_date=$wxc_date_array[0].$wxc_date_array[1];
+                $wxc_postid=$wxc_postid_array[2];
+                
+                //查询wxc内容
+                $rs_blog_legacy_202005_post=$obj_blog_legacy_202005_post->getOne("*",['treelevel'=>0,'postid'=>$wxc_postid],"blog_{$wxc_date}_post");
+                if(empty($rs_blog_legacy_202005_post)){
+                    continue;
+                }
+                $rs_blog_legacy_202005_msg=$obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs_blog_legacy_202005_post['postid']],"blog_{$wxc_date}_msg");
+                if(empty($rs_blog_legacy_202005_msg)){
+                    continue;
+                }
+                
+                //替换haiwai内容
+                $rs_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$v['postID']]);
+                
+                $post_tbn=substr('0'.$rs_article_indexing['userID'],-1);
+                //$rs_article_post=$obj_article_post->getOne("*",['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
+                $obj_article_post->update(['msgbody'=>$rs_blog_legacy_202005_msg['msgbody']],['id'=>$rs_article_indexing['postID']],"post_{$post_tbn}");
+                echo $v['id']."\n";
+            }
+        }
+    }
 }
 
 $obj = new tmp();
-$obj->start();
+$obj->start5();
 
 
 
