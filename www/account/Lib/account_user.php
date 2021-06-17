@@ -72,7 +72,7 @@ class account_user extends Model{
 	        
 	        //加入名博
 	        $obj_memcache = func_initMemcached('cache01');
-	        $rs_memcache = $obj_memcache->get("blog_hot_blogger");
+	        $rs_memcache = $obj_memcache->get(FILE_DOMAIN."blog_hot_blogger");
 	        $userID_rs_memcache=[];
 	        if(!empty($rs_memcache)){
 	            foreach($rs_memcache as $v){

@@ -13,13 +13,13 @@
         popper-class="bubble"
         trigger="manual"
         >
-        <p>{{user.userinfo.bubble.instruction.blog_home_manage}}</p>
+        <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_manage}}</p>
           <div style="text-align: right; margin: 0">
             1/3
-            <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_manage')">知道了</el-button>
+            <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_manage')">{{$t('message').userindex.bubble_iknow}}</el-button>
           </div>
         <el-button v-if="user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()" slot="reference">
-          <i class="el-icon-notebook-2"></i> 博文管理
+          <i class="el-icon-notebook-2"></i> {{$t('message').userindex.menu_btn_manage}}
         </el-button>
       </el-popover>
       
@@ -75,15 +75,17 @@ export default {
     },
     showBubble(){
       var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
-      for(let i=0;i<bubbles.length;i++){
-        let type = bubbles[i]
-        if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.bloggerID==this.data[0].bloggerID){
-          this.bubbles[type]=true;
-          return
-        }else{
-          this.bubbles[type]=false;
-        }
-      };
+      if(this.user.userinfo.bubble){
+        for(let i=0;i<bubbles.length;i++){
+          let type = bubbles[i]
+          if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.bloggerID==this.data[0].bloggerID){
+            this.bubbles[type]=true;
+            return
+          }else{
+            this.bubbles[type]=false;
+          }
+        };
+      }
     },
     removeBubble(type){
       this.user.remove_bubble(type).then(res=>{

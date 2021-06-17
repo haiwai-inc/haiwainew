@@ -85,6 +85,12 @@ class user extends Api {
         $obj_article_draft=load("article_draft");
         $obj_article_draft->remove(['userID'=>$_SESSION['id'],'postID'=>0]);
         
+        //插入最新缓存
+        $obj_memcache=func_initMemcached('cache03');
+        $rs_memcache=$obj_memcache->get("blog_recent_article");
+        array_unshift($rs_memcache, ["userID"=>$_SESSION['id'],"postID"=>$article_data['postID'],"create_date"=>$time]);
+        $obj_memcache->set(FILE_DOMAIN."blog_recent_article",$rs_memcache,3600*24);
+        
         //显示当前插入信息
         return $article_data['postID'];
     }
@@ -156,6 +162,10 @@ class user extends Api {
         
         $time=times::gettime();
         $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
+        
+        //撤销精选
+        $obj_blog_recommend=load("blog_recommend");
+        $obj_blog_recommend->remove(['postID'=>$postID]);
         
         //同步博客数据
         if($rs_article_indexing['typeID']==1){
@@ -446,7 +456,8 @@ class user extends Api {
         }
         
         //不是自己的发帖 或 主贴不是自己
-        if($check_article_indexing['userID']!=$_SESSION['id'] || $check_main_article_indexing['userID']!=$_SESSION['id']) {$this->error="删除的帖子没有权限";$this->status=false;return false;}
+        if($check_article_indexing['userID']!=$_SESSION['id'] && $check_main_article_indexing['userID']!=$_SESSION['id']) 
+        {$this->error="删除的帖子没有权限";$this->status=false;return false;}
         
         $rs_count_delete=$obj_article_indexing->count(['visible'=>1,'basecode'=>$id]);
         $obj_article_indexing->update(['count_comment'=>$check_main_article_indexing['count_comment']-$rs_count_delete-1],['postID'=>$check_article_indexing['basecode']]);

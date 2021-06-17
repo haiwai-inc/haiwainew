@@ -243,6 +243,7 @@ import tinymce from './tinymce/tinymce.min'
 import 'tinymce/themes/silver'
 import './tinymce/icons/default/icons.js'
 import './tinymce/plugins/image/plugin.js'
+import './tinymce/plugins/axupimgs/plugin.js'
 import './tinymce/plugins/media'
 import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
@@ -314,9 +315,39 @@ export default {
     },
     
     uploadImage(blobInfo, success, failure, progress){
-      this.uploadFile("image", blobInfo.base64(), success, failure, progress);
+      // this.uploadFile("image", blobInfo.base64(), success, failure, progress);
+      this.uploadFileTest("image", blobInfo.blob(), success, failure, progress);
     },
+// 6-17-2021 test
+uploadFileTest(fileType, file, success, failure, progress){
+  console.log(file)
+  var reader = new FileReader();
+  reader.addEventListener("load",function(){
+    var imgurl = reader.result;
+  })
+  var base = reader.readAsDataURL(file);
+  console.log(base)
+      // document.tinymceEditor.topLevelWindow.block("Uploading file ...");
+      // if(fileType == 'media'){
+      //   this.loading.media = true;
+      //   blog.uploadMedia(file).then(rs=>{
+      //     document.tinymceEditor.topLevelWindow.unblock();
+      //     success(rs.data);
+      //     this.loading.media = false;
+      //   }).catch(error=>{
+          
+      //   })
+      // }
+      // else {
+      //   blog.uploadImage(file).then(rs=>{
+      //     document.tinymceEditor.topLevelWindow.unblock();
+      //     success(rs.data);
+      //   }).catch(error=>{
 
+      //   })
+      // }
+    },
+// 6-17-2021 test
     uploadFile(fileType, file, success, failure, progress){
       document.tinymceEditor.topLevelWindow.block("Uploading file ...");
       if(fileType == 'media'){
@@ -731,14 +762,14 @@ export default {
         images_upload_handler: this.uploadImage,
         // language_url : './langs/zh_CN.js',
         plugins: [
-           'advlist autolink lists link image charmap print preview anchor paste',
+           'advlist autolink lists link image axupimgs charmap print preview anchor paste',
            'searchreplace visualblocks code fullscreen',
-           'insertdatetime media table paste help wordcount'
+           'insertdatetime media table paste help wordcount '
          ],
          toolbar_mode:"wrap",
          toolbar:
-           'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
-            image media link file\
+           'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify \
+           image axupimgs media link file\
            formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
         language: lang,
         relative_urls : false,

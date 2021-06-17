@@ -16,7 +16,7 @@ class admin extends Api {
      */
     public function article_delete($postID,$visible){
         $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID]);
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['postID'=>$postID]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
         $time=times::gettime();

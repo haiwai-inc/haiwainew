@@ -31,7 +31,21 @@ const cns = {
       notice_menu_funs: "我的粉丝",
       notice_menu_likeme: "我收到的赞",
       index_hot_categorymenu: "其它分类",
-      
+      btn_regist_now:"立即激活博客",
+      blog_regist_prefix:"请点击下面按钮激活您的博客。我们会自动为您生成一个博客名:",
+      blog_regist_suffix:"如果您对这个名字不满意,可以在“个人设置”中的“博客设置”修改。",
+    },
+    userindex:{
+      bubble_iknow:"知道了",
+      name_noregist:"未开通博客",
+      discrib_noregist:"此用户尚未开通博客...",
+      header_funs:"粉丝：",
+      header_readcount:"博客访问：",
+      menu_title:"博文目录",
+      menu_btn_manage:"博文管理",
+      article_tab0:"最新博文",
+      article_tab1:"最热博文",
+      article_tab2:"新评博文"
     },
     article:{
       read_count:"阅读",
@@ -83,7 +97,8 @@ const cns = {
       accout_comfirm_ph:"确认密码",
       accout_pass_btn:"修改密码",
       black_title:"黑名单",
-      black_remove:"从黑名单中移除"
+      black_remove:"从黑名单中移除",
+      blogregist_btn:"开通博客"
     },
     editor:{
       page_title:"发博文",
@@ -122,6 +137,15 @@ const cns = {
       tag_btn_add:"+ 添加和内容相关的关键词",
       tag_placeholder:"请输入标签",
       tag_lable:"博文标签：",
+    },
+    qqh:{
+      modal_title_prefix:"向",
+      modal_title:"发送悄悄话",
+      modal_placeholder:"请输入内容",
+      modal_succese:"发送成功",
+      modal_btn_send:"发 送",
+      modal_btn_cancel:"取 消",
+      btn_send:"发悄悄话"
     }
   },
   ...zhLocale,

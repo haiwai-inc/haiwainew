@@ -15,14 +15,14 @@
                 popper-class="bubble"
                 trigger="manual"
                 >
-                    <p>{{user.userinfo.bubble.instruction.blog_home_setting}}</p>
+                    <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_setting}}</p>
                     <div style="text-align: right; margin: 0">
-                        2/3
-                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_setting')">知道了</el-button>
+                        3/3
+                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_setting')">{{$t('message').userindex.bubble_iknow}}</el-button>
                     </div>
-                    <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm" slot="reference"><span class="d-none d-sm-block">博客设置</span><i class="el-icon-setting d-sm-none"></i></n-button>
+                    <n-button v-if="data.bloggerID!==0" @click="$router.push('/profile/?id=0')" size="sm" slot="reference"><span class="d-none d-sm-block">{{$t('message').setting.menu_bolg}}</span><i class="el-icon-setting d-sm-none"></i></n-button>
                 </el-popover>
-                <el-button v-if="data.bloggerID==0"  type="primary" @click="$router.push('/blog_register')">开通博客</el-button>
+                <el-button v-if="data.bloggerID==0"  type="primary" @click="$router.push('/blog_register')">{{$t('message').setting.blogregist_btn}}</el-button>
             </div>
         </div>
         
@@ -38,20 +38,22 @@
             </div>
             
             <div class="flex-fill">
-                <span style="color:#39b8eb;font-size:0.8rem" v-if="false"><icon-pen style="width:14px;fill:#39b8eb"></icon-pen>编辑</span>
+                
                <div class="row textgroup">
                 <span class="col-auto mr-2 blog-user-index-des name"><icon-V class="mr-2 text-primary lable" v-if="data.userinfo_id.is_hot_blogger"></icon-V>{{data.userinfo_id.username}}</span>
                 <span class="col-9 blog-user-index-des x">{{data.userinfo_id.description}} </span>
                 </div>
-                <span v-if="data.bloggerID" class="blog-user-index-des">博客访问：{{data.bloggerinfo_bloggerID.count_read}}</span>
-                <span class="blog-user-index-des ml-4">粉丝：{{data.userinfo_id.count_follower}}</span>
+                <span v-if="data.bloggerID" class="blog-user-index-des">
+                    {{$t('message').userindex.header_readcount}}{{data.bloggerinfo_bloggerID.count_read}}</span>
+                <span class="blog-user-index-des ml-4">
+                    {{$t('message').userindex.header_funs}}{{data.userinfo_id.count_follower}}</span>
                 <div class="float-right pr-4 qqh" v-if="data.id!=$store.state.user.userinfo.UserID">
                     <n-button  
                     link 
                     size="sm"
                     @click="openModal()"
                     >
-                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:1rem;">发悄悄话</span>
+                        <icon-mail style="width:25px;fill:#39b8eb"></icon-mail> <span style="color:#39b8eb;font-size:1rem;">{{$t('message').qqh.btn_send}}</span>
                     </n-button>
                     
                     <n-button 
@@ -61,7 +63,7 @@
                     @click="follow"
                     class="editbtn ml-3"
                     >
-                        <icon-plus :style="{fill:'#fff'}"></icon-plus>{{data.userinfo_id.is_following?'已关注':'关注'}}
+                        <icon-plus :style="{fill:'#fff'}"></icon-plus>{{data.userinfo_id.is_following?$t('message').blog.blogger_followed:$t('message').blog.blogger_follow}}
                     </n-button>
                 </div>
             </div>
@@ -74,13 +76,13 @@
                 popper-class="bubble"
                 trigger="manual"
                 >
-                    <p>{{user.userinfo.bubble.instruction.blog_home_profile}}</p>
+                    <p v-if="user.userinfo.bubble">{{user.userinfo.bubble.instruction.blog_home_profile}}</p>
                     <div style="text-align: right; margin: 0">
                         2/3
-                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_profile')">知道了</el-button>
+                        <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_profile')">{{$t('message').userindex.bubble_iknow}}</el-button>
                     </div>
                     <n-button size="sm" @click="$router.push('/profile/?id=1')" slot="reference">
-                        <span class="d-none d-sm-block">账号设置</span>
+                        <span class="d-none d-sm-block">{{$t('message').setting.menu_accout}}</span>
                         <i class="el-icon-setting d-sm-none"></i>
                     </n-button>
                 </el-popover>  
@@ -90,26 +92,26 @@
         
     <!-- Send QQH Modal -->
     <modal :show.sync="modals.sendQqhModal" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up" style="padding-top:5px">向 {{data.userinfo_id.username}} 发送悄悄话</h4>
+      <h4 slot="header" class="title title-up" style="padding-top:5px">{{$t('message').qqh.modal_title_prefix}} {{data.userinfo_id.username}} {{$t('message').qqh.modal_title}}</h4>
       
       <div class="datepicker-container d-flex justify-content-center">
         <el-input
         type="textarea"
-        :rows="2"
-        placeholder="请输入内容"
+        :rows="3"
+        :placeholder="$t('message').qqh.modal_placeholder"
         v-model="modals.qqhMsgbody">
         </el-input>
       </div>
       
       <template slot="footer">
-          <span v-if="modals.modalData" :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.status?'发送成功':modals.modalData.error}}</span>
+          <span v-if="modals.modalData" :class="{'text-success':modals.modalData.status,'text-danger':!modals.modalData.status,}">{{modals.modalData.status?$t('message').qqh.modal_succese:modals.modalData.error}}</span>
         <n-button 
         class="mr-3"
         type="default" 
         link
         @click.native="modals.sendQqhModal = false"
         >
-          取消
+          {{$t('message').qqh.modal_btn_cancel}}
         </n-button>
         <n-button 
         type="primary"
@@ -117,7 +119,7 @@
         simple
         @click.native="sendQqh(data)"
         >
-          发送
+          {{$t('message').qqh.modal_btn_send}}
         </n-button>
       </template>
     </modal>
@@ -126,7 +128,6 @@
 </template>
 <script>
 import {
-    IconPen,
     IconMail,
     IconPlus,
     IconV
@@ -152,7 +153,6 @@ export default {
         }
     },
     components:{
-        IconPen,
         IconMail,
         IconPlus,
         IconV,
@@ -244,15 +244,18 @@ export default {
         },
         showBubble(){console.log(this.user.userinfo.UserID,this.data.id)
             var bubbles=['blog_home_manage','blog_home_profile','blog_home_setting'];
-            for(let i=0;i<bubbles.length;i++){
-                let type = bubbles[i]
-                if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.UserID==this.data.id){
-                this.bubbles[type]=true;
-                return
-                }else{
-                this.bubbles[type]=false;
-                }
-            };
+            if(this.user.userinfo.bubble){
+                for(let i=0;i<bubbles.length;i++){
+                    let type = bubbles[i]
+                    if(this.user.userinfo.bubble.user[type]==1 && this.user.userinfo.UserID==this.data.id){
+                    this.bubbles[type]=true;
+                    return
+                    }else{
+                    this.bubbles[type]=false;
+                    }
+                };
+            }
+            
         },
         removeBubble(type){
             this.user.remove_bubble(type).then(res=>{
@@ -268,8 +271,8 @@ export default {
             user:this.$store.state.user,
             default_blginfo:{
                 background : '/img/default_bg.jpg',
-                name : "未开通博客",
-                description : "此用户尚未开通博客..."},
+                name : this.$t('message').userindex.name_noregist,
+                description : this.$t('message').userindex.discrib_noregist},
             data:this.info,
             modals:{
                 sendQqhModal:false,

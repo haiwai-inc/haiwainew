@@ -14,13 +14,13 @@
           v-if="$store.state.user.userinfo.userID==$route.params.id" 
           round
           @click="$router.push('/blog/my/')">
-            <i class="el-icon-notebook-2"></i> 博文管理
+            <i class="el-icon-notebook-2"></i> {{$t('message').userindex.menu_btn_manage}}
         </el-button>
       </div>
        <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
           <div class="collection-list mt-3" v-if="collectionList.length>0">
-            <collection-list v-bind:data="collectionList" :userdata="false" title="博文目录" @showbubble="showbubble"></collection-list>
+            <collection-list v-bind:data="collectionList" :userdata="false" :title="$t('message').userindex.menu_title" @showbubble="showbubble"></collection-list>
           </div>
         <blog-help></blog-help>
         </div>
@@ -97,9 +97,9 @@ export default {
         blog.get_user_info(this.userID).then(res=>{
             this.userinfo = res.data;console.log(this.userinfo);
             this.bloggerID = res.data.bloggerID?res.data.bloggerID:0;
+            this.articlelists = [];
+            this.collectionList = [];
             if(this.bloggerID!=0){
-                this.articlelists = [];
-                this.collectionList = [];
                 this.loadArticle();
                 blog.category_list(this.bloggerID).then(res=>{
                     if(res.status){
@@ -140,7 +140,7 @@ export default {
             if(res.status){
                 let arr = res.data;
                 this.noMore = arr.length<30 ? true : false;
-                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
+                this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].create_date ;
                 this.articlelists = this.articlelists.concat(arr) ;
                 this.loading.article=false;
                 console.log(arr,this.lastID,this.noMore);
@@ -150,7 +150,9 @@ export default {
             let user =this.$store.state.user;
           if(this.token && !user.userinfo.id){
             user.user_login_wxc_to_haiwai(token).then(res=>{
-                console.log(res);
+                user.getUserInfo(this.$route.params.id).then(res=>{
+                    console.log(res)
+                })
             })
           }
       },
@@ -163,7 +165,7 @@ export default {
         userID:this.$route.params.id,
         bloggerID:0,
         userinfo:{},
-        token:this.$route.query.haiwai_token,
+        token:this.$route.query.token,
         currentTabId:0,
         noMore:false,
         lastID:{article:0,wenji:0},
@@ -171,13 +173,13 @@ export default {
         tabs:[
             {
                 id:0,
-                text:'最新博文',
+                text:this.$t('message').userindex.article_tab0,
             },{
                 id:1,
-                text:'最热博文',
+                text:this.$t('message').userindex.article_tab1,
             },{
                 id:2,
-                text:'新评博文',
+                text:this.$t('message').userindex.article_tab2,
             }
         ],
         authorInfo : {},

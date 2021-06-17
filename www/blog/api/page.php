@@ -80,7 +80,7 @@ class page extends Api {
      */
     public function hot_blogger(){
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache = $obj_memcache->get("blog_hot_blogger");
+        $rs_memcache = $obj_memcache->get(FILE_DOMAIN."blog_hot_blogger");
         
         if(empty($rs_memcache)){
             $rs=['status'=>false,'msg'=>"",'data'=>""];
@@ -98,7 +98,7 @@ class page extends Api {
      */
     public function hot_tag(){
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache = $obj_memcache->get("blog_hot_tag");
+        $rs_memcache = $obj_memcache->get(FILE_DOMAIN."blog_hot_tag");
         
         if(empty($rs_memcache)){
             $rs=['status'=>false,'msg'=>"",'data'=>""];
@@ -121,7 +121,7 @@ class page extends Api {
         $obj_article_noindex=load("search_article_noindex");
         
         $obj_memcache = func_initMemcached('cache01');
-        $rs_memcache=$obj_memcache->get("blog_hot_article_{$tagID}");
+        $rs_memcache=$obj_memcache->get(FILE_DOMAIN."blog_hot_article_{$tagID}");
         
         $rs=empty($rs_memcache)?[]:$rs_memcache;
         return $rs;
@@ -165,13 +165,14 @@ class page extends Api {
      * 文章 列表 最新
      * @param integer $bloggerID
      * @param integer $postID | 排重postID
-     * @param integer $lastID | 最后一个postID
+     * @param integer $lastID | 最后一个create_date
      */
     public function article_list_recent($bloggerID,$postID=0,$lastID=0){
         $obj_blog_blogger=load("blog_blogger");
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'typeID'=>1,
             'is_publish'=>1,
             'treelevel'=>0,
             'visible'=>1,
@@ -179,7 +180,7 @@ class page extends Api {
             'order'=>['create_date'=>'DESC']
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
         if(!empty($bloggerID)){
             $fields['bloggerID']=$bloggerID;
@@ -188,7 +189,27 @@ class page extends Api {
             if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         }
         
-        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
+        //缓存处理
+        $obj_memcache=func_initMemcached('cache03');
+        $rs_article_indexing=$obj_memcache->get(FILE_DOMAIN."blog_recent_article");
+        if(!empty($bloggerID) || empty($rs_article_indexing)){
+            $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
+        }else{
+            $tmp_article_indexing=[];
+            $limit=0;
+            foreach($rs_article_indexing as $k=>$v){
+                if(!empty($lastID) && $v['create_date']>=$lastID){
+                    continue;
+                }else{
+                    $tmp_article_indexing[]=$v;
+                    $limit++;
+                }
+                if($limit==30){
+                    break;
+                }
+            }
+            $rs_article_indexing=$tmp_article_indexing;
+        }
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
@@ -311,12 +332,16 @@ class page extends Api {
     public function article_view($id){
         $obj_article_indexing=load("article_indexing");
         
-        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish'],['visible'=>1,'postID'=>$id]);
+        $rs_article_indexing=$obj_article_indexing->getOne(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel','is_comment','is_publish','visible'],['postID'=>$id]);
         if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
         
+        //已经删除
+        if(empty($rs_article_indexing['visible'])){
+            if((!empty($_SESSION) && $_SESSION['UserLevel']!=2) || empty($_SESSION))    {$this->error="此文章已删除";$this->status=false;return false;}
+        }
+        
         //未公开
-	if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
-
+	    if(empty($rs_article_indexing['is_publish']) && (empty($_SESSION['id']) || (!empty($_SESSION['id']) && $rs_article_indexing['userID']!=$_SESSION['id']))) {$this->error="此文章不存在";$this->status=false;return false;}
 
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");

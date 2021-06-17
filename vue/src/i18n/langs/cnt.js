@@ -30,7 +30,22 @@ const cnt = {
             notice_menu_qqh:"我的悄悄話",
             notice_menu_funs:"我的粉絲",
             notice_menu_likeme:"我收到的讚",
-            index_hot_categorymenu: "其它分類"
+            index_hot_categorymenu: "其它分類",
+            btn_regist_now:"立即激活博客",
+            blog_regist_prefix:"請點擊下面按鈕激活您的博客。我們會自動為您生成一個博客名:",
+            blog_regist_suffix:"如果您對這個名字不滿意,可以在“個人設置”中的“博客設置”修改。",
+        },
+        userindex:{
+          bubble_iknow:"知道了",
+          name_noregist:"未開通博客",
+          discrib_noregist:"此用戶尚未開通博客...",
+          header_funs:"粉絲：",
+          header_readcount:"博客訪問：",
+          menu_title:"博文目錄",
+          menu_btn_manage:"博文管理",
+          article_tab0:"最新博文",
+          article_tab1:"最熱博文",
+          article_tab2:"新評博文"
         },
         article:{
           read_count:"閱讀",
@@ -82,7 +97,8 @@ const cnt = {
             accout_comfirm_ph:"確認密碼",
             accout_pass_btn:"修改密碼",
             black_title:"黑名單",
-            black_remove:"從黑名單中移除"
+            black_remove:"從黑名單中移除",
+            blogregist_btn:"開通博客"
         },
         editor:{
             page_title:"發博文",
@@ -121,6 +137,15 @@ const cnt = {
             tag_btn_add:"+ 添加和內容相關的關鍵詞",
             tag_placeholder:"請輸入標籤",
             tag_lable:"博文標籤：",
+        },
+        qqh:{
+            modal_title_prefix:"向",
+            modal_title:"發送悄悄話",
+            modal_placeholder:"請輸入內容",
+            modal_succese:"發送成功",
+            modal_btn_send:"發 送",
+            modal_btn_cancel:"取 消",
+            btn_send:"發悄悄話"
         }
     },
     ...zhtLocale

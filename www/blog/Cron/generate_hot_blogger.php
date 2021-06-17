@@ -10,7 +10,7 @@ class generate_hot_blogger{
         $this->obj_blog_blogger=load("blog_blogger");
         $rs_blog_blogger=$this->obj_blog_blogger->getAll(['id','userID','count_buzz','count_article','count_comment','count_read','description'],['is_hot'=>1,'status'=>1,'limit'=>200,'order'=>['count_read'=>'DESC']]);
         $obj_memcache = func_initMemcached('cache01');
-        $obj_memcache->set("blog_hot_blogger",$rs_blog_blogger, 3600*24);
+        $obj_memcache->set(FILE_DOMAIN."blog_hot_blogger",$rs_blog_blogger, 3600*24);
     }
 }
 

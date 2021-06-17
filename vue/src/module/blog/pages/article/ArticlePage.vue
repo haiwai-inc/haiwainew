@@ -77,6 +77,17 @@
               >
                 <el-button type="text" icon="el-icon-delete" slot="reference" class="ml-3" style="color:#39b8eb">删除</el-button>
               </el-popconfirm>
+              <el-popconfirm  v-if="$store.state.user.userinfo.UserLevel==2&&articleDetail.data.visible"
+                placement="top-end"
+                :confirm-button-text="$t('message').article.comment_delet"
+                :cancel-button-text="$t('message').article.comment_cancel"
+                :title="$t('message').article.delete_confirm"
+                :hide-icon="true"
+                @confirm="admin_delete(articleDetail.data,0)"
+              >
+                <el-button type="warning" plain icon="el-icon-delete" slot="reference" class="ml-3" >管理員删除</el-button>
+              </el-popconfirm>
+              <el-button v-if="!articleDetail.data.visible" type="text" icon="el-icon-refresh-left" slot="reference" class="ml-3" style="color:#39b8eb" @click="admin_delete(articleDetail.data,1)">管理員恢復</el-button>
             </div>
             <div class="content" v-html="$options.filters.textTrans(articleDetail.data.postInfo_postID.msgbody)">
               <!-- blog 正文 -->
@@ -376,6 +387,13 @@ export default {
       blog.article_delete(item.postID,0).then(res=>{
         if(res.status){
           this.$router.push('/blog/')
+        }
+      })
+    },
+    admin_delete(item,type){
+      this.$store.state.user.admin_article_delete(item.postID,type).then(res=>{
+        if(res.status){
+          item.visible=type;
         }
       })
     },

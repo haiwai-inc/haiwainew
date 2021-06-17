@@ -127,7 +127,7 @@ export default {
       this.selectItem=item;
       this.lastID.article = 0;
       this.articlelists = [];
-      this.getArticleList();
+      item.followingID>=0?this.getArticleList():'';
       this.header_info(item.followingID);
     },
     getFollowing(){
@@ -140,13 +140,17 @@ export default {
       });
     },
     header_info(userID){
-      blog.get_user_info(userID).then(res=>{
+      if(userID>0){
+        blog.get_user_info(userID).then(res=>{
           this.userinfo = res.data;
-      });
+        });
+      }else{
+        this.userinfo.id=userID
+      }
     },
     async getArticleList(){
       this.loading.article=true;
-      let res = await this.user.following_article_list(this.selectItem.followingID,this.lastID.article);
+      let res = this.selectItem.followingID>=0?await this.user.following_article_list(this.selectItem.followingID,this.lastID.article):"";
       let arr = res.data;
       if (res.status){
         this.noMore = arr.length<30 ? true : false;
