@@ -64,18 +64,17 @@ class tmp{
                 $rs_account_user=$obj_account_user->getOne("*",['id'=>$rs_blog_blogger['userID']]);
                 
                 //获取文学成用户信息
-                $rs_blog_legacy_blogcat_members=$obj_blog_legacy_blogcat_members->getAll("*",['username'=>$rs_account_user['username']]);
+                $rs_blog_legacy_blogcat_members=$obj_blog_legacy_blogcat_members->getOne("*",['category'=>$v['name'],'username'=>$rs_account_user['username']]);
                 if(!empty($rs_blog_legacy_blogcat_members)){
-                    debug::d($rs_blog_legacy_blogcat_members);
+                    $obj_blog_blogger->update(['is_publish'=>$rs_blog_legacy_blogcat_members['visible']],['id'=>$v['id']]);
                 }
-                exit;
                 echo $lastid."\n";
             }
         }
     }
     
     //恢复我的隐藏文章
-    function start(){
+    function start4(){
         $obj_article_indexing=load("article_indexing");
         $obj_blog_category=load("blog_category");
         $lastid=0;
@@ -95,7 +94,7 @@ class tmp{
 }
 
 $obj = new tmp();
-$obj->start();
+$obj->start3();
 
 
 
