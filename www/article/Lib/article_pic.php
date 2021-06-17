@@ -8,12 +8,12 @@ class article_pic{
             $file = base64_decode($file);
         }
         $random_num = $this->random_string(10);
-        $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
+        $dir = DOCUROOT."/upload/article/pic/user_upload/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
         if( !is_dir($dir)) files::mkdirs($dir);
         
         while(file_exists($dir."/$random_num.".$ext)){
             $random_num = $this->random_string(10);
-            $dir = DOCUROOT."/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
+            $dir = DOCUROOT."/upload/article/pic/user_upload/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2);
             if( !is_dir($dir)) files::mkdirs($dir);
         }
 
@@ -22,7 +22,7 @@ class article_pic{
     }
 
     public function getFileURL($random_num, $ext){
-        return "/upload/article/pic/blog/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2)."/$random_num.".$ext;
+        return "/upload/article/pic/user_upload/".substr($random_num,-8,-6)."/".substr($random_num,-6,-4)."/".substr($random_num,-4,-2)."/".substr($random_num,-2)."/$random_num.".$ext;
     }
 
     public function save_picture($file){
@@ -41,7 +41,9 @@ class article_pic{
 
     function random_string($length) {
         $key = '';
-        $keys = array_merge(range(0, 9), range('a', 'z'));
+        // $keys = array_merge(range(0, 9), range('a', 'z'));
+
+        $keys = range(0, 9);
     
         for ($i = 0; $i < $length; $i++) {
             $key .= $keys[array_rand($keys)];
