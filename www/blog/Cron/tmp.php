@@ -94,7 +94,7 @@ class tmp{
 }
 
 $obj = new tmp();
-$obj->start3();
+$obj->start();
 
 
 

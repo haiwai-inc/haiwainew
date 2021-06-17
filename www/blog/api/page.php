@@ -165,13 +165,14 @@ class page extends Api {
      * 文章 列表 最新
      * @param integer $bloggerID
      * @param integer $postID | 排重postID
-     * @param integer $lastID | 最后一个postID
+     * @param integer $lastID | 最后一个create_date
      */
     public function article_list_recent($bloggerID,$postID=0,$lastID=0){
         $obj_blog_blogger=load("blog_blogger");
         
         $obj_article_indexing=load("article_indexing");
         $fields=[
+            'typeID'=>1,
             'is_publish'=>1,
             'treelevel'=>0,
             'visible'=>1,
@@ -179,7 +180,7 @@ class page extends Api {
             'order'=>['create_date'=>'DESC']
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
         if(!empty($bloggerID)){
             $fields['bloggerID']=$bloggerID;
@@ -188,7 +189,27 @@ class page extends Api {
             if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         }
         
-        $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
+        //缓存处理
+        $obj_memcache=func_initMemcached('cache03');
+        $rs_article_indexing=$obj_memcache->get("blog_recent_article");
+        if(!empty($bloggerID) || empty($rs_article_indexing)){
+            $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
+        }else{
+            $tmp_article_indexing=[];
+            $limit=0;
+            foreach($rs_article_indexing as $k=>$v){
+                if(!empty($lastID) && $v['create_date']>=$lastID){
+                    continue;
+                }else{
+                    $tmp_article_indexing[]=$v;
+                    $limit++;
+                }
+                if($limit==30){
+                    break;
+                }
+            }
+            $rs_article_indexing=$tmp_article_indexing;
+        }
         
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
