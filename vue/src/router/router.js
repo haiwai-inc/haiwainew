@@ -12,7 +12,7 @@ const routes = [
   },{
     path:'*',
     name:'404',
-    components:{default: resolve => require (['../module/pages/404.vue'],resolve), header: MainNavbar, footer: MainFooter}
+    components:{default: resolve => require (['../module/pages/404.vue'],resolve), header: MainNavbar}
   },
   {
       path: '/privacy',
