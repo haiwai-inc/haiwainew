@@ -51,7 +51,24 @@ class admin extends Api {
         return $rs_account_user;
     }
     
-    
+    /**
+     * 快速登录
+     * 用户 认证
+     */
+    public function login_status($userID=0) {
+        $obj_account_user=load("account_user");
+        $obj_account_user_login=load("account_user_login");
+        
+        $rs_account_user=$obj_account_user->getOne("*",['id'=>$userID]);
+        $_SESSION=$obj_account_user_login->set_user_session($rs_account_user);
+        if(empty($rs_account_user)){
+            $this->error='此用户不存在';
+            $this->status=false;
+            return false;
+        }
+        
+        return $rs_account_user;
+    }
     
     
     
