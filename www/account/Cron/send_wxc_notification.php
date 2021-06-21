@@ -18,7 +18,9 @@ class send_wxc_notification{
                 foreach($rs_account_notification as $v){
                     $lastid=$v['id'];
                     if(empty($send_pool[$v['userID']])){
-                        $send_pool[$v['userID']]=$v['msgbody']."\n";
+                        $send_pool[$v['userID']]="以下是过去一天您在 Haiwai.com 的通知一览，请前往 ".FILE_DOMAIN." 查看详情。
+
+".$v['msgbody']."\n";
                     }else{
                         $send_pool[$v['userID']].=$v['msgbody']."\n";
                     }
@@ -61,7 +63,7 @@ class send_wxc_notification{
                 "username"=>"论坛管理",
                 "userid"=>"356756",
                 "touserid"=>$rs_account_legacy_user['userid'],
-                "title"=>"来自海外名博的消息",
+                "title"=>"来自海外 Haiwai.com 的通知",
                 "dateline"=>$dateline,
                 "size"=>strlen($v),
                 'flag'=>0,
