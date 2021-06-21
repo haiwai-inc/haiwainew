@@ -25,6 +25,17 @@ class page extends Api {
         return $rs_account_user;
     }
     
+    /**
+     * 用户 信息
+     * @param string $name
+     */
+    public function user_info_name($name){
+        $obj_account_user_auth=load("account_user_auth");
+        $rs_account_user=$obj_account_user_auth->getOne(['userID'],['login_source'=>"wxc",'login_data'=>$name]);
+        if(empty($rs_account_user)) {$this->error="用户不存在";$this->status=false;return false;}
+        
+        return $rs_account_user['userID'];
+    }
     
 }
 
