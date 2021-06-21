@@ -53,11 +53,6 @@ class send_wxc_notification{
                 continue;
             }
             
-            //测试用户 sidatesting wxc123456
-            if($rs_account_legacy_user['userid']!="866909"){
-                continue;
-            }
-            
             //插入悄悄话
             $fields=[
                 "username"=>"论坛管理",
