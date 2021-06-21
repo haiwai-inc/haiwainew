@@ -44,7 +44,7 @@ class extract_article_pic{
                         //文学城本站图片
                         if(substr($vv,0,8)=='/upload/'){
                             if(!empty(strpos($vv, '/article/pic/blog/'))){
-                                $image="http://beta.haiwai.com".$vv;
+                                $image=FILE_DOMAIN.$vv;
                             }else{
                                 $image="https://cdn.wenxuecity.com".$vv;
                             }
