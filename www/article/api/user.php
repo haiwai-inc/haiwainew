@@ -88,8 +88,10 @@ class user extends Api {
         //插入最新缓存
         $obj_memcache=func_initMemcached('cache03');
         $rs_memcache=$obj_memcache->get("blog_recent_article");
-        array_unshift($rs_memcache, ["userID"=>$_SESSION['id'],"postID"=>$article_data['postID'],"create_date"=>$time]);
-        $obj_memcache->set(FILE_DOMAIN."blog_recent_article",$rs_memcache,3600*24);
+        if(!empty($rs_memcache)){
+            array_unshift($rs_memcache, ["userID"=>$_SESSION['id'],"postID"=>$article_data['postID'],"create_date"=>$time]);
+            $obj_memcache->set(FILE_DOMAIN."blog_recent_article",$rs_memcache,3600*24);
+        }
         
         //显示当前插入信息
         return $article_data['postID'];
