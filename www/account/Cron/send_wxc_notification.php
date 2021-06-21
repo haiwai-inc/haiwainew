@@ -18,7 +18,7 @@ class send_wxc_notification{
                 foreach($rs_account_notification as $v){
                     $lastid=$v['id'];
                     if(empty($send_pool[$v['userID']])){
-                        $send_pool[$v['userID']]="以下是过去一天您在 Haiwai.com 的通知一览，请前往 ".FILE_DOMAIN." 查看详情。
+                        $send_pool[$v['userID']]="以下是过去一天您在海外网的通知一览，请前往 <a href='".FILE_DOMAIN."/notices?id=0' target='_blank'>Haiwai.com</a> 查看详情。
 
 ".$v['msgbody']."\n";
                     }else{
