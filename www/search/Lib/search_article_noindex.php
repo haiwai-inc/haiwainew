@@ -129,8 +129,9 @@ class search_article_noindex extends Search
 			if(empty($full_msg)){
 				$article_index_obj = load("article_indexing");
 				$posts_body = $article_index_obj -> format_string($posts_body);
-				$posts_body = $article_index_obj -> format_pic($posts_body);
 			}
+			$posts_body = $article_index_obj -> format_pic($posts_body);
+			
 			return $posts_body;
 		}
 		return $posts;
@@ -223,6 +224,7 @@ class search_article_noindex extends Search
             //是否点赞
             $rs[$k]["postInfo_{$hashID}"]['is_buzz']=(!empty($_SESSION['id']) && in_array($_SESSION['id'],$hash_posts[$v[$hashID]]['buzz']))?1:0;
         }
+        
 	    return $rs;
 	}
 
