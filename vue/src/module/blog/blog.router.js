@@ -47,15 +47,15 @@ export default [
       },{
         path: '/blog/user/:id',
         name: 'bloguserindex',
-        components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components: { default:resolve => require (['./user/Index.vue'],resolve), header: MainNavbar},
       },{
         path: '/blog/my',
         name: 'myblog',
-        components: { default:resolve => require (['./user/blog/Index.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components: { default:resolve => require (['./user/blog/Index.vue'],resolve), header: MainNavbar},
         meta:{requiresAuth:true}
       },{
         path: '/blog/c/:bloggerid/:catid',
         name: 'categorindex',
-        components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar, footer: MainFooter},
+        components: { default:resolve => require (['./user/IndexCategory.vue'],resolve), header: MainNavbar},
       }
 ]
