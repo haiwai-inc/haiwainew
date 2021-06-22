@@ -44,7 +44,7 @@ class generate_recent_article{
         
         //最新缓存
         $obj_memcache = func_initMemcached('cache03');
-        $obj_memcache->set(FILE_DOMAIN."blog_recent_article",$rs_article_indexing,3600*24);
+        $obj_memcache->set(FILE_DOMAIN."blog_recent_article",$rs,3600*24);
     }
 }
 
