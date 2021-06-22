@@ -14,7 +14,7 @@ class generate_hot_tag_article{
         $obj_article_noindex=load("search_article_noindex");
         
         //全部文章
-        $rs_article_hot[0]=$obj_article_indexing->getAll(['postID','userID'],['is_publish'=>1,'limit'=>120,'visible'=>1,'order'=>['count_read'=>'DESC']]);
+        $rs_article_hot[0]=$obj_article_indexing->getAll(['postID','userID'],['treelevel'=>0,'is_publish'=>1,'limit'=>60,'visible'=>1,'order'=>['count_read'=>'DESC']]);
         
         //ES补全postID信息
         $rs_article_hot[0]=$obj_article_noindex->get_postInfo($rs_article_hot[0]);
