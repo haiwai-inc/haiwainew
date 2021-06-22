@@ -126,8 +126,8 @@ class search_article_noindex extends Search
 				}
 			}
 			// Remove tags if full_msg is set to false
+			$article_index_obj = load("article_indexing");
 			if(empty($full_msg)){
-				$article_index_obj = load("article_indexing");
 				$posts_body = $article_index_obj -> format_string($posts_body);
 			}
 			$posts_body = $article_index_obj -> format_pic($posts_body);
