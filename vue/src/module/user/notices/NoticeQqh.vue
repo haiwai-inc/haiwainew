@@ -20,7 +20,7 @@
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)">
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)" style="min-width:0;">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
@@ -28,9 +28,9 @@
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
               class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
-            <div class="pl-2">
+            <div class="pl-2" style="min-width:0;">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
-              <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
+              <div class="wrap">{{item.last_messageinfo.msgbody}}</div>
             </div>
 
           </div>
@@ -92,7 +92,7 @@
                 <el-dropdown-item>
                   <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.id:item.userinfo_touserID.id)">加入黑名单</a>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <!-- <el-dropdown-item>
                   <el-popover 
                   placement="bottom-start"
                   width="375" 
@@ -109,7 +109,7 @@
                       >举报</n-button>
                     <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
                   </el-popover>
-                </el-dropdown-item>
+                </el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
 
