@@ -206,7 +206,7 @@ components: {
         ],
         password: [
           { required: true, validator: validatePass, trigger: 'blur' },
-          { min: 6, message: '至少 6 个字符', trigger: 'blur' },
+          // { min: 6, message: '至少 6 个字符', trigger: 'blur' },
         ],
       },
       loginErr:{status:false,msg:''},
