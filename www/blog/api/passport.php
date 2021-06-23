@@ -115,14 +115,15 @@ class passport extends Api {
     
     /**
      * 文学城
-     * 目录 隐藏
+     * 目录 隐藏/显示
      * @param string $token
      * @param string $wxc_userID
      * @param string $username
      * @param string $name
-     * @post token,wxc_userID,username,name
+     * @param string $is_publish
+     * @post token,wxc_userID,username,name,is_publish
      */
-    public function wxc_to_haiwai_category_hide($token,$wxc_userID,$username,$name){
+    public function wxc_to_haiwai_category_publish($token,$wxc_userID,$username,$name,$is_publish){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
         $wxc_userID_cache=$obj_memcache->get($token);
@@ -140,8 +141,8 @@ class passport extends Api {
         $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         if(empty($check_blog_category))    {$this->error="此目录不存在";$this->status=false;return false;}
         
-        //隐藏目录
-        $obj_blog_category->update(['is_publish'=>0],['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        //隐藏/显示目录
+        $obj_blog_category->update(['is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
         return true;
     }
     
