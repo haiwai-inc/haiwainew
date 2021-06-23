@@ -115,6 +115,38 @@ class passport extends Api {
     
     /**
      * 文学城
+     * 目录 隐藏
+     * @param string $token
+     * @param string $wxc_userID
+     * @param string $username
+     * @param string $name
+     * @post token,wxc_userID,username,name
+     */
+    public function wxc_to_haiwai_category_hide($token,$wxc_userID,$username,$name){
+        //验证用户
+        $obj_memcache = func_initMemcached('cache02');
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
+        
+        //验证博客用户
+        $obj_account_user_auth=load("account_user_auth");
+        $rs_account_user_auth=$obj_account_user_auth->getOne(['userID'],['login_data'=>$username,'login_source'=>"wxc"]);
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne(['id'],['userID'=>$rs_account_user_auth['userID']]);
+        if(empty($check_blog_blogger))    {$this->error="博客不存在";$this->status=false;return false;}
+        
+        //验证目录
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        if(empty($check_blog_category))    {$this->error="此目录不存在";$this->status=false;return false;}
+        
+        //隐藏目录
+        $obj_blog_category->update(['is_publish'=>0],['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        return true;
+    }
+    
+    /**
+     * 文学城
      * 文章 添加
      * @param string $token
      * @param string $wxc_userID
