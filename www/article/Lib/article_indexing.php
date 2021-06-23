@@ -4,8 +4,10 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
-    //循环查询archive分表
-    function getAll_list($select,$fields){
+    
+    
+    //archive分表
+    function getAll_archive_list($select,$fields){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
@@ -30,7 +32,8 @@ class article_indexing extends Model
         return $rs_article_indexing;
     }
     
-    function getAll_or($select,$fields){
+    //archive分表
+    function getAll_archive_or($select,$fields){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
@@ -179,7 +182,7 @@ class article_indexing extends Model
             }
             
             //点赞计数，留言计数，阅读计数
-            $rs_article_count=$this->getAll_or(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            $rs_article_count=$this->getAll_archive_or(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
             
             if(!empty($rs_article_count)){
                 foreach($rs_article_count as $v){
