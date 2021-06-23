@@ -562,7 +562,7 @@ class page extends Api {
             'categoryID'=>$id,
             'treelevel'=>0,
             'limit'=>30,
-            "order"=>['id'=>"DESC"],
+            "order"=>['create_date'=>"DESC"],
         ];
         if(!empty($lastID)){
             $fields['postID,<']=$lastID;
