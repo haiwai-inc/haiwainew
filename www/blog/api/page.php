@@ -547,7 +547,7 @@ class page extends Api {
      * 博客主页 
      * 文集 文章列表
      * @param integer $id | 文集ID
-     * @param integer $lastID | 最后文章postID
+     * @param integer $lastID | 最后文章的create_date
      */
     public function category_article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
@@ -561,13 +561,13 @@ class page extends Api {
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
-            'limit'=>30,
+            'limit'=>15,
             "order"=>['create_date'=>"DESC"],
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll_indexing(['postID','treelevel','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");

@@ -4,6 +4,42 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
+    //循环查询archive分表
+    function getAll_indexing($select,$fields){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        $rs_article_indexing=$this->getAll($select,$fields);
+        $limit=$fields['limit'];
+        
+        if(!empty($limit) && count($rs_article_indexing)<$limit){
+            foreach($archive_pool as $k=>$v){
+                $rs_archive=$obj_archive->getAll($select,$fields,"{$k}_indexing");
+                if(!empty($rs_archive)){
+                    $rs_article_indexing=array_merge($rs_article_indexing,$rs_archive);
+                }
+                
+                //达到分页条数后断开
+                $fields['limit']=$limit-count($rs_article_indexing);
+                if($fields['limit']<=0){
+                    break;
+                }
+            }
+        }
+        
+        return $rs_article_indexing;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //根据跟帖，补全主贴信息
     function get_article_info_by_comment($rs_account_notification){
         if(empty($rs_account_notification)){
