@@ -20,7 +20,7 @@ class archive{
         $start_time=strtotime("01/01/".$start_year);
         $end_year=$start_year+1;
         $end_time=strtotime("01/01/".$end_year);
-        $obj_article_archive=load("article_{$start_year}_indexing");
+        $obj_article_archive=load("article_2020_indexing");
         
         //晓青 4287 1346
         while( $rs_article_indexing = $obj_article_indexing->getAll("*",['order'=>['create_date'=>'ASC'],'limit'=>20,'create_date,>'=>$start_time]) ){
@@ -28,7 +28,7 @@ class archive{
                 $start_time=$v['create_date'];
                 
                 unset($v['id']);
-                $obj_article_archive->insert($v);
+                $obj_article_archive->insert($v,"{$start_year}_indexing");
                 
                 echo date("Y-m-d, H-i-s",$start_time)."\n";
             }
