@@ -2,7 +2,7 @@
   <div class="bolger-box">
     <div class="blogger-title d-flex justify-content-between">
       <h5 class="font-weight-bold">{{title}}</h5>
-      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh(Math.ceil(Math.random()*10))"><i class="now-ui-icons arrows-1_refresh-69"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
+      <n-button type="default" link v-bind:style="{paddingRight:0 }" @click="refresh(Math.ceil(Math.random()*10))"><i class="icon" v-html="icons.refresh"></i> {{$t('message').blog.bloggerlist_refresh}}</n-button>
     </div>
     <bloger-list-item 
     v-for="(item,index) in hotBloggerList.data" 
@@ -41,6 +41,7 @@ export default {
   },
   data(){
     return{
+      icons:icons,
       hotBloggerList:{
         currentList:0,
         count:10,
@@ -61,6 +62,10 @@ export default {
   background-color: #f6f9fc;
   border-radius: 16px;
   padding:18px 0;
+}
+.bolger-box .icon svg{
+  width:21px;
+  height:21px;
 }
 .blogger-title{
   padding:0 18px;
