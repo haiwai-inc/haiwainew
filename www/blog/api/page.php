@@ -561,7 +561,7 @@ class page extends Api {
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
-            'limit'=>15,
+            'limit'=>30,
             "order"=>['create_date'=>"DESC"],
         ];
         if(!empty($lastID)){
