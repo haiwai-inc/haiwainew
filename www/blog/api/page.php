@@ -567,7 +567,7 @@ class page extends Api {
         if(!empty($lastID)){
             $fields['create_date,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll_indexing(['postID','treelevel','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll_list(['postID','treelevel','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");

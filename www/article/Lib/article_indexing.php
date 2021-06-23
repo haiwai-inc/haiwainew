@@ -5,7 +5,7 @@ class article_indexing extends Model
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
     //循环查询archive分表
-    function getAll_indexing($select,$fields){
+    function getAll_list($select,$fields){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
@@ -30,15 +30,47 @@ class article_indexing extends Model
         return $rs_article_indexing;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    function getAll_or($select,$fields){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        //解析OR
+        $key=key($fields['OR']);
+        $id_rs=array_pop($fields['OR']);
+        if(empty($id_rs)){
+            return [];
+        }
+        
+        //生成select
+        if($select=="*"){
+            $select_sql="SELECT * ";
+        }else{
+            foreach($select as $v){
+                if(empty($select_sql)){
+                    $select_sql="SELECT {$v}";
+                }else{
+                    $select_sql.=",{$v} ";
+                }
+            }
+        }
+        
+        //生成where
+        foreach($id_rs as $v){
+            if(empty($where_sql)){
+                $where_sql="WHERE {$key}={$v} ";
+            }else{
+                $where_sql.="or {$key}={$v} ";
+            }
+        }
+        
+        //组合全部sql
+        $sql=$select_sql."FROM indexing ".$where_sql;
+        foreach($archive_pool as $k=>$v){
+            $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
+        }
+        $rs_article_count=$this->getAll($sql);
+        return $rs_article_count;
+    }
     
     //根据跟帖，补全主贴信息
     function get_article_info_by_comment($rs_account_notification){
@@ -147,7 +179,8 @@ class article_indexing extends Model
             }
             
             //点赞计数，留言计数，阅读计数
-            $rs_article_count=$this->getAll(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            $rs_article_count=$this->getAll_or(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            
             if(!empty($rs_article_count)){
                 foreach($rs_article_count as $v){
                     $hash_article_count[$v['postID']]=$v;
