@@ -40,10 +40,13 @@
             <!-- <avatar :data="item.userinfo_from_userID" :imgHeight="48"></avatar> -->
             <div class="pl-2">
               <!-- <span class="name">{{item.userinfo_from_userID.username}}</span> -->
-              <span class="wrap">{{item.msgbody}}</span>
+              <p class="wrap">{{item.msgbody}}</p>
+              <span class="date">{{item.create_date*1000 | formatDate}}</span>
             </div>
 
           </div>
+          <p class="text-center py-4" style="cursor:pointer" v-if="!noMore" @click="showAllNotice">加载更多消息</p>
+          <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
         <div v-if="activeId === 1">
           <notice-comment></notice-comment>
@@ -80,6 +83,7 @@ import NoticeQqh from "./NoticeQqh";
 // import Avatar from "../../blog/pages/components/Main/Avatar";
 import NoticeLike from './NoticeLike.vue';
 import icons from "@/components/Icons/Icons";
+import {formatDate} from '@/directives/formatDate.js';
 // import {DropDown} from "@/components"
 /** 测试数据
   * 用户17登录
@@ -102,6 +106,8 @@ export default {
       user:this.$store.state.user,
       activeId: 0,
       allNoticeList:[],
+      allNoticeLastid:0,
+      noMore:false,
       counts:{},
       data: [
         {
@@ -187,10 +193,12 @@ export default {
       console.log(n);
     },
     async showAllNotice(){
-      let v = await this.user.notification_list(0);
+      let v = await this.user.notification_list(this.allNoticeLastid);
       if(v.status){
-        this.allNoticeList = v.data;
-        console.log(this.allNoticeList)
+        this.allNoticeList = this.allNoticeList.concat(v.data);
+        this.allNoticeLastid = v.data.length==30?v.data[29].id:this.allNoticeLastid;
+        this.noMore = v.data.length==30?false:true;
+        console.log(this.allNoticeList,v.data.length)
       }
     },
     gotoDetail(e){
@@ -204,12 +212,25 @@ export default {
       if(e.type=="buzz")this.activeId=4;
     }
   },
+  filters: {
+    formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
+  }
 };
 </script>
 <style>
 .noticeItem{
-  padding: 1rem;
+  padding: 0.65rem 1rem;
   border-bottom: aliceblue 1px solid;
+}
+.noticeItem .wrap{
+  margin-bottom:0px;
+}
+.noticeItem .date{
+  color:gray;
+  font-size:0.85rem;
 }
 #avatar .avatar-word{
     border-radius: 50%;

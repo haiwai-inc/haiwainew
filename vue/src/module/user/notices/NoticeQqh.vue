@@ -135,16 +135,16 @@
             的对话
           </b>
         </div>
-        <div class="col-1 d-flex justify-content-end">
-          <!-- <drop-down
+       <!--  <div class="col-1 d-flex justify-content-end">
+          <drop-down
           class="nav-item dropdown"
           :haiwaiIcon="iconmore3v"
           haiwaiClass="haiwaiicon"
           style="padding:0;"
           >
             <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(touser.id)">加入黑名单</a>
-          </drop-down> -->
-        </div>
+          </drop-down> 
+        </div>-->
       </div>
       <div class="message-show">
         <ul class="message-list">
