@@ -12,8 +12,6 @@ class archive{
         }
         
         $obj_article_indexing=load("article_indexing");
-        $this->obj_article_post=load("article_post");
-        $this->obj_account_user=load("account_user");
         
         //GMT时间
         date_default_timezone_set('GMT');
@@ -23,18 +21,17 @@ class archive{
         $obj_article_archive=load("article_2020_indexing");
         
         //晓青 4287 1346
-        while( $rs_article_indexing = $obj_article_indexing->getAll("*",['order'=>['create_date'=>'ASC'],'limit'=>20,'create_date,>'=>$start_time]) ){
+        while( $rs_article_indexing = $obj_article_indexing->getAll("*",['order'=>['create_date'=>'ASC'],'limit'=>20,'SQL'=>"create_date >= {$start_time} and create_date < {$end_time}"]) ){
+            
             foreach($rs_article_indexing as $k=>$v){
                 $start_time=$v['create_date'];
-                
-                unset($v['id']);
-                $obj_article_archive->insert($v,"{$start_year}_indexing");
-                
+                $check_postID=$obj_article_archive->getOne(['postID'],['postID'=>$v['postID']],"{$start_year}_indexing");
+                //拍重处理
+                if(!empty($check_postID)){
+                    unset($v['id']);
+                    $obj_article_archive->insert($v,"{$start_year}_indexing");
+                }
                 echo date("Y-m-d, H-i-s",$start_time)."\n";
-            }
-            
-            if($v['create_date']>$end_time){
-                break;
             }
         }
     }
