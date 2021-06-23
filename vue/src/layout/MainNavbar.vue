@@ -59,7 +59,7 @@
       </div>
       <drop-down v-if="!($route.path.indexOf('/blog/p/'))"
         class="nav-item dropdown"
-        icon="now-ui-icons text_caps-small"
+        :haiwaiIcon="icons.font_resize"
         style="margin-top:3px;"
       >
         <a class="dropdown-item" href="#" @click="setFontSize(0)">小</a>
@@ -76,7 +76,7 @@
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
         <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="10" class="badge-item">
-          <nav-link
+          <router-link
             class="nav-link"
             style="margin-top:3px;z-index:1000"
             rel="tooltip"
@@ -85,12 +85,12 @@
             to="/notices?id=0"
             >
             <!-- <div class="noticealert" v-if="$store.state.user.notice.totall"></div> -->
-            <i class="now-ui-icons ui-1_bell-53"></i>
+            <i v-html="icons.notice" style="fill:#6a6a6a"></i>
             <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
-          </nav-link> 
+          </router-link> 
         </el-badge>
       </li>
-      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><nav-link to="/login">{{$t('message').topnav.login}}</nav-link></div>
+      <div class="mx-2" style="padding-top:10px" v-if="!$store.state.user.userinfo.id"><router-link to="/login">{{$t('message').topnav.login}}</router-link></div>
       <profile-drop-down
         v-if="$store.state.user.userinfo.id"
               tag="li"
@@ -99,35 +99,35 @@
               :avatarurl="$store.state.user.userinfo.userinfo_id.avatar"
               class="nav-item">
         <nav-link to="/backend" v-if="$store.state.user.userinfo.UserLevel==2">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.admin}}
+          <i class="el-icon-setting"></i> {{$t('message').topnav.admin}}
         </nav-link>
         <hr class="mb-1 mt-1" v-if="$store.state.user.userinfo.UserLevel==2">
         <nav-link :to="'/blog/user/'+$store.state.user.userinfo.UserID">
-          <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myindex}}
+          <i class="icon" v-html="icons.user" style="top:-2px"></i> {{$t('message').topnav.myindex}}
         </nav-link>
          <hr class="mb-1 mt-1">
         <nav-link to="/bookmark">
          <span class="icon" v-html="icons.star_small"></span>{{$t('message').topnav.myfavorite}}
         </nav-link>
         <nav-link to="/notices?id=1">
-          <i class="now-ui-icons ui-2_chat-round"></i> {{$t('message').topnav.mycomment}}
+          <i v-html="icons.message" class="icon"></i> {{$t('message').topnav.mycomment}}
         </nav-link>
         <nav-link to="/notices?id=2">
-          <i class="now-ui-icons ui-1_email-85"></i> {{$t('message').topnav.myqqh}}
+          <i v-html="icons.mail" class="icon" style="top:-1px"></i> {{$t('message').topnav.myqqh}}
         </nav-link>
          <nav-link to="/notices?id=3">
-          <i class="now-ui-icons users_single-02"></i> {{$t('message').topnav.myfuns}}
+          <i class="icon" v-html="icons.follower"></i> {{$t('message').topnav.myfuns}}
         </nav-link>
          <nav-link to="/notices?id=4">
-          <i class="now-ui-icons ui-2_favourite-28"></i> {{$t('message').topnav.likeme}}
+          <i class="icon" v-html="icons.like_outline" style="stroke:#6a6a6a"></i> {{$t('message').topnav.likeme}}
         </nav-link>
         <hr class="mb-2 mt-1">
         <nav-link to="/profile/?id=1">
-          <i class="now-ui-icons ui-1_settings-gear-63"></i> {{$t('message').topnav.profile}}
+          <i class="el-icon-setting"></i> {{$t('message').topnav.profile}}
         </nav-link>
         <hr class="mb-1 mt-1">
         <a href="javascript:void(0)" @click="logout" class="dropdown-item">
-          <i class="now-ui-icons arrows-1_share-66" style="transform: rotate(-90deg);"></i> {{$t('message').topnav.logout}}
+          <i class="icon" v-html="icons.exit" style="top:-1px"></i> {{$t('message').topnav.logout}}
         </a>
         
       </profile-drop-down>
@@ -354,6 +354,10 @@ span.icon {
 }
 .editbtn{
    white-space: nowrap;
+}
+.nav-item .icon svg{
+  width:18px;
+  height:18px;
 }
 @media (max-width: 575.98px) { 
   .editbtn{
