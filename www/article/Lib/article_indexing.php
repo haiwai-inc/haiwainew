@@ -27,68 +27,63 @@ class article_indexing extends Model
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
-        $rs_article_indexing=parent::getAll($condition,$where);
-        $limit=$where['limit'];
-        
-        if(!empty($limit) && count($rs_article_indexing)<$limit){
-            foreach($archive_pool as $k=>$v){
-                $rs_archive=$obj_archive->getAll($condition,$where,"{$k}_indexing");
-                if(!empty($rs_archive)){
-                    $rs_article_indexing=array_merge($rs_article_indexing,$rs_archive);
-                }
-                
-                //达到分页条数后断开
-                $where['limit']=$limit-count($rs_article_indexing);
-                if($where['limit']<=0){
-                    break;
+        $rs_article_indexing=[];
+        if(!empty($where) && !array_key_exists('OR',$where)){
+            //list查询
+            $rs_article_indexing=parent::getAll($condition,$where);
+            $limit=$where['limit'];
+            if(!empty($limit) && count($rs_article_indexing)<$limit){
+                foreach($archive_pool as $k=>$v){
+                    $rs_archive=$obj_archive->getAll($condition,$where,"{$k}_indexing");
+                    if(!empty($rs_archive)){
+                        $rs_article_indexing=array_merge($rs_article_indexing,$rs_archive);
+                    }
+                    
+                    //达到分页条数后断开
+                    $where['limit']=$limit-count($rs_article_indexing);
+                    if($where['limit']<=0){
+                        break;
+                    }
                 }
             }
-        }
-        
-        return $rs_article_indexing;
-    }
-    
-    //archive分表
-    function getAll_archive_or($select,$fields){
-        $obj_archive=load("article_2020_indexing");
-        $archive_pool=conf("article.archive_maping");
-        
-        //解析OR
-        $key=key($fields['OR']);
-        $id_rs=array_pop($fields['OR']);
-        if(empty($id_rs)){
-            return [];
-        }
-        
-        //生成select
-        if($select=="*"){
-            $select_sql="SELECT * ";
         }else{
-            foreach($select as $v){
-                if(empty($select_sql)){
-                    $select_sql="SELECT {$v}";
-                }else{
-                    $select_sql.=",{$v} ";
+            //解析OR
+            $key=key($where['OR']);
+            $id_rs=array_pop($where['OR']);
+            if(empty($id_rs)){
+                return [];
+            }
+            
+            //生成select
+            if($condition=="*"){
+                $select_sql="SELECT * ";
+            }else{
+                foreach($condition as $v){
+                    if(empty($select_sql)){
+                        $select_sql="SELECT {$v}";
+                    }else{
+                        $select_sql.=",{$v} ";
+                    }
                 }
             }
-        }
-        
-        //生成where
-        foreach($id_rs as $v){
-            if(empty($where_sql)){
-                $where_sql="WHERE {$key}={$v} ";
-            }else{
-                $where_sql.="or {$key}={$v} ";
+            
+            //生成where
+            foreach($id_rs as $v){
+                if(empty($where_sql)){
+                    $where_sql="WHERE {$key}={$v} ";
+                }else{
+                    $where_sql.="or {$key}={$v} ";
+                }
             }
+            
+            //组合全部sql
+            $sql=$select_sql."FROM indexing ".$where_sql;
+            foreach($archive_pool as $k=>$v){
+                $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
+            }
+            $rs_article_indexing=parent::getAll($sql);
         }
-        
-        //组合全部sql
-        $sql=$select_sql."FROM indexing ".$where_sql;
-        foreach($archive_pool as $k=>$v){
-            $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
-        }
-        $rs_article_count=$this->getAll($sql);
-        return $rs_article_count;
+        return $rs_article_indexing;
     }
     
     //根据跟帖，补全主贴信息
@@ -198,7 +193,7 @@ class article_indexing extends Model
             }
             
             //点赞计数，留言计数，阅读计数
-            $rs_article_count=$this->getAll_archive_or(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            $rs_article_count=$this->getAll(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
             
             if(!empty($rs_article_count)){
                 foreach($rs_article_count as $v){
