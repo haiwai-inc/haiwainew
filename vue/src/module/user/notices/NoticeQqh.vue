@@ -232,6 +232,7 @@ export default {
     $route(){console.log(this.qqhView.lastID);
       this.typeid = Number(this.$route.query.typeid);
       this.qqhView.lastID=0;
+      this.qqhView.data = [];
       if(this.typeid){
         this.getUserInfo();
         this.qqh_list().then(res=>{
