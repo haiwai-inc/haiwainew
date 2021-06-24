@@ -299,12 +299,10 @@ export default {
     },
     flex_bottom(){
       var ele = document.getElementById("showbox");
-      ele.style.opacity = 1;
-      //判断元素是否出现了滚动条
       if(ele.scrollHeight > ele.clientHeight) {
-        //设置滚动条到最底部
         ele.scrollTop = ele.scrollHeight;
       }
+      ele.style.opacity = 1;
     },
     showQqhView(item){
       console.log(item)
