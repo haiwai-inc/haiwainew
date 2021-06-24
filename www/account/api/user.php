@@ -322,7 +322,7 @@ class user extends Api {
         $where_account_qqh_post=[
             'limit'=>20,
             'SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",
-            'order'=>["last_message_dateline"=>'DESC']
+            'order'=>["last_messageID"=>'DESC']
         ];
         if(!empty($lastID)){
             $where_account_qqh_post['last_message_dateline,<']=$lastID;
