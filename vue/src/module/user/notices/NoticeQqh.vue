@@ -216,12 +216,25 @@ export default {
         user:this.$store.state.user,
         report_status:false,
         replybtndisable:false,
-        reportmsgbody:''
+        reportmsgbody:'',
+        typeid:0
       }
   },
   created: function () {
     this.getUserInfo();
     this.qqh_list();
+  },
+  watch:{
+    $route(){
+      this.typeid = Number(this.$route.query.typeid);
+      if(this.typeid){
+        console.log(this.typeid);
+        this.showView = true;
+        this.qqh_viewBYtypeid(this.typeid)
+      }else{
+        this.showView = false;
+      }
+    }
   },
   methods:{
     async getUserInfo(){//获取登录用户信息
@@ -255,6 +268,12 @@ export default {
       let res = await user.qqh_view(list[idx].id);
       this.qqhView=res;console.log(res.data)
       this.qqhView.data=res.data.reverse();//对话倒序排列
+    },
+
+    async qqh_viewBYtypeid(typeid){
+      for(i=0;i<this.qqhList.length;i++){
+        if(this.qqhList[i].id==typeid)this.qqh_view(i)
+      }
     },
 
     showQqhView(idx){

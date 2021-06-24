@@ -173,7 +173,7 @@ export default {
   methods: {
     whichActive(id) {
       this.activeId = id;
-      console.log(this);
+      this.$router.push({path:'/notices',query:{id:id}})
     },
     async allNoticeCount(){
       let n = await this.user.notification_unread_count();
@@ -201,12 +201,13 @@ export default {
         console.log(this.allNoticeList,v.data.length)
       }
     },
-    gotoDetail(e){
+    gotoDetail(e){console.log(e)
       if(e.type=="follow"){
         this.activeId=3
       }
       if(e.type=="qqh"){
-        this.activeId=2
+        this.activeId=2;
+        this.$router.push({path:"/notices",query:{id:this.activeId,typeid:e.typeID}})
       }
       if(e.type=="reply")this.activeId=1;
       if(e.type=="buzz")this.activeId=4;
