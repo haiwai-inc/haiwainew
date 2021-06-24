@@ -20,7 +20,7 @@
      
       <ul>
         <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)" style="min-width:0;">
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(item)" style="min-width:0;">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
@@ -123,7 +123,7 @@
         <div class="col-1 pt-2">
           <a href="#" 
           class="back-to-list active" 
-          @click="showView=false"
+          @click="showView=false;$router.go(-1)"
             ><left-arrow ></left-arrow>
             <!-- <span class="d-none d-sm-block">返回</span> -->
           </a>
@@ -229,18 +229,23 @@ export default {
       this.typeid = Number(this.$route.query.typeid);
       if(this.typeid){
         console.log(this.typeid);
-        this.showView = true;
-        this.qqh_viewBYtypeid(this.typeid)
+        this.getUserInfo();
+        this.qqh_list().then(res=>{
+          this.showView = true;
+          this.qqh_viewBYtypeid(this.typeid)
+        });
       }else{
         this.showView = false;
       }
     }
   },
   methods:{
-    async getUserInfo(){//获取登录用户信息
+    getUserInfo(){//获取登录用户信息
+      console.log(this.$store.state.user)
       // let user = this.$store.state.user;
-      let res = await this.user.getUserStatus();
-      this.loginUser = res.data;
+      // let res = await this.user.getUserStatus();
+      // this.loginUser = res.data;
+      this.loginUser = this.$store.state.user.userinfo
       console.log(this.loginUser);
     },
 
@@ -256,6 +261,7 @@ export default {
     },
 
     async qqh_view(idx) {
+      this.qqhView.data=[];
       let list = this.qqhList;
       if(list[idx].userinfo_userID.id===this.loginUser.id){
         this.touser=list[idx].userinfo_touserID;
@@ -270,15 +276,16 @@ export default {
       this.qqhView.data=res.data.reverse();//对话倒序排列
     },
 
-    async qqh_viewBYtypeid(typeid){
+    async qqh_viewBYtypeid(typeid){console.log(this.qqhList);
       for(i=0;i<this.qqhList.length;i++){
         if(this.qqhList[i].id==typeid)this.qqh_view(i)
       }
     },
 
-    showQqhView(idx){
-      this.msgID=idx;
-      this.qqh_view(idx);
+    showQqhView(item){
+      this.msgID=item;console.log(item)
+      // this.qqh_view(idx);
+      this.$router.push({path:"/notices",query:{id:this.$route.query.id,typeid:item.id}})
       this.showView=true;
     },
 
