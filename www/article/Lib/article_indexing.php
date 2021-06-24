@@ -4,7 +4,23 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
-    
+    //archive分表
+    function getOne($condition,$where=NULL,$table=NULL){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        $rs_article_indexing=parent::getOne($condition,$where);
+        if(empty($rs_article_indexing)){
+            foreach($archive_pool as $k=>$v){
+                $rs_article_indexing=$obj_archive->getOne($condition,$where,"{$k}_indexing");
+                if(!empty($rs_article_indexing)){
+                    break;
+                }
+            }
+        }
+        
+        return $rs_article_indexing;
+    }
     
     //archive分表
     function getAll_archive_list($select,$fields){
