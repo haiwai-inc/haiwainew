@@ -215,6 +215,8 @@ export default {
     }
   },
   created: function () {
+        this.getUserInfo();
+        this.init_qqh_list();
   },
   watch:{
     $route(){console.log(this.qqhView.lastID);
@@ -223,14 +225,12 @@ export default {
       this.qqhView.data = [];
       if(this.typeid){
         this.getUserInfo();
-        this.qqh_list().then(res=>{
+        this.init_qqh_list().then(res=>{
           this.showView = true;
           this.qqh_viewBYtypeid()
         });
       }else{
         this.showView = false;
-        this.getUserInfo();
-        this.qqh_list();
       }
     }
   },
@@ -241,7 +241,16 @@ export default {
       // this.loginUser = res.data;
       this.loginUser = this.$store.state.user.userinfo
     },
-
+    async init_qqh_list(){
+      let res = await this.user.qqh_list(0);
+      this.qqhList.data=res.data;
+      if(res.data.length==20){
+        this.qqhList.noMore = false;
+        this.qqhList.lastID = res.data[19].last_messageID;
+      }else{
+        this.qqhList.noMore = true;
+      }
+    },
     async qqh_list() {
       // let user = this.$store.state.user;
       let res = await this.user.qqh_list(this.qqhList.lastID);
