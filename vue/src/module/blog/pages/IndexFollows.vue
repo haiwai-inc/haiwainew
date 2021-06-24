@@ -156,8 +156,8 @@ export default {
         this.noMore = arr.length<30 ? true : false;
         this.lastID.article = arr.length===30 ? arr[arr.length-1].postID : this.lastID.article;
         this.articlelists = this.articlelists.concat(arr) ;
+        this.loading.article=false;
       }
-      this.loading.article=false;
       console.log(this.articlelists);
     },
     async getBloggers(){
