@@ -193,7 +193,7 @@ class page extends Api {
         $obj_memcache=func_initMemcached('cache03');
         $rs_article_indexing=$obj_memcache->get(FILE_DOMAIN."blog_recent_article");
         if(!empty($bloggerID) || empty($rs_article_indexing)){
-            $rs_article_indexing=$obj_article_indexing->getAll_archive_list(["userID","postID","create_date"],$fields);
+            $rs_article_indexing=$obj_article_indexing->getAll(["userID","postID","create_date"],$fields);
         }else{
             $tmp_article_indexing=[];
             $limit=0;
@@ -567,7 +567,7 @@ class page extends Api {
         if(!empty($lastID)){
             $fields['create_date,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll_archive_list(['postID','treelevel','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
+        $rs_article_indexing=$obj_article_indexing->getAll(['postID','treelevel','basecode','userID','bloggerID','categoryID','create_date','edit_date'],$fields);
         
         //添加用户信息
         $obj_account_user=load("account_user");
