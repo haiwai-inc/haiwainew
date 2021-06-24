@@ -138,10 +138,10 @@
           </b>
         </div>
       </div>
-      <div class="message-show">
+      <div class="message-show" id="showbox">
         <p class="text-center pt-3" style="cursor:pointer" v-if="!qqhView.noMore" @click="qqh_viewBYtypeid">加载更多</p>
         <p class="text-center pt-3" v-if="qqhView.noMore">没有更多了</p>
-        <ul class="message-list">
+        <ul class="message-list" id="innerbox">
           <li 
           v-for="(item,index) in qqhView.data" 
           :key="index"
@@ -286,6 +286,10 @@ export default {
         this.qqhView.noMore = true;
       }
       this.qqhView.data=res.data.reverse().concat(this.qqhView.data);//对话倒序排列
+      document.getElementById("showbox").style.opacity = 0;
+      setTimeout(()=>{
+        this.flex_bottom()
+      },500)
     },
     
     async qqh_viewBYtypeid(){
@@ -293,7 +297,15 @@ export default {
         if(this.qqhList.data[i].id==this.typeid)this.qqh_view(i)
       }
     },
-
+    flex_bottom(){
+      var ele = document.getElementById("showbox");
+      ele.style.opacity = 1;
+      //判断元素是否出现了滚动条
+      if(ele.scrollHeight > ele.clientHeight) {
+        //设置滚动条到最底部
+        ele.scrollTop = ele.scrollHeight;
+      }
+    },
     showQqhView(item){
       console.log(item)
       // this.qqh_view(idx);
@@ -421,8 +433,16 @@ export default {
   margin-right: 10px;
 }
 /*悄悄话详情页*/
-.qiaoqiao-view.box{
-  height: 50vh;
+.qiaoqiao-view .message-show{
+  height: calc(100vh - 37vh);
+  overflow-y:scroll ;
+}
+.qiaoqiao-view .message-show::-webkit-scrollbar {/*滚动条整体样式*/
+  width:4px;
+}
+.qiaoqiao-view .message-show::-webkit-scrollbar-thumb { /* 拖动条 */
+    background-color: rgba(0,0,0,.15);
+    border-radius: 2px;
 }
 /* .qiaoqiao-view .chat-top {
   position: fixed;
