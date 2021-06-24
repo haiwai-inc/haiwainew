@@ -311,7 +311,7 @@ class user extends Api {
     /**
      * 悄悄话页
      * 悄悄话 列表
-     * @param integer $lastID | 最后一个悄悄话信息对话框的message_dateline
+     * @param integer $lastID | 最后一个悄悄话信息对话框的last_messageID
      * @response /account/api_response/qqh_list.txt
      */
     public function qqh_list($lastID=0){
@@ -325,7 +325,7 @@ class user extends Api {
             'order'=>["last_messageID"=>'DESC']
         ];
         if(!empty($lastID)){
-            $where_account_qqh_post['last_message_dateline,<']=$lastID;
+            $where_account_qqh_post['last_messageID,<']=$lastID;
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
         if(!empty($rs_account_qqh)){
