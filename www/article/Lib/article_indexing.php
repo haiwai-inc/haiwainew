@@ -11,7 +11,7 @@ class article_indexing extends Model
         
         $rs_article_indexing=parent::getOne($condition,$where);
         if($table!="archive"){
-            return $rs_article_indexing;
+            //return $rs_article_indexing;
         }
         
         if(empty($rs_article_indexing)){
@@ -31,7 +31,7 @@ class article_indexing extends Model
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
-        if($table!="archive"){
+        if($table=="indexing"){
             $rs_article_indexing=parent::getAll($condition,$where);
             return $rs_article_indexing;
         }
