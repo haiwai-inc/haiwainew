@@ -23,23 +23,23 @@ class article_indexing extends Model
     }
     
     //archive分表
-    function getAll_archive_list($select,$fields){
+    function getAll($condition,$where=NULL,$table=NULL){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
-        $rs_article_indexing=$this->getAll($select,$fields);
-        $limit=$fields['limit'];
+        $rs_article_indexing=parent::getAll($condition,$where);
+        $limit=$where['limit'];
         
         if(!empty($limit) && count($rs_article_indexing)<$limit){
             foreach($archive_pool as $k=>$v){
-                $rs_archive=$obj_archive->getAll($select,$fields,"{$k}_indexing");
+                $rs_archive=$obj_archive->getAll($condition,$where,"{$k}_indexing");
                 if(!empty($rs_archive)){
                     $rs_article_indexing=array_merge($rs_article_indexing,$rs_archive);
                 }
                 
                 //达到分页条数后断开
-                $fields['limit']=$limit-count($rs_article_indexing);
-                if($fields['limit']<=0){
+                $where['limit']=$limit-count($rs_article_indexing);
+                if($where['limit']<=0){
                     break;
                 }
             }
