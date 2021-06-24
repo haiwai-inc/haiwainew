@@ -10,6 +10,10 @@ class article_indexing extends Model
         $archive_pool=conf("article.archive_maping");
         
         $rs_article_indexing=parent::getOne($condition,$where);
+        if($table!="archive"){
+            return $rs_article_indexing;
+        }
+        
         if(empty($rs_article_indexing)){
             foreach($archive_pool as $k=>$v){
                 $rs_article_indexing=$obj_archive->getOne($condition,$where,"{$k}_indexing");
@@ -26,6 +30,11 @@ class article_indexing extends Model
     function getAll($condition,$where=NULL,$table=NULL){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
+        
+        if($table!="archive"){
+            $rs_article_indexing=parent::getAll($condition,$where);
+            return $rs_article_indexing;
+        }
         
         $rs_article_indexing=[];
         if(!empty($where) && !array_key_exists('OR',$where)){
