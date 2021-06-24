@@ -15,6 +15,8 @@
         </div>
     <div v-if="this.follows.authorList.length">
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item" :usertype="'follower'"></bloger-list-item>
+        <p class="text-center pb-5" style="cursor:pointer" v-if="!noMore" @click="getfollower">加载更多</p>
+        <p class="text-center pb-5" v-if="noMore">没有更多了</p>
     </div>
   </div>     
 </template>
@@ -30,19 +32,27 @@ export default {
   },
   methods:{
     async getfollower(){
-      let v= await this.$store.state.user.my_follower_list(0);
+      let v= await this.$store.state.user.my_follower_list(this.lastID);
       if(v.status){
-        this.follows.authorList = v.data;
+        this.follows.authorList = this.follows.authorList.concat(v.data);
+        if(v.data.length==20){
+          this.lastID = v.data[19].id;
+          this.noMore = false;
+        }else{
+          this.noMore = true;
+        }
         console.log(this.follows.authorList);
       }
     }
   },
   data(){
     return{
-        follows:{
-          title:'我的粉丝',
-          authorList : []
-      }
+      follows:{
+        title:'我的粉丝',
+        authorList : []
+      },
+      lastID:0,
+      noMore : false,
     }
   }
 }

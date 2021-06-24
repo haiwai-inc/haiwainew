@@ -75,7 +75,7 @@
         @input="s_t"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
-        <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="10" class="badge-item">
+        <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="99" class="badge-item">
           <router-link
             class="nav-link"
             style="margin-top:3px;z-index:1000"

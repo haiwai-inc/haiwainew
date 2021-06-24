@@ -267,9 +267,9 @@ class User extends API{
     /**
      * get qqh list 
      */
-    async qqh_list(){
+    async qqh_list(lastID){
         try{
-            let res = await this.get("account/user/qqh_list/");
+            let res = await this.get("account/user/qqh_list/?lastID="+lastID);
             return res
         }
         catch(e){
@@ -281,9 +281,9 @@ class User extends API{
      * get qqh view 
      * @param qqhID
      */
-    async qqh_view(qqhID){
+    async qqh_view(qqhID,lastID){
         try{
-            let res = await this.get("account/user/qqh_view/?qqhID="+qqhID);
+            let res = await this.get("account/user/qqh_view/?qqhID="+qqhID+"&lastID="+lastID);
             return res
         }
         catch(e){

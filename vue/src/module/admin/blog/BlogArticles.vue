@@ -106,7 +106,7 @@ export default {
             if(res.status){
                 let arr = res.data;
                 this.noMore = arr.length<40 ? true : false;
-                this.lastID = arr.length<40 ? this.lastID : arr[arr.length-1].postID ;
+                this.lastID = arr.length<40 ? this.lastID : arr[arr.length-1].comment_date ;
                 this.articlelist = this.articlelist.concat(arr) ;
                 console.log(arr,this.lastID,this.noMore);
             }

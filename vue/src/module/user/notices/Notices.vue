@@ -115,31 +115,31 @@ export default {
           icon:icons.notice,
           title: this.$t('message').blog.notice_menu_all,
           noticeList: [],
-          unread: 0,
+          unread: this.$store.state.user.notice.totall,
         },{
           id: 1,
           icon:icons.message,
           title: this.$t('message').blog.notice_menu_comment,
           noticeList: [],
-          unread: 0,
+          unread: this.$store.state.user.notice.reply,
         },{
           id: 2,
           icon:icons.mail,
           title: this.$t('message').blog.notice_menu_qqh,
           noticeList: [],
-          unread: 0,
+          unread: this.$store.state.user.notice.qqh,
         },{
           id: 3,
           icon:icons.follower,
           title: this.$t('message').blog.notice_menu_funs,
           noticeList: [],
-          unread: 0,
+          unread: this.$store.state.user.notice.follow,
         },{
           id: 4,
           icon:icons.like_outline,
           title: this.$t('message').blog.notice_menu_likeme,
           noticeList: [],
-          unread: 0,
+          unread: this.$store.state.user.notice.buzz,
         },
       ],
     };
@@ -157,48 +157,50 @@ export default {
   watch:{
     "$route.query.id":function(val){
       this.activeId = Number(val);
+      var type = this.activeId==0?"totall":this.activeId==1?"reply":this.activeId==2?"qqh":this.activeId==3?"follow":this.activeId==4?"buzz":"";
+      this.notification_unread_clear(type)
     }
   },
   mounted:function(){
     // this.getUnreadCount();
-    this.allNoticeCount();
+    // this.allNoticeCount();
     this.showAllNotice();
   },
   created(){
     this.activeId = Number(this.$route.query.id);
   },
   beforeDestroy() {
-    this.notification_unread_clear("")
+    
   },
   methods: {
     whichActive(id) {
       this.activeId = id;
       this.$router.push({path:'/notices',query:{id:id}})
     },
-    async allNoticeCount(){
-      let n = await this.user.notification_unread_count();
-      if(n.status){
-        // "reply":1,"qqh":0,"follow":0,"buzz":0,"totall":1
-        this.data[0].unread=n.data.totall;
-        // this.data[1].unread=n.data.blog_comment;
-        this.data[1].unread=n.data.reply;
-        this.data[2].unread=n.data.qqh;
-        this.data[3].unread=n.data.follow;
-        this.data[4].unread=n.data.buzz;
-      }
-    },
+    // async allNoticeCount(){
+    //   let n = await this.user.notification_unread_count();
+    //   if(n.status){
+    //     // "reply":1,"qqh":0,"follow":0,"buzz":0,"totall":1
+    //     this.data[0].unread=n.data.totall;
+    //     // this.data[1].unread=n.data.blog_comment;
+    //     this.data[1].unread=n.data.reply;
+    //     this.data[2].unread=n.data.qqh;
+    //     this.data[3].unread=n.data.follow;
+    //     this.data[4].unread=n.data.buzz;
+    //   }
+    // },
     async notification_unread_clear(type){
       let n = await this.user.notification_unread_clear(type);
-      this.allNoticeCount();
+      // this.allNoticeCount();
       console.log(n);
     },
     async showAllNotice(){
       let v = await this.user.notification_list(this.allNoticeLastid);
       if(v.status){
         this.allNoticeList = this.allNoticeList.concat(v.data);
-        this.allNoticeLastid = v.data.length==30?v.data[29].id:this.allNoticeLastid;
-        this.noMore = v.data.length==30?false:true;
-        console.log(this.allNoticeList,v.data.length)
+        this.allNoticeLastid = v.data.length==20?v.data[19].id:this.allNoticeLastid;
+        this.noMore = v.data.length==20?false:true;
+        // console.log(this.allNoticeList,v.data.length)
       }
     },
     gotoDetail(e){console.log(e)

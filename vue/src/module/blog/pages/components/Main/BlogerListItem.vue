@@ -113,7 +113,7 @@ export default {
     if(this.usertype=="follower"){
       this.curent_data.userinfo_userID = this.data.userinfo_followerID;
       this.curent_data.userID = this.data.userinfo_followerID.id;
-      console.log(this.curent_data)
+      // console.log(this.curent_data)
     }
   },
   methods:{

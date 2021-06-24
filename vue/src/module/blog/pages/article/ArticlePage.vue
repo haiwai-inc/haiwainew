@@ -243,12 +243,12 @@ export default {
     },
     getRecommend(){
       let postID = this.$route.params.id;
-      blog.article_list_tag(this.recommend.props.tags,postID).then(res=>{
+      blog.article_list_tag(this.recommend.props.tags,postID,this.recommend.props.lastID).then(res=>{
         console.log(res);
         if(res.status){
           let arr = res.data
           this.recommend.articles = arr;
-          this.recommend.props.lastID = arr.length>10?arr[9].postID:arr.length!=0?arr[arr.length-1].postid:0;
+          this.recommend.props.lastID = arr.length>10?arr[arr.length-1].create_date:0;
         }
       })
     },
