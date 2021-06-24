@@ -13,7 +13,7 @@
       </div>
     </div>
     <!-- 悄悄话列表 -->
-    <div class="qiaoqiao-list"  v-show="!showView && qqhList.data.length>0">
+    <div class="qiaoqiao-list"  v-if="!showView && qqhList.data.length>0">
       <!-- <h6 class="pb-2 font-weight-normal">
         我的悄悄话
       </h6> -->
@@ -120,7 +120,7 @@
       <p class="text-center pb-5" v-if="qqhList.noMore">没有更多了</p>
     </div>
     <!-- 悄悄话详情 -->
-    <div class="qiaoqiao-view box" v-show="showView">
+    <div class="qiaoqiao-view box" v-if="showView">
       <div class="row no-gutters mb-2">
         <div class="col-1 pt-2">
           <a href="#" 
@@ -215,18 +215,6 @@ export default {
     }
   },
   created: function () {
-    this.getUserInfo();
-    this.typeid = Number(this.$route.query.typeid);
-    if(this.typeid){
-        this.getUserInfo();
-        this.qqh_list().then(res=>{
-          this.showView = true;
-          this.qqh_viewBYtypeid(this.typeid)
-        });
-      }else{
-        this.showView = false;
-        this.qqh_list();
-      }
   },
   watch:{
     $route(){console.log(this.qqhView.lastID);
@@ -237,10 +225,12 @@ export default {
         this.getUserInfo();
         this.qqh_list().then(res=>{
           this.showView = true;
-          this.qqh_viewBYtypeid(this.typeid)
+          this.qqh_viewBYtypeid()
         });
       }else{
         this.showView = false;
+        this.getUserInfo();
+        this.qqh_list();
       }
     }
   },
@@ -255,7 +245,7 @@ export default {
     async qqh_list() {
       // let user = this.$store.state.user;
       let res = await this.user.qqh_list(this.qqhList.lastID);
-      this.qqhList.data=this.qqhList.data.concat(res.data);
+      this.qqhList.data=this.qqhList.lastID==0?res.data:this.qqhList.data.concat(res.data);
       if(res.data.length==20){
         this.qqhList.noMore = false;
         this.qqhList.lastID = res.data[19].last_messageID;
