@@ -189,14 +189,6 @@ class CategorySorter{
         $this->reorderHaiwai($wxcCategories, $hwCategories);
     }
 
-    // private function fetchWXCCategoryOrder(){
-
-    // }
-
-    // private function fetchCurrentHaiwaiOrder($nameList = []){
-
-    // }
-
     private function reorderHaiwai($wxcCategories, $hwCategories){
         $catNameIDMap = [];
         foreach($hwCategories as $category){
@@ -223,13 +215,10 @@ class CategorySorter{
             $visited[$category['category']] = true;
             $i ++;
         }
-        // debug::d($wxcCategories);  
-        // debug::d($hwCategories);
-        debug::d($updates);
     }
 }
 
-$sorter = new CategorySorter(["晓青"]);
+$sorter = new CategorySorter();
 $sorter-> reorderCategory();
 
 
