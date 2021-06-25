@@ -201,7 +201,7 @@ class CategorySorter{
         $i = 0;
         foreach($wxcCategories as $category){
             if(empty($catNameIDMap[$category['category']]) || !empty($visited[$category['category']])) continue;
-            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['id']], ["id"=>$catNameIDMap[$category['category']]]);
+            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$catNameIDMap[$category['category']]]);
             $updates[] = ["category"=>$category['category'], "id"=>$catNameIDMap[$category['category']], "sort" => $hwCategories[$i]['id']];
             $visited[$category['category']] = true;
             $i ++;
@@ -210,7 +210,7 @@ class CategorySorter{
         // Update sort for categories not in wxc
         foreach($hwCategories as $category){
             if(!empty($visited[$category['name']])) continue;
-            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['id']], ["id"=>$category['id']]);
+            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$category['id']]);
             $updates[] = ["category"=>$category['name'], "sort" => $hwCategories[$i]['id']];
             $visited[$category['category']] = true;
             $i ++;
