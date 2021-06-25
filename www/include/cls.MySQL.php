@@ -420,6 +420,7 @@ class MySQL{
 		
 		/* prepare SQL binding */
 		$this->querySQL = "UPDATE {$table} SET " . $this->parseData($data) . " WHERE " . $this->parseWhere( $where );
+		// exit;
 		if (!$stmt = $this->conn->prepare( $this->querySQL )) {
 			debug::d($this->querySQL);
 			func_throwException("Failed to prepare mysqli_stmt");
@@ -540,6 +541,7 @@ class MySQL{
 				$bind_name_pool[]=$mysqli_prepare_unique_bind_name;
 				$i++;
 			}
+			// debug::d($bind_items);
 	
 			$bindResult = call_user_func_array(array($stmt,'bind_param'), $bind_items);//触发绑定
 			//debug::d($bindResult);
