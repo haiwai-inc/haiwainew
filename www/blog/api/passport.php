@@ -115,6 +115,39 @@ class passport extends Api {
     
     /**
      * 文学城
+     * 目录 隐藏/显示
+     * @param string $token
+     * @param string $wxc_userID
+     * @param string $username
+     * @param string $name
+     * @param string $is_publish
+     * @post token,wxc_userID,username,name,is_publish
+     */
+    public function wxc_to_haiwai_category_publish($token,$wxc_userID,$username,$name,$is_publish){
+        //验证用户
+        $obj_memcache = func_initMemcached('cache02');
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
+        
+        //验证博客用户
+        $obj_account_user_auth=load("account_user_auth");
+        $rs_account_user_auth=$obj_account_user_auth->getOne(['userID'],['login_data'=>$username,'login_source'=>"wxc"]);
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne(['id'],['userID'=>$rs_account_user_auth['userID']]);
+        if(empty($check_blog_blogger))    {$this->error="博客不存在";$this->status=false;return false;}
+        
+        //验证目录
+        $obj_blog_category=load("blog_category");
+        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        if(empty($check_blog_category))    {$this->error="此目录不存在";$this->status=false;return false;}
+        
+        //隐藏/显示目录
+        $obj_blog_category->update(['is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],'name'=>$name]);
+        return true;
+    }
+    
+    /**
+     * 文学城
      * 文章 添加
      * @param string $token
      * @param string $wxc_userID
@@ -123,10 +156,11 @@ class passport extends Api {
      * @param string $title
      * @param string $msgbody
      * @param string $category_name
+     * @param string $is_publish
      * @param string $tagname
-     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,tagname
+     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,is_publish,tagname
      */
-    public function wxc_to_haiwai_article_add($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
+    public function wxc_to_haiwai_article_add($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$is_publish,$tagname=""){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
         $wxc_userID_cache=$obj_memcache->get($token);
@@ -158,7 +192,7 @@ class passport extends Api {
             "typeID"=>1,
             'tagname'=>empty($tagname)?[]:explode(",",urldecode($tagname)),
             "is_comment"=>1,
-            "is_publish"=>1,
+            "is_publish"=>$is_publish,
         ];
         $module_data=[
             "bloggerID"=>$check_blog_blogger['id'],
@@ -178,7 +212,7 @@ class passport extends Api {
             "create_date"=>$time,
             "edit_date"=>$time,
             "is_comment"=>empty($article_data['is_comment'])?0:1,
-            'is_publish'=>empty($article_data['is_publish'])?0:1,
+            'is_publish'=>$is_publish,
         ];
         $obj_article_indexing->insert($fields_indexing);
         $post_tbn=substr('0'.$rs_account_user_auth['userID'],-1);
@@ -220,10 +254,11 @@ class passport extends Api {
      * @param string $title
      * @param string $msgbody
      * @param string $category_name
+     * @param string $is_publish
      * @param string $tagname
-     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,tagname
+     * @post token,wxc_userID,username,wxc_postID,title,msgbody,category_name,is_publish,tagname
      */
-    public function wxc_to_haiwai_article_edit($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$tagname=""){
+    public function wxc_to_haiwai_article_edit($token,$wxc_userID,$username,$wxc_postID,$title,$msgbody,$category_name,$is_publish,$tagname=""){
         //验证用户
         $obj_memcache = func_initMemcached('cache02');
         $wxc_userID_cache=$obj_memcache->get($token);
@@ -265,7 +300,7 @@ class passport extends Api {
             "typeID"=>1,
             'tagname'=>empty($tagname)?[]:explode(",",urldecode($tagname)),
             "is_comment"=>1,
-            "is_publish"=>1,
+            "is_publish"=>$is_publish,
         ];
         $module_data=[
             "bloggerID"=>$check_blog_blogger['id'],
@@ -279,7 +314,7 @@ class passport extends Api {
             "is_pic"=>0,
             "edit_date"=>$time,
             "is_comment"=>empty($article_data['is_comment'])?0:1,
-            'is_publish'=>empty($article_data['is_publish'])?0:1,
+            'is_publish'=>$is_publish,
         ];
         $obj_article_indexing->update($fields_indexing,['postID'=>$article_data['postID']]);
         $post_tbn=substr('0'.$rs_account_user_auth['userID'],-1);

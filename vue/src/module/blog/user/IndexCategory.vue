@@ -39,7 +39,7 @@
                 </article-list-item>
             </div>
             <div class="text-center py-5" v-if="loading.article"><!-- loader -->
-                <i class="now-ui-icons loader_refresh spin"></i>
+                <i class="now-ui-icons spin" v-html="icons.refresh"></i>
             </div>
             <p class="text-center py-4" v-if="noMore">没有更多了</p>
         </div>
@@ -104,7 +104,7 @@ export default {
       if(res.status){
         let arr = res.data;
         this.noMore = arr.length<30 ? true : false;
-        this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].postID ;
+        this.lastID.article = arr.length<30 ? this.lastID.article : arr[arr.length-1].create_date ;
         this.articlelists = this.articlelists.concat(arr) ;
         this.loading.article=false;
         console.log(this.articlelists,this.lastID,this.noMore);

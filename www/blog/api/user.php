@@ -94,7 +94,7 @@ class user extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
@@ -244,7 +244,7 @@ class user extends Api {
      * 二级页面
      * 关注 文章 列表
      * @param integer $followingID | 关注人的ID
-     * @param integer $lastID | 最后一个postID
+     * @param integer $lastID | 最后一个create_date
      */
     public function following_article_list($followingID=0,$lastID=0){
         $obj_account_follow=load("account_follow");
@@ -271,16 +271,16 @@ class user extends Api {
         //索引表
         $obj_article_indexing=load("article_indexing");
         $fields=[
-            'order'=>['id'=>'DESC'],
+            'order'=>['create_date'=>'DESC'],
             'treelevel'=>0,
             'visible'=>1,
             'limit'=>30,
             'OR'=>['userID'=>$followingID_account_follow]
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
-        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","blogID"],$fields);      
+        $rs_article_indexing=$obj_article_indexing->getAll(["id","postID","userID","bloggerID"],$fields,"indexing");      
         
         //添加用户信息
         $rs_article_indexing=$obj_account_user->get_basic_userinfo($rs_article_indexing,"userID");
@@ -303,7 +303,7 @@ class user extends Api {
      * 编辑器页
      * 文章 列表
      * @param integer $id | 目录ID
-     * @param String $lastID|文章postID
+     * @param String $lastID|文章create_date
      */
     public function article_list($id,$lastID=0){
         $obj_blog_category=load("blog_category");
@@ -316,11 +316,11 @@ class user extends Api {
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
             'treelevel'=>0,
-            "order"=>['is_sticky'=>'DESC','id'=>"DESC"],
+            "order"=>['is_sticky'=>'DESC','create_date'=>"DESC"],
             "limit"=>30
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll('*',$fields);
         
@@ -340,11 +340,11 @@ class user extends Api {
         $fields=[
             'bloggerID'=>$rs_blog_category['bloggerID'],
             'categoryID'=>$id,
-            "order"=>['id'=>"DESC"],
+            "order"=>['create_date'=>"DESC"],
             "limit"=>30
         ];
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
         $rs_article_draft=$obj_article_draft->getAll("*",$fields);
         

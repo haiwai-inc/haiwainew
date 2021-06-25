@@ -8,8 +8,8 @@ class Account extends API{
     }
     
     async signup(form){
-        let email = form.email;
-        let password = form.password;
+        let email = encodeURIComponent(form.email);
+        let password = encodeURIComponent(form.password);
         return await this.sendget("account/passport/user_register/?email=" + email + "&password=" + password);
     };
     
@@ -18,7 +18,7 @@ class Account extends API{
     }
 
     async checkpassword(password){
-        return await this.sendget("account/passport/user_password_check/?password="+password)
+        return await this.sendget("account/passport/user_password_check/?password="+encodeURIComponent(password))
     }
 
     async sendverifymail(id){
@@ -26,14 +26,14 @@ class Account extends API{
     }
 
     async login(form){
-        let email = form.email;
-        let password = form.password;
+        let email = encodeURIComponent(form.email);
+        let password = encodeURIComponent(form.password);
         return await this.sendget("account/passport/user_login/?login_data=" + email + "&login_token=" + password);
     };
 
     async wxc_sign_in(form){
-        let username = form.username;
-        let password = form.password;
+        let username = encodeURIComponent(form.username);
+        let password = encodeURIComponent(form.password);
         return await this.sendget("account/passport/user_login_wxc/?login_data="+username+"&login_token="+password)
     }
 
@@ -59,7 +59,7 @@ class Account extends API{
         return await this.sendget("account/passport/user_password_send_request/?email="+email)
     }
     async user_password_reset(password,token){
-        return await this.sendget("account/passport/user_password_reset/?password="+password+"&token="+token)
+        return await this.sendget("account/passport/user_password_reset/?password="+encodeURIComponent(password)+"&token="+token)
     }
 // user profile api
     async get_user_profile(){
@@ -67,7 +67,7 @@ class Account extends API{
     }
 
     async user_password_update(password){
-        return await this.sendget("account/user/user_password_update/?password="+password)
+        return await this.sendget("account/user/user_password_update/?password="+encodeURIComponent(password))
     }
 
 // user functions api

@@ -112,7 +112,7 @@ class blog_tool{
                 "edit_date"=>strtotime($rs['dateline']),
                 "count_read"=>$rs['view'],
                 "count_comment"=>$rs['comments'],
-                'is_publish'=>empty($rs_blog_legacy_blogcat_members['visible'])?1:$rs_blog_legacy_blogcat_members['visible'],
+                'is_publish'=>empty($rs_blog_legacy_blogcat_members)?1:$rs_blog_legacy_blogcat_members['visible'],
             ];
             $fields_indexing['id']=$this->obj_article_indexing->insert($fields_indexing);
             
@@ -302,7 +302,7 @@ class blog_tool{
                 "bloggerID"=>$rs['blogger_new']['id'],
                 "name"=>$rs_blog_legacy_blogcat_members['category'],
                 'count_article'=>1,
-                'is_publish'=>empty($rs_blog_legacy_blogcat_members['visible'])?1:$rs_blog_legacy_blogcat_members['visible'],
+                'is_publish'=>empty($rs_blog_legacy_blogcat_members)?1:$rs_blog_legacy_blogcat_members['visible'],
             ];
             if($field['name']=="我的文章"){
                 $field['is_default']=1;

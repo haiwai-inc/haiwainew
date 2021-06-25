@@ -28,19 +28,19 @@
             
             <div>
               <a v-if="!curent_data.userinfo_userID.is_following" class="btn btn-link text-primary w-100 btn-follow" @click="following_add(curent_data.userID)">
-                <div class="d-flex justify-content-end align-items-end add">
+                <div class="d-flex justify-content-end align-items-center add">
                     <icon-plus></icon-plus>
                     {{$t('message').blog.blogger_follow}}
                 </div></a>
               <a v-if="curent_data.userinfo_userID.is_following" class="btn btn-link text-default w-100 cancel-follow" @click="following_delete(curent_data.userID)">
                   <span class="cancel-text text-danger">
-                      <div class="d-flex justify-content-end align-items-end">
+                      <div class="d-flex justify-content-end align-items-center">
                         <icon-x :style="{fill:'#FF3636'}"></icon-x>
                         {{$t('message').blog.blogger_remove_follow}}
                       </div>
                   </span>
                   <span class="followed-text text-default">
-                      <div class="d-flex justify-content-end align-items-end" style="fill:#999">
+                      <div class="d-flex justify-content-end align-items-center" style="fill:#999">
                           <icon-check></icon-check>
                           {{$t('message').blog.blogger_followed}}
                       </div>
@@ -113,7 +113,7 @@ export default {
     if(this.usertype=="follower"){
       this.curent_data.userinfo_userID = this.data.userinfo_followerID;
       this.curent_data.userID = this.data.userinfo_followerID.id;
-      console.log(this.curent_data)
+      // console.log(this.curent_data)
     }
   },
   methods:{

@@ -4,6 +4,97 @@ class article_indexing extends Model
     protected $tableName = "indexing";
     protected $dbinfo = array("config" => "article", "type" => "MySQL");
 
+    //archive分表
+    function getOne($condition,$where=NULL,$table=NULL){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        $rs_article_indexing=parent::getOne($condition,$where);
+        if($table!="archive"){
+            //return $rs_article_indexing;
+        }
+        
+        if(empty($rs_article_indexing)){
+            foreach($archive_pool as $k=>$v){
+                $rs_article_indexing=$obj_archive->getOne($condition,$where,"{$k}_indexing");
+                if(!empty($rs_article_indexing)){
+                    break;
+                }
+            }
+        }
+        
+        return $rs_article_indexing;
+    }
+    
+    //archive分表
+    function getAll($condition,$where=NULL,$table=NULL){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        if($table=="indexing"){
+            $rs_article_indexing=parent::getAll($condition,$where);
+            return $rs_article_indexing;
+        }
+        
+        $rs_article_indexing=[];
+        if(!empty($where) && !array_key_exists('OR',$where)){
+            //list查询
+            $rs_article_indexing=parent::getAll($condition,$where);
+            $limit=$where['limit'];
+            if(!empty($limit) && count($rs_article_indexing)<$limit){
+                foreach($archive_pool as $k=>$v){
+                    $rs_archive=$obj_archive->getAll($condition,$where,"{$k}_indexing");
+                    if(!empty($rs_archive)){
+                        $rs_article_indexing=array_merge($rs_article_indexing,$rs_archive);
+                    }
+                    
+                    //达到分页条数后断开
+                    $where['limit']=$limit-count($rs_article_indexing);
+                    if($where['limit']<=0){
+                        break;
+                    }
+                }
+            }
+        }else{
+            //解析OR
+            $key=key($where['OR']);
+            $id_rs=array_pop($where['OR']);
+            if(empty($id_rs)){
+                return [];
+            }
+            
+            //生成select
+            if($condition=="*"){
+                $select_sql="SELECT * ";
+            }else{
+                foreach($condition as $v){
+                    if(empty($select_sql)){
+                        $select_sql="SELECT {$v}";
+                    }else{
+                        $select_sql.=",{$v} ";
+                    }
+                }
+            }
+            
+            //生成where
+            foreach($id_rs as $v){
+                if(empty($where_sql)){
+                    $where_sql="WHERE {$key}={$v} ";
+                }else{
+                    $where_sql.="or {$key}={$v} ";
+                }
+            }
+            
+            //组合全部sql
+            $sql=$select_sql."FROM indexing ".$where_sql;
+            foreach($archive_pool as $k=>$v){
+                $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
+            }
+            $rs_article_indexing=parent::getAll($sql);
+        }
+        return $rs_article_indexing;
+    }
+    
     //根据跟帖，补全主贴信息
     function get_article_info_by_comment($rs_account_notification){
         if(empty($rs_account_notification)){
@@ -112,6 +203,7 @@ class article_indexing extends Model
             
             //点赞计数，留言计数，阅读计数
             $rs_article_count=$this->getAll(['postID','count_buzz','count_read','count_comment'],['OR'=>['postID'=>$id_rs]]);
+            
             if(!empty($rs_article_count)){
                 foreach($rs_article_count as $v){
                     $hash_article_count[$v['postID']]=$v;

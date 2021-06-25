@@ -16,7 +16,7 @@ class tmp{
             foreach($rs_blog_legacy_blogger_haiwai as $v){
                 $check_account_user=$obj_account_user->getOne(['id','username'],['username'=>$v['username']]);
                 if(!empty($check_account_user)){
-                    $obj_blog_legacy_blogger_haiwai->update(['haiwai_userID'=>$v['id']],['username'=>$check_account_user['username']]);
+                    $obj_blog_legacy_blogger_haiwai->update(['haiwai_userID'=>$check_account_user['id']],['username'=>$check_account_user['username']]);
                 }
                 $lastid=$v['id'];
             }

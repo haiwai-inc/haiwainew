@@ -1,7 +1,7 @@
 <template>
   <div>
     <h6 class="pb-3 font-weight-normal" v-if="!showView">我的悄悄话</h6>
-    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.length==0">
+    <div class="row  no-gutters flex-md-row mb-4  h-md-450 position-relative"  v-if="qqhList.data.length==0">
       <div class="col-12 pt-4 col-md-8"><img src="/img/qqh.webp" class="logo"></div>
       <div class="col-12 col-md-3 p-4 d-flex flex-column position-static">
         <div class="row featurette ">
@@ -13,24 +13,24 @@
       </div>
     </div>
     <!-- 悄悄话列表 -->
-    <div class="qiaoqiao-list"  v-if="!showView && qqhList.length>0">
+    <div class="qiaoqiao-list"  v-if="!showView && qqhList.data.length>0">
       <!-- <h6 class="pb-2 font-weight-normal">
         我的悄悄话
       </h6> -->
      
       <ul>
-        <li v-for="(item,index) in qqhList" :key="index" class="d-flex justify-content-between">
-          <div class="d-flex align-items-center flex-fill" @click="showQqhView(index)">
+        <li v-for="(item,index) in qqhList.data" :key="index" class="d-flex justify-content-between">
+          <div class="d-flex align-items-center flex-fill" @click="showQqhView(item)" style="min-width:0;">
             <img class="rounded-circle" style="width:48px;height:48px"
              :src="item.userID!==loginUser.id?item.userinfo_userID.avatar:item.userinfo_touserID.avatar"
              v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar!='':item.userinfo_touserID.avatar!=''"
               />
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
-              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
-            <div class="pl-2">
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_touserID.first_letter:item.userinfo_userID.first_letter}}</div>
+            <div class="pl-2" style="min-width:0;">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
-              <span class="wrap">{{item.last_messageinfo.msgbody}}</span>
+              <div class="wrap">{{item.last_messageinfo.msgbody}}</div>
             </div>
 
           </div>
@@ -92,7 +92,7 @@
                 <el-dropdown-item>
                   <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.id:item.userinfo_touserID.id)">加入黑名单</a>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <!-- <el-dropdown-item>
                   <el-popover 
                   placement="bottom-start"
                   width="375" 
@@ -109,21 +109,23 @@
                       >举报</n-button>
                     <a class="dropdown-item" href="javascript:void(0)" slot="reference" style="color:gray"><span>举报</span></a>
                   </el-popover>
-                </el-dropdown-item>
+                </el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
 
           </div>
         </li>
       </ul>
+      <p class="text-center pb-5" style="cursor:pointer" v-if="!qqhList.noMore" @click="qqh_list">加载更多</p>
+      <p class="text-center pb-5" v-if="qqhList.noMore">没有更多了</p>
     </div>
     <!-- 悄悄话详情 -->
-    <div class="qiaoqiao-view" v-if="showView">
+    <div class="qiaoqiao-view box" v-if="showView">
       <div class="row no-gutters mb-2">
         <div class="col-1 pt-2">
           <a href="#" 
           class="back-to-list active" 
-          @click="showView=false"
+          @click="showView=false;$router.go(-1)"
             ><left-arrow ></left-arrow>
             <!-- <span class="d-none d-sm-block">返回</span> -->
           </a>
@@ -131,34 +133,26 @@
         <div class="col-10 pt-2 text-center">
           <b>
             与
-            <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
+            <a href="#" @click="$router.push('/blog/user/'+user.notice.touser.id)">{{user.notice.touser.name}}</a>
             的对话
           </b>
         </div>
-        <div class="col-1 d-flex justify-content-end">
-          <!-- <drop-down
-          class="nav-item dropdown"
-          :haiwaiIcon="iconmore3v"
-          haiwaiClass="haiwaiicon"
-          style="padding:0;"
-          >
-            <a class="dropdown-item"  href="javascript:void(0)" @click="blockUser(touser.id)">加入黑名单</a>
-          </drop-down> -->
-        </div>
       </div>
-      <div class="message-show">
-        <ul class="message-list">
+      <div class="message-show" id="showbox">
+        <p class="text-center pt-3" style="cursor:pointer" v-if="!qqhView.noMore" @click="qqh_view">加载更多</p>
+        <p class="text-center pt-3" v-if="qqhView.noMore">没有更多了</p>
+        <ul class="message-list" id="innerbox">
           <li 
           v-for="(item,index) in qqhView.data" 
           :key="index"
           :class="{'message-l':item.userID!==loginUser.id,'message-r':item.userID===loginUser.id,}" >
-            <a href="#" class="avatar">
+            <span class="avatar">
               <img class="rounded-circle" 
-              :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
-              v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
+              :src="item.userinfo_userID.avatar"
+              v-if="item.userinfo_userID.avatar!=''"
               />
-              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter:touser.first_letter}}</div>
-            </a>
+              <div v-if="item.userinfo_userID.avatar==''" class="first_letter">{{item.userinfo_userID.first_letter}}</div>
+            </span>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
           </li>
@@ -177,7 +171,7 @@
           type="primary"
           round 
           simple
-          @click.native="sendQqh(touser.id)"
+          @click.native="send()"
           >
             发送
           </n-button>
@@ -204,74 +198,123 @@ export default {
     // Avatar,
   },
   data(){
-      return{
-        loginUser:{},
-        touser:{},
-        msgID:0,
-        iconmore3v:HaiwaiIcons.iconmore3v,
-        showView:false,
-        qqhList:{},
-        qqhView:{},
-        msgbody:'',
-        user:this.$store.state.user,
-        report_status:false,
-        replybtndisable:false,
-        reportmsgbody:''
-      }
+    return{
+      loginUser:{},
+      msgID:0,
+      iconmore3v:HaiwaiIcons.iconmore3v,
+      showView:false,
+      qqhList:{lastID:0,data:[],noMore:false},
+      qqhView:{lastID:0,data:[],noMore:false,id:0},
+      msgbody:'',
+      user:this.$store.state.user,
+      report_status:false,
+      replybtndisable:false,
+      reportmsgbody:'',
+      typeid:0
+    }
   },
   created: function () {
-    this.getUserInfo();
-    this.qqh_list();
+        this.getUserInfo();
+        this.init_qqh_list();
+  },
+  watch:{
+    $route(){
+        console.log(this.user.notice.touser);
+      this.typeid = Number(this.$route.query.typeid);
+      this.qqhView.lastID=0;
+      this.qqhView.data = [];
+      if(this.typeid){
+        this.showView = true;
+        this.qqh_view().then(res=>{
+          this.flex_bottom()
+        });
+      }else{
+        this.showView = false;
+      }
+    }
   },
   methods:{
-    async getUserInfo(){//获取登录用户信息
+    getUserInfo(){//获取登录用户信息
       // let user = this.$store.state.user;
-      let res = await this.user.getUserStatus();
-      this.loginUser = res.data;
-      console.log(this.loginUser);
+      // let res = await this.user.getUserStatus();
+      // this.loginUser = res.data;
+      this.loginUser = this.$store.state.user.userinfo
     },
-
+    async init_qqh_list(){
+      let res = await this.user.qqh_list(0);
+      this.qqhList.data=res.data;
+      if(res.data.length==20){
+        this.qqhList.noMore = false;
+        this.qqhList.lastID = res.data[19].last_messageID;
+      }else{
+        this.qqhList.noMore = true;
+      }
+    },
     async qqh_list() {
       // let user = this.$store.state.user;
-      let res = await this.user.qqh_list();
-      this.qqhList=res.data;console.log(this.qqhList)
-      this.qqhList.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
-        let aTime = a.last_messageinfo.dateline;
-        let bTime = b.last_messageinfo.dateline;
-        return bTime - aTime
-      });
-    },
-
-    async qqh_view(idx) {
-      let list = this.qqhList;
-      if(list[idx].userinfo_userID.id===this.loginUser.id){
-        this.touser=list[idx].userinfo_touserID;
-        this.loginUser=list[idx].userinfo_userID;
+      let res = await this.user.qqh_list(this.qqhList.lastID);
+      this.qqhList.data=this.qqhList.lastID==0?res.data:this.qqhList.data.concat(res.data);
+      if(res.data.length==20){
+        this.qqhList.noMore = false;
+        this.qqhList.lastID = res.data[19].last_messageID;
       }else{
-        this.touser=list[idx].userinfo_userID;
-        this.loginUser=list[idx].userinfo_touserID;
+        this.qqhList.noMore = true;
       }
-      let user = this.$store.state.user;
-      let res = await user.qqh_view(list[idx].id);
-      this.qqhView=res;console.log(res.data)
-      this.qqhView.data=res.data.reverse();//对话倒序排列
+      // this.qqhList.data.sort((a,b)=>{//按照最后信息时间倒序排列悄悄话列表
+      //   let aTime = a.last_messageinfo.dateline;
+      //   let bTime = b.last_messageinfo.dateline;
+      //   return bTime - aTime
+      // });
     },
 
-    showQqhView(idx){
-      this.msgID=idx;
-      this.qqh_view(idx);
+    async qqh_view() {
+      this.qqhView.data=this.qqhView.lastID==0?[]:this.qqhView.data;
+      
+      let res = await this.user.qqh_view(this.typeid,this.qqhView.lastID);
+      if(res.data.length==20){
+        this.qqhView.noMore = false;
+        this.qqhView.lastID = res.data[19].id;
+      }else{
+        this.qqhView.noMore = true;
+      }
+      this.qqhView.data=res.data.reverse().concat(this.qqhView.data);//对话倒序排列
+      console.log(res.data);
+      // this.set_touser(res.data);
+    },
+    async qqh_viewBYtypeid(){
+      for(i=0;i<this.qqhList.data.length;i++){
+        if(this.qqhList.data[i].id==this.typeid)this.qqh_view(i)
+      }
+    },
+    flex_bottom(){
+      var ele = document.getElementById("showbox");
+      if(ele.scrollHeight > ele.clientHeight) {
+        ele.style.opacity = 0;
+        setTimeout(()=>{
+          ele.scrollTop = ele.scrollHeight;
+          ele.style.opacity = 1;
+        },500)
+      }
+    },
+    showQqhView(item){
+      console.log(item)
+      // this.qqh_view(idx);
+      this.user.notice.touser.id = this.loginUser.id !== item.userID ? item.userID : item.touserID;
+      this.user.notice.touser.name = this.loginUser.id !== item.userID ? item.userinfo_userID.username : item.userinfo_touserID.username;
+      this.$router.push({path:"/notices",query:{id:this.$route.query.id,typeid:item.id}}).catch(()=>{
+        this.$message.error("数据加载失败，请返回重试！")
+      })
       this.showView=true;
     },
 
-    sendQqh(id){
-      this.send(this.loginUser.id,id,this.msgbody);
-    },
-
-    async send(userID,touserID,msgbody) {
+    async send() {
       // let user = this.$store.state.user;
-      let res = await this.user.sendQqh(userID,touserID,msgbody);
+      let res = await this.user.sendQqh(this.loginUser.id,this.user.notice.touser.id,this.msgbody);
       if(res.status){
-        this.showQqhView(this.msgID);
+        this.qqhView.lastID = 0 ;
+        this.qqh_view().then(res=>{
+          this.flex_bottom()
+        });
       }else{
         this.$message.error(res.error);
       }
@@ -380,7 +423,18 @@ export default {
   margin-right: 10px;
 }
 /*悄悄话详情页*/
-.qiaoqiao-view .chat-top {
+.qiaoqiao-view .message-show{
+  height: calc(100vh - 37vh);
+  overflow-y:scroll ;
+}
+.qiaoqiao-view .message-show::-webkit-scrollbar {/*滚动条整体样式*/
+  width:4px;
+}
+.qiaoqiao-view .message-show::-webkit-scrollbar-thumb { /* 拖动条 */
+    background-color: rgba(0,0,0,.15);
+    border-radius: 2px;
+}
+/* .qiaoqiao-view .chat-top {
   position: fixed;
   width: 726px;
   z-index: 1;
@@ -390,7 +444,7 @@ export default {
   text-align: center;
   background-color: #fff;
   border-bottom: 1px solid #f0f0f0;
-}
+} */
 .qiaoqiao-view .first_letter,.qiaoqiao-list .first_letter{
   color:#14171a;
   border-radius: 50%;
@@ -402,19 +456,19 @@ export default {
   display: block;
   background-color: aliceblue;
 }
-.chat-top a {
+/* .chat-top a {
   color: #333;
-}
+} */
 .qiaoqiao-view .back-to-list {
   font-size: 14px;
   color: #969696;
 }
 
-.qiaoqiao-view .chat-top .ic-show {
+/* .qiaoqiao-view .chat-top .ic-show {
   position: absolute;
   top: 0;
   right: 15px;
-}
+} */
 .qiaoqiao-view .message-l div .content {
   min-height: 39px;
   background-color: #eee;

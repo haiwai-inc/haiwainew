@@ -9,10 +9,9 @@ class User extends API{
         this.userinfo= res.data;
     });
     published = {};
-    notice={};
+    notice={data:[],touser:{id:0,name:''}};
     myEditor={};
-    // editorObj=[];
-    // editorTabStatus=[];
+    
     /**
      * Login function for example
      * @param {*} email 
@@ -217,7 +216,7 @@ class User extends API{
      */
     async notification_unread_count(){
         let res = await this.sendget("account/user/notification_unread_count/")
-        if(res.status) this.notice=res.data
+        if(res.status) this.notice.data=res.data
         return res
     }
 
@@ -267,9 +266,9 @@ class User extends API{
     /**
      * get qqh list 
      */
-    async qqh_list(){
+    async qqh_list(lastID){
         try{
-            let res = await this.get("account/user/qqh_list/");
+            let res = await this.get("account/user/qqh_list/?lastID="+lastID);
             return res
         }
         catch(e){
@@ -281,9 +280,9 @@ class User extends API{
      * get qqh view 
      * @param qqhID
      */
-    async qqh_view(qqhID){
+    async qqh_view(qqhID,lastID){
         try{
-            let res = await this.get("account/user/qqh_view/?qqhID="+qqhID);
+            let res = await this.get("account/user/qqh_view/?qqhID="+qqhID+"&lastID="+lastID);
             return res
         }
         catch(e){

@@ -320,7 +320,7 @@ components: {
             if(formName==='loginForm'){
               this.loginForm.submitDisable = true;
               account.login(this.loginForm).then(res=>{
-                console.log(res);
+                // console.log(this.loginForm);
                 if(res.status){
                   this.setLoginState(res);
                 }else{
@@ -333,7 +333,7 @@ components: {
             if(formName==='wxcForm'){
               this.wxcForm.submitDisable = true;
               account.wxc_sign_in(this.wxcForm).then(res=>{
-                console.log(res);
+                // console.log(this.wxcForm);
                 if(res.status){
                   this.setLoginState(res);
                 }else{

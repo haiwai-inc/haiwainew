@@ -7,15 +7,19 @@
       </router-link>
         <div class='list-itme-tail d-flex justify-content-between mb-2'>
           <div class="name">
-            <!-- <i class="now-ui-icons objects_diamond text-primary" v-if="data.isHot"></i> -->
             <icon-V class="text-primary lable" v-if="data.userinfo_userID.is_hot_blogger"></icon-V> 
             
             {{data.userinfo_userID.username}}
             
           </div>
           <div class="tail-data">
-            <span><i class="now-ui-icons ui-2_favourite-28"></i> {{data.countinfo_postID.count_buzz}}</span>
-            <span class="ml-3"><i class="now-ui-icons ui-2_chat-round"></i> {{data.countinfo_postID.count_comment}}</span>
+            <span>
+              <!-- <i class="now-ui-icons ui-2_favourite-28"></i> -->
+              <span class="icons" v-html="icons.like_outline"></span>
+               {{data.countinfo_postID.count_buzz}}</span>
+            <span class="ml-3">
+              <span class="icons" v-html="icons.message"></span>
+               {{data.countinfo_postID.count_comment}}</span>
             <span class="ml-3" v-if="type=='bookmark'">
               <a herf="javascript:void(0)" v-if="data.postInfo_postID.is_bookmark==1" @click="deletBookmark(data.postID)">取消收藏</a>
             </span>
@@ -38,7 +42,7 @@
       id="image" 
       class='list-itme-image' 
       v-if="data.postInfo_postID.pic"
-      v-bind:style="{backgroundImage:'url('+(data.postInfo_postID.s_pic?data.postInfo_postID.s_pic:data.postInfo_postID.pic)+')'}">
+      v-bind:style="{backgroundImage:'url('+data.postInfo_postID.pic+')'}">
         <router-link :to="'/blog/p/'+data.postID">
           <div class="imgspace" id="imgspace"></div>
         </router-link>
@@ -49,6 +53,7 @@
 import {
     IconV
 } from '@/components/Icons';
+import icons from '@/components/Icons/Icons.js'
 import blog from '../../../blog.service';
 import {textTrans} from '@/directives/textTrans.js';
 
@@ -69,6 +74,11 @@ export default {
   },
   components: {
     IconV
+  },
+  data(){
+    return{
+      icons:icons,
+    }
   },
   methods:{
     deletBookmark(postID){
@@ -154,6 +164,11 @@ p.descript,div.list-itme-tail{
 }
 .list-itme-tail .tail-data a{
   cursor: pointer;
+}
+.tail-data .icons svg{
+  stroke:gray;
+  height:16px;
+  width:16px;
 }
 p.descript{
   margin-bottom: 0.25rem;

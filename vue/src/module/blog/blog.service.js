@@ -53,8 +53,8 @@ class Blog extends API{
   /**
    * 正文页相关推荐
    */
-  async article_list_tag(id,postID){
-	return await this.sendget("blog/page/article_list_tag/?tagID="+id+"&postID="+postID)
+  async article_list_tag(id,postID,lastID){
+	return await this.sendget("blog/page/article_list_tag/?tagID="+id+"&postID="+postID+"&lastID="+lastID)
   }
   /**
 	 * 返回博主首页最新列表

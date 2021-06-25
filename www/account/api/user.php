@@ -311,7 +311,7 @@ class user extends Api {
     /**
      * 悄悄话页
      * 悄悄话 列表
-     * @param integer $lastID | 最后一个悄悄话信息对话框的message_dateline
+     * @param integer $lastID | 最后一个悄悄话信息对话框的last_messageID
      * @response /account/api_response/qqh_list.txt
      */
     public function qqh_list($lastID=0){
@@ -322,10 +322,10 @@ class user extends Api {
         $where_account_qqh_post=[
             'limit'=>20,
             'SQL'=>"userID={$_SESSION['id']} OR touserID={$_SESSION['id']}",
-            'order'=>["last_message_dateline"=>'DESC']
+            'order'=>["last_messageID"=>'DESC']
         ];
         if(!empty($lastID)){
-            $where_account_qqh_post['last_message_dateline,<']=$lastID;
+            $where_account_qqh_post['last_messageID,<']=$lastID;
         }
         $rs_account_qqh=$obj_account_qqh->getAll("*",$where_account_qqh_post);
         if(!empty($rs_account_qqh)){
@@ -608,7 +608,7 @@ class user extends Api {
      */
     public function my_follower_list($lastID=0){
         $obj_account_follow=load("account_follow");
-        $fields=["followingID"=>$_SESSION['id'],'limit'=>20];
+        $fields=["followingID"=>$_SESSION['id'],'limit'=>20,'order'=>['id'=>'DESC']];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
