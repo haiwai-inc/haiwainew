@@ -27,7 +27,7 @@
               />
               <div 
               v-if="item.userID!==loginUser.id?item.userinfo_userID.avatar=='':item.userinfo_touserID.avatar==''" 
-              class="first_letter">{{item.userID===loginUser.id?item.userinfo_userID.first_letter:item.userinfo_touserID.first_letter}}</div>
+              class="first_letter">{{item.userID===loginUser.id?item.userinfo_touserID.first_letter:item.userinfo_userID.first_letter}}</div>
             <div class="pl-2" style="min-width:0;">
               <span class="name">{{item.userinfo_userID.id!==loginUser.id?item.userinfo_userID.username:item.userinfo_touserID.username}}</span>
               <div class="wrap">{{item.last_messageinfo.msgbody}}</div>
