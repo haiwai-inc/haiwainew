@@ -142,7 +142,7 @@ class tmp{
 }
 
 $obj = new tmp();
-$obj->start5();
+//$obj->start5();
 
 
 class CategorySorter{
