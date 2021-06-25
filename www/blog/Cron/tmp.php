@@ -180,16 +180,13 @@ class CategorySorter{
 
         $haiwaiUser= $this->hwUserObj->getOne("*", ["login_data" => $blogger["username"]]);
         if(empty($haiwaiUser)) return;
-        $haiwaiBlogger = $this->hwBloggerObj -> getOne("*", ["userID" => $haiwaiUser['id']]);
+	$hwBloggers = $this->hwBloggerObj->getOne("*",['userID'=>$haiwaiUser['userID']]);
 
         // Get all category of the blogger on haiwai
-        $hwCategories = $this->hwCategoryObj->getAll("*", ["bloggerID" => $haiwaiBlogger["id"], 'name,<>'=>"我的文章",'order'=>["sort"=>"ASC"]]);
-
+        $hwCategories = $this->hwCategoryObj->getAll("*", ["bloggerID" => $hwBloggers["id"], 'name,!='=>'我的文章','order'=>['sort'=>'ASC']]);
 
         // Reorder haiwai categories according to WXC
         $this->reorderHaiwai($wxcCategories, $hwCategories);
-
-
     }
 
     // private function fetchWXCCategoryOrder(){
@@ -232,7 +229,7 @@ class CategorySorter{
     }
 }
 
-$sorter = new CategorySorter();
+$sorter = new CategorySorter(["晓青"]);
 $sorter-> reorderCategory();
 
 
