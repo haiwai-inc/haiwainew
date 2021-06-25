@@ -133,7 +133,7 @@
         <div class="col-10 pt-2 text-center">
           <b>
             与
-            <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.name}}</a>
+            <a href="#" @click="$router.push('/blog/user/'+user.notice.touser.id)">{{user.notice.touser.name}}</a>
             的对话
           </b>
         </div>
@@ -200,7 +200,6 @@ export default {
   data(){
     return{
       loginUser:{},
-      touser:{},
       msgID:0,
       iconmore3v:HaiwaiIcons.iconmore3v,
       showView:false,
@@ -220,6 +219,7 @@ export default {
   },
   watch:{
     $route(){
+        console.log(this.user.notice.touser);
       this.typeid = Number(this.$route.query.typeid);
       this.qqhView.lastID=0;
       this.qqhView.data = [];
@@ -279,19 +279,8 @@ export default {
       }
       this.qqhView.data=res.data.reverse().concat(this.qqhView.data);//对话倒序排列
       console.log(res.data);
-      this.set_touser(res.data);
+      // this.set_touser(res.data);
     },
-    async set_touser(res){
-      for(i=0;i<res.length;i++){
-        
-        if(res[i].userID!==this.loginUser.id){
-          this.touser.id = res[i].userID;
-          this.touser.name = res[i].userinfo_userID.username;
-          return
-        }console.log(i)
-      }
-    },
-    
     async qqh_viewBYtypeid(){
       for(i=0;i<this.qqhList.data.length;i++){
         if(this.qqhList.data[i].id==this.typeid)this.qqh_view(i)
@@ -310,6 +299,8 @@ export default {
     showQqhView(item){
       console.log(item)
       // this.qqh_view(idx);
+      this.user.notice.touser.id = item.userID;
+      this.user.notice.touser.name = item.userinfo_userID.username;
       this.$router.push({path:"/notices",query:{id:this.$route.query.id,typeid:item.id}}).catch(()=>{
         this.$message.error("数据加载失败，请返回重试！")
       })
@@ -318,7 +309,7 @@ export default {
 
     async send() {
       // let user = this.$store.state.user;
-      let res = await this.user.sendQqh(this.loginUser.id,this.touser.id,this.msgbody);
+      let res = await this.user.sendQqh(this.loginUser.id,this.user.notice.touser.id,this.msgbody);
       if(res.status){
         this.qqhView.lastID = 0 ;
         this.qqh_view().then(res=>{

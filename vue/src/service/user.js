@@ -9,10 +9,9 @@ class User extends API{
         this.userinfo= res.data;
     });
     published = {};
-    notice={};
+    notice={data:[],touser:{id:0,name:''}};
     myEditor={};
-    // editorObj=[];
-    // editorTabStatus=[];
+    
     /**
      * Login function for example
      * @param {*} email 
@@ -217,7 +216,7 @@ class User extends API{
      */
     async notification_unread_count(){
         let res = await this.sendget("account/user/notification_unread_count/")
-        if(res.status) this.notice=res.data
+        if(res.status) this.notice.data=res.data
         return res
     }
 

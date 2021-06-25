@@ -53,7 +53,6 @@
         </div>
         <div v-if="activeId === 2">
           <notice-qqh></notice-qqh>
-          
         </div>
         <div v-if="activeId === 3">
           <notice-follow></notice-follow>
@@ -109,37 +108,38 @@ export default {
       allNoticeLastid:0,
       noMore:false,
       counts:{},
+      touser:{},
       data: [
         {
           id: 0,
           icon:icons.notice,
           title: this.$t('message').blog.notice_menu_all,
           noticeList: [],
-          unread: this.$store.state.user.notice.totall,
+          unread: this.$store.state.user.notice.data.totall,
         },{
           id: 1,
           icon:icons.message,
           title: this.$t('message').blog.notice_menu_comment,
           noticeList: [],
-          unread: this.$store.state.user.notice.reply,
+          unread: this.$store.state.user.notice.data.reply,
         },{
           id: 2,
           icon:icons.mail,
           title: this.$t('message').blog.notice_menu_qqh,
           noticeList: [],
-          unread: this.$store.state.user.notice.qqh,
+          unread: this.$store.state.user.notice.data.qqh,
         },{
           id: 3,
           icon:icons.follower,
           title: this.$t('message').blog.notice_menu_funs,
           noticeList: [],
-          unread: this.$store.state.user.notice.follow,
+          unread: this.$store.state.user.notice.data.follow,
         },{
           id: 4,
           icon:icons.like_outline,
           title: this.$t('message').blog.notice_menu_likeme,
           noticeList: [],
-          unread: this.$store.state.user.notice.buzz,
+          unread: this.$store.state.user.notice.data.buzz,
         },
       ],
     };
@@ -159,7 +159,7 @@ export default {
       this.activeId = Number(val);
       var type = this.activeId==0?"totall":this.activeId==1?"reply":this.activeId==2?"qqh":this.activeId==3?"follow":this.activeId==4?"buzz":"";
       this.notification_unread_clear(type);
-      if(this.activeId==0){console.log(this.activeId)
+      if(this.activeId==0){
         this.allNoticeLastid = 0;
         this.allNoticeList = [];
         this.showAllNotice()
@@ -214,6 +214,8 @@ export default {
       }
       if(e.type=="qqh"){
         this.activeId=2;
+        this.user.notice.touser.id = e.from_userID;
+        this.user.notice.touser.name = e.userinfo_from_userID.username;
         this.$router.push({path:"/notices",query:{id:this.activeId,typeid:e.typeID}})
       }
       if(e.type=="reply")this.activeId=1;

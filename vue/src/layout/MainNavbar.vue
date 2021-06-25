@@ -75,7 +75,7 @@
         @input="s_t"
       ></n-switch>
        <li class="nav-item" v-if="$store.state.user.userinfo.id">
-        <el-badge :value="$store.state.user.notice.totall" :hidden="!$store.state.user.notice.totall" :max="99" class="badge-item">
+        <el-badge :value="$store.state.user.notice.data.totall" :hidden="!$store.state.user.notice.data.totall" :max="99" class="badge-item">
           <router-link
             class="nav-link"
             style="margin-top:3px;z-index:1000"
@@ -84,7 +84,7 @@
             data-placement="bottom"
             to="/notices?id=0"
             >
-            <!-- <div class="noticealert" v-if="$store.state.user.notice.totall"></div> -->
+            <!-- <div class="noticealert" v-if="$store.state.user.notice.data.totall"></div> -->
             <i v-html="icons.notice" style="fill:#657786"></i>
             <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
           </router-link> 
