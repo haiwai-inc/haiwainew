@@ -11,10 +11,17 @@ class sync_recommend_post{
         $obj_legacy_hot_post=load("blog_legacy_hot_post");
         $obj_blog_recommend=load("blog_recommend");
         $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
+        $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
         
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         $postID_legacy_hot_post=[];
         foreach($rs_legacy_hot_post as $v){
+            //检查是否为600人
+            $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid']]);
+            if(empty($check_blog_legacy_blogger_haiwai)){
+                continue;
+            }
+            
             //检查是否导入
             $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$v['title']]);
             if(!empty($check_blog_hot)){
