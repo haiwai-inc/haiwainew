@@ -30,18 +30,26 @@ export default {
   created() {
     this.getfollower();
   },
+  watch:{
+    $route(){
+      if(this.$route.query.id==3){
+        this.lastID=0;console.log("ok")
+        this.follows.authorList = [];
+        this.getfollower();
+      }
+    }
+  },
   methods:{
     async getfollower(){
       let v= await this.$store.state.user.my_follower_list(this.lastID);
       if(v.status){
         this.follows.authorList = this.follows.authorList.concat(v.data);
         if(v.data.length==20){
-          this.lastID = v.data[19].id;
+          this.lastID = v.data[19].id;console.log(this.lastID)
           this.noMore = false;
         }else{
           this.noMore = true;
         }
-        console.log(this.follows.authorList);
       }
     }
   },

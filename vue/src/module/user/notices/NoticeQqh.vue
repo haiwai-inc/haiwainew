@@ -133,26 +133,26 @@
         <div class="col-10 pt-2 text-center">
           <b>
             与
-            <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.username}}</a>
+            <a href="#" @click="$router.push('/blog/user/'+touser.id)">{{touser.name}}</a>
             的对话
           </b>
         </div>
       </div>
       <div class="message-show" id="showbox">
-        <p class="text-center pt-3" style="cursor:pointer" v-if="!qqhView.noMore" @click="qqh_viewBYtypeid">加载更多</p>
+        <p class="text-center pt-3" style="cursor:pointer" v-if="!qqhView.noMore" @click="qqh_view">加载更多</p>
         <p class="text-center pt-3" v-if="qqhView.noMore">没有更多了</p>
         <ul class="message-list" id="innerbox">
           <li 
           v-for="(item,index) in qqhView.data" 
           :key="index"
           :class="{'message-l':item.userID!==loginUser.id,'message-r':item.userID===loginUser.id,}" >
-            <a href="#" class="avatar">
+            <span class="avatar">
               <img class="rounded-circle" 
-              :src="item.userID===loginUser.id?loginUser.avatar:touser.avatar"
-              v-if="item.userID===loginUser.id?loginUser.avatar!='':touser.avatar!=''"
+              :src="item.userinfo_userID.avatar"
+              v-if="item.userinfo_userID.avatar!=''"
               />
-              <div v-if="item.userID===loginUser.id?loginUser.avatar=='':touser.avatar==''" class="first_letter">{{item.userID===loginUser.id?loginUser.first_letter:touser.first_letter}}</div>
-            </a>
+              <div v-if="item.userinfo_userID.avatar==''" class="first_letter">{{item.userinfo_userID.first_letter}}</div>
+            </span>
             <div><span class="content">{{item.msgbody}}</span></div>
             <span class="time">{{item.dateline*1000 | formatDate}}</span>
           </li>
@@ -171,7 +171,7 @@
           type="primary"
           round 
           simple
-          @click.native="sendQqh(touser.id)"
+          @click.native="send()"
           >
             发送
           </n-button>
@@ -205,7 +205,7 @@ export default {
       iconmore3v:HaiwaiIcons.iconmore3v,
       showView:false,
       qqhList:{lastID:0,data:[],noMore:false},
-      qqhView:{lastID:0,data:[],noMore:false},
+      qqhView:{lastID:0,data:[],noMore:false,id:0},
       msgbody:'',
       user:this.$store.state.user,
       report_status:false,
@@ -219,15 +219,14 @@ export default {
         this.init_qqh_list();
   },
   watch:{
-    $route(){console.log(this.qqhView.lastID);
+    $route(){
       this.typeid = Number(this.$route.query.typeid);
       this.qqhView.lastID=0;
       this.qqhView.data = [];
       if(this.typeid){
-        this.getUserInfo();
-        this.init_qqh_list().then(res=>{
-          this.showView = true;
-          this.qqh_viewBYtypeid()
+        this.showView = true;
+        this.qqh_view().then(res=>{
+          this.flex_bottom()
         });
       }else{
         this.showView = false;
@@ -268,17 +267,10 @@ export default {
       // });
     },
 
-    async qqh_view(idx) {
+    async qqh_view() {
       this.qqhView.data=this.qqhView.lastID==0?[]:this.qqhView.data;
-      let list = this.qqhList.data;
-      if(list[idx].userinfo_userID.id===this.loginUser.id){
-        this.touser=list[idx].userinfo_touserID;
-        this.loginUser=list[idx].userinfo_userID;
-      }else{
-        this.touser=list[idx].userinfo_userID;
-        this.loginUser=list[idx].userinfo_touserID;
-      }
-      let res = await this.user.qqh_view(list[idx].id,this.qqhView.lastID);
+      
+      let res = await this.user.qqh_view(this.typeid,this.qqhView.lastID);
       if(res.data.length==20){
         this.qqhView.noMore = false;
         this.qqhView.lastID = res.data[19].id;
@@ -286,10 +278,18 @@ export default {
         this.qqhView.noMore = true;
       }
       this.qqhView.data=res.data.reverse().concat(this.qqhView.data);//对话倒序排列
-      document.getElementById("showbox").style.opacity = 0;
-      setTimeout(()=>{
-        this.flex_bottom()
-      },500)
+      console.log(res.data);
+      this.set_touser(res.data);
+    },
+    async set_touser(res){
+      for(i=0;i<res.length;i++){
+        
+        if(res[i].userID!==this.loginUser.id){
+          this.touser.id = res[i].userID;
+          this.touser.name = res[i].userinfo_userID.username;
+          return
+        }console.log(i)
+      }
     },
     
     async qqh_viewBYtypeid(){
@@ -300,9 +300,12 @@ export default {
     flex_bottom(){
       var ele = document.getElementById("showbox");
       if(ele.scrollHeight > ele.clientHeight) {
-        ele.scrollTop = ele.scrollHeight;
+        ele.style.opacity = 0;
+        setTimeout(()=>{
+          ele.scrollTop = ele.scrollHeight;
+          ele.style.opacity = 1;
+        },500)
       }
-      ele.style.opacity = 1;
     },
     showQqhView(item){
       console.log(item)
@@ -313,16 +316,14 @@ export default {
       this.showView=true;
     },
 
-    sendQqh(id){
-      this.send(this.loginUser.id,id,this.msgbody);
-    },
-
-    async send(userID,touserID,msgbody) {console.log(this.qqhView.lastID);
+    async send() {
       // let user = this.$store.state.user;
-      let res = await this.user.sendQqh(userID,touserID,msgbody);
+      let res = await this.user.sendQqh(this.loginUser.id,this.touser.id,this.msgbody);
       if(res.status){
         this.qqhView.lastID = 0 ;
-        this.qqh_viewBYtypeid();
+        this.qqh_view().then(res=>{
+          this.flex_bottom()
+        });
       }else{
         this.$message.error(res.error);
       }

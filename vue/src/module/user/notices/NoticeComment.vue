@@ -46,8 +46,9 @@
                     </div>
                 </li>
             </ul>
-            <!-- <comment :data="item.comment"></comment> -->
         </div>
+        <p class="text-center pb-5" style="cursor:pointer" v-if="!noMore" @click="getcomments">加载更多</p>
+        <p class="text-center pb-5" v-if="noMore">没有更多了</p>
         </div>
     </div>
 </template>
@@ -65,17 +66,27 @@ export default {
   created() {
       this.getcomments()
   },
-  filters: {
-    formatDate(time) {
-        var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm');
+  watch:{
+    $route(){
+      if(this.$route.query.id==1){
+        this.lastID=0;
+        this.comments.data = [];
+        this.getcomments();
+      }
     }
   },
   methods:{
       async getcomments(){
           let v = await this.$store.state.user.my_comment_list(0);
           if(v.status){
-              this.comments=v;
+              this.comments.status = v.status;
+              this.comments.data = this.comments.data.concat(v.data);
+              if(v.data==20){
+                  this.noMore = fasle;
+                  this.lastID = v.data[19].id
+              }else{
+                  this.noMore = true
+              }
           }
       },
       reply_delete(id){
@@ -88,9 +99,17 @@ export default {
   },
   data(){
       return{
-          comments:{status:false}
+          comments:{status:false,data:[]},
+          lastID:0,
+          noMore:true
       }
-  }
+  },
+  filters: {
+    formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
+    }
+  },
 }
 </script>
 <style>

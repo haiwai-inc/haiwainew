@@ -158,7 +158,12 @@ export default {
     "$route.query.id":function(val){
       this.activeId = Number(val);
       var type = this.activeId==0?"totall":this.activeId==1?"reply":this.activeId==2?"qqh":this.activeId==3?"follow":this.activeId==4?"buzz":"";
-      this.notification_unread_clear(type)
+      this.notification_unread_clear(type);
+      if(this.activeId==0){console.log(this.activeId)
+        this.allNoticeLastid = 0;
+        this.allNoticeList = [];
+        this.showAllNotice()
+      }
     }
   },
   mounted:function(){

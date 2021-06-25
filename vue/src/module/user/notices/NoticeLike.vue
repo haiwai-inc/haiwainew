@@ -19,6 +19,9 @@
             type="0"
           >
           </article-list-item>
+
+        <p class="text-center pb-5" style="cursor:pointer" v-if="!noMore" @click="getlike">加载更多</p>
+        <p class="text-center pb-5" v-if="noMore">没有更多了</p>
     </div>
 </template>
 <script>
@@ -31,11 +34,26 @@ export default {
   created() {
     this.getlike();
   },
+  watch:{
+    $route(){
+      if(this.$route.query.id==4){
+        this.lastID=0;
+        this.articlelists = [];
+        this.getlike();
+      }
+    }
+  },
   methods:{
     async getlike(){
-      let v = await this.$store.state.user.my_buzz_article_list(0);
+      let v = await this.$store.state.user.my_buzz_article_list(this.lastID);
       if(v.status){
-        this.articlelists = v.data
+        if(v.data.length==20){
+          this.lastID = v.data[19].postID;
+          this.noMore = false;
+        }else{
+          this.noMore = true;
+        }
+        this.articlelists = this.articlelists.concat(v.data);
       }
       console.log(this.articlelists)
     },
@@ -43,6 +61,8 @@ export default {
   data(){
     return{
       articlelists: [],
+      lastID:0,
+      noMore:false
     }
   }
 }
