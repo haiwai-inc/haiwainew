@@ -608,7 +608,7 @@ class user extends Api {
      */
     public function my_follower_list($lastID=0){
         $obj_account_follow=load("account_follow");
-        $fields=["followingID"=>$_SESSION['id'],'limit'=>20];
+        $fields=["followingID"=>$_SESSION['id'],'limit'=>20,'order'=>['id'=>'DESC']];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
