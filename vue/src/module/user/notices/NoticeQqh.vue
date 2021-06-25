@@ -299,8 +299,8 @@ export default {
     showQqhView(item){
       console.log(item)
       // this.qqh_view(idx);
-      this.user.notice.touser.id = item.userID;
-      this.user.notice.touser.name = item.userinfo_userID.username;
+      this.user.notice.touser.id = this.loginUser.id !== item.userID ? item.userID : item.touserID;
+      this.user.notice.touser.name = this.loginUser.id !== item.userID ? item.userinfo_userID.username : item.userinfo_touserID.username;
       this.$router.push({path:"/notices",query:{id:this.$route.query.id,typeid:item.id}}).catch(()=>{
         this.$message.error("数据加载失败，请返回重试！")
       })
