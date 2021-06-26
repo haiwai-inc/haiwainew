@@ -22,5 +22,9 @@ class blog_category extends Model{
 		$categories = $blogger_obj->get_basic_bloggerinfo($categories, "bloggerID");
 		return $categories;
 	}
-
+	
+	//同步wxc和haiwai目录排序
+	public function sync_wxc_category($username){
+	    
+	}
 }
