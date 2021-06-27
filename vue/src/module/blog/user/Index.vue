@@ -19,7 +19,7 @@
       </div>
        <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
-          <div class="collection-list mt-3" v-if="collectionList.length>0">
+          <div class="collection-list mt-3" v-if="collectionList.length>=0">
             <collection-list v-bind:data="collectionList" :userdata="false" :title="$t('message').userindex.menu_title" @showbubble="showbubble"></collection-list>
           </div>
         <blog-help></blog-help>

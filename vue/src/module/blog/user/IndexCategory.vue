@@ -6,7 +6,9 @@
       <div class="row">
        <div class="col-sm-3 d-none d-sm-block">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
+          
           <div class="collection-list mt-1">
+            
             <collection-list v-if="loading.userinfo" v-bind:data="collectionList" :userdata="userInfo" :title="$t('message').userindex.menu_title"></collection-list>
           </div>
         </div>
@@ -118,33 +120,34 @@ export default {
           this.loading.userinfo=true;
         }
       })
-    }
+    },
   },
   data() {
     return {
-        bloggerID:this.$route.params.bloggerid,
-        catID:this.$route.params.catid,
-        currentCat:{},
-        noMore:false,
-        userInfo:{},
-        lastID:{article:0,wenji:0},
-        loading:{article:true,wenji:true,userinfo:false},
-        tabs:[
-            {
-                id:0,
-                text:'最新博文',
-            },{
-                id:1,
-                text:'最热博文',
-            },{
-                id:2,
-                text:'新评博文',
-            }
-        ],
-        authorInfo : {},
-        articlelists: [],
-        collectionList : [],
-        icons:icons
+      user:this.$store.state.user,
+      bloggerID:this.$route.params.bloggerid,
+      catID:this.$route.params.catid,
+      currentCat:{},
+      noMore:false,
+      userInfo:{},
+      lastID:{article:0,wenji:0},
+      loading:{article:true,wenji:true,userinfo:false},
+      tabs:[
+          {
+              id:0,
+              text:'最新博文',
+          },{
+              id:1,
+              text:'最热博文',
+          },{
+              id:2,
+              text:'新评博文',
+          }
+      ],
+      authorInfo : {},
+      articlelists: [],
+      collectionList : [],
+      icons:icons,
     };
   },
 };
