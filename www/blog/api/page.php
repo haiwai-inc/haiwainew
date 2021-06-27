@@ -420,7 +420,7 @@ class page extends Api {
      * 文章详情页 
      * 文章 评论
      * @param integer $id | 主贴postID
-     * @param integer $lastID | 评论最后一个postID
+     * @param integer $lastID | 评论最后一个create_date
      */
     public function article_view_comment($id,$lastID=0){
         $obj_article_indexing=load("article_indexing");
@@ -430,14 +430,14 @@ class page extends Api {
         //评论
         $fields=[
             'treelevel,!='=>0,
-            'order'=>['postID'=>'DESC'],
+            'order'=>['create_date'=>'DESC'],
             'visible'=>1,
             'basecode'=>$check_article_indexing['postID'],
             'limit'=>20,
         ];
         
         if(!empty($lastID)){
-            $fields['postID,<']=$lastID;
+            $fields['create_date,<']=$lastID;
         }
         $rs_article_indexing=$obj_article_indexing->getAll(['postID','basecode','userID','bloggerID','create_date','edit_date','treelevel'],$fields);
         if(empty($rs_article_indexing)){
@@ -539,7 +539,7 @@ class page extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['is_publish'=>1,'order'=>['sort'=>'ASC'],'limit'=>50,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['is_publish'=>1,'order'=>['is_default'=>'DESC','sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
