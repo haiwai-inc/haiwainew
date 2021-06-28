@@ -326,7 +326,24 @@ class article_indexing extends Model
 	    }
 	    
 	    //文学城域名
-        $msgbody=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$msgbody);
+	    $doc = new DOMDocument();
+	    @$doc->loadHTML($msgbody);
+	    $elements = $doc->getElementsByTagName('img');
+	    $image_pool=[];
+	    foreach($elements as $element) {
+	        if(!empty($element->getAttribute('src'))){
+	            $image_pool[]=$element->getAttribute('src');
+	        }
+	    }
+	    if(!empty($image_pool)){
+	        foreach($image_pool as $k=>$v){
+	            if(substr($v,0,14)=='/upload/album/'){
+	                $new_image=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$v);
+	                $msgbody=str_replace($v,$new_image,$msgbody);
+	            }
+	        }
+	    }
+	    
 	    return $msgbody;
 	}
 	
