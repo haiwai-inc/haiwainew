@@ -220,10 +220,10 @@ class user extends Api {
      * 我关注的人 列表 
      * @param integer $lastID | 分页id
      */
-    public function my_followering_list($lastID=0){
+    public function my_following_list($lastID=0){
         $obj_account_follow=load("account_follow");
         
-        $fields=['order'=>["id"=>"DESC"],'followerID'=>$_SESSION['id']];
+        $fields=['order'=>["id"=>"DESC"],'followerID'=>$_SESSION['id'],'limit'=>100];
         if(!empty($lastID)){
             $fields['id,<']=$lastID;
         }
@@ -233,8 +233,27 @@ class user extends Api {
         $obj_account_user=load("account_user");
         $rs_account_follow=$obj_account_user->get_basic_userinfo($rs_account_follow,"followingID");
         
-        //添加博客信息
+        //剔除非博客用户
         $obj_blog_blogger=load("blog_blogger");
+        if(!empty($rs_account_follow)){
+            foreach($rs_account_follow as $v){
+                $tmp_account_follow[]=$v['followingID'];
+            }
+            $rs_blog_blogger=$obj_blog_blogger->getAll(['id','userID'],['OR'=>['userID'=>$tmp_account_follow]]);
+            if(!empty($rs_blog_blogger)){
+                foreach($rs_blog_blogger as $v){
+                    $hash_blog_blogger[$v['id']]=$v['userID'];
+                }
+                foreach($rs_account_follow as $k=>$v){
+                    if(!in_array($v['followingID'],$hash_blog_blogger)){
+                        unset($rs_account_follow[$k]);
+                    }
+                }
+                $rs_account_follow=array_values($rs_account_follow);
+            }
+        }
+        
+        //添加博客信息
         $rs_account_follow=$obj_blog_blogger->get_basic_bloggerinfo($rs_account_follow,"userinfo_followingID",true);
         
         return $rs_account_follow;
