@@ -85,7 +85,7 @@
             to="/notices?id=0"
             >
             <!-- <div class="noticealert" v-if="$store.state.user.notice.data.totall"></div> -->
-            <i v-html="icons.notice" style="fill:#657786"></i>
+            <i v-html="icons.notice" class="notice"></i>
             <p class="d-lg-none d-xl-none">{{$t('message').topnav.notice}}</p>
           </router-link> 
         </el-badge>
@@ -358,6 +358,10 @@ span.icon {
   width:18px;
   height:18px;
 }
+
+.notice svg{
+  fill:#657786;
+}
 @media (max-width: 575.98px) { 
   .editbtn{
     color:white !important;
@@ -386,5 +390,10 @@ span.icon {
   left: 0
   }
 }
-
+@media (max-width: 767.98px) {
+  .nav-item .icon svg,.notice svg{
+    fill:white;
+    stroke: white;
+  }
+}
 </style>

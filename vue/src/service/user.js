@@ -309,7 +309,8 @@ class User extends API{
      * @param {分页参数} lastID 
      */
     async my_followering_list(lastID){
-        return await this.sendget("blog/user/my_followering_list/?lastID="+lastID)
+        // return await this.sendget("blog/user/my_followering_list/?lastID="+lastID);
+        return await this.sendget("blog/user/my_following_list/?lastID="+lastID);
     }
 
     /**
