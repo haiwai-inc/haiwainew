@@ -394,6 +394,7 @@ span.icon {
   .nav-item .icon svg,.notice svg{
     fill:white;
     stroke: white;
+    stroke-width: 0.6px;
   }
 }
 </style>
