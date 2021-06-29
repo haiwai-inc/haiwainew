@@ -86,7 +86,7 @@ class article_indexing extends Model
             }else{
                 foreach($condition as $v){
                     if(empty($select_sql)){
-                        $select_sql="SELECT {$v}";
+                        $select_sql="SELECT {$v} ";
                     }else{
                         $select_sql.=",{$v} ";
                     }
