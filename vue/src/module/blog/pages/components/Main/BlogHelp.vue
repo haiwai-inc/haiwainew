@@ -1,12 +1,13 @@
 <template>
-            <div class="box mt-4 pl-3 bolger-box sticky-top help">
+            <div class="box mt-4 p-3 bolger-box sticky-top help">
               <span v-html="icons.helpcenter"></span>
               <span class="ml-3 mb-3 "><a href="http://www1.haiwai.com/blog/c/618/4393" class="title font-weight-bold text-dark">帮助中心</a></span>
               <div class=row>
               <div class="col-12 mt-3 text-secondary"><a href="https://www1.haiwai.com/blog/p/1636880" class="small">复制文学城博客和相关问题解答</a></div>
               </div>
               <div class=row>
-               <div class="col-12 mt-3 text-secondary"><a href="https://www1.haiwai.com/blog/p/1636901" class="small">如何在海外注册和登入</a></div>
+               <div class="col-6 mt-3 text-secondary"><a href="https://www1.haiwai.com/blog/p/1636901" class="small">如何注册和登入</a></div>
+               <div class="col-6 mt-3 text-secondary"><a href="https://www1.haiwai.com/blog/p/1637701" class="small">如何公开或隐藏目录</a></div>
               </div>
               <div class=row>
                <div class="col-6 mt-3 text-secondary"><a href="https://www1.haiwai.com/blog/p/1448485" class="small">如何发博文</a></div>
