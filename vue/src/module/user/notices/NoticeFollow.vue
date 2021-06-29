@@ -13,7 +13,7 @@
               </div>
            </div>
         </div>
-    <div v-if="this.follows.authorList.length">
+    <div v-if="this.follows.authorList.length" class="pb-5 mb-5">
         <bloger-list-item v-for="(item,index) in follows.authorList" :key="index" :data="item" :usertype="'follower'"></bloger-list-item>
         <p class="text-center pb-5" style="cursor:pointer" v-if="!noMore" @click="getfollower">加载更多</p>
         <p class="text-center pb-5" v-if="noMore">没有更多了</p>
