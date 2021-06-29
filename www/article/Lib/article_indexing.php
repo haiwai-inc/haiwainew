@@ -27,6 +27,23 @@ class article_indexing extends Model
     }
     
     //archive分表
+    function update($condition,$where=NULL,$table=NULL){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        $rs_article_indexing=parent::getOne(['id','postID','create_date'],$where);
+        if(!empty($rs_article_indexing)){
+            $id=parent::update($condition,$where);
+            return $id;
+        }
+        
+        $rs_article_indexing=$this->getOne(['id','postID','create_date'],$where);
+        $tbn=gmdate('Y',$rs_article_indexing['create_date'])."_indexing";
+        $id=$obj_archive->update($condition,$where,$tbn);
+        return $id;
+    }
+    
+    //archive分表
     function getAll($condition,$where=NULL,$table=NULL){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
