@@ -43,6 +43,6 @@ font-size:1rem}
 .bolger-box {
         background-color: #f6f9fc;
         border-radius: 16px;
-        padding: 18px 0
+        padding: 18px 0;
 }
 </style>
