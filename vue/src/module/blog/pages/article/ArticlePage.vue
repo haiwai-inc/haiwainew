@@ -92,7 +92,6 @@
             <div class="content" v-html="$options.filters.textTrans(articleDetail.data.postInfo_postID.msgbody)">
               <!-- blog 正文 -->
             </div>
-            <div id="isTw"></div>
             <!-- <script v-if="hasTw" async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
             <previous-next-bar
               v-if="articleDetail.data.article_previous_next.next ||articleDetail.data.article_previous_next.previous"
