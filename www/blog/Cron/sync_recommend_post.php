@@ -17,6 +17,8 @@ class sync_recommend_post{
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         $postID_legacy_hot_post=[];
         foreach($rs_legacy_hot_post as $v){
+            echo $v['id']."\n";
+            
             //检查是否为600人
             $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid']]);
             if(empty($check_blog_legacy_blogger_haiwai)){
@@ -52,7 +54,6 @@ class sync_recommend_post{
             }
             
             $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
-            echo $v['id']."\n";
         }
         
         //同步ES索引
