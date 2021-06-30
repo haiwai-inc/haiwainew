@@ -12,6 +12,7 @@ class sync_recommend_post{
         $obj_blog_recommend=load("blog_recommend");
         $obj_blog_legacy_202005_post=load("blog_legacy_202005_post");
         $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
+        $obj_blog_wxc_postID=load("blog_wxc_postID");
         
         $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
         $postID_legacy_hot_post=[];
@@ -25,6 +26,10 @@ class sync_recommend_post{
             //检查是否导入
             $check_blog_hot=$obj_blog_recommend->getOne(['id'],['title'=>$v['title']]);
             if(!empty($check_blog_hot)){
+                continue;
+            }
+            $check_blog_wxc_postID=$obj_blog_wxc_postID->getOne(['id'],['wxc_postID'=>"{$v['date']}_{$v['postid']}","wxc_userID"=>$v['userid']]);
+            if(!empty($check_blog_wxc_postID)){
                 continue;
             }
             
