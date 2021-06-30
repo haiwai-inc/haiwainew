@@ -105,6 +105,9 @@ class article_indexing extends Model
             unset($where['OR']);
             if(!empty($where)){
                 foreach($where as $k=>$v){
+                    if($k=="order"){
+                        continue;
+                    }
                     $where_sql.="and `{$k}`={$v} ";
                 }
             }
@@ -114,6 +117,13 @@ class article_indexing extends Model
             foreach($archive_pool as $k=>$v){
                 $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
             }
+            if(!empty($where['order'])){
+                $sql.="order by ";
+                foreach($where['order'] as $k=>$v){
+                    $sql.="`{$k}` {$v} ";
+                }
+            }
+            
             
             $rs_article_indexing=parent::getAll($sql);
         }
