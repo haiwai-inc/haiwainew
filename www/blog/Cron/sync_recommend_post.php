@@ -14,7 +14,7 @@ class sync_recommend_post{
         $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
         $obj_blog_wxc_postID=load("blog_wxc_postID");
         
-        $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['limit'=>80,'order'=>['id'=>'DESC']]);
+        $rs_legacy_hot_post=$obj_legacy_hot_post->getAll("*",['id,>'=>179806,'limit'=>80,'order'=>['id'=>'DESC']]);
         $postID_legacy_hot_post=[];
         foreach($rs_legacy_hot_post as $v){
             echo $v['id']."\n";
