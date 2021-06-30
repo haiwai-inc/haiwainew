@@ -470,9 +470,6 @@ class page extends Api {
             }
         }
         
-        debug::D($rs_article_indexing);
-        exit;
-        
         //ES补全postID信息
         $obj_article_noindex=load("search_article_noindex");
         $rs_article_indexing=$obj_article_noindex->get_postInfo($rs_article_indexing,'postID',true);
