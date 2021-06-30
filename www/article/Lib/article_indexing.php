@@ -96,9 +96,16 @@ class article_indexing extends Model
             //生成where
             foreach($id_rs as $v){
                 if(empty($where_sql)){
-                    $where_sql="WHERE {$key}={$v} ";
+                    $where_sql="WHERE ( {$key}={$v} ";
                 }else{
                     $where_sql.="or {$key}={$v} ";
+                }
+            }
+            $where_sql.=") ";
+            unset($where['OR']);
+            if(!empty($where)){
+                foreach($where as $k=>$v){
+                    $where_sql.="and `{$k}`={$v} ";
                 }
             }
             
@@ -107,6 +114,7 @@ class article_indexing extends Model
             foreach($archive_pool as $k=>$v){
                 $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
             }
+            
             $rs_article_indexing=parent::getAll($sql);
         }
         return $rs_article_indexing;
