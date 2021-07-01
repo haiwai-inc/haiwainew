@@ -10,7 +10,7 @@
             <ul style="white-space:nowrap;display:block;overflow:auto;padding-inline-start:0px">
               <li v-for="item in authorList" 
               style="list-style:none;display:inline-block;margin-left:10px;padding-top:6px;vertical-align:top"
-              :key="item.id" @click="$router.push('/blog/user/'+item.userID)">
+              :key="item.id" @click="$router.push('/blog/user/'+item.followingID)">
                 <!-- <avatar :data="item.userinfo_followingID" :imgHeight="42"></avatar> -->
                 <el-avatar v-if="item.userinfo_followingID.avatar" :src="item.userinfo_followingID.avatar" :size="50"></el-avatar>
                 <el-avatar v-if="!item.userinfo_followingID.avatar" :size="50">{{item.userinfo_followingID.first_letter}}</el-avatar>
