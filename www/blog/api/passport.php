@@ -384,7 +384,7 @@ class passport extends Api {
         
         //查询博客文章
         $obj_article_indexing=load("article_indexing");
-        $check_article_indexing=$obj_article_indexing->getOne(['postID'],['visible'=>1,'postID'=>$postID]);
+        $check_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID]);
         if(empty($check_article_indexing)) {$this->error="博文不存在";$this->status=false;return false;}
         
         $time=times::gettime();
@@ -396,9 +396,9 @@ class passport extends Api {
         $obj_blog_recommend->remove(['postID'=>$postID]);
         
         //同步博客数据
-        if($rs_article_indexing['typeID']==1){
+        if($check_article_indexing['typeID']==1){
             $obj_blog_blogger=load("blog_blogger");
-            $obj_blog_blogger->delete_blog_article($rs_article_indexing);
+            $obj_blog_blogger->delete_blog_article($check_article_indexing);
         }
         
         //同步ES索引
