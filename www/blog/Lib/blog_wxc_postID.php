@@ -1,5 +1,5 @@
 <?php
-class article_indexing_wxc extends Model{
+class blog_wxc_postID extends Model{
 	protected $tableName="wxc_postID";
 	protected $dbinfo=array("config"=>"blog","type"=>"MySQL");
 }
