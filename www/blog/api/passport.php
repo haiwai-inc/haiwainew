@@ -382,7 +382,13 @@ class passport extends Api {
         }
         $postID=$rs_blog_wxc_postID['postID'];
         
+        //查询博客文章
+        $obj_article_indexing=load("article_indexing");
+        $check_article_indexing=$obj_article_indexing->getOne(['postID'],['visible'=>1,'postID'=>$postID]);
+        if(empty($check_article_indexing)) {$this->error="博文不存在";$this->status=false;return false;}
+        
         $time=times::gettime();
+        $obj_article_indexing=load("article_indexing");
         $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
         
         //撤销精选
