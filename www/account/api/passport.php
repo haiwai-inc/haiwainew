@@ -100,6 +100,7 @@ class passport extends Api {
      */
     public function user_login_wxc($login_data,$login_token){
         $login_data=str_replace(" ","+",$login_data);
+        $login_token=rawurldecode($login_token);
         
         $obj_account_user_login=load("account_user_login");
         $rs_user_login=$obj_account_user_login->wxc_login($login_data,$login_token);
