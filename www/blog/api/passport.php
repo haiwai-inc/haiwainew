@@ -364,11 +364,6 @@ class passport extends Api {
         $check_blog_blogger=$obj_blog_blogger->getOne(['id'],['userID'=>$rs_account_user_auth['userID']]);
         if(empty($check_blog_blogger))    {$this->error="博客不存在";$this->status=false;return false;}
         
-        //验证文章
-        $obj_article_indexing=load("article_indexing");
-        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID,'userID'=>$_SESSION['UserID']]);
-        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
-        
         //查询haiwai postID
         $obj_blog_wxc_postID=load("blog_wxc_postID");
         $rs_blog_wxc_postID=$obj_blog_wxc_postID->getOne("*",['wxc_postID'=>$wxc_postID,'wxc_userID'=>$wxc_userID]);
