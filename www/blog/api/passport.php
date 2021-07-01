@@ -341,7 +341,71 @@ class passport extends Api {
         return true;
     }
     
-    
+    /**
+     * 文学城
+     * 文章 修改
+     * @param string $token
+     * @param string $wxc_userID
+     * @param string $username
+     * @param string $wxc_postID
+     * @param string $visible
+     * @post token,wxc_userID,username,wxc_postID,$visible
+     */
+    public function wxc_to_haiwai_article_delete($token,$wxc_userID,$username,$wxc_postID,$visible=0){
+        //验证用户
+        $obj_memcache = func_initMemcached('cache02');
+        $wxc_userID_cache=$obj_memcache->get($token);
+        if(empty($wxc_userID_cache) || $wxc_userID_cache!=$wxc_userID)  {$this->error="未通过验证";$this->status=false;return false;}
+        
+        //验证博客用户
+        $obj_account_user_auth=load("account_user_auth");
+        $rs_account_user_auth=$obj_account_user_auth->getOne(['userID'],['login_data'=>$username,'login_source'=>"wxc"]);
+        $obj_blog_blogger=load("blog_blogger");
+        $check_blog_blogger=$obj_blog_blogger->getOne(['id'],['userID'=>$rs_account_user_auth['userID']]);
+        if(empty($check_blog_blogger))    {$this->error="博客不存在";$this->status=false;return false;}
+        
+        //验证文章
+        $obj_article_indexing=load("article_indexing");
+        $rs_article_indexing=$obj_article_indexing->getOne("*",['visible'=>1,'postID'=>$postID,'userID'=>$_SESSION['UserID']]);
+        if(empty($rs_article_indexing)){$this->error="此文章不存在";$this->status=false;return false;}
+        
+        //查询haiwai postID
+        $obj_blog_wxc_postID=load("blog_wxc_postID");
+        $rs_blog_wxc_postID=$obj_blog_wxc_postID->getOne("*",['wxc_postID'=>$wxc_postID,'wxc_userID'=>$wxc_userID]);
+        if(empty($rs_blog_wxc_postID)){
+            $obj_article_indexing_wxc=load("article_indexing_wxc");
+            $wxc_postID=explode("_",$wxc_postID);
+            $year=substr($wxc_postID[0],0,4);
+            $month=substr($wxc_postID[0],4,6);
+            $wxc_postID="{$year}-{$month}_blog_{$wxc_postID[1]}";
+            $rs_article_indexing_wxc=$obj_article_indexing_wxc->getOne("*",['wxc_postID'=>$wxc_postID]);
+            if(!empty($rs_article_indexing_wxc)){
+                $rs_blog_wxc_postID['postID']=$rs_article_indexing_wxc['postID'];
+            }else{
+                $this->error="此文章不存在";$this->status=false;return false;
+            }
+        }
+        $postID=$rs_blog_wxc_postID['postID'];
+        
+        $time=times::gettime();
+        $obj_article_indexing->update(['visible'=>!empty($visible)?1:0,"edit_date"=>$time],['postID'=>$postID]);
+        
+        //撤销精选
+        $obj_blog_recommend=load("blog_recommend");
+        $obj_blog_recommend->remove(['postID'=>$postID]);
+        
+        //同步博客数据
+        if($rs_article_indexing['typeID']==1){
+            $obj_blog_blogger=load("blog_blogger");
+            $obj_blog_blogger->delete_blog_article($rs_article_indexing);
+        }
+        
+        //同步ES索引
+        $obj_article_noindex=load("search_article_noindex");
+        $obj_article_noindex->fetch_and_insert([$postID]);
+        
+        return true;
+    }
     
     
     
