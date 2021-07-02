@@ -20,7 +20,7 @@ class sync_recommend_post{
             echo $v['id']."\n";
             
             //检查是否为600人
-            $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid'],'id,<'=>602]);
+            $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid'],'id,<'=>649]);
             if(empty($check_blog_legacy_blogger_haiwai)){
                 continue;
             }

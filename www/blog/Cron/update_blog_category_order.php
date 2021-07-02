@@ -22,7 +22,7 @@ class CategorySorter{
             $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["username" => $this->usernames]]);
         }
         else {
-            $wxcBloggers = $this->wxcBloggerObj->getAll("*",['id<,'=>602]);
+            $wxcBloggers = $this->wxcBloggerObj->getAll("*",['id<,'=>649]);
         }
         foreach($wxcBloggers as $blogger){
             $this->reorderBloggerCategory($blogger);
