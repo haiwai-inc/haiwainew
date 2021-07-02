@@ -22,10 +22,8 @@ class CategorySorter{
             $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["username" => $this->usernames]]);
         }
         else {
-            $wxcBloggers = $this->wxcBloggerObj->getAll("*");
+            $wxcBloggers = $this->wxcBloggerObj->getAll("*",['id<,'=>649]);
         }
-
-
         foreach($wxcBloggers as $blogger){
             $this->reorderBloggerCategory($blogger);
         }
@@ -44,20 +42,9 @@ class CategorySorter{
         // Get all category of the blogger on haiwai
         $hwCategories = $this->hwCategoryObj->getAll("*", ["bloggerID" => $haiwaiBlogger["id"], 'name,<>'=>"我的文章",'order'=>["sort"=>"ASC"]]);
 
-
         // Reorder haiwai categories according to WXC
         $this->reorderHaiwai($wxcCategories, $hwCategories);
-
-
     }
-
-    // private function fetchWXCCategoryOrder(){
-
-    // }
-
-    // private function fetchCurrentHaiwaiOrder($nameList = []){
-
-    // }
 
     private function reorderHaiwai($wxcCategories, $hwCategories){
         $catNameIDMap = [];
@@ -85,12 +72,9 @@ class CategorySorter{
             $visited[$category['category']] = true;
             $i ++;
         }
-        // debug::d($wxcCategories);
-        // debug::d($hwCategories);
-        debug::d($updates);
     }
 }
 
-$sorter = new CategorySorter(["sidatesting"]);
+$sorter = new CategorySorter();
 $sorter-> reorderCategory();
 
