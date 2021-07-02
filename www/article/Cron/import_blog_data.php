@@ -35,7 +35,7 @@ class import_blog_data{
                     $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>601]);
                     
                     if(!empty($check_blog_legacy_blogger_haiwai)){
-                        echo "hit {$check_blog_legacy_blogger_haiwai['username']}.\n";
+                        echo "hit {$check_blog_legacy_blogger_haiwai['username']}========================= \n";
                         
                         //主贴
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
