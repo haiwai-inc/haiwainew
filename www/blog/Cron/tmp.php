@@ -198,12 +198,11 @@ class tmp{
 '南半球')");
         
         foreach($rs_account_legacy_user as $v){
-            $obj_blog_legacy_blogger_haiwai->insert(['userid'=>$v['userid'],'']);
+            $obj_blog_legacy_blogger_haiwai->insert(['userid'=>$v['userid'],'blogid'=>$v['blogid'],'username'=>$v['username']]);
         }
         
         debug::d($rs_account_legacy_user);
         exit;
-        
     }
 }
 
