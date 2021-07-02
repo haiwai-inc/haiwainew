@@ -32,14 +32,12 @@ class import_blog_data{
                     
                     //热门博主搜索
                     $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
-                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid']]);
-                    
-                    
-                    debug::d($check_blog_legacy_blogger_haiwai);
-                    exit;
-                    
+                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne(['id'],['userid'=>$v['userid'],'id,>'=>601]);
                     
                     if(!empty($check_blog_legacy_blogger_haiwai)){
+                        debug::d($check_blog_legacy_blogger_haiwai);
+                        exit;
+                        
                         //主贴
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
                         $rs_import_post=$obj_blog_tool->import_post($v);

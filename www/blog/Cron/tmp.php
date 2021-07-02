@@ -207,7 +207,7 @@ class tmp{
 }
 
 $obj = new tmp();
-$obj->start6();
+//$obj->start6();
 
 
 
