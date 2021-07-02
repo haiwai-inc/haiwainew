@@ -139,87 +139,76 @@ class tmp{
             $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
         }
     }
+    
+    //补充新博客到haiwai_blogger
+    function start6(){
+        $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
+        $obj_account_legacy_user=load("account_legacy_user");
+        
+        $rs_account_legacy_user=$obj_account_legacy_user->getAll("SELECT username,userid,blogid FROM `user` WHERE username IN ('liangmenzha',
+'静心阁',
+'erdong',
+'清风-细雨',
+'喜清静',
+'心雨烟尘',
+'西门东瓜',
+'o哈哈校长',
+'黑眼睛的苏珊',
+'拂晓的风，轻轻地吹',
+'jun100',
+'手拉手来',
+'北极清泉',
+'心雨烟尘',
+'rosejyy2000',
+'华灜',
+'紫嫣淡染',
+'芋头_2020',
+'田姐',
+'素月-2006-',
+'gx123',
+'千瓦厚',
+'认真错位',
+'lin13590',
+'观摄',
+'雁霄',
+'爱琴海上',
+'土村药师',
+'Astrologer07',
+'我的庭院',
+'疏影浅斜',
+'婉妮',
+'wxia0822',
+'求索之路平坦心',
+'杳果果',
+'深度思考',
+'GD988',
+'西窗下',
+'everyday',
+'恬宁',
+'美国波比医生',
+'东篱翁',
+'无法弄',
+'东村山人',
+'江毅',
+'nuts000',
+'吟凝',
+'快乐玉子',
+'罗雪七',
+'JessAB',
+'南半球')");
+        
+        foreach($rs_account_legacy_user as $v){
+            $obj_blog_legacy_blogger_haiwai->insert(['userid'=>$v['userid'],'']);
+        }
+        
+        debug::d($rs_account_legacy_user);
+        exit;
+        
+    }
 }
 
 $obj = new tmp();
-//$obj->start5();
-
-
-class CategorySorter{
-
-    public function __construct($usernames = [])
-    {
-        $this->usernames = empty($usernames) ? [] : $usernames;
-        $this->wxcBloggerObj = load("blog_legacy_blogger_haiwai");
-        $this->wxcCategoryObj = load("blog_legacy_blogcat_members");
-        $this->hwUserObj = load("account_user_auth");
-        $this->hwCategoryObj = load("blog_category");
-        $this->hwBloggerObj = load("blog_blogger");
-    }
-
-    public function reorderCategory(){  
-        $wxcBloggers = [];
-        if(!empty($this->usernames)) {
-            $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["username" => $this->usernames]]);
-        }
-        else {
-            $wxcBloggers = $this->wxcBloggerObj->getAll("*");
-        }
-
-
-        foreach($wxcBloggers as $blogger){
-            $this->reorderBloggerCategory($blogger);
-        }
-    }
-
-    private function reorderBloggerCategory($blogger){
-        // Get all category of the blogger on WXC
-        $wxcCategories = $this->wxcCategoryObj->getAll("*", ["userid" => $blogger['userid'], 'order'=>["sortorder"=>"ASC"]]);
-
-        // Get information about the user in haiwai
-
-        $haiwaiUser= $this->hwUserObj->getOne("*", ["login_data" => $blogger["username"]]);
-        if(empty($haiwaiUser)) return;
-	$hwBloggers = $this->hwBloggerObj->getOne("*",['userID'=>$haiwaiUser['userID']]);
-
-        // Get all category of the blogger on haiwai
-        $hwCategories = $this->hwCategoryObj->getAll("*", ["bloggerID" => $hwBloggers["id"], 'name,!='=>'我的文章','order'=>['sort'=>'ASC']]);
-
-        // Reorder haiwai categories according to WXC
-        $this->reorderHaiwai($wxcCategories, $hwCategories);
-    }
-
-    private function reorderHaiwai($wxcCategories, $hwCategories){
-        $catNameIDMap = [];
-        foreach($hwCategories as $category){
-            $catNameIDMap[$category['name']] = $category['id'];
-        }
-
-        // Upate sort for categories in wxc
-        $updates = [];
-        $visited = [];
-        $i = 0;
-        foreach($wxcCategories as $category){
-            if(empty($catNameIDMap[$category['category']]) || !empty($visited[$category['category']])) continue;
-            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$catNameIDMap[$category['category']]]);
-            $updates[] = ["category"=>$category['category'], "id"=>$catNameIDMap[$category['category']], "sort" => $hwCategories[$i]['id']];
-            $visited[$category['category']] = true;
-            $i ++;
-        }
-
-        // Update sort for categories not in wxc
-        foreach($hwCategories as $category){
-            if(!empty($visited[$category['name']])) continue;
-            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$category['id']]);
-            $updates[] = ["category"=>$category['name'], "sort" => $hwCategories[$i]['id']];
-            $visited[$category['category']] = true;
-            $i ++;
-        }
-    }
-}
-
-$sorter = new CategorySorter();
-$sorter-> reorderCategory();
+$obj->start6();
 
 
 
