@@ -94,7 +94,7 @@ class user extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['is_default'=>'DESC','sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
