@@ -263,7 +263,7 @@ export default {
             arr.splice(from,1);
             arr.splice(to,0,e);
             arr.forEach(item=>{
-                sort.push(item.id)
+                sort.push(item.sort)
             })
         }
         this.shiftable = false;
