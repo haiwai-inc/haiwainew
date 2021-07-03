@@ -180,7 +180,6 @@ export default {
         console.log(this.collectionList);
         this.changeTab(this.collectionList[0].id)
     })
-    
   },
   methods:{
       
@@ -269,10 +268,12 @@ export default {
         this.shiftable = false;
         blog.category_shift(this.userID,sort.toString()).then(res=>{
             if(res.status){
-                this.shiftable = true
+                this.$store.state.user.category_list(this.userID).then(res=>{
+                    this.collectionList=res.data;
+                    this.shiftable = true
+                })
             }
         })
-        console.log(this.collectionList);
     },
     delArticle(item){
         if(item.postID!==0){
