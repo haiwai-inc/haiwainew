@@ -94,7 +94,7 @@ class user extends Api {
         if(empty($rs_blog_blogger)) {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['is_default'=>'DESC','sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'limit'=>80,"bloggerID"=>$bloggerID]);
         return $rs_blog_category;
     }
     
@@ -198,12 +198,13 @@ class user extends Api {
         if(empty($check_blog_blogger))  {$this->error="此博主不存在";$this->status=false;return false;}
         
         $obj_blog_category=load("blog_category");
-        $rs_blog_category=$obj_blog_category->getAll("*",['visible'=>1,'bloggerID'=>$check_blog_blogger['id']]);
+        $rs_blog_category=$obj_blog_category->getAll("*",['order'=>['sort'=>'ASC'],'visible'=>1,'bloggerID'=>$check_blog_blogger['id']]);
         if(!empty($rs_blog_category)){
             foreach($rs_blog_category as $v){
                 $old_sort[]=$v['sort'];
             }
         }
+        
         $case_query=""; 
         foreach($sort as $k=>$v){
             $case_query.="when sort = {$old_sort[$k]} then {$v} ";
