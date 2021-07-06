@@ -14,11 +14,11 @@ class sync_article_count_read{
         if(!empty($rs_article_key)){
             foreach($rs_article_key as $v){
                 $rs_article_indexing=$obj_article_indexing->getOne(['bloggerID','count_read'],['postID'=>$v]);
+                
+                $count_read=$obj_count_tool->view_article($v);
                 if($count_read<$rs_article_indexing['count_read']){
                     continue;
                 }
-                
-                $count_read=$obj_count_tool->view_article($v);
                 
                 //同步数据库
                 $obj_article_indexing->update(['count_read'=>$count_read],['postID'=>$v]);

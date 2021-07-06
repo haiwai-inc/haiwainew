@@ -739,7 +739,7 @@ export default {
          toolbar:
            'undo redo  bold italic underline strikethrough  paste pastetext  alignleft aligncenter alignright alignjustify  \
             image media link file\
-           formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help code',
+           formatselect  backcolor forecolor  bullist numlist outdent indent  removeformat  searchreplace help ',
         language: lang,
         relative_urls : false,
         remove_script_host : true,

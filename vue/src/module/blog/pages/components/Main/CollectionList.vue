@@ -18,7 +18,7 @@
             1/3
             <el-button class="ml-3" type="primary" round size="mini" @click="removeBubble('blog_home_manage')">{{$t('message').userindex.bubble_iknow}}</el-button>
           </div>
-        <el-button v-if="user.userinfo.bloggerID==data[0].bloggerID" type="text" link v-bind:style="{paddingRight:0 }" @click="go()" slot="reference">
+        <el-button v-if="$route.params.id==user.userinfo.id" type="text" link v-bind:style="{paddingRight:0 }" @click="go()" slot="reference">
           <i class="el-icon-notebook-2"></i> {{$t('message').userindex.menu_btn_manage}}
         </el-button>
       </el-popover>
@@ -59,7 +59,7 @@ export default {
       collapse:true,
       bubbles:{
         blog_home_manage:false,
-      }
+      },
     }
   },
   components: {

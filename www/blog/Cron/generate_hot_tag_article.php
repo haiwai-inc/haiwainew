@@ -30,7 +30,7 @@ class generate_hot_tag_article{
         if(!empty($rs_article_tag)){
             foreach($rs_article_tag as $v){
                 //读数倒排
-                $rs_article_hot[$v['id']]=$obj_article_index->search_tags([$v['id']],0,["count_read"=>array("order"=>"desc")],120);
+                $rs_article_hot[$v['id']]=$obj_article_index->search_tags([$v['id']],0,["count_read"=>array("order"=>"desc")],60);
                 
                 //添加用户信息
                 $rs_article_hot[$v['id']]=$obj_account_user->get_basic_userinfo($rs_article_hot[$v['id']],"userID");

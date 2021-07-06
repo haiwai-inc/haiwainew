@@ -50,6 +50,53 @@ class admin extends Api{
         debug::D($obj -> get($id));
     }
 
+
+    /**
+    * For debug purpose, 
+    * 带index文章: indexing, 不带index文章: noindexing, both: post
+    * 博主：blogger
+    * 文集：category
+    * 标签：tag
+    *
+    * @param string $id
+    * @param string $table
+    * @response 打印内容
+    *
+    * @response 
+    */
+    public function updateId($id, $table){
+        $obj = null;
+        switch($table){
+            case("indexing") : {
+                $obj = load("search_article_index");
+                break;
+            }
+            case("noindexing") : {
+                $obj = load("search_article_noindex");
+                break;
+            }
+            case("post") : {
+                $obj = load("search_article_index");
+                debug::D($obj -> fetch_and_insert($id));
+                $obj = load("search_article_noindex");
+                break;
+            }
+            case("category") : {
+                $obj = load("search_category");
+                break;
+            }
+            case("blogger") : {
+                $obj = load("search_blogger");
+                break;
+            }
+            case("tag") : {
+                $obj = load("search_tag");
+                break;
+            }
+        }
+        debug::D($obj -> fetch_and_insert($id));
+    }
+
     /**
     * For debug purpose, 重置index
     * 带index文章: indexing, 不带index文章: noindexing

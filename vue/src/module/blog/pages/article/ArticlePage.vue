@@ -92,7 +92,7 @@
             <div class="content" v-html="$options.filters.textTrans(articleDetail.data.postInfo_postID.msgbody)">
               <!-- blog 正文 -->
             </div>
-            
+            <!-- <script v-if="hasTw" async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
             <previous-next-bar
               v-if="articleDetail.data.article_previous_next.next ||articleDetail.data.article_previous_next.previous"
              :data="articleDetail.data"></previous-next-bar>
@@ -229,6 +229,7 @@ export default {
           this.initRecommendProp(res);
           this.getRecentArticle(res,0);
           this.getComment();
+          this.hasTw();
         }
       });
     },
@@ -416,7 +417,25 @@ export default {
           console.log(e.message);
       }
       return string;
-    }
+    },
+    hasTw(){
+      var content = this.articleDetail.data.postInfo_postID.msgbody
+      if(content){
+        if(content.indexOf("twitter-tweet")!==-1){
+          this.addTw();
+        }
+      }
+    },
+    addTw(){
+      let script = document.getElementById('hasTw');
+      if(!script){
+        script = document.createElement('script');
+        script.id = 'hasTw';
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.charset = 'utf-8';
+        document.body.append(script);
+      }
+    },
   },
   data() {
     return {

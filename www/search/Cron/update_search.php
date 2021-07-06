@@ -27,16 +27,17 @@ class update_search{
         }
         else{
             //更新10分钟以前
-            $edit_date=times::getTime()-600;
-            $rs_lastid=$this->obj_article_indexing->getOne(['postID'],['edit_date,>'=>$edit_date,'order'=>['postID'=>"ASC"]]);
-            $lastid=empty($rs_lastid)?2147483647:$rs_lastid['postID']-1;
+            $lastid=$edit_date=times::getTime()-600;
+
+            //$rs_lastid=$this->obj_article_indexing->getOne(['postID','edit_date'],['edit_date,>'=>$edit_date,'order'=>['edit_date'=>"ASC"]]);
+            //$lastid=empty($rs_lastid)?2147483647:$rs_lastid['edit_date']-1;
         }
         
         
         $count=0;
-        while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['postID'=>'ASC'],'limit'=>100,'postID,>'=>$lastid]) ){
+        while($rs_article_indexing=$this->obj_article_indexing->getAll("*",['order'=>['edit_date'=>'ASC'],'limit'=>100,'edit_date,>'=>$lastid]) ){
             foreach($rs_article_indexing as $k=>$v){
-                $lastid=$v['postID'];
+                $lastid=$v['edit_date'];
                 
                 //补全帖子所有分表信息
                 $rs_article_indexing=$this->obj_article_indexing->get_basic_articleinfo($rs_article_indexing,$k,$v);

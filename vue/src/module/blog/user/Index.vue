@@ -17,14 +17,14 @@
             <i class="el-icon-notebook-2"></i> {{$t('message').userindex.menu_btn_manage}}
         </el-button>
       </div>
-       <div class="col-lg-3 d-none d-lg-block" v-show="bloggerID!=0">
+       <div class="col-lg-4 d-none d-lg-block" v-show="bloggerID!=0">
             <!-- <user-index-sort :data="sortList"></user-index-sort> -->
-          <div class="collection-list mt-3" v-if="collectionList.length>0">
+          <div class="collection-list mt-3" v-if="collectionList.length>=0">
             <collection-list v-bind:data="collectionList" :userdata="false" :title="$t('message').userindex.menu_title" @showbubble="showbubble"></collection-list>
           </div>
         <blog-help></blog-help>
         </div>
-       <div class="col-lg-9 col-12" v-show="bloggerID!=0">
+       <div class="col-lg-8 col-12" v-show="bloggerID!=0">
             <div class="profile-header mt-2 mb-3 border-bottom">
                 <ul class="nav justify-content-center">
                     <li class="col nav-item text-center px-0" v-for="(item,index) in this.tabs" :key="index">

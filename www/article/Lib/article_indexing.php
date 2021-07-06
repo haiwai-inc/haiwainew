@@ -27,6 +27,23 @@ class article_indexing extends Model
     }
     
     //archive分表
+    function update($condition,$where=NULL,$table=NULL){
+        $obj_archive=load("article_2020_indexing");
+        $archive_pool=conf("article.archive_maping");
+        
+        $rs_article_indexing=parent::getOne(['id','postID','create_date'],$where);
+        if(!empty($rs_article_indexing)){
+            $id=parent::update($condition,$where);
+            return $id;
+        }
+        
+        $rs_article_indexing=$this->getOne(['id','postID','create_date'],$where);
+        $tbn=gmdate('Y',$rs_article_indexing['create_date'])."_indexing";
+        $id=$obj_archive->update($condition,$where,$tbn);
+        return $id;
+    }
+    
+    //archive分表
     function getAll($condition,$where=NULL,$table=NULL){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
@@ -69,7 +86,7 @@ class article_indexing extends Model
             }else{
                 foreach($condition as $v){
                     if(empty($select_sql)){
-                        $select_sql="SELECT {$v}";
+                        $select_sql="SELECT {$v} ";
                     }else{
                         $select_sql.=",{$v} ";
                     }
@@ -79,9 +96,19 @@ class article_indexing extends Model
             //生成where
             foreach($id_rs as $v){
                 if(empty($where_sql)){
-                    $where_sql="WHERE {$key}={$v} ";
+                    $where_sql="WHERE ( {$key}={$v} ";
                 }else{
                     $where_sql.="or {$key}={$v} ";
+                }
+            }
+            $where_sql.=") ";
+            unset($where['OR']);
+            if(!empty($where)){
+                foreach($where as $k=>$v){
+                    if($k=="order"){
+                        continue;
+                    }
+                    $where_sql.="and `{$k}`={$v} ";
                 }
             }
             
@@ -90,6 +117,14 @@ class article_indexing extends Model
             foreach($archive_pool as $k=>$v){
                 $sql.="UNION ALL ".$select_sql."FROM {$obj_archive->conn->config['database']}.{$k}_indexing ".$where_sql;
             }
+            if(!empty($where['order'])){
+                $sql.="order by ";
+                foreach($where['order'] as $k=>$v){
+                    $sql.="`{$k}` {$v} ";
+                }
+            }
+            
+            
             $rs_article_indexing=parent::getAll($sql);
         }
         return $rs_article_indexing;
@@ -326,7 +361,24 @@ class article_indexing extends Model
 	    }
 	    
 	    //文学城域名
-        $msgbody=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$msgbody);
+	    $doc = new DOMDocument();
+	    @$doc->loadHTML($msgbody);
+	    $elements = $doc->getElementsByTagName('img');
+	    $image_pool=[];
+	    foreach($elements as $element) {
+	        if(!empty($element->getAttribute('src'))){
+	            $image_pool[]=$element->getAttribute('src');
+	        }
+	    }
+	    if(!empty($image_pool)){
+	        foreach($image_pool as $k=>$v){
+	            if(substr($v,0,14)=='/upload/album/'){
+	                $new_image=str_replace("/upload/album/","https://cdn.wenxuecity.com/upload/album/",$v);
+	                $msgbody=str_replace($v,$new_image,$msgbody);
+	            }
+	        }
+	    }
+	    
 	    return $msgbody;
 	}
 	
