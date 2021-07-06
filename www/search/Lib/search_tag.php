@@ -183,7 +183,11 @@ class search_tag extends Search{
         ];
     }
 
-
+    public function fetch_and_insert($tagIDs){
+        $article_tag = load("article_tag");
+        $tags = $article_tag->getAll("*", ["OR"=>['id'=>$tagIDs]]);
+        $this->add_new_tags($tags);
+    }
     public function update_data(){
 $article_tag = load("article_tag");
 $iter = 0;

@@ -28,6 +28,12 @@ class admin extends Api{
                 $obj = load("search_article_noindex");
                 break;
             }
+            case("post") : {
+                $obj = load("search_article_index");
+                debug::D($obj -> get($id));
+                $obj = load("search_article_noindex");
+                break;
+            }
             case("category") : {
                 $obj = load("search_category");
                 break;
