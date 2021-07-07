@@ -289,6 +289,7 @@ class blog_tool{
         //添加默认文集
         if(empty($rs['catid'])){
             $rs_blog_legacy_blogcat_members['category']="我的文章";
+            $rs_blog_legacy_blogcat_members['visible']=1;
         }else{
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
             if(empty($rs_blog_legacy_blogcat_members)){
