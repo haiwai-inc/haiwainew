@@ -106,7 +106,7 @@
                            {{item.postInfo_postID.title}}
                            <small v-if="item.postID===0">(草稿)</small>
                         </h5>
-                       <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.edit_date*1000|formatDate}}</span>
+                       <span class="text-muted" style="font-size:0.8rem; padding-left:32px">{{item.create_date*1000|formatDate}}</span>
                        
                    </div>
                    <div class="col-2" style="padding:0">
