@@ -7,6 +7,7 @@ func_checkCliEnv();
 
 //汪老师https://blog.wenxuecity.com/myoverview/69027/
 //润涛阎https://blog.wenxuecity.com/myoverview/1666/
+//求索之路平坦心 1083473
 
 class import_blog_data{
     function start($year,$month){
@@ -24,16 +25,17 @@ class import_blog_data{
             
             $lastid=0;
             $rs_blog_legacy_202005_post=[];
-            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
+            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['userid'=>1083473,'treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
                 $postID_legacy_hot_post=[];
                 foreach($rs_blog_legacy_202005_post as $k=>$v){
                     $lastid=$v['postid'];
                     echo $lastid."_".$month_tbn."\n";
                     
-                    //热门博主搜索
+                    //热门博主
                     $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
                     $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>601]);
                     
+                    $check_blog_legacy_blogger_haiwai=true; //=======================测试
                     if(!empty($check_blog_legacy_blogger_haiwai)){
                         echo "hit {$check_blog_legacy_blogger_haiwai['username']}========================= \n";
                         
@@ -56,6 +58,9 @@ class import_blog_data{
                             //同步ES索引回复
                             $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post_reply);
                         }
+                        
+                        debug::D($v);
+                        exit;
                     }
                 }
                 
