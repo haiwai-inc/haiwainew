@@ -37,7 +37,7 @@ class CategorySorter{
 
         $haiwaiUser= $this->hwUserObj->getOne("*", ["login_data" => $blogger["username"]]);
         if(empty($haiwaiUser)) return;
-        $haiwaiBlogger = $this->hwBloggerObj -> getOne("*", ["userID" => $haiwaiUser['id']]);
+        $haiwaiBlogger = $this->hwBloggerObj -> getOne("*", ["userID" => $haiwaiUser['userID']]);
 
         // Get all category of the blogger on haiwai
         $hwCategories = $this->hwCategoryObj->getAll("*", ["bloggerID" => $haiwaiBlogger["id"], 'name,<>'=>"我的文章",'order'=>["sort"=>"ASC"]]);
@@ -58,7 +58,7 @@ class CategorySorter{
         $i = 0;
         foreach($wxcCategories as $category){
             if(empty($catNameIDMap[$category['category']]) || !empty($visited[$category['category']])) continue;
-            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['id']], ["id"=>$catNameIDMap[$category['category']]]);
+            $this->hwCategoryObj->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$catNameIDMap[$category['category']]]);
             $updates[] = ["category"=>$category['category'], "id"=>$catNameIDMap[$category['category']], "sort" => $hwCategories[$i]['id']];
             $visited[$category['category']] = true;
             $i ++;
@@ -72,6 +72,9 @@ class CategorySorter{
             $visited[$category['category']] = true;
             $i ++;
         }
+        // debug::d($wxcCategories); 
+        // debug::d($hwCategories);
+        debug::d($updates);
     }
 }
 

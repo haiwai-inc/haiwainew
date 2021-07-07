@@ -252,7 +252,7 @@ class search_article_noindex extends Search
                 $article_formatted = [
                     "postID"  => $article['postID'],
                     "title"   => empty($article['title'])?"":$article['title'],
-                    "msgbody" => empty($article['msgbody_origin'])?"":$article['msgbody_origin'],
+                    "msgbody" => empty($article['msgbody_origin'])?$article['msgbody']:$article['msgbody_origin'],
                     "pic"     => empty($article['pic'])?"":$article['pic'],
                     "buzz"    => $article['buzz'],
                     "tags"    => $article['tags'],
@@ -311,8 +311,8 @@ class search_article_noindex extends Search
 		        $rs_article_indexing=$obj_article_indexing->get_basic_articleinfo($rs_article_indexing,$k,$v);
 		    }
 		}
-		$rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
-		
+		// $rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
+		// $rs_article_indexing['msgbody_origin'] = $rs_article_indexing['msgbody'];
 		//导入ES
 		$this->add_new_articles($rs_article_indexing);
 		return true;

@@ -124,12 +124,13 @@ class search_article_index extends Search
 	 * 根据标签ID搜索文章
 	 * @param array $tags | array of tag ids
 	 * @param array/float $last_score | array of last articles' values or single value for paging, consistent with order
-	 * @param array $order | how the result is sorted
+	 * @param array $condition | how the result is sorted and other conditions ['order'=>[], 'create_date'=>[]]
 	 * @param int $limit | number of results per search
 	 * 
 	 */
-	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc")), $limit = 30){
+	public function search_tags($tags, $last_score = 0, $condition= ['order' => array("count_read"=>array("order"=>"desc"))], $limit = 30){
 		$query["should"] = [];
+		$query["must"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
@@ -138,8 +139,15 @@ class search_article_index extends Search
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
 		); 
+		if(!empty($condition['order'])){
+			$query["sort"]=[$this->object($condition['order'])];
+		}
 
-		$query["sort"]=[$this->object($order)];
+		foreach($condition as $k => $v){
+			if($k == "order") continue;
+			$query["must"][] = $this->object(["range"=>[$k=>$v]]);
+		}
+
 		if(!empty($last_score)){
 			if(is_array($last_score)){
 				$query["search_after"] = $last_score;
@@ -237,6 +245,38 @@ class search_article_index extends Search
 	    
 	    return $rs;
 	}
+
+	/**
+	 * Fetch one post and insert into the es
+	 * @param int $postID | The id of the post to update
+	 * @return boolean true if sucess, none if not
+	 */
+    public function fetch_and_insert($postID)
+    {
+
+        if(empty($postID)){
+            return;
+        }
+        
+        if(!is_array($postID)){
+            $postID = [$postID];
+		}
+
+		$obj_article_indexing=load("article_indexing");
+		$rs_article_indexing=$obj_article_indexing->getAll("*",['OR'=>['postID'=>$postID]]);
+		
+		//补全帖子所有分表信息
+		if(!empty($rs_article_indexing)){
+		    foreach($rs_article_indexing as $k=>$v){
+		        $rs_article_indexing=$obj_article_indexing->get_basic_articleinfo($rs_article_indexing,$k,$v);
+		    }
+		}
+		$rs_article_indexing=$obj_article_indexing->format_string($rs_article_indexing,['msgbody','title'],0);
+		
+		//导入ES
+		$this->add_new_articles($rs_article_indexing);
+		return true;
+    }
 
 	public function insert_doc($article){
 		$article_formatted = [

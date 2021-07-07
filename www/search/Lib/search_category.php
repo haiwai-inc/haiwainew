@@ -207,7 +207,12 @@ class search_category  extends Search{
         ];
     }
 
-
+    public function fetch_and_insert($categoryIDs){
+        $blog_category = load("blog_category");
+        $categories = $blog_category->getAll("*", ["OR"=>['id'=>$categoryIDs]]);
+        $this->add_new_categories($categories);
+    }
+    
     public function update_data(){
 $blog_category = load("blog_category");
 $iter = 0;

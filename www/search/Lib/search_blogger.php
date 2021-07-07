@@ -285,7 +285,6 @@ class search_blogger extends Search
 
     public function update_data($time = 0)
     {
-        $search_blogger = load("search_blogger");
         $blogger_obj = load("blog_blogger");
         $user_obj = load("account_user");
         $search_category = load("search_category");
@@ -306,7 +305,7 @@ class search_blogger extends Search
                 $bloggerIDs[] = $blogger['id'];
             }
             $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");
-            $search_blogger->add_new_bloggers($bloggers);
+            $this->add_new_bloggers($bloggers);
             $categories = $blog_category->getAll("*", ["OR" => ['bloggerID' => $bloggerIDs]]);
             $total_category += count($categories);
             $search_category->add_new_categories($categories);
@@ -314,5 +313,24 @@ class search_blogger extends Search
             echo ("$total_category category updated\n");
             $iter++;
         }
+    }
+
+    /**
+     * Fetch and insert one or more bloggers
+     */
+    public function fetch_and_insert($bloggerIDs){
+          $blogger_obj = load("blog_blogger");
+          $user_obj = load("account_user");
+          $search_category = load("search_category");
+          $blog_category = load("blog_category");
+            $bloggers = $blogger_obj->getAll(["id", "userID", "name"], ["OR"=>["id"=>$bloggerIDs]]);
+            $bloggerIDs = [];
+            foreach ($bloggers as $blogger) {
+                $bloggerIDs[] = $blogger['id'];
+            }
+            $bloggers = $user_obj->get_basic_userinfo($bloggers, "userID");
+            $this->add_new_bloggers($bloggers);
+            $categories = $blog_category->getAll("*", ["OR" => ['bloggerID' => $bloggerIDs]]);
+            $search_category->add_new_categories($categories);
     }
 }

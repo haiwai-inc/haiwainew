@@ -13,8 +13,10 @@ class generate_hot_tag_article{
         $obj_article_indexing=load("article_indexing");
         $obj_article_noindex=load("search_article_noindex");
         
+        $time=times::gettime()-(86400*4);
+        
         //全部文章
-        $rs_article_hot[0]=$obj_article_indexing->getAll(['postID','userID'],['treelevel'=>0,'is_publish'=>1,'limit'=>60,'visible'=>1,'order'=>['count_read'=>'DESC']]);
+        $rs_article_hot[0]=$obj_article_indexing->getAll(['postID','userID'],['create_date,>'=>$time,'treelevel'=>0,'is_publish'=>1,'limit'=>40,'visible'=>1,'order'=>['count_read'=>'DESC']]);
         
         //ES补全postID信息
         $rs_article_hot[0]=$obj_article_noindex->get_postInfo($rs_article_hot[0]);
@@ -26,11 +28,11 @@ class generate_hot_tag_article{
         $rs_article_hot[0]=$obj_article_indexing->get_article_count($rs_article_hot[0]);
         
         //按标签区分
-        $rs_article_tag=$obj_article_tag->getAll("*",['visible'=>1,'limit'=>20,'order'=>['count_article'=>'DESC']]);
+        $rs_article_tag=$obj_article_tag->getAll("*",['visible'=>1,'limit'=>40,'order'=>['count_article'=>'DESC']]);
         if(!empty($rs_article_tag)){
             foreach($rs_article_tag as $v){
                 //读数倒排
-                $rs_article_hot[$v['id']]=$obj_article_index->search_tags([$v['id']],0,["count_read"=>array("order"=>"desc")],60);
+                $rs_article_hot[$v['id']]=$obj_article_index->search_tags([$v['id']],0,["create_date"=>["gt"=>$time],"order"=>["count_read"=>["order"=>"desc"]]],60);
                 
                 //添加用户信息
                 $rs_article_hot[$v['id']]=$obj_account_user->get_basic_userinfo($rs_article_hot[$v['id']],"userID");
