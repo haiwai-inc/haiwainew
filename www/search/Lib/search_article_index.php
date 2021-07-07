@@ -128,7 +128,7 @@ class search_article_index extends Search
 	 * @param int $limit | number of results per search
 	 * 
 	 */
-	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc")), $limit = 30){
+	public function search_tags($tags, $last_score = 0, $order = ["count_read"=>["order"=>"desc"]], $limit = 30){
 		$query["should"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
@@ -138,7 +138,7 @@ class search_article_index extends Search
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
 		); 
-
+		
 		$query["sort"]=[$this->object($order)];
 		if(!empty($last_score)){
 			if(is_array($last_score)){
