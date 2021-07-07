@@ -124,12 +124,13 @@ class search_article_index extends Search
 	 * 根据标签ID搜索文章
 	 * @param array $tags | array of tag ids
 	 * @param array/float $last_score | array of last articles' values or single value for paging, consistent with order
-	 * @param array $order | how the result is sorted
+	 * @param array $condition | how the result is sorted and other conditions ['order'=>[], 'create_date'=>[]]
 	 * @param int $limit | number of results per search
 	 * 
 	 */
-	public function search_tags($tags, $last_score = 0, $order = array("count_read"=>array("order"=>"desc")), $limit = 30){
+	public function search_tags($tags, $last_score = 0, $condition= ['order' => array("count_read"=>array("order"=>"desc"))], $limit = 30){
 		$query["should"] = [];
+		$query["must"] = [];
 		foreach ($tags as $tag){
 			$tag= intval($tag);
 			$query["should"][] = $this->object(array("match" => array("tags"=>$tag)));
@@ -138,8 +139,15 @@ class search_article_index extends Search
 		$query["must_not"]=array(
 			$this->object(array("term" => array("visible"=>0)))
 		); 
+		if(!empty($condition['order'])){
+			$query["sort"]=[$this->object($condition['order'])];
+		}
 
-		$query["sort"]=[$this->object($order)];
+		foreach($condition as $k => $v){
+			if($k == "order") continue;
+			$query["must"][] = $this->object(["range"=>[$k=>$v]]);
+		}
+
 		if(!empty($last_score)){
 			if(is_array($last_score)){
 				$query["search_after"] = $last_score;
