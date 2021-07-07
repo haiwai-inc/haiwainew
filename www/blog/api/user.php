@@ -137,6 +137,11 @@ class user extends Api {
         
         $obj_blog_category->update(['name'=>$name,'is_publish'=>$is_publish],['bloggerID'=>$check_blog_blogger['id'],"id"=>$id]);
         
+        //文章全部为隐藏
+        $obj_article_indexing=load("article_indexing");
+        $time=times::gettime();
+        $obj_article_indexing->update(['is_publish'=>$is_publish,'edit_date'=>$time],['userID'=>$_SESSION['id'],'categoryID'=>$id],NULL,true);
+        
         return $id;
     }
     
