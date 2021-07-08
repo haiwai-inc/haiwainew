@@ -89,7 +89,12 @@ class blog_tool{
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
             
             //查看内容
-            $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+            if($rs['treelevel']==0){
+                $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+            }else{
+                $date=substr($rs['mdateline'],0,4).substr($rs['mdateline'],5,2);
+            }
+            
             $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
             
             //获取postID
