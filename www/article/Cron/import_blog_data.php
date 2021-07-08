@@ -25,7 +25,7 @@ class import_blog_data{
             
             $lastid=0;
             $rs_blog_legacy_202005_post=[];
-            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['postid'=>40268,'userid'=>1083473,'treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
+            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
                 $postID_legacy_hot_post=[];
                 $userID_blog_legacy_202005_post=[];
                 
@@ -35,9 +35,9 @@ class import_blog_data{
                     
                     //热门博主
                     $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
-                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>601]);
+                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>648]);
                     
-                    $check_blog_legacy_blogger_haiwai=true; //=======================测试
+                    //$check_blog_legacy_blogger_haiwai=true; //=======================测试
                     if(!empty($check_blog_legacy_blogger_haiwai)){
                         echo "hit {$check_blog_legacy_blogger_haiwai['username']}========================= \n";
                         
@@ -69,9 +69,6 @@ class import_blog_data{
                 
                 //更新博客顺序
                 $obj_blog_tool->obj_blog_category->sync_wxc_category_order($userID_blog_legacy_202005_post);
-                
-                echo 1;
-                exit;
             }
         }
     }
