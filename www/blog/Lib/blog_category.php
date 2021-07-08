@@ -29,7 +29,11 @@ class blog_category extends Model{
 	 * @param array $userid
 	 */
 	public function sync_wxc_category_order($userid){
-	    $this->userid = empty($userid) ? [] : $userid;
+	    if(empty($userid)){
+	        return;
+	    }
+	    
+	    $this->userid = $userid;
         $this->wxcBloggerObj = load("blog_legacy_blogger_haiwai");
         $this->wxcCategoryObj = load("blog_legacy_blogcat_members");
         $this->hwUserObj = load("account_user_auth");
@@ -39,14 +43,7 @@ class blog_category extends Model{
 
 	public function reorderCategory(){  
         $wxcBloggers = [];
-        if(!empty($this->userid)) {
-            $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["userid" => $this->userid]]);
-        }
-        else {
-            $wxcBloggers = $this->wxcBloggerObj->getAll("*");
-        }
-
-
+        $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["userid" => $this->userid]]);
         foreach($wxcBloggers as $blogger){
             $this->reorderBloggerCategory($blogger);
         }
