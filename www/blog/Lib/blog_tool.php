@@ -261,7 +261,8 @@ class blog_tool{
             $old_blog_pic="https://cdn.wenxuecity.com/{$rs_blog_legacy_blogger['blog_pic']}";
         }else{
             if(!empty($rs_blog_legacy_blogger['template'])){
-                $template=explode("/",$rs_blog_legacy_blogger['template'])[1];
+                $template=explode("/",$rs_blog_legacy_blogger['template']);
+                $template=empty($template[1])?"1_6":$template[1];
             }else{
                 $template="1_6";
             }
