@@ -145,7 +145,8 @@ class tmp{
         $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
         $obj_account_legacy_user=load("account_legacy_user");
         
-        $rs_account_legacy_user=$obj_account_legacy_user->getAll("SELECT username,userid,blogid FROM `user` WHERE username IN ('liangmenzha',
+        $rs_account_legacy_user=$obj_account_legacy_user->getAll("SELECT username,userid,blogid FROM `user` WHERE username IN 
+('liangmenzha',
 '静心阁',
 'erdong',
 '清风-细雨',
@@ -195,7 +196,8 @@ class tmp{
 '快乐玉子',
 '罗雪七',
 'JessAB',
-'南半球')");
+'南半球')"
+            );
         
         foreach($rs_account_legacy_user as $v){
             $obj_blog_legacy_blogger_haiwai->insert(['userid'=>$v['userid'],'blogid'=>$v['blogid'],'username'=>$v['username']]);
@@ -207,7 +209,7 @@ class tmp{
 }
 
 $obj = new tmp();
-//$obj->start6();
+$obj->start6();
 
 
 

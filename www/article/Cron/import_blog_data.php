@@ -27,6 +27,8 @@ class import_blog_data{
             $rs_blog_legacy_202005_post=[];
             while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['userid'=>1083473,'treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
                 $postID_legacy_hot_post=[];
+                $userID_blog_legacy_202005_post=[];
+                
                 foreach($rs_blog_legacy_202005_post as $k=>$v){
                     $lastid=$v['postid'];
                     echo $lastid."_".$month_tbn."\n";
@@ -43,6 +45,7 @@ class import_blog_data{
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
                         $rs_import_post=$obj_blog_tool->import_post($v);
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
+                        $userID_blog_legacy_202005_post[]=$v['userid'];
                         
                         //查询评论
                         $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>100,'basecode'=>$v['basecode'],'visible,!='=>0,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month_tbn}_post");
@@ -58,14 +61,17 @@ class import_blog_data{
                             //同步ES索引回复
                             $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post_reply);
                         }
-                        
-                        debug::D($v);
-                        exit;
                     }
                 }
                 
                 //同步ES索引主贴
                 $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
+                
+                //更新博客顺序
+                $obj_blog_tool->obj_blog_category->sync_wxc_category_order($userID_blog_legacy_202005_post);
+                
+                echo 1;
+                exit;
             }
         }
     }

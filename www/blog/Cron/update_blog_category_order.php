@@ -78,6 +78,6 @@ class CategorySorter{
     }
 }
 
-$sorter = new CategorySorter();
+$sorter = new CategorySorter($usernames);
 $sorter-> reorderCategory();
 
