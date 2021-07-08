@@ -93,6 +93,9 @@ class blog_tool{
                 $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
             }else{
                 $date=substr($rs['mdateline'],0,4).substr($rs['mdateline'],5,2);
+                if($date=="000000"){    //==============容错
+                    $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+                }
             }
             
             $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
