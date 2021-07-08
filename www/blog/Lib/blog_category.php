@@ -92,7 +92,7 @@ class blog_category extends Model{
             if(!empty($visited[$category['name']])) continue;
             $this->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$category['id']]);
             $updates[] = ["category"=>$category['name'], "sort" => $hwCategories[$i]['id']];
-            $visited[$category['category']] = true;
+            $visited[$category['name']] = true;
             $i ++;
         }
     }
