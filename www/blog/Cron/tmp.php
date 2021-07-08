@@ -147,7 +147,7 @@ class tmp{
         
         $rs_account_legacy_user=$obj_account_legacy_user->getAll("SELECT username,userid,blogid FROM `user` WHERE username IN 
 ('洛城丹妮','云淡风更轻','乔宁','closeby','疯言风语','GD988','helen_xu1111','阿多','我爱栀子花',
-'lightlight','高晓岚','0084lx','超然客','南岛水鸟','真真国女儿','蓝天白云915LQB','poiuyt','卜兰子','marienplatz','sunnykids','路上拾影','LinMu')"
+'lightlight','高晓岚','0084lx','南岛水鸟','真真国女儿','蓝天白云915LQB','poiuyt','卜兰子','marienplatz','sunnykids','路上拾影','LinMu')"
             );
         
         foreach($rs_account_legacy_user as $v){
@@ -159,7 +159,7 @@ class tmp{
     }
 }
 
-$obj = new tmp();
+//$obj = new tmp();
 $obj->start6();
 
 
