@@ -25,7 +25,7 @@ class import_blog_data{
             
             $lastid=0;
             $rs_blog_legacy_202005_post=[];
-            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['userid'=>1083473,'treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
+            while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['postid'=>40268,'userid'=>1083473,'treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
                 $postID_legacy_hot_post=[];
                 $userID_blog_legacy_202005_post=[];
                 
