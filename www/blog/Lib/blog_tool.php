@@ -89,7 +89,15 @@ class blog_tool{
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
             
             //查看内容
-            $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+            if($rs['treelevel']==0){
+                $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+            }else{
+                $date=substr($rs['mdateline'],0,4).substr($rs['mdateline'],5,2);
+                if($date=="000000"){    //==============容错
+                    $date=substr($rs['dateline'],0,4).substr($rs['dateline'],5,2);
+                }
+            }
+            
             $rs_blog_legacy_202005_msg=$this->obj_blog_legacy_202005_msg->getOne("*",['postid'=>$rs['postid']],"blog_{$date}_msg");
             
             //获取postID
@@ -256,7 +264,8 @@ class blog_tool{
             $old_blog_pic="https://cdn.wenxuecity.com/{$rs_blog_legacy_blogger['blog_pic']}";
         }else{
             if(!empty($rs_blog_legacy_blogger['template'])){
-                $template=explode("/",$rs_blog_legacy_blogger['template'])[1];
+                $template=explode("/",$rs_blog_legacy_blogger['template']);
+                $template=empty($template[1])?"1_6":$template[1];
             }else{
                 $template="1_6";
             }
@@ -289,6 +298,7 @@ class blog_tool{
         //添加默认文集
         if(empty($rs['catid'])){
             $rs_blog_legacy_blogcat_members['category']="我的文章";
+            $rs_blog_legacy_blogcat_members['visible']=1;
         }else{
             $rs_blog_legacy_blogcat_members=$this->obj_blog_legacy_blogcat_members->getOne("*",['catid'=>$rs['catid']]);
             if(empty($rs_blog_legacy_blogcat_members)){

@@ -7,6 +7,7 @@ func_checkCliEnv();
 
 //汪老师https://blog.wenxuecity.com/myoverview/69027/
 //润涛阎https://blog.wenxuecity.com/myoverview/1666/
+//求索之路平坦心 1083473
 
 class import_blog_data{
     function start($year,$month){
@@ -26,14 +27,17 @@ class import_blog_data{
             $rs_blog_legacy_202005_post=[];
             while( $rs_blog_legacy_202005_post = $obj_blog_tool->obj_blog_legacy_202005_post->getAll("*",['treelevel'=>0,'order'=>['postid'=>'ASC'],'limit'=>20,'postid,>'=>$lastid,'visible,!='=>0],"blog_{$year}{$month_tbn}_post") ){
                 $postID_legacy_hot_post=[];
+                $userID_blog_legacy_202005_post=[];
+                
                 foreach($rs_blog_legacy_202005_post as $k=>$v){
                     $lastid=$v['postid'];
                     echo $lastid."_".$month_tbn."\n";
                     
-                    //热门博主搜索
+                    //热门博主
                     $obj_blog_legacy_blogger_haiwai=load("blog_legacy_blogger_haiwai");
-                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>601]);
+                    $check_blog_legacy_blogger_haiwai=$obj_blog_legacy_blogger_haiwai->getOne("*",['userid'=>$v['userid'],'id,>'=>648]);
                     
+                    //$check_blog_legacy_blogger_haiwai=true; //=======================测试
                     if(!empty($check_blog_legacy_blogger_haiwai)){
                         echo "hit {$check_blog_legacy_blogger_haiwai['username']}========================= \n";
                         
@@ -41,6 +45,7 @@ class import_blog_data{
                         $v['date']=substr($v['dateline'],0,7); //=========================主贴时间
                         $rs_import_post=$obj_blog_tool->import_post($v);
                         $postID_legacy_hot_post[]=$rs_import_post['article_new']['postID'];
+                        $userID_blog_legacy_202005_post[]=$v['userid'];
                         
                         //查询评论
                         $rs_reply=$obj_blog_tool->obj_blog_legacy_202005_post->getAll('*',['limit'=>100,'basecode'=>$v['basecode'],'visible,!='=>0,'treelevel'=>1,'order'=>['postid'=>'ASC']],"blog_{$year}{$month_tbn}_post");
@@ -61,6 +66,9 @@ class import_blog_data{
                 
                 //同步ES索引主贴
                 $obj_article_noindex->fetch_and_insert($postID_legacy_hot_post);
+                
+                //更新博客顺序
+                $obj_blog_tool->obj_blog_category->sync_wxc_category_order($userID_blog_legacy_202005_post);
             }
         }
     }

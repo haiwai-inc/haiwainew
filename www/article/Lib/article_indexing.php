@@ -27,19 +27,29 @@ class article_indexing extends Model
     }
     
     //archive分表
-    function update($condition,$where=NULL,$table=NULL){
+    function update($condition,$where=NULL,$table=NULL,$all=NULL){
         $obj_archive=load("article_2020_indexing");
         $archive_pool=conf("article.archive_maping");
         
-        $rs_article_indexing=parent::getOne(['id','postID','create_date'],$where);
-        if(!empty($rs_article_indexing)){
-            $id=parent::update($condition,$where);
-            return $id;
+        if(!empty($all)){
+            //全部循环更新archive
+            parent::update($condition,$where);
+            foreach($archive_pool as $k=>$v){
+                $tbn="{$k}_indexing";
+                $id=$obj_archive->update($condition,$where,$tbn);
+            }
+        }else{
+            //循环查询更新archive
+            $rs_article_indexing=parent::getOne(['id','postID','create_date'],$where);
+            if(!empty($rs_article_indexing)){
+                $id=parent::update($condition,$where);
+            }else{
+                $rs_article_indexing=$this->getOne(['id','postID','create_date'],$where);
+                $tbn=gmdate('Y',$rs_article_indexing['create_date'])."_indexing";
+                $id=$obj_archive->update($condition,$where,$tbn);
+            }
         }
         
-        $rs_article_indexing=$this->getOne(['id','postID','create_date'],$where);
-        $tbn=gmdate('Y',$rs_article_indexing['create_date'])."_indexing";
-        $id=$obj_archive->update($condition,$where,$tbn);
         return $id;
     }
     

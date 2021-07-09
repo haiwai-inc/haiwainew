@@ -113,17 +113,15 @@ class blog_blogger extends Model{
 	    $obj_blog_category=load("blog_category");
 	    
 	    //是否为公开文章
-	    //if(!empty($article_data['is_publish'])){
-	        //同步文集计数
-	        //老目录-1
-	        $check_old_article_indexing=$obj_article_indexing->getOne(['postID','categoryID'],['postID'=>$article_data['postID']]);
-	        $check_old_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$check_old_article_indexing['categoryID']]);
-	        $obj_blog_category->update(['count_article'=>$check_old_blog_category['count_article']-1],['id'=>$check_old_blog_category['id']]);
-	        
-	        //新目录+1
-	        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
-	        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
-	    //}
+        //同步文集计数
+        //老目录-1
+        $check_old_article_indexing=$obj_article_indexing->getOne(['postID','categoryID'],['postID'=>$article_data['postID']]);
+        $check_old_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$check_old_article_indexing['categoryID']]);
+        $obj_blog_category->update(['count_article'=>$check_old_blog_category['count_article']-1],['id'=>$check_old_blog_category['id']]);
+        
+        //新目录+1
+        $check_blog_category=$obj_blog_category->getOne("*",['bloggerID'=>$module_data['bloggerID'],'id'=>$module_data['categoryID']]);
+        $obj_blog_category->update(['count_article'=>$check_blog_category['count_article']+1],['id'=>$check_blog_category['id']]);
 	       
 	    //修改索引表
 	    $obj_article_indexing->update(['bloggerID'=>$module_data['bloggerID'],'categoryID'=>$module_data['categoryID']],['postID'=>$article_data['postID']]);
@@ -147,17 +145,15 @@ class blog_blogger extends Model{
 	//删除博客文章操作
 	function delete_blog_article($rs_article_indexing,$count=-1){
 	    //是否为隐藏目录
-	    //if(!empty($rs_article_indexing['is_publish'])){
-	        $obj_blog_category=load("blog_category");
-	        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
-	        
-	        //同步文集计数
-	        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']+$count],['id'=>$rs_article_indexing['categoryID']]);
-	        
-	        //同步博客计数
-	        $rs_blog_blogger=$this->getOne("*",['id'=>$rs_article_indexing['bloggerID']]);
-	        $this->update(['count_article'=>$rs_blog_blogger['count_article']+$count],['id'=>$rs_article_indexing['bloggerID']]);
-	    //}
+        $obj_blog_category=load("blog_category");
+        $rs_blog_category=$obj_blog_category->getOne("*",['id'=>$rs_article_indexing['categoryID']]);
+        
+        //同步目录计数
+        $obj_blog_category->update(["count_article"=>$rs_blog_category['count_article']+$count],['id'=>$rs_article_indexing['categoryID']]);
+        
+        //同步博客计数
+        $rs_blog_blogger=$this->getOne("*",['id'=>$rs_article_indexing['bloggerID']]);
+        $this->update(['count_article'=>$rs_blog_blogger['count_article']+$count],['id'=>$rs_article_indexing['bloggerID']]);
 	}
 	
 	

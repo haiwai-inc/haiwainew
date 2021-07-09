@@ -252,7 +252,7 @@ class search_article_noindex extends Search
                 $article_formatted = [
                     "postID"  => $article['postID'],
                     "title"   => empty($article['title'])?"":$article['title'],
-                    "msgbody" => empty($article['msgbody_origin'])?$article['msgbody']:$article['msgbody_origin'],
+                    "msgbody" => empty($article['msgbody_origin'])?(empty($article['msgbody'])?"":$article['msgbody']):$article['msgbody_origin'],
                     "pic"     => empty($article['pic'])?"":$article['pic'],
                     "buzz"    => $article['buzz'],
                     "tags"    => $article['tags'],

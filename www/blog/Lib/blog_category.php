@@ -26,10 +26,14 @@ class blog_category extends Model{
 
 	/**
 	 * Sync category order of haiwai based on their wxc counter part
-	 * @param array $usernames
+	 * @param array $userid
 	 */
-	public function sync_wxc_category($usernames){
-		$this->usernames = empty($usernames) ? [] : $usernames;
+	public function sync_wxc_category_order($userid){
+	    if(empty($userid)){
+	        return;
+	    }
+	    
+	    $this->userid = $userid;
         $this->wxcBloggerObj = load("blog_legacy_blogger_haiwai");
         $this->wxcCategoryObj = load("blog_legacy_blogcat_members");
         $this->hwUserObj = load("account_user_auth");
@@ -39,14 +43,7 @@ class blog_category extends Model{
 
 	public function reorderCategory(){  
         $wxcBloggers = [];
-        if(!empty($this->usernames)) {
-            $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["username" => $this->usernames]]);
-        }
-        else {
-            $wxcBloggers = $this->wxcBloggerObj->getAll("*");
-        }
-
-
+        $wxcBloggers =$this->wxcBloggerObj->getAll("*", ["OR"=>["userid" => $this->userid]]);
         foreach($wxcBloggers as $blogger){
             $this->reorderBloggerCategory($blogger);
         }
@@ -60,7 +57,7 @@ class blog_category extends Model{
 
         $haiwaiUser= $this->hwUserObj->getOne("*", ["login_data" => $blogger["username"]]);
         if(empty($haiwaiUser)) return;
-	$hwBloggers = $this->hwBloggerObj->getOne("*",['userID'=>$haiwaiUser['userID']]);
+	    $hwBloggers = $this->hwBloggerObj->getOne("*",['userID'=>$haiwaiUser['userID']]);
 
         // Get all category of the blogger on haiwai
         $hwCategories = $this->getAll("*", ["bloggerID" => $hwBloggers["id"], 'name,!='=>'我的文章','order'=>['sort'=>'ASC']]);
@@ -92,7 +89,7 @@ class blog_category extends Model{
             if(!empty($visited[$category['name']])) continue;
             $this->Update(["sort" => $hwCategories[$i]['sort']], ["id"=>$category['id']]);
             $updates[] = ["category"=>$category['name'], "sort" => $hwCategories[$i]['id']];
-            $visited[$category['category']] = true;
+            $visited[$category['name']] = true;
             $i ++;
         }
     }

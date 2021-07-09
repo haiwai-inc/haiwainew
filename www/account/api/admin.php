@@ -37,7 +37,13 @@ class admin extends Api {
         
         //博客
         $obj_blog_blogger=load("blog_blogger");
-        $obj_blog_blogger->update(['status'=>$status],['userID'=>$userID]);
+        $time=times::gettime();
+        $obj_blog_blogger->update(['status'=>$status,'update_date'=>$time,'update_type'=>'admin'],['userID'=>$userID]);
+        
+        //删除文章
+        $obj_article_indexing=load("article_indexing");
+        $obj_article_indexing->update(['visible'=>$status,'edit_date'=>$time],['userID'=>$userID],NULL,true);
+        
         return true;
     }
     
