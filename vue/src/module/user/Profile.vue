@@ -276,8 +276,7 @@ export default {
          this.$refs[formName].validate((valid) => {
          if (valid) {
             this.signupForm.submitDisable = true;
-            account.user_password_update(this.signupForm).then(res=>{
-               console.log(res);
+            account.user_password_update(this.signupForm.password).then(res=>{
                if(res.status){
                   this.$message({message:'修改成功',type:'success'})
                   this.initForm();
