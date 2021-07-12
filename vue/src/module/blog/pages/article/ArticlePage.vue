@@ -562,7 +562,11 @@ padding: 0 18px;
   font-size: 1.5rem !important;
   margin:-5px 0 0 0;
 }
-
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+}
 @media (max-width: 575.98px){
   .article-page .blogger-box{
     width:220px
