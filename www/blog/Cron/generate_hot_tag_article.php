@@ -13,7 +13,7 @@ class generate_hot_tag_article{
         $obj_article_indexing=load("article_indexing");
         $obj_article_noindex=load("search_article_noindex");
         
-        $time=times::gettime()-(86400*4);
+        $time=times::gettime()-(86400*2);
         
         //全部文章
         $rs_article_hot[0]=$obj_article_indexing->getAll(['postID','userID'],['create_date,>'=>$time,'treelevel'=>0,'is_publish'=>1,'limit'=>40,'visible'=>1,'order'=>['count_read'=>'DESC']]);
