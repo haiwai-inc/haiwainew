@@ -256,6 +256,7 @@ class account_user_login extends Model{
 	    $rs_user_session['UserID']=$rs_account_user['id'];
 	    $rs_user_session['UserLevel']=$rs_account_user['auth_group'];
 	    $rs_user_session['id']=$rs_account_user['id'];
+	    $rs_user_session['login_source']=$rs_account_user['login_source'];
 	    
 	    $obj_account_user=load("account_user");
 	    $rs_user_session=$obj_account_user->get_basic_userinfo([$rs_user_session]);
