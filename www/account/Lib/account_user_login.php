@@ -24,6 +24,7 @@ class account_user_login extends Model{
 	    $this->set_user_cookie($check_account_user);
 	    
 	    //设置session
+	    $check_account_user['login_source']="haiwai";
 	    $rs_user_session=$this->set_user_session($check_account_user);
 	    
 	    $rs_status['status']=true;
@@ -76,6 +77,7 @@ class account_user_login extends Model{
 	    $this->set_user_cookie($check_account_user);
 	    
 	    //设置session
+	    $check_account_user['login_source']="wxc";
 	    $this->set_user_session($check_account_user);
 	    $rs=['status'=>true,'data'=>$userID];
 	    return $rs;
@@ -147,6 +149,7 @@ class account_user_login extends Model{
 	    $this->set_user_cookie($check_account_user);
 	    
 	    //设置session
+	    $check_account_user['login_source']="wxc";
 	    $rs_user_session=$this->set_user_session($check_account_user);
 	    
 	    $rs_status['status']=true;
@@ -212,6 +215,7 @@ class account_user_login extends Model{
 	        $this->set_user_cookie($rs_account_user);
 	        
 	        //设置session
+	        $check_account_user['login_source']="google";
 	        $rs_user_session=$this->set_user_session($rs_account_user);
 	        
 	        $rs_status['status']=true;
