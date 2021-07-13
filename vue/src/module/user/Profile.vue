@@ -105,7 +105,7 @@
           <div v-else class="crop-placeholder" />
         </div> -->
                </div>
-               <div>
+               <div class="mb-5">
                   <p class="pt-3"><b>{{$t('message').setting.accout_name}}</b>
                   <span v-if="err.username.flag" class="ml-4 text-danger">{{err.username.msg}}</span></p>
                   <fg-input
@@ -122,7 +122,7 @@
                   <p class="pt-3"><b>{{$t('message').setting.accout_accout}}</b> : <span>{{authorInfor.email}}</span></p>
                   <hr class="mb-4">
                   <p class="pt-3"><b>{{$t('message').setting.accout_pass}}</b></p>
-                  <el-form :model="signupForm" :rules="rules" ref="signupForm" label-width="10px">
+                  <el-form v-if="user.userinfo.login_source==='haiwai'" :model="signupForm" :rules="rules" ref="signupForm" label-width="10px">
           
                      <el-form-item label="" prop="password">
                         <el-input type="password" :placeholder="$t('message').setting.accout_pass_ph" v-model="signupForm.password" autocomplete="off"></el-input>
@@ -130,11 +130,11 @@
                      <el-form-item label="" prop="checkPassword">
                         <el-input type="password" :placeholder="$t('message').setting.accout_comfirm_ph" v-model="signupForm.checkPassword" autocomplete="off"></el-input>
                      </el-form-item>
-                     
+                     <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
                   </el-form>
-                 
+                  <p v-if="user.userinfo.login_source!=='haiwai'" style="color:gray">您是透过文学城账号登入的海外，因此无法在此修改密码。<br>您可以前往文学城网站的账号管理功能修改文学城的密码。</p>
                </div>
-               <button class="btn btn-round btn-primary" :disabled="signupForm.submitDisable" @click="submitForm('signupForm')">{{$t('message').setting.accout_pass_btn}}</button>
+               
             </div>
             <div v-if="menuId===2">
                <h5 class="border-bottom py-3">{{$t('message').setting.black_title}}</h5>
